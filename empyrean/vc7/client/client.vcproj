@@ -145,6 +145,12 @@
 				RelativePath="..\..\src\client\Application.h">
 			</File>
 			<File
+				RelativePath="..\..\src\client\AudioSystem.cpp">
+			</File>
+			<File
+				RelativePath="..\..\src\client\AudioSystem.h">
+			</File>
+			<File
 				RelativePath="..\..\src\client\Cal3DAppearance.cpp">
 			</File>
 			<File
