@@ -9,7 +9,7 @@ namespace pyr {
 
     class RectangleTool : public Tool {
     public:
-        RectangleTool();
+        RectangleTool(MapView* mv);
     
         virtual bool onMouseMove(ToolEvent& te);
         virtual bool onLeftDown(ToolEvent& te);

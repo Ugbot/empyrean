@@ -15,7 +15,7 @@ namespace pyr {
     
     class MapView : public wxGLCanvas, public CommandReciever {
     public:
-        MapView(wxWindow* parent, Tool* defaultTool);
+        MapView(wxWindow* parent);
         ~MapView();
 
         MapFile& getMap();

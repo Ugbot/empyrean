@@ -2,6 +2,7 @@
 #include "MapView.h"
 #include "Tool.h"
 
+#include "RectangleTool.h"
 
 namespace pyr {
 
@@ -18,10 +19,19 @@ namespace pyr {
     END_EVENT_TABLE()
     
 
-    MapView::MapView(wxWindow* parent, Tool* defaultTool)
+    MapView::MapView(wxWindow* parent)
         : wxGLCanvas(parent, -1)
     {
-        _tool = defaultTool;
+        typedef RectangleTool DefaultTool;
+
+        _tool = new DefaultTool(this);
+
+        _map._obstructions.points.push_back(MapFile::Point(0, 0));
+        _map._obstructions.points.push_back(MapFile::Point(0.5, 0));
+        _map._obstructions.points.push_back(MapFile::Point(0.5, 0.5));
+        _map._obstructions.obstructions.push_back(MapFile::Obstruction(0, 1));
+        _map._obstructions.obstructions.push_back(MapFile::Obstruction(1, 2));
+        _map._obstructions.obstructions.push_back(MapFile::Obstruction(2, 0));
     }
 
     MapView::~MapView() {
@@ -37,6 +47,7 @@ namespace pyr {
     
     void MapView::setTool(Tool* tool) {
         _tool = tool;
+        Refresh();
     }
     
     Tool* MapView::getTool() const {
@@ -118,6 +129,9 @@ namespace pyr {
         te.cmd = this;
         te.x = float(e.GetX()) / size.x *  2 - 1;
         te.y = float(e.GetY()) / size.y * -2 + 1;
+        te.shift = e.ShiftDown();
+        te.ctrl = e.ControlDown();
+        te.alt = e.AltDown();
     
         bool repaint = false;
         
@@ -158,6 +172,22 @@ namespace pyr {
         }
 
         // TODO: templates, obstructions, entities, et cetera
+
+        glColor4f(1, 0, 0, 1);
+        glBegin(GL_LINES);
+        for (std::vector<MapFile::Obstruction>::iterator
+            iter = _map._obstructions.obstructions.begin();
+            iter != _map._obstructions.obstructions.end();
+            iter++)
+        {
+            MapFile::Point& p1 = _map._obstructions.points[iter->p1];
+            MapFile::Point& p2 = _map._obstructions.points[iter->p2];
+
+            glVertex2f(p1.x, p1.y);
+            glVertex2f(p2.x, p2.y);
+        }
+        glEnd();
+
         _tool->onRender();
     }
 #else

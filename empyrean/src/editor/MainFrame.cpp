@@ -2,6 +2,7 @@
 #include "MapView.h"
 #include "RectangleTool.h"
 #include "TranslateTool.h"
+#include "ObstructionTool.h"
 
 
 namespace pyr {
@@ -12,6 +13,7 @@ namespace pyr {
     enum {
         ID_TOOL_TRANSLATE = wxID_HIGHEST,
         ID_TOOL_RECTANGLE,
+        ID_TOOL_OBSTRUCTION,
     };
 
 
@@ -19,6 +21,8 @@ namespace pyr {
         EVT_MENU(wxID_EXIT, MainFrame::onExit)
         EVT_MENU(wxID_UNDO, MainFrame::onUndo)
         EVT_MENU(wxID_REDO, MainFrame::onRedo)
+        EVT_TOOL(ID_TOOL_RECTANGLE, MainFrame::onUseImageTool)
+        EVT_TOOL(ID_TOOL_OBSTRUCTION, MainFrame::onUseObstructionTool)
     END_EVENT_TABLE()
     
     MainFrame::MainFrame()
@@ -50,6 +54,7 @@ namespace pyr {
         wxMenu* toolMenu = new wxMenu;
         toolMenu->Append(ID_TOOL_TRANSLATE, "&Translate");
         toolMenu->Append(ID_TOOL_RECTANGLE, "&Rectangle");
+        toolMenu->Append(ID_TOOL_OBSTRUCTION, "&Obstruction");
         
         wxMenu* helpMenu = new wxMenu;
         helpMenu->Append(wxID_ABOUT,  "&About...");
@@ -80,6 +85,7 @@ namespace pyr {
         toolbar->AddSeparator();
         toolbar->AddTool(ID_TOOL_TRANSLATE, "Trans", PNG_BITMAP("editorrc/tool_translate.png"));
         toolbar->AddTool(ID_TOOL_RECTANGLE, "Rect",  PNG_BITMAP("editorrc/tool_rect.png"));
+        toolbar->AddTool(ID_TOOL_OBSTRUCTION, "Obs", PNG_BITMAP("editorrc/tool_translate.png")); // ah what the hell
         #else
         toolbar->AddTool(wxID_NEW, PNG_BITMAP("editorrc/new.png"));
         toolbar->AddTool(wxID_OPEN, PNG_BITMAP("editorrc/open.png"));
@@ -87,6 +93,8 @@ namespace pyr {
         toolbar->AddSeparator();
         toolbar->AddTool(ID_TOOL_TRANSLATE, PNG_BITMAP("editorrc/tool_translate.png"));
         toolbar->AddTool(ID_TOOL_RECTANGLE, PNG_BITMAP("editorrc/tool_rect.png"));
+        toolbar->AddTool(ID_TOOL_OBSTRUCTION, PNG_BITMAP("editorrc/tool_translate.png")); // ah what the hell
+        toolbar->AddTool(ID_TOOL_OBSTRUCTION, PNG_BITMAP("editorrc/tool_translate.png")); // ah what the hell
         #endif
 
         // add more stuff
@@ -98,7 +106,7 @@ namespace pyr {
     
     void MainFrame::createContents() {
 //        typedef TranslateTool DefaultTool;
-        typedef RectangleTool DefaultTool;
+//        typedef RectangleTool DefaultTool;
     
     
         // use wxCLIP_CHILDREN to avoid some flicker
@@ -111,7 +119,7 @@ namespace pyr {
         _mapTree->AppendItem(root, "Part 1");
         _mapTree->AppendItem(root, "Part 2");
         
-        _mapView = new MapView(_splitter, new DefaultTool());
+        _mapView = new MapView(_splitter);
 
         _splitter->SetMinimumPaneSize(MINIMUM_PANE_SIZE);
         _splitter->SplitVertically(_mapTree, _mapView, DEFAULT_TREE_SIZE);
@@ -131,5 +139,13 @@ namespace pyr {
 
     void MainFrame::onRedo(wxCommandEvent&) {
         _mapView->redo();
+    }
+
+    void MainFrame::onUseImageTool(wxCommandEvent&) {
+        _mapView->setTool(new RectangleTool(_mapView));
+    }
+
+    void MainFrame::onUseObstructionTool(wxCommandEvent&) {
+        _mapView->setTool(new ObstructionTool(_mapView));
     }
 }

@@ -36,6 +36,8 @@ namespace pyr {
 
             // TODO: u/v
 
+            Image() : x(0), y(0), width(0), height(0), z(0){}
+
             // It'd be awfully nice if C++ offered a way to do this automatically. >_>
             Image(float _x, float _y, float _w, float _h, const std::string& _name = "", int _z = 0)
                 : x(_x)
@@ -54,10 +56,23 @@ namespace pyr {
 
         struct Obstruction {
             int p1, p2;
+
+            Obstruction() : p1(0), p2(0) {}
+            Obstruction(int a, int b)
+                : p1(a)
+                , p2(b)
+            {}
         };
 
         struct Point {
             float x, y;
+
+            Point() : x(0), y(0){}
+
+            Point(float _x, float _y)
+                : x(_x)
+                , y(_y)
+            {}
         };
 
         struct ObstructionMap {

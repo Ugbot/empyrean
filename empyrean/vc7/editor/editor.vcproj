@@ -132,10 +132,19 @@
 				RelativePath="..\..\src\editor\MapView.h">
 			</File>
 			<File
+				RelativePath="..\..\src\editor\ObstructionTool.cpp">
+			</File>
+			<File
+				RelativePath="..\..\src\editor\ObstructionTool.h">
+			</File>
+			<File
 				RelativePath="..\..\src\editor\RectangleTool.cpp">
 			</File>
 			<File
 				RelativePath="..\..\src\editor\RectangleTool.h">
+			</File>
+			<File
+				RelativePath="..\..\src\editor\Tool.cpp">
 			</File>
 			<File
 				RelativePath="..\..\src\editor\Tool.h">
@@ -162,6 +171,18 @@
 			</File>
 			<File
 				RelativePath="..\..\src\editor\AddImageCommand.h">
+			</File>
+			<File
+				RelativePath="..\..\src\editor\AddObstructionPointCommand.cpp">
+			</File>
+			<File
+				RelativePath="..\..\src\editor\AddObstructionPointCommand.h">
+			</File>
+			<File
+				RelativePath="..\..\src\editor\AddObstructionSegmentCommand.cpp">
+			</File>
+			<File
+				RelativePath="..\..\src\editor\AddObstructionSegmentCommand.h">
 			</File>
 			<File
 				RelativePath="..\..\src\editor\Command.h">

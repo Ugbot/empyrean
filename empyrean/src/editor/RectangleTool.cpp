@@ -11,16 +11,21 @@
 
 namespace pyr {
 
-    RectangleTool::RectangleTool() {
+    RectangleTool::RectangleTool(MapView* mv)
+        : Tool(mv)
+    {
         _down = false;
         _x = 0;
         _y = 0;
     }
 
     bool RectangleTool::onMouseMove(ToolEvent& te) {
-        _x2 = te.x;
-        _y2 = te.y;
-        return true;
+        if (_down) {
+            _x2 = te.x;
+            _y2 = te.y;
+        }
+
+        return _down; // EVERYBODY WANG CHUNG TONIGHT.
     }
 
     bool RectangleTool::onLeftDown(ToolEvent& te) {
@@ -35,14 +40,11 @@ namespace pyr {
             return false;
         }
 
-        /*float x = (_x > te.x) ? te.x : _x;
-        float y = (_y > te.y) ? te.y : _y;*/
         float x = std::min(_x, te.x);
         float y = std::min(_y, te.y);
         float w = (_x > te.x) ? _x - te.x : te.x - _x;
         float h = (_y > te.y) ? _y - te.y : te.y - _y;
 
-        //te.map->addRectangle(_x, _y, te.x, te.y);
         te.cmd->handleCommand(new AddImageCommand(x, y, w, h));
         _down = false;
         return true;
@@ -52,10 +54,10 @@ namespace pyr {
         if (_down) {
             glColor4f(1, 1, 1, 1);
             glBegin(GL_LINE_LOOP);
-            glVertex2f(_x, _y);
+            glVertex2f(_x,  _y);
             glVertex2f(_x2, _y);
             glVertex2f(_x2, _y2);
-            glVertex2f(_x, _y2);
+            glVertex2f(_x,  _y2);
             glEnd();
         }
     }

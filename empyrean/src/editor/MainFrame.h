@@ -30,6 +30,8 @@ namespace pyr {
         void onExit(wxCommandEvent&);
         void onUndo(wxCommandEvent&);
         void onRedo(wxCommandEvent&);
+        void onUseImageTool(wxCommandEvent&);
+        void onUseObstructionTool(wxCommandEvent&);
         
         DECLARE_EVENT_TABLE()
     };
