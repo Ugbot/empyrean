@@ -24,8 +24,8 @@
  *
  * -----------------------------------------------------------------
  * File:          $RCSfile: TextField.cpp,v $
- * Date modified: $Date: 2003-11-10 01:25:04 $
- * Version:       $Revision: 1.8 $
+ * Date modified: $Date: 2004-03-01 07:17:55 $
+ * Version:       $Revision: 1.9 $
  * -----------------------------------------------------------------
  *
  ************************************************************** phui-cpr-end */
@@ -64,7 +64,7 @@ namespace phui
 
         const Insets& i = getInsets();
         unsigned fontHeight = renderer->getHeight(mText.c_str());
-        unsigned fontWidth = renderer->getWidth(mText.c_str());
+        //unsigned fontWidth = renderer->getWidth(mText.c_str());
 
         float textX = float(i.getLeft());
         float textY = std::max(0.0f, (height - fontHeight) / 2.0f);

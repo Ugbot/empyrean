@@ -24,8 +24,8 @@
  *
  * -----------------------------------------------------------------
  * File:          $RCSfile: ListBox.cpp,v $
- * Date modified: $Date: 2003-09-24 00:48:56 $
- * Version:       $Revision: 1.5 $
+ * Date modified: $Date: 2004-03-01 07:17:55 $
+ * Version:       $Revision: 1.6 $
  * -----------------------------------------------------------------
  *
  ************************************************************** phui-cpr-end */
@@ -119,7 +119,7 @@ namespace phui
       {
          mItems.erase(mItems.begin() + idx);
 
-         if (idx == mSelectedItem) 
+         if (static_cast<int>(idx) == mSelectedItem) 
          {
             mSelectedItem = -1;
          }

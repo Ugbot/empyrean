@@ -24,8 +24,8 @@
  *
  * -----------------------------------------------------------------
  * File:          $RCSfile: SDLBridge.cpp,v $
- * Date modified: $Date: 2003-08-08 02:51:24 $
- * Version:       $Revision: 1.2 $
+ * Date modified: $Date: 2004-03-01 07:17:55 $
+ * Version:       $Revision: 1.3 $
  * -----------------------------------------------------------------
  *
  ************************************************************** phui-cpr-end */
@@ -51,9 +51,9 @@ namespace phui
       switch (key) {
          case SDLK_BACKSPACE:    return KEY_BACKSPACE;
          case SDLK_TAB:          return KEY_TAB;
-         case SDLK_CLEAR:        break;
+         case SDLK_CLEAR:        return KEY_UNKNOWN;
          case SDLK_RETURN:       return KEY_ENTER;
-         case SDLK_PAUSE:        break;
+         case SDLK_PAUSE:        return KEY_UNKNOWN;
          case SDLK_ESCAPE:       return KEY_ESCAPE;
          case SDLK_SPACE:        return KEY_SPACE;
          case SDLK_EXCLAIM:      return KEY_1;
@@ -120,9 +120,8 @@ namespace phui
          case SDLK_MENU:         return KEY_UNKNOWN;
          case SDLK_POWER:        return KEY_UNKNOWN;
          case SDLK_EURO:         return KEY_UNKNOWN;
+         default:                return KEY_UNKNOWN;
       }
-
-      return KEY_UNKNOWN;
    }
 
    InputButton SDLToPhuiButton(Uint8 button) {

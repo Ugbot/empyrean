@@ -144,9 +144,6 @@ Export('TOOLS')
 # Create base environment.
 base_env = Environment(ENV = os.environ)
 
-if base_env.get('CC') == 'gcc':
-    base_env.Append(CCFLAGS = ['-Wall'])
-
 if base_env['PLATFORM'] == 'cygwin':
     base_env.Append(CPPDEFINES = ['WIN32', '_WIN32', 'NOMINMAX'],
                     CPPPATH = ['#/third-party-cygwin/include'],
@@ -163,6 +160,11 @@ if base_env['PLATFORM'] == 'irix':
         CPPPATH = string.split(os.environ['CPLUS_INCLUDE_PATH'], ':'),
         LIBPATH = string.split(os.environ['LIBRARY_PATH'], ':'),
         LIBS = ['m'])
+
+if base_env['CC'] == 'gcc':
+    base_env.Append(CCFLAGS=['-Wall'])
+if base_env['CXX'] == 'g++':
+    base_env.Append(CXXFLAGS=['-Wall', '-Wno-non-virtual-dtor'])
 
 # Process build options.
 if ARGUMENTS.get('dbg'):

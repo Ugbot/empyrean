@@ -6,9 +6,9 @@ namespace pyr {
 
     UpdateGeometryElementCommand::UpdateGeometryElementCommand(
         GeometryElement* element, const gmtl::Vec2f& pos, const std::string& texture)
-        : _element(element)
-        , _pos(pos)
+        : _pos(pos)
         , _texture(texture)
+        , _element(element)
     {}
 
     void UpdateGeometryElementCommand::perform(CommandContext& context) {

@@ -55,10 +55,10 @@ namespace pyr {
         
         void createConnectWindow() {
             using namespace phui;
-        
-            int width  = the<Configuration>().screenWidth;
-            int height = the<Configuration>().screenHeight;
-    
+
+            //int width  = the<Configuration>().screenWidth;
+            //int height = the<Configuration>().screenHeight;
+
             _server = new TextField(the<Configuration>().server);
             
             WidgetContainerPtr serverPanel = new WidgetContainer(

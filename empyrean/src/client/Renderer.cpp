@@ -54,7 +54,7 @@ namespace pyr {
                 r->selectMeshSubmesh(curmesh, cursub);
 
                 static float verts[30000][3];
-                int nVerts=r->getVertices(&verts[0][0]);
+                /*int nVerts=*/r->getVertices(&verts[0][0]);
                 glVertexPointer(3, GL_FLOAT, 0, &verts[0][0]);
 
                 static float normals[30000][3];
@@ -80,7 +80,7 @@ namespace pyr {
                     glEnableClientState(GL_TEXTURE_COORD_ARRAY);
                     glBindTexture(GL_TEXTURE_1D,shadetex);
                     glTexCoordPointer(1,GL_FLOAT,0,texcoords2);
-                    
+
                     glClientActiveTexture(GL_TEXTURE0_ARB);
                     glActiveTexture(GL_TEXTURE0_ARB);
 
@@ -91,7 +91,7 @@ namespace pyr {
 
                 if (r->getMapCount()) {
                     static float texcoords[30000][2];
-                    int nTexcoords=r->getTextureCoordinates(0, &texcoords[0][0]);
+                    /*int nTexcoords=*/r->getTextureCoordinates(0, &texcoords[0][0]);
                     glEnable(GL_TEXTURE_2D);
                     glBindTexture(GL_TEXTURE_2D, (GLuint)r->getMapUserData(0));
                     glEnableClientState(GL_TEXTURE_COORD_ARRAY);
@@ -153,10 +153,10 @@ namespace pyr {
                 r.selectMeshSubmesh(curmesh,cursub);
 
                 static float verts[30000][3];
-                int nVerts=r.getVertices(&verts[0][0]);
+                /*int nVerts=*/r.getVertices(&verts[0][0]);
 
                 static float normals[30000][3];
-                int nNormals=r.getNormals(&normals[0][0]);
+                /*int nNormals=*/r.getNormals(&normals[0][0]);
 
                 static float texcoords[30000][2];
                 int nTexcoords=r.getTextureCoordinates(0,&texcoords[0][0]);

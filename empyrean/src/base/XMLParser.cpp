@@ -21,26 +21,26 @@ namespace pyr {
     XMLParser::~XMLParser() {
         XML_ParserFree(_parser);
     }
-    
+
     XMLNode* XMLParser::parse(const std::string& filename) {
         // XXX need an exception-safe smart pointer around FILE*
         FILE* file = fopen(filename.c_str(), "rb");
         if (!file) {
             throw XMLParseError("Opening file failed.");
         }
-        
-        static const int BUFFER_SIZE = 4096;
-        
+
+        static const size_t BUFFER_SIZE = 4096;
+
         for (;;) {
             char buffer[BUFFER_SIZE];
             size_t read = fread(buffer, 1, BUFFER_SIZE, file);
-            
+
             int status = XML_Parse(_parser, buffer, static_cast<int>(read), 0);
             if (status == 0) {
                 fclose(file);
                 return finish();
             }
-            
+
             if (read != BUFFER_SIZE) {
                 break;
             }

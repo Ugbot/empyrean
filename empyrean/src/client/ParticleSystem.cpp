@@ -14,8 +14,8 @@ namespace pyr {
         : _pos(pos)
         , _vel(vel)
         , _accel(acceleration)
-        , _lifetime(lifetime)
         , _color(color)
+        , _lifetime(lifetime)
     {
         _colorFade[3] = (1.0f / _lifetime) * _color[3];
     }
