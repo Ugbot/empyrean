@@ -5,7 +5,7 @@ SOURCES = Split("""
     Canvas.cpp
     Connection.cpp
     Error.cpp
-    Map.cpp
+    MapFile.cpp
     NSPRUtility.cpp
     PacketFactory.cpp
     PacketTypes.cpp

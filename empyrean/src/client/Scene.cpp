@@ -16,7 +16,7 @@ namespace pyr {
         : _backdrop(Texture::create("images/stars.png"))
         , _map(new MapFile)
     {
-        _map->_terrain.images.push_back(MapFile::Image(0, 220, 400, 80));
+        //_map->_terrain.images.push_back(MapFile::Image(0, 220, 400, 80));
         //_map->addRectangle(0, 220, 400, 300);
     }
     

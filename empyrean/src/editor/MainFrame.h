@@ -47,9 +47,9 @@ namespace pyr {
         void undo();
         void redo();
         
-        std::stack<::pyr::Command*> _undoList;
-        std::stack<::pyr::Command*> _redoList;
-        void clearList(std::stack<::pyr::Command*>& list); // deletes and clears
+        std::stack<pyr::Command*> _undoList;
+        std::stack<pyr::Command*> _redoList;
+        void clearList(std::stack<pyr::Command*>& list); // deletes and clears
 
         MapFile* _map;
         

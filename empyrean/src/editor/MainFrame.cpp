@@ -207,7 +207,7 @@ namespace pyr {
 
     void MainFrame::redo() {
         if (!_redoList.empty()) {
-            ::pyr::Command* c = _redoList.top();
+            pyr::Command* c = _redoList.top();
             _redoList.pop();
             _undoList.push(c);
             bool refresh = c->perform(_map);
@@ -217,9 +217,9 @@ namespace pyr {
         }
     }
 
-    void MainFrame::clearList(std::stack<::pyr::Command*>& list) {
+    void MainFrame::clearList(std::stack<pyr::Command*>& list) {
         while (!list.empty()) {
-            ::pyr::Command* c = list.top();
+            pyr::Command* c = list.top();
             delete c;
             list.pop();
         }

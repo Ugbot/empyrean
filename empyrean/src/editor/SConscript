@@ -1,14 +1,21 @@
 Import('base_env TOOLS')
 
 SOURCES = [
+    'AddObstructionPointCommand.cpp',
+    'AddObstructionSegmentCommand.cpp',
+    'AddRectCommand.cpp',
+    'ChangeRectPropertiesCommand.cpp',
     'Editor.cpp',
     'Main.cpp',
     'MainFrame.cpp',
     'MapView.cpp',
-    'RectangleTool.cpp']
+    'ObstructionTool.cpp',
+    'RectangleTool.cpp',
+    'Texture.cpp',
+    'Tool.cpp']
 
 env = base_env.Copy()
-for t in Split('PyrBase wxWindows OpenGL'):
+for t in Split('PyrBase Corona wxWindows OpenGL'):
     TOOLS[t](env)
 
 env.Program('#/build/editor', SOURCES)
