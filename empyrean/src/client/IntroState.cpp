@@ -10,6 +10,8 @@ namespace pyr {
 
     class MenuState;
 
+    PYR_REGISTER_STATE_FACTORY(IntroState)
+
     IntroState::IntroState()
     : _image(Texture::create("images/intro.tga")) {
         showPointer();

@@ -31,7 +31,9 @@ EXTENSIONS = Split("""
     xrf
 
     py
-
+    
+    vs
+    fs
 """)
 
 
@@ -77,4 +79,5 @@ for t in map(Dir, tdirs):
     Default(t)
     env = base_env.Copy(DEST=t)
     Export('env')
-    SConscript(dirs=['cutscene', 'editorrc', 'fonts', 'images', 'maps', 'models', 'music', 'sounds'])
+    SConscript(dirs=['cutscene', 'editorrc', 'fonts', 'images', 'maps',
+                     'models', 'music', 'shaders', 'sounds'])

@@ -96,12 +96,14 @@ namespace pyr {
      * log, although it might be too expensive for logging a single
      * stream.  For that, use logger.log(level, message);
      */
-    #define PYR_LOG(logger, level, stream)              \
-        if ((logger).enabled((level))) {                \
-            std::ostringstream os;                      \
-            os << stream;                               \
-            (logger).log((level), os.str());            \
-        } else PYR_REQUIRE_SEMI
+    #define PYR_LOG(logger, level, stream)                  \
+        PYR_REQUIRE_SEMI(                                   \
+            if ((logger).enabled((level))) {                \
+                std::ostringstream os;                      \
+                os << stream;                               \
+                (logger).log((level), os.str());            \
+            }                                               \
+        )
 
     
     class LogScope {
@@ -117,7 +119,7 @@ namespace pyr {
     };
 
     #define PYR_LOG_SCOPE(logger, level, name) \
-	::pyr::LogScope PYR_UNIQUE_NAME()(logger, level, name);
+	::pyr::LogScope PYR_UNIQUE_NAME()(logger, level, name)
     
     
     void initializeLog(const string& logFile, const string& configFile);

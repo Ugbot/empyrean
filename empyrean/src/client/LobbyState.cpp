@@ -9,6 +9,8 @@ namespace pyr {
     class CutSceneState;
     class MenuState;
 
+    PYR_REGISTER_STATE_FACTORY(LobbyState)
+
     LobbyState::LobbyState() {
         showPointer();
 

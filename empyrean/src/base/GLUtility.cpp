@@ -1,6 +1,9 @@
 #include <stdexcept>
 #include "Debug.h"
+#include "File.h"
 #include "GLUtility.h"
+#include "ScopedPtr.h"
+#include "ScopedArray.h"
 
 namespace pyr {
 
@@ -36,8 +39,36 @@ namespace pyr {
     void checkOpenGLErrors() {
         GLenum error;
 	while ((error = glGetError()) != GL_NO_ERROR) {
+            PYR_BREAK();
             throw std::runtime_error(getErrorString(error));
         }
+    }
+
+    void loadShader(GLhandleARB shader, const char* filename) {
+        ScopedPtr<File> file(openFile(filename));
+        u32 length = static_cast<u32>(file->getLength());
+        ScopedArray<GLcharARB> source = new GLcharARB[length];
+        size_t read = file->read(source.get(), length);
+        if (read != length) {
+            throw std::runtime_error("read != length in shader read");
+        }
+
+        const GLcharARB* sources[] = { source.get() };
+        GLint            lengths[] = { length };
+        glShaderSourceARB(shader, 1, sources, lengths);
+
+        glCompileShaderARB(shader);
+        GLint compiled;
+        glGetObjectParameterivARB(shader, GL_OBJECT_COMPILE_STATUS_ARB, &compiled);
+        if (!compiled) {
+            GLint length;
+            glGetObjectParameterivARB(shader, GL_OBJECT_INFO_LOG_LENGTH_ARB, &length);
+            ScopedArray<GLcharARB> infoLog(new GLcharARB[length]);
+            glGetInfoLogARB(shader, length, 0, infoLog.get());
+            throw std::runtime_error(string("GLSL Compile error: ") + infoLog.get());
+        }
+
+        checkOpenGLErrors();
     }
 
 }

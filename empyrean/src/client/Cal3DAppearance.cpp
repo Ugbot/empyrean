@@ -25,7 +25,7 @@ namespace pyr {
         _model->blendCycle(animation, 1.0f, 0.1f);
     }
 
-    void Cal3DAppearance::update(float dt) {
+    void Cal3DAppearance::update(float dt, const Environment& env) {
         _model->update(dt);
     }
 

@@ -42,7 +42,6 @@ namespace pyr {
         
     private:
         void drawMap(Vec2f ll, Vec2f rr);
-        void addParticles(MapElementPtr elt);
 
         typedef std::map<u16, ClientEntityPtr> EntityMap;
 

@@ -3,11 +3,6 @@ import string
 import sys
 
 
-# REMOVE THIS WHEN THE TOOLPATH-IMPORT PATCH IS CHECKED INTO SCONS.
-# Add toolspec to sys.path so we can use those tools.
-sys.path.append(Dir('#/toolspec').abspath)
-
-
 SConsignFile()
 
 Default(['build', 'tests'])
@@ -28,7 +23,9 @@ opts.AddOptions(
     BoolOption('withCallStack', 'Enable CallStack support', 1))
 
 # Create base environment.
-env = Environment(ENV=os.environ, options=opts)
+env = Environment(ENV=os.environ,
+                  options=opts,
+                  toolpath=[Dir('#/toolspec').abspath])
 
 Help(opts.GenerateHelpText(env))
 opts.Save(cachefile, env)

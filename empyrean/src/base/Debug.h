@@ -3,10 +3,9 @@
 
 
 /**
- * Put this at the end of a macro if the user must enter a semicolon
- * after it.
+ * Use this in macros that require the user to enter a semicolon after it.
  */
-#define PYR_REQUIRE_SEMI do { } while (false)
+#define PYR_REQUIRE_SEMI(BODY) do { BODY } while (false)
 
 /// Nice utility function to stringize the expansion of the argument.
 #define PYR_STR(name) #name
@@ -27,28 +26,50 @@
     }
 
     #ifdef _MSC_VER
+
+        #define PYR_BREAK()     \
+            PYR_REQUIRE_SEMI(   \
+                __asm int 3     \
+            )
     
-        #define PYR_ASSERT(condition, label)                                        \
-            if (!(condition)) {                                                     \
-                showAssertMessage(#condition, label, __FILE__, PYR_STR2(__LINE__)); \
-                __asm int 3                                                         \
-            } PYR_REQUIRE_SEMI
+        #define PYR_ASSERT(condition, label)                                            \
+            PYR_REQUIRE_SEMI(                                                           \
+                if (!(condition)) {                                                     \
+                    showAssertMessage(#condition, label, __FILE__, PYR_STR2(__LINE__)); \
+                    PYR_BREAK();                                                        \
+                }                                                                       \
+            )
         
     #else
 
         #include <assert.h>
+
+        #define PYR_BREAK()     \
+            PYR_REQUIRE_SEMI(   \
+                ;               \
+            )
       
-        #define PYR_ASSERT(condition, label)                                        \
-            if (!(condition)) {                                                     \
-                showAssertMessage(#condition, label, __FILE__, PYR_STR2(__LINE__)); \
-                assert((condition) && (label));                                     \
-            } PYR_REQUIRE_SEMI
+        #define PYR_ASSERT(condition, label)                                            \
+            PYR_REQUIRE_SEMI(                                                           \
+                if (!(condition)) {                                                     \
+                    showAssertMessage(#condition, label, __FILE__, PYR_STR2(__LINE__)); \
+                    assert((condition) && (label));                                     \
+                }                                                                       \
+            )
     
     #endif
 
 #else
 
-    #define PYR_ASSERT(condition, label) PYR_REQUIRE_SEMI
+    #define PYR_ASSERT(condition, label)    \
+        PYR_REQUIRE_SEMI(                   \
+            ;                               \
+        )
+
+    #define PYR_BREAK()     \
+        PYR_REQUIRE_SEMI(   \
+            ;               \
+        )
 
 #endif
 

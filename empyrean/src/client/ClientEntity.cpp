@@ -8,7 +8,7 @@ namespace pyr {
 
     ActionQueue ClientEntity::update(float dt, const Environment& env) {
         ActionQueue aq = Entity::update(dt, env);
-        getClientAppearance()->update(dt);
+        getClientAppearance()->update(dt, env);
 
         // Reduce the display time for the numbers
         if (_timeToShowVitChange > 0) {

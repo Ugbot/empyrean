@@ -35,11 +35,6 @@ namespace pyr {
         return Vec2f(a[0] * b[0], a[1] * b[1]);
     }
 
-    inline Vec3f normal(Vec3f v) {
-        normalize(v);
-        return v;
-    }
-
     void MapRenderer::visitGeometry(GeometryElement* e) {
         Vec2f oldPosition = _currentPosition;
         float oldScale    = _currentScale;

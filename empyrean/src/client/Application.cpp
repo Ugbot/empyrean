@@ -16,19 +16,149 @@
 
 namespace pyr {
 
+    // For Dr. Reiners: select one of these for the different demos.
+    typedef class TreeState  InitialState;
+    //typedef class GrassState InitialState;
+    //typedef class IntroState InitialState;
+
+
     namespace {
     
         Logger& _logger = Logger::get("pyr.Application");
     
     }
 
-    class IntroState;
-    typedef IntroState InitialState;
-
-
     PYR_DEFINE_SINGLETON(Application)
     
+
+    void glow() {
+        PYR_PROFILE_BLOCK("glow");
+
+        static bool inited = false;
+        static GLuint screenTexture;
+        static GLuint smallTexture;
+
+        if (!inited) {
+            glGenTextures(1, &screenTexture);
+            glBindTexture(GL_TEXTURE_2D, screenTexture);
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR); // No mipmaps.
+
+            glGenTextures(1, &smallTexture);
+            glBindTexture(GL_TEXTURE_2D, smallTexture);
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR); // No mipmaps;
+
+            glBindTexture(GL_TEXTURE_2D, 0);
+            inited = true;
+        }
+
+        OrthoProjection(1, 1, 0).apply();
+
+        glBindTexture(GL_TEXTURE_2D, screenTexture);
+        int appWidth  = the<Application>().getWidth();
+        int appHeight = the<Application>().getHeight();
+        int texWidth  = getNextPowerOf2(appWidth);
+        int texHeight = getNextPowerOf2(appHeight);
+        glCopyTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, 0, 0, texWidth, texHeight, 0);
+
+        const float u1 = float(appWidth) / texWidth;
+        const float v1 = float(appHeight) / texHeight;
+
+        glViewport(0, 0, 256, 256);
+        glEnable(GL_TEXTURE_2D);
+        glBegin(GL_QUADS);
+          glTexCoord2f(0,  v1); glVertex2i(0, 0);
+          glTexCoord2f(0,  0);  glVertex2i(0, 1);
+          glTexCoord2f(u1, 0);  glVertex2i(1, 1);
+          glTexCoord2f(u1, v1); glVertex2i(1, 0);
+        glEnd();
+
+        glBindTexture(GL_TEXTURE_2D, smallTexture);
+        glCopyTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, 0, 0, 256, 256, 0);
+
+        glViewport(0, 0, appWidth, appHeight);
+
+        const float u2 = 1;
+        const float v2 = 1;
+
+        glActiveTextureARB(GL_TEXTURE0_ARB);
+        glEnable(GL_TEXTURE_2D);
+        glBindTexture(GL_TEXTURE_2D, smallTexture);
+        glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
+
+        checkOpenGLErrors();
+
+        glActiveTextureARB(GL_TEXTURE1_ARB);
+        glEnable(GL_TEXTURE_2D);
+        glBindTexture(GL_TEXTURE_2D, smallTexture);
+        glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
+
+        checkOpenGLErrors();
+
+        /*
+        glActiveTextureARB(GL_TEXTURE2_ARB);
+        glEnable(GL_TEXTURE_2D);
+        glBindTexture(GL_TEXTURE_2D, smallTexture);
+        glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
+        */
+
+        checkOpenGLErrors();
+
+        glActiveTextureARB(GL_TEXTURE3_ARB);
+        glEnable(GL_TEXTURE_2D);
+        glBindTexture(GL_TEXTURE_2D, screenTexture);
+        glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_ADD);
+
+        checkOpenGLErrors();
+
+        glColor4f(0.6f, 0.6f, 0.6f, 1.0f);
+        glBegin(GL_QUADS);
+          glMultiTexCoord2fARB(GL_TEXTURE0_ARB, 0, v2);
+          glMultiTexCoord2fARB(GL_TEXTURE1_ARB, 0, v2);
+          glMultiTexCoord2fARB(GL_TEXTURE2_ARB, 0, v2);
+          glMultiTexCoord2fARB(GL_TEXTURE3_ARB, 0, v1);
+          glVertex2i(0, 0);
+
+          glMultiTexCoord2fARB(GL_TEXTURE0_ARB, 0, 0);
+          glMultiTexCoord2fARB(GL_TEXTURE1_ARB, 0, 0);
+          glMultiTexCoord2fARB(GL_TEXTURE2_ARB, 0, 0);
+          glMultiTexCoord2fARB(GL_TEXTURE3_ARB, 0, 0);
+          glVertex2i(0, 1);
+
+          glMultiTexCoord2fARB(GL_TEXTURE0_ARB, u2, 0);
+          glMultiTexCoord2fARB(GL_TEXTURE1_ARB, u2, 0);
+          glMultiTexCoord2fARB(GL_TEXTURE2_ARB, u2, 0);
+          glMultiTexCoord2fARB(GL_TEXTURE3_ARB, u1, 0);
+          glVertex2i(1, 1);
+
+          glMultiTexCoord2fARB(GL_TEXTURE0_ARB, u2, v2);
+          glMultiTexCoord2fARB(GL_TEXTURE1_ARB, u2, v2);
+          glMultiTexCoord2fARB(GL_TEXTURE2_ARB, u2, v2);
+          glMultiTexCoord2fARB(GL_TEXTURE3_ARB, u1, v1);
+          glVertex2i(1, 0);
+        glEnd();
+
+        checkOpenGLErrors();
+
+        glActiveTextureARB(GL_TEXTURE0_ARB);
+        glDisable(GL_TEXTURE_2D);
+        glBindTexture(GL_TEXTURE_2D, 0);
+
+        glActiveTextureARB(GL_TEXTURE1_ARB);
+        glDisable(GL_TEXTURE_2D);
+        glBindTexture(GL_TEXTURE_2D, 0);
+
+        glActiveTextureARB(GL_TEXTURE2_ARB);
+        glDisable(GL_TEXTURE_2D);
+        glBindTexture(GL_TEXTURE_2D, 0);
+
+        glActiveTextureARB(GL_TEXTURE3_ARB);
+        glDisable(GL_TEXTURE_2D);
+        glBindTexture(GL_TEXTURE_2D, 0);
+
+        glActiveTextureARB(GL_TEXTURE0_ARB);
+    }
     
+
     Application::Application() {
         _currentState = instantiateState<InitialState>();
         
@@ -58,6 +188,7 @@ namespace pyr {
 
         if (_currentState) {
             _currentState->draw();
+            checkOpenGLErrors();
 
             if (_currentState->isPointerVisible()) {
                 beginPass(OrthoProjection(_width, _height));
@@ -75,6 +206,7 @@ namespace pyr {
             beginPass(OrthoProjection(1024, 768));
 
             // Display FPS & profile tree.
+            glColor4f(1, 1, 1, 1);
             PYR_TEXT_STREAM(_renderer, Vec2f(0, 0)) << "FPS: " << _fps.getFPS();
 
             if (_showCPUInfo == 2) {
@@ -83,7 +215,11 @@ namespace pyr {
 
             endPass();
         }
+	checkOpenGLErrors();
 
+        if (_glow) {
+            glow();
+        }
 	checkOpenGLErrors();
     }
 
@@ -114,6 +250,11 @@ namespace pyr {
     void Application::onKeyPress(SDLKey key, bool down) {
         if (down && key == SDLK_F1) {
             _showCPUInfo = (_showCPUInfo + 1) % 3;
+            return;
+        }
+
+        if (down && key == SDLK_F10) {
+            _glow = !_glow;
             return;
         }
 

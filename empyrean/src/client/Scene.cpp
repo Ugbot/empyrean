@@ -5,8 +5,6 @@
 #include "Environment.h"
 #include "MapLoader.h"
 #include "MapRenderer.h"
-#include "ParticleEmitter.h"
-#include "ParticleSystem.h"
 //#include "PhysicsEngine.h"
 #include "Profiler.h"
 #include "Scene.h"
@@ -262,28 +260,4 @@ namespace pyr {
         }
     }
 
-    void Scene::addParticles(MapElementPtr elt) {
-        static u16 id = 65535;  /// @todo WARNING: HACK!
-        // Yeah, the server should send these in, now that it has the
-        // infrastructure.
-
-        if (elt && elt->properties["particles"] == "true") {
-            ParticleSystem* ps = new ParticleSystem;
-            ps->setPos(elt->pos);
-            addEntity(id--, ps);
-
-            ParticleEmitter* pe = new ParticleEmitter(ps);
-            pe->setVelocity(Vec2f(0, 1));
-            pe->setAccel(Vec2f(0, -2));
-            addEntity(id--, pe);
-        }
-
-        GroupElementPtr g = dynamic_cast<GroupElement*>(elt.get());
-        if (g) {
-            for (size_t i = 0; i < g->children.size(); ++i) {
-                addParticles(g->children[i]);
-            }
-        }
-    }
-    
 }

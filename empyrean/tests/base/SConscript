@@ -1,6 +1,5 @@
 Import('*')
-env = env.Copy(tools=['pyr_base', 'nspr', 'expat'],
-               toolpath=[Dir('#/toolspec').abspath])
+env = env.Copy(tools=['pyr_base', 'nspr', 'expat'])
 
 tests = ['testCallStack.cpp',
          'testCondVar.cpp',

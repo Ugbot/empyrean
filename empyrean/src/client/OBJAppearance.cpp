@@ -20,7 +20,7 @@ namespace pyr {
     void OBJAppearance::beginAnimationCycle(const std::string& animation) {
     }
 
-    void OBJAppearance::update(float dt) {
+    void OBJAppearance::update(float dt, const Environment& env) {
         _time += dt;
     }
 

@@ -133,12 +133,6 @@
 			Name="files"
 			Filter="">
 			<File
-				RelativePath="..\..\src\client\AppearanceFactory.cpp">
-			</File>
-			<File
-				RelativePath="..\..\src\client\AppearanceFactory.h">
-			</File>
-			<File
 				RelativePath="..\..\src\client\Application.cpp">
 			</File>
 			<File
@@ -148,16 +142,13 @@
 				RelativePath="..\..\src\client\AudioSystem.cpp">
 			</File>
 			<File
+				RelativePath="..\..\src\client\AudioSystem.cpp">
+			</File>
+			<File
 				RelativePath="..\..\src\client\AudioSystem.h">
 			</File>
 			<File
-				RelativePath="..\..\src\client\Cal3DAppearance.cpp">
-			</File>
-			<File
-				RelativePath="..\..\src\client\Cal3DAppearance.h">
-			</File>
-			<File
-				RelativePath="..\..\src\client\ClientAppearance.h">
+				RelativePath="..\..\src\client\AudioSystem.h">
 			</File>
 			<File
 				RelativePath="..\..\src\client\ClientEntity.cpp">
@@ -212,30 +203,6 @@
 			</File>
 			<File
 				RelativePath="..\..\src\client\Model.h">
-			</File>
-			<File
-				RelativePath="..\..\src\client\ModelRenderer.cpp">
-			</File>
-			<File
-				RelativePath="..\..\src\client\ModelRenderer.h">
-			</File>
-			<File
-				RelativePath="..\..\src\client\OBJAppearance.cpp">
-			</File>
-			<File
-				RelativePath="..\..\src\client\OBJAppearance.h">
-			</File>
-			<File
-				RelativePath="..\..\src\client\ParticleEmitter.cpp">
-			</File>
-			<File
-				RelativePath="..\..\src\client\ParticleEmitter.h">
-			</File>
-			<File
-				RelativePath="..\..\src\client\ParticleSystem.cpp">
-			</File>
-			<File
-				RelativePath="..\..\src\client\ParticleSystem.h">
 			</File>
 			<File
 				RelativePath="..\..\src\client\Player.cpp">
@@ -296,6 +263,12 @@
 				RelativePath="..\..\src\client\GameState.h">
 			</File>
 			<File
+				RelativePath="..\..\src\client\GrassState.cpp">
+			</File>
+			<File
+				RelativePath="..\..\src\client\GrassState.h">
+			</File>
+			<File
 				RelativePath="..\..\src\client\IntroState.cpp">
 			</File>
 			<File
@@ -318,6 +291,12 @@
 			</File>
 			<File
 				RelativePath="..\..\src\client\State.h">
+			</File>
+			<File
+				RelativePath="..\..\src\client\TreeState.cpp">
+			</File>
+			<File
+				RelativePath="..\..\src\client\TreeState.h">
 			</File>
 			<File
 				RelativePath="..\..\src\client\UIState.cpp">
@@ -398,12 +377,55 @@
 				RelativePath="..\..\src\client\PythonCutScene.h">
 			</File>
 		</Filter>
-		<File
-			RelativePath="..\..\src\client\AudioSystem.cpp">
-		</File>
-		<File
-			RelativePath="..\..\src\client\AudioSystem.h">
-		</File>
+		<Filter
+			Name="appearances"
+			Filter="">
+			<File
+				RelativePath="..\..\src\client\AppearanceFactory.cpp">
+			</File>
+			<File
+				RelativePath="..\..\src\client\AppearanceFactory.h">
+			</File>
+			<File
+				RelativePath="..\..\src\client\Cal3DAppearance.cpp">
+			</File>
+			<File
+				RelativePath="..\..\src\client\Cal3DAppearance.h">
+			</File>
+			<File
+				RelativePath="..\..\src\client\ClientAppearance.h">
+			</File>
+			<File
+				RelativePath="..\..\src\client\ModelRenderer.cpp">
+			</File>
+			<File
+				RelativePath="..\..\src\client\ModelRenderer.h">
+			</File>
+			<File
+				RelativePath="..\..\src\client\OBJAppearance.cpp">
+			</File>
+			<File
+				RelativePath="..\..\src\client\OBJAppearance.h">
+			</File>
+			<File
+				RelativePath="..\..\src\client\Particle.cpp">
+			</File>
+			<File
+				RelativePath="..\..\src\client\Particle.h">
+			</File>
+			<File
+				RelativePath="..\..\src\client\ParticleGroup.cpp">
+			</File>
+			<File
+				RelativePath="..\..\src\client\ParticleGroup.h">
+			</File>
+			<File
+				RelativePath="..\..\src\client\ParticleSystem.cpp">
+			</File>
+			<File
+				RelativePath="..\..\src\client\ParticleSystem.h">
+			</File>
+		</Filter>
 	</Files>
 	<Globals>
 	</Globals>

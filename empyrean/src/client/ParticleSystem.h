@@ -1,54 +1,43 @@
-#ifndef PYR_PARTICLESYSTEM_H
-#define PYR_PARTICLESYSTEM_H
+#ifndef PYR_PARTICLE_SYSTEM_H
+#define PYR_PARTICLE_SYSTEM_H
 
-#include <list>
 
-#include "ClientEntity.h"
-#include "Color.h"
-#include "Types.h"
-#include "VecMath.h"
+#include "ClientAppearance.h"
+#include "ParticleGroup.h"
+
 
 namespace pyr {
+
+    class Environment;
     class Texture;
 
-    class ParticleSystem : public ClientEntity {
+    /// @todo Rename to ParticleAppearance.
+    class ParticleSystem : public ClientAppearance {
+    protected:
+        ~ParticleSystem() { }
+
     public:
-        ParticleSystem();
+        string getName()     { return "particle"; }
+        string getResource() { return _resource;  }
 
-        virtual void update(float dt, const Map* terrain);
-        virtual void draw();
+        ParticleSystem(const string& resource);
 
-        void spawnParticle(const Vec2f& pos,
-                           const Vec2f& vel,
-                           const Vec2f& acceleration,
-                           float lifetime,
-                           const Color& color);
+        void update(float dt, const Environment& env);
+        void draw();
+
+        void sendCommand(const string& command) { };
+        void beginAnimation(const string& animation) { };
+        void beginAnimationCycle(const string& animation) { };
 
     private:
-        struct Particle {
-            friend class ParticleSystem;
+        void smoke(float dt, const Environment& env);
+        void sparks(float dt, const Environment& env);
 
-        protected:
-            Vec2f _pos;
-            Vec2f _vel;
-            Vec2f _accel;
-            Color _color;
-            Color _colorFade; ///< Subtract this from the color every second
-            float _lifetime;  ///< Your days are numbered, yo   
+        string        _resource;
+        Zeroed<float> _time;
+        ParticleGroup _group;
 
-            Particle(const Vec2f& pos,
-                     const Vec2f& vel,
-                     const Vec2f& acceleration,
-                     float lifetime,
-                     const Color& color);
-
-            void update(float dt);
-        };
-
-
-        typedef std::list<Particle> ParticleList;
-        ParticleList _particles;
-        Texture*     _particleTex;
+        Texture* _texture;
     };
 }
 

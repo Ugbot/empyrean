@@ -8,6 +8,8 @@ namespace pyr {
 
     class GameState;
 
+    PYR_REGISTER_STATE_FACTORY(CutSceneState)
+
     CutSceneState::CutSceneState() {
         _cutScene = new CutScene;
 

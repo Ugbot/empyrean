@@ -8,6 +8,8 @@ namespace pyr {
 
     class MenuState;
 
+    PYR_REGISTER_STATE_FACTORY(CreditsState)
+
     CreditsState::CreditsState() {
         _renderer = gltext::CreateRenderer(
             gltext::TEXTURE,

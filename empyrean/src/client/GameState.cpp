@@ -11,8 +11,6 @@
 #include "Model.h"
 #include "ModelRenderer.h"
 #include "PacketTypes.h"
-#include "ParticleSystem.h"
-#include "ParticleEmitter.h"
 #include "Profiler.h"
 #include "Scene.h"
 #include "ServerConnection.h"
@@ -27,6 +25,8 @@ namespace pyr {
         Logger& _logger = Logger::get("pyr.State.GameState");
 
     }
+
+    PYR_REGISTER_STATE_FACTORY(GameState)
 
     GameState::GameState() {
         PYR_PROFILE_BLOCK("GameState::GameState");
@@ -98,7 +98,7 @@ namespace pyr {
 
     void GameState::draw() {
         PYR_PROFILE_BLOCK("GameState::draw");
-        
+
         _scene.draw(_renderer);
         checkOpenGLErrors();
 
@@ -146,6 +146,8 @@ namespace pyr {
             checkOpenGLErrors();
         }
 
+        //glow();
+        checkOpenGLErrors();
     }
 
     void GameState::update(float dt) {
@@ -247,7 +249,7 @@ namespace pyr {
 
         _im.update(dt);
     }
-    
+
     void GameState::handleSetMap(Connection*, SetMapPacket* p) {
         _scene.setMap(p->map());
     }

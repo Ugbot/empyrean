@@ -28,7 +28,6 @@ SOURCES = Split("""
     ModelRenderer.cpp
     NewGameWindow.cpp
     OBJAppearance.cpp
-    ParticleEmitter.cpp
     ParticleSystem.cpp
     Player.cpp
     PythonClientBindings.cpp
@@ -44,8 +43,7 @@ SOURCES = Split("""
 
 env = env.Copy(tools=['pyr_base', 'boostpython', 'python', 'phui', 'cal3d',
                       'audiere', 'corona', 'expat', 'gltext', 'nspr',
-                      'opengl', 'sdl'],
-               toolpath=[Dir('#/toolspec').abspath])
+                      'opengl', 'sdl'])
 
 client = env.Program('#/build/client', SOURCES)
 Alias('client', client)

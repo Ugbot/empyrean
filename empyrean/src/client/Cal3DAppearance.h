@@ -10,6 +10,9 @@
 namespace pyr {
 
     class Cal3DAppearance : public ClientAppearance {
+    protected:
+        ~Cal3DAppearance() { }
+
     public:
         Cal3DAppearance(const std::string& resource);
 
@@ -25,7 +28,7 @@ namespace pyr {
         void beginAnimation(const std::string& animation);
         void beginAnimationCycle(const std::string& animation);
 
-        void update(float dt);
+        void update(float dt, const Environment& env);
         void draw();
 
     private:

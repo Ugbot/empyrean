@@ -24,15 +24,6 @@ namespace pyr {
     };
 
 
-    int getNextPowerOf2(int n) {
-        int i = 1;
-        while (i < n) {
-            i *= 2;
-        }
-        return i;
-    }
-
-
     inline void throwTextureError(const std::string& error) {
         throw std::runtime_error(error.c_str());
     }

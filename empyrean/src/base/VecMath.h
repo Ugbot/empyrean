@@ -18,6 +18,8 @@ namespace pyr {
     using gmtl::Vec2i;
     using gmtl::Vec3i;
     using gmtl::Vec4i;
+    
+    using gmtl::Matrix44f;
 
     inline void rotateVector(float angle, Vec2f& vec) {
         gmtl::Matrix22f rotMat;
@@ -26,6 +28,12 @@ namespace pyr {
         
         // Calculate the velocity vectors of the two boxes in the collision coordinate system (collisionVec = new x axis)
         vec = rotMat * vec;
+    }
+
+    template<typename T>
+    inline T normal(T v) {
+        normalize(v);
+        return v;
     }
 
 }

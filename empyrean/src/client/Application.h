@@ -81,6 +81,8 @@ namespace pyr {
         Texture* _pointer;
 
         FPSCounter _fps;
+
+        Inited<bool, false> _glow;
     };
     
 }

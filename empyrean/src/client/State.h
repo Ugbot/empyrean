@@ -13,12 +13,20 @@ namespace pyr {
     /**
      * This class lets you instantiate states and invoke transitions
      * without needing to include the state's header directly.  It just
-     * has to be listed in State.cpp.
+     * has to have a PYR_REGISTER_STATE_FACTORY definition somewhere, usually
+     * in the State's source file.
      */
     template<typename T>
     struct StateFactory {
         static State* create();
     };
+
+
+    #define PYR_REGISTER_STATE_FACTORY(StateT)                  \
+        State* StateFactory<StateT>::create() {                 \
+            return new StateT;                                  \
+        }
+
 
     class State {
     public:

@@ -25,7 +25,7 @@ namespace pyr {
         void beginAnimation(const std::string& animation);
         void beginAnimationCycle(const std::string& animation);
 
-        void update(float dt);
+        void update(float dt, const Environment& env);
         void draw();
     
     private:

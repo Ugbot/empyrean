@@ -162,6 +162,21 @@ namespace pyr {
      */
 
 
+    inline int getNextPowerOf2(int n) {
+        int i = 1;
+        while (i < n) {
+            i *= 2;
+        }
+        return i;
+    }
+
+
+    // :(  This needs to go into the random number stuff, like Die.
+    inline float randf() {
+        return float(rand()) / RAND_MAX;
+    }
+
+
     // These are perfect candidates for unit tests.
     // They are also perfect candidates for going into their own string header.
 

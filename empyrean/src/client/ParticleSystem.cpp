@@ -1,85 +1,137 @@
-#include <gmtl/VecOps.h>
+#include "Environment.h"
+#include "GLUtility.h"
 #include "OpenGL.h"
 #include "ParticleSystem.h"
 #include "Profiler.h"
 #include "Texture.h"
 
 namespace pyr {
-    ParticleSystem::Particle::Particle(
-        const gmtl::Vec2f& pos,
-        const gmtl::Vec2f& vel,
-        const gmtl::Vec2f& acceleration,
-        float lifetime,
-        const Color& color)
-        : _pos(pos)
-        , _vel(vel)
-        , _accel(acceleration)
-        , _color(color)
-        , _lifetime(lifetime)
-    {
-        _colorFade[3] = (1.0f / _lifetime) * _color[3];
-    }
 
-    void ParticleSystem::Particle::update(float dt) {
-        _lifetime -= dt;
+    struct Domain {
+        virtual Vec3f generate() = 0;
+    };
 
-        _pos += _vel * dt;
-        _vel += _accel * dt;
-        _color -= _colorFade * dt;
-    }
-
-    ParticleSystem::ParticleSystem() 
-        : ClientEntity(0, 0)
-        , _particleTex(Texture::create("images/particle.png"))
-    {
-    }
-
-    void ParticleSystem::update(float dt, const Map* /*terrain*/) {
-        for (ParticleList::iterator iter = _particles.begin(); iter != _particles.end(); iter++) {
-            iter->update(dt);
-
-            if (iter->_lifetime <= 0) {
-                ParticleList::iterator i = iter;    // save the spot we're at
-                iter--;                             // and move back one, because the spot we were at is...
-                _particles.erase(i);                // ... toast.
-                continue;                           // and continue on our merry way
+    struct SphereDomain : Domain {
+        Vec3f generate() {
+            for (;;) {
+                Vec3f v(
+                    randf() * 2 - 1,
+                    randf() * 2 - 1,
+                    randf() * 2 - 1);
+                if (lengthSquared(v) <= 1) {
+                    return v;
+                }
             }
+        }
+    };
+
+    ParticleSystem::ParticleSystem(const string& resource)
+    : _resource(resource)
+    , _texture(Texture::create("images/smoke.png")) {
+    }
+
+
+    void ParticleSystem::smoke(float dt, const Environment& env) {
+        _group.update(dt, Vec3f(), std::vector<Segment>());
+
+        SphereDomain sphere;
+
+        float rate = 50;  // Particles per second.
+        float invRate = 1.0f / rate;
+        while (_time >= invRate) {
+            Vec3f vel(randf() * 0.2f - 0.1f, 0.4f, 0);
+            vel[1] -= fabs(vel[0]) / 2;
+            Particle p(5, sphere.generate() / 5, vel);
+            _group.addParticle(p);
+            _time -= invRate;
+        }
+    }
+
+    void ParticleSystem::sparks(float dt, const Environment& env) {
+        std::vector<Segment> segs;
+        env.map->getSegs(segs, 31);  // @todo !!!  Need to get real entity position.
+
+        _group.update(dt, Vec3f(0, -9.81f, 0), segs);
+
+        SphereDomain sphere;
+        
+        while (_time > 5) {
+            for (int i = 0; i < 40; ++i) {
+                Particle p(5, Vec3f(), sphere.generate());
+                _group.addParticle(p);
+            }
+            _time -= 5;
+        }
+    }
+
+    void ParticleSystem::update(float dt, const Environment& env) {
+        PYR_PROFILE_BLOCK("ParticleSystem::update");
+
+        _time += dt;
+
+        if (_resource == "smoke") {
+            smoke(dt, env);
+        } else if (_resource == "sparks") {
+            sparks(dt, env);
         }
     }
 
     void ParticleSystem::draw() {
-        PYR_PROFILE_BLOCK("Render");
+        PYR_PROFILE_BLOCK("ParticleSystem::draw");
 
-        static const float particleSize = 5;
+        if (_resource == "smoke") {
+            glColor3f(1, 1, 1);
+            glDisable(GL_DEPTH_TEST);
+            glDisable(GL_LIGHTING);
+            _texture->bind();
+            glEnable(GL_TEXTURE_2D);
+            glEnable(GL_BLEND);
+            glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-        glEnable(GL_TEXTURE_2D);
-        glEnable(GL_COLOR_MATERIAL);
-        glEnable(GL_BLEND);
-        _particleTex->bind();
+            float off = 0.1f;
 
-        glBegin(GL_QUADS);
-        for (ParticleList::iterator iter = _particles.begin(); iter != _particles.end(); iter++) {
-            const float x1 = iter->_pos[0] - particleSize / 2;
-            const float y1 = iter->_pos[1] - particleSize / 2;
-            const float x2 = iter->_pos[0] + particleSize / 2;
-            const float y2 = iter->_pos[1] + particleSize / 2;
+            glBegin(GL_QUADS);
+            const ParticleGroup::ParticleList& particles = _group.getParticles();
+            for (size_t i = 0; i < particles.size(); ++i) {
+                const Particle& p = particles[particles.size() - i - 1];
+                float alpha = (p.getLifeLeft() < 2.5f
+                    ? p.getLifeLeft() / 2.5f
+                    : (5 - p.getLifeLeft()) / 2.5f);
+                glColor4f(1, 1, 1, alpha);
+                glTexCoord2f(0, 0); glVertex(p.pos() + Vec3f(-off,  off, 0));
+                glTexCoord2f(0, 1); glVertex(p.pos() + Vec3f(-off, -off, 0));
+                glTexCoord2f(1, 1); glVertex(p.pos() + Vec3f( off, -off, 0));
+                glTexCoord2f(1, 0); glVertex(p.pos() + Vec3f( off,  off, 0));
+            }
+            glEnd();
 
-            glColor4fv(iter->_color.getData());
+            glDisable(GL_BLEND);
+            glDisable(GL_TEXTURE_2D);
+            glBindTexture(GL_TEXTURE_2D, 0);
+            glEnable(GL_LIGHTING);
+            glEnable(GL_DEPTH_TEST);
+        } else if (_resource == "sparks") {
+            glDisable(GL_DEPTH_TEST);
+            glDisable(GL_LIGHTING);
 
-            glTexCoord2f(0, 0);  glVertex2f(x1, y1);
-            glTexCoord2f(1, 0);  glVertex2f(x2, y1);
-            glTexCoord2f(1, 1);  glVertex2f(x2, y2);
-            glTexCoord2f(0, 1);  glVertex2f(x1, y2);
+            float off = 0.1f;
+
+            glBegin(GL_LINES);
+            const ParticleGroup::ParticleList& particles = _group.getParticles();
+            for (size_t i = 0; i < particles.size(); ++i) {
+                const Particle& p = particles[particles.size() - i - 1];
+                float alpha = (p.getLifeLeft() < 2.5f
+                    ? p.getLifeLeft() / 2.5f
+                    : (5 - p.getLifeLeft()) / 2.5f);
+                glColor4f(1, 0.8f, 0, alpha);
+                glVertex(p.pos() - p.vel() / 80);
+                glVertex(p.pos() + p.vel() / 80);
+            }
+            glEnd();
+
+            glEnable(GL_LIGHTING);
+            glEnable(GL_DEPTH_TEST);
         }
-        glEnd();
-        glColor4f(1, 1, 1, 1);
     }
 
-    void ParticleSystem::spawnParticle(const gmtl::Vec2f& pos,
-                                       const gmtl::Vec2f& vel,
-                                       const gmtl::Vec2f& acceleration,
-                                       float lifetime,
-                                       const Color& color) {
-        _particles.push_back(Particle(pos, vel, acceleration, lifetime, color));
-    }
 }

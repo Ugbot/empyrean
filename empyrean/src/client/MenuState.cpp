@@ -10,6 +10,8 @@ namespace pyr {
     class CreditsState;
     class LobbyState;
 
+    PYR_REGISTER_STATE_FACTORY(MenuState)
+
     MenuState::MenuState() {
         showPointer();
 

@@ -19,6 +19,5 @@ SOURCES = Split("""
     Window.cpp
 """)
 
-env = env.Copy(tools=['pyr_base', 'sdl', 'nspr', 'gltext'],
-               toolpath=[Dir('#/toolspec').abspath])
+env = env.Copy(tools=['pyr_base', 'sdl', 'nspr', 'gltext'])
 env.Library('phui', SOURCES)

@@ -23,8 +23,7 @@ SOURCES = Split("""
 """)
 
 env = env.Copy(tools=['pyr_base', 'boostpython', 'python', 'expat', 'nspr',
-                      'corona', 'wx'],
-               toolpath=[Dir('#/toolspec').abspath])
+                      'corona', 'wx'])
 
 server = env.Program('#/build/server', SOURCES)
 Alias('server', server)

@@ -52,7 +52,6 @@ SOURCES = Split("""
 """)
 
 
-env = env.Copy(tools=['nspr', 'corona', 'boostpython', 'python', 'opengl'],
-               toolpath=[Dir('#/toolspec').abspath])
+env = env.Copy(tools=['nspr', 'corona', 'boostpython', 'python', 'opengl'])
         
 env.Library('base', SOURCES)

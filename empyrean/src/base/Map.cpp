@@ -184,7 +184,7 @@ namespace pyr {
         }
 
         // Geographically divide regions
-        const int REGION_COUNT = 8;
+        const int REGION_COUNT = 32;
         float length = maxX - minX;
         float regionLength = length / (float) REGION_COUNT;
 

@@ -19,8 +19,7 @@ SOURCES = Split("""
     UpdateMapElementCommand.cpp
 """)
 
-env = env.Copy(tools=['pyr_base', 'nspr', 'corona', 'wx', 'opengl', 'expat'],
-               toolpath=[Dir('#/toolspec').abspath])
+env = env.Copy(tools=['pyr_base', 'nspr', 'corona', 'wx', 'opengl', 'expat'])
 
 if env['PLATFORM'] == 'cygwin':
     def CygwinRES(env):

@@ -25,12 +25,12 @@ namespace pyr {
             return _array;
         }
 
-        const T& operator [](unsigned int idx) const {
+        const T& operator[](unsigned int idx) const {
             PYR_ASSERT(get() != 0, "Can't index null array");
             return get()[idx];
         }
 
-        T& operator [](unsigned int idx) {
+        T& operator[](unsigned int idx) {
             PYR_ASSERT(get() != 0, "Can't index null array");
             return get()[idx];
         }

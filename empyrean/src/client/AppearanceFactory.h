@@ -2,7 +2,7 @@
 #define PYR_APPEARANCE_FACTORY_H
 
 
-#include <string>
+#include "Types.h"
 
 
 namespace pyr {
@@ -15,8 +15,8 @@ namespace pyr {
      *
      * This function will not return a null pointer.
      */
-    ClientAppearance* instantiateAppearance(const std::string& name,
-                                            const std::string& resource = "");
+    ClientAppearance* instantiateAppearance(const string& name,
+                                            const string& resource = "");
 
 }
 

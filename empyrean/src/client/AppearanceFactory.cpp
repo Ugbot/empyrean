@@ -1,9 +1,18 @@
+#include "Log.h"
+
 #include "Cal3DAppearance.h"
 #include "ClientAppearance.h"
 #include "OBJAppearance.h"
+#include "ParticleSystem.h"
 
 
 namespace pyr {
+
+    namespace {
+
+        Logger& _logger = Logger::get("pyr.AppearanceFactory");
+
+    }
 
     class EmptyAppearance : public ClientAppearance {
     public:
@@ -18,7 +27,7 @@ namespace pyr {
             return "";
         }
         
-        void update(float /*dt*/) {
+        void update(float /*dt*/, const Environment& env) {
         }
 
         void draw() {
@@ -34,12 +43,15 @@ namespace pyr {
         }
     };
 
-    ClientAppearance* instantiateAppearance(const std::string& name, const std::string& resource) {
+    ClientAppearance* instantiateAppearance(const string& name, const string& resource) {
         if (name == "cal3d") {
             return new Cal3DAppearance(resource);
         } else if (name == "obj") {
             return new OBJAppearance(resource);
+        } else if (name == "particle") {
+            return new ParticleSystem(resource);
         } else {
+            PYR_LOG(_logger, WARN, "Unknown appearance name: " << name);
             return new EmptyAppearance(resource);
         }
     }

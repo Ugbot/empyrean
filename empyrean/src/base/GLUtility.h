@@ -10,6 +10,7 @@ namespace pyr {
 
     void setOrthoProjection(float width, float height, bool cartesian = false);
     const char* getErrorString(GLenum error);
+    void loadShader(GLhandleARB shader, const char* filename);
 
     void checkOpenGLErrors();
 

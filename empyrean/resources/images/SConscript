@@ -8,6 +8,7 @@ Install(env, Split("""
     MikeThumbnail.jpg
     CaphrielFace.jpg
     robot_screen.jpg
+    smoke.png
 """))
 
 ConvertImage(env, 'intro.tga', 'intro.png')
