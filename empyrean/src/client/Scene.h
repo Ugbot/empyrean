@@ -41,7 +41,7 @@ namespace pyr {
         Entity* _focus;
         Texture* _backdrop;
         EntityMap _entities;
-        std::auto_ptr<Map> _map;
+        ScopedPtr<Map> _map;
     };
 
 }

@@ -10,7 +10,7 @@ namespace pyr {
     Game::Game(const std::string& name, const std::string& password) {
         _name = name;
         _password = password;
-        _map.reset(loadOBJFile("maps/map1.obj"));
+        _map = loadOBJFile("maps/map1.obj");
         if (!_map.get()) {
             throw std::runtime_error("Loading maps/map1.obj failed");
         }

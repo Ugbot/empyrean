@@ -99,6 +99,35 @@ namespace pyr {
         }
     }
 
+    string joinPath(const string& s1, const string& s2) {
+        if (s1.empty()) return s2;
+        if (s2.empty()) return s1;
+
+        if (s1[s1.size() - 1] == '/') {
+            if (s2[0] == '/') {
+                return s1 + s2.substr(1);
+            } else {
+                return s1 + s2;
+            }
+        } else {
+            if (s2[0] == '/') {
+                return s1 + s2;
+            } else {
+                return s1 + "/" + s2;
+            }
+        }
+    }
+
+    bool fileExists(const string& path) {
+        FILE* file = fopen(path.c_str(), "rb");
+        if (file) {
+            fclose(file);
+            return true;
+        } else {
+            return false;
+        }
+    }
+
     string va(const char* s, ...) {
         char temp[1024];
         va_list lst;

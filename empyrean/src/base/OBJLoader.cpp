@@ -2,12 +2,16 @@
 #include <sstream>
 #include "Map.h"
 #include "OBJLoader.h"
+#include "PathHandler.h"
 
 
 namespace pyr {
 
     Map* loadOBJFile(const std::string& filename) {
-        std::ifstream file(filename.c_str());
+        PathHandler ph;
+        ScopedPathSearch sps(ph, getPath(filename));
+
+        std::ifstream file(ph.findFile(filename).c_str());
         if (!file) {
             return 0;
         }

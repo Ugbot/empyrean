@@ -7,7 +7,6 @@
 #include "Debug.h"
 
 // I have no idea where these are #defined, but they are.
-// undefine biotch
 #if defined(_MSC_VER) && MSC_VER <= 1300
 #  if defined(min)
 #     undef min
@@ -161,6 +160,9 @@ namespace pyr {
     };
 
 
+    // These are perfect candidates for unit tests.
+
+
     std::string itos(int i);
     
 
@@ -206,6 +208,15 @@ namespace pyr {
      * If there are no slashes in the path, the string is returned unaltered.
      */
     std::string getFilename(const std::string& s);
+
+    /**
+     * Returns a joining of the two paths into one, by inserting a slash
+     * if necessary.
+     */
+    std::string joinPath(const std::string& s1, const std::string& s2);
+
+    /// Returns true iff the path exists.
+    bool fileExists(const std::string& path);
 
     /** Does the printf thing; returns a string.
      * (it rhymes!)

@@ -44,7 +44,7 @@ namespace pyr {
         
         std::vector<ServerEntity*> _entities;
     
-        std::auto_ptr<Map> _map;
+        ScopedPtr<Map> _map;
 
         UIDGenerator<u16> _idGenerator;
     };
