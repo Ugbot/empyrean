@@ -92,20 +92,33 @@ namespace pyr {
     }
 
     void Profiler::pushBlock(ProfileBlockPtr block) {
-        CallNode* cn = new CallNode;
-        cn->block = block;
+        CallNodePtr cn;
         
-        if (_callStack.empty()) {
-            _callTree.push_back(cn);
-        } else {
-            _callStack.top()->children.push_back(cn);
+        if (!_callStack.empty()) {
+            CallNodeList& children = _callStack.top()->children;
+            for (size_t i = 0; i < children.size(); ++i) {
+                if (children[i]->block == block) {
+                    cn = children[i];
+                    break;
+                }
+            }
+        }
+
+        if (!cn) {
+            cn = new CallNode(block);
+
+            if (_callStack.empty()) {
+                _callTree.push_back(cn);
+            } else {
+                _callStack.top()->children.push_back(cn);
+            }
         }
 
         _callStack.push(cn);
     }
 
     ProfileBlockPtr Profiler::popBlock() {
-        PYR_ASSERT(!_callStack.empty(), "endBlock() called when call stack is empty.");
+        PYR_ASSERT(!_callStack.empty(), "popBlock() called when call stack is empty.");
 
         ProfileBlockPtr top = _callStack.top()->block;
         _callStack.pop();

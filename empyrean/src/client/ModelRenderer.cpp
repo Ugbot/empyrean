@@ -11,6 +11,8 @@
 namespace pyr {
 
     void ModelRenderer::draw(const Model& m) {
+        PYR_PROFILE_BLOCK("ModelRenderer::draw");
+
         glPushMatrix();
         float scale = m.getScale();
         glScalef(scale, scale, scale);
@@ -19,6 +21,8 @@ namespace pyr {
     }
 
     void ModelRenderer::renderMesh(const Model& model) {
+        PYR_PROFILE_BLOCK("ModelRenderer::renderMesh");
+
         glEnableClientState(GL_VERTEX_ARRAY);
         glEnableClientState(GL_NORMAL_ARRAY);
         glEnable(GL_TEXTURE_2D);

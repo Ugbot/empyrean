@@ -35,8 +35,8 @@ namespace pyr {
      *
      */
     class CoreModel : public RefCounted {
-	private:    
-		typedef std::map<std::string,CoreModel*> InstanceMap;
+    private:    
+        typedef std::map<std::string,CoreModel*> InstanceMap;
         
         /// This static data kind of scares me.
         static InstanceMap _instances;

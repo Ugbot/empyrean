@@ -39,6 +39,7 @@ namespace pyr {
         ClientEntity* getFocus() const;
         
     private:
+        void drawMap();
         void addParticles(MapElementPtr elt);
 
         typedef std::map<u16, ClientEntity*> EntityMap;

@@ -7,10 +7,10 @@ namespace pyr {
 
     class ModelRenderer {
     public:
-        void draw(const Model& m);
+        static void draw(const Model& m);
 
     private:
-        void renderMesh(const Model& model);
+        static void renderMesh(const Model& model);
     };
 
 }

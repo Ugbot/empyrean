@@ -160,13 +160,19 @@ namespace pyr {
     {
         static const float SPACING = 24;
         static const float INDENT = 32;
+        static const float PERCENT_COLUMN = 500;
 
         int lines = 0;
 
-        float totalTime = 0;
-        for (CallNodeList::const_iterator i = callTree.begin(); i != callTree.end(); ++i) {
-            CallNodePtr cn = *i;
-            totalTime += cn->block->getAverageTotalTime();
+        float totalTime;
+        if (parent) {
+            totalTime = parent->block->getAverageTotalTime();
+        } else {
+            totalTime = 0;
+            for (CallNodeList::const_iterator i = callTree.begin(); i != callTree.end(); ++i) {
+                CallNodePtr cn = *i;
+                totalTime += cn->block->getAverageTotalTime();
+            }
         }
 
         for (CallNodeList::const_iterator i = callTree.begin(); i != callTree.end(); ++i) {
@@ -175,9 +181,9 @@ namespace pyr {
             float y = lines * SPACING;
 
             PYR_TEXT_STREAM(_renderer, offset + Vec2f(0, y))
-                << cn->block->getName();
-            PYR_TEXT_STREAM(_renderer, Vec2f(350, offset[1] + y))
-                << 100 * cn->block->getAverageTotalTime() / totalTime << "%";
+                << std::setprecision(3) << cn->block->getName();
+            PYR_TEXT_STREAM(_renderer, Vec2f(PERCENT_COLUMN, offset[1] + y))
+                << std::setprecision(3) << 100 * cn->block->getAverageTotalTime() / totalTime << "%";
             ++lines;
 
             lines += renderCallTree(cn, cn->children, offset + Vec2f(INDENT, y + SPACING));

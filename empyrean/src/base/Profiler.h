@@ -1,10 +1,10 @@
 #ifndef PYR_PROFILER_H
 #define PYR_PROFILER_H
 
-#include <list>
 #include <map>
 #include <stack>
 #include <string>
+#include <vector>
 #include "RefCounted.h"
 #include "RefPtr.h"
 #include "Singleton.h"
@@ -76,10 +76,14 @@ namespace pyr {
 
     struct CallNode;
     typedef RefPtr<CallNode> CallNodePtr;
-    typedef std::list<CallNodePtr> CallNodeList;
+    typedef std::vector<CallNodePtr> CallNodeList;
 
     /// Facilitates construction of a tree of calls.
     struct CallNode : public RefCounted {
+        CallNode(ProfileBlockPtr b) {
+            block = b;
+        }
+
         ProfileBlockPtr block;
         CallNodeList children;
     };

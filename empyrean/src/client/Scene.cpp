@@ -66,8 +66,7 @@ namespace pyr {
 
         glColor3f(1, 1, 1);
         glPointSize(5);
-        MapRenderer renderer;
-        _map->handleVisitor(renderer);
+        drawMap();
 
         glDisable(GL_DEPTH_TEST);
         
@@ -136,6 +135,12 @@ namespace pyr {
     
     ClientEntity* Scene::getFocus() const {
         return _focus;
+    }
+
+    void Scene::drawMap() {
+        PYR_PROFILE_BLOCK("Scene::drawMap");
+        MapRenderer renderer;
+        _map->handleVisitor(renderer);
     }
 
     void Scene::addParticles(MapElementPtr elt) {
