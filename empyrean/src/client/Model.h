@@ -31,7 +31,8 @@ namespace pyr {
      * kind of equipment/weapon(s) a model has.
      *
      * Something to note is that this does not use ResourceManager.  You have to
-     * new/delete it. (or just use ScopedPtr)
+     * new/delete it. (Or just use ScopedPtr.)  The appropriate data will be shared
+     * automatically.
      */
     class Model {
     public:

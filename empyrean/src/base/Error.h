@@ -19,7 +19,7 @@
     }                                               \
     catch (const std::exception& e) {               \
         std::string what = e.what();                \
-        pyr::error("Caught exception: " + what);    \
+        pyr::error("Exception: " + what);    \
     }                                               \
     PYR_CATCH_ALL()
 
@@ -40,7 +40,7 @@
  */
 #define PYR_CATCH_ALL()                             \
     catch (...) {                                   \
-        pyr::error("Caught unknown exception");     \
+        pyr::error("Unknown exception");     \
     }
     
 #else

@@ -218,7 +218,7 @@ namespace pyr {
             PYR_LOG() << "Num Hats " << SDL_JoystickNumHats(joystick);
         }
 
-        // notify the app and the input manager of the window size
+        // notify the app of the window size
         the<Application>().resize(width, height);
 
         mainLoop();
