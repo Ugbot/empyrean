@@ -1,3 +1,4 @@
+#include <iomanip>
 #include <stdlib.h>
 #include <sstream>
 #include <stdexcept>
@@ -79,16 +80,23 @@ namespace pyr {
             glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
             glColor4f(1, 1, 1, 1);
 
-            const Profiler::BlockMap& bm = the<Profiler>().getBlockMap();
-            float totaltime              = the<Profiler>().getTotalTime();
+            /* Display profile blocks.
+
+            const ProfileBlockMap& bm = the<Profiler>().getBlockMap();
+            float totaltime           = the<Profiler>().getTotalTime();
 
             GLTEXT_STREAM(_renderer) << "FPS: " << _fps.getFPS();
 
-            for (Profiler::BlockMap::const_iterator iter = bm.begin(); iter != bm.end(); ++iter) {
+            for (ProfileBlockMap::const_iterator iter = bm.begin(); iter != bm.end(); ++iter) {
                 glTranslatef(0,24,0);
                 int i = int(iter->second->total.time() / totaltime * 100);
                 GLTEXT_STREAM(_renderer) << iter->first << ": " << i << "%";
             }
+            */
+
+            // Display FPS & profile tree.
+            GLTEXT_STREAM(_renderer) << "FPS: " << _fps.getFPS();
+            renderCallTree(the<Profiler>().getLastCallTree());
         }
     }
 
@@ -124,34 +132,53 @@ namespace pyr {
             _currentState->onKeyPress(key, down);
         }
     }
-    
+
     void Application::onMousePress(Uint8 button, bool down, int x, int y) {
         if (_currentState) {
             _currentState->onMousePress(button, down, x, y);
         }
     }
-    
-    void Application::onMouseMove(int x, int y) { 
+
+    void Application::onMouseMove(int x, int y) {
         if (_currentState) {
             _currentState->onMouseMove(x, y);
         }
         _lastX = x;
         _lastY = y;
     }
-    
+
     void Application::invokeTransition(State* state) {
         invokeTimedTransition(state, 0);
     }
-    
+
     void Application::invokeTimedTransition(State* state, float seconds) {
         _nextState = state;
         _fadingState = _currentState;
         _totalFadeTime = seconds;
         _currentFadeTime = 0;
     }
-    
+
     bool Application::shouldQuit() {
         return (_currentState == 0);
+    }
+
+    void Application::renderCallTree(const CallNodeList& callTree) {
+        for (CallNodeList::const_iterator i = callTree.begin(); i != callTree.end(); ++i) {
+            CallNodePtr cn = *i;
+
+            glTranslatef(0, 24, 0);
+            GLTEXT_STREAM(_renderer) << cn->block->getName();
+            glPushMatrix();
+            glTranslatef(300, 0, 0);
+            GLTEXT_STREAM(_renderer) << std::setprecision(4) << cn->block->getAverageTime();
+            glTranslatef(200, 0, 0);
+            GLTEXT_STREAM(_renderer) << std::setprecision(4) << cn->block->getAverageTotalTime();
+            glPopMatrix();
+
+            glTranslatef(32, 0, 0);
+            renderCallTree(cn->children);
+            glTranslatef(-32, 0, 0);
+        }
     }
 
 }

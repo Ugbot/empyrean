@@ -5,6 +5,7 @@
 #include <gltext.h>
 #include "Utility.h"
 #include "FPSCounter.h"
+#include "Profiler.h"
 #include "Singleton.h"
 
 namespace pyr {
@@ -38,15 +39,17 @@ namespace pyr {
         bool shouldQuit();
         
     private:
+        void renderCallTree(const CallNodeList& callTree);
+
         // dimensions of the window or screen
         int _width;
         int _height;
-        
+
         // last position of the mouse (so we can notify new states of
         // the mouse's position)
         int _lastX;
         int _lastY;
-                
+
         ScopedPtr<State> _currentState;
         ScopedPtr<State> _nextState;
         ScopedPtr<State> _fadingState;

@@ -27,6 +27,13 @@ namespace pyr {
     struct Type2Type {
         typedef T OriginalType;
     };
+    
+    
+    // Lets you delete the contents of a container with std::for_each.
+    template<typename T>
+    void delete_function(T* p) {
+        delete p;
+    }
 
 
     /**

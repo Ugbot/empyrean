@@ -1,10 +1,14 @@
 #ifndef PYR_PROFILER_H
 #define PYR_PROFILER_H
 
+#include <list>
 #include <map>
 #include <stack>
 #include <string>
+#include "RefCounted.h"
+#include "RefPtr.h"
 #include "Singleton.h"
+#include "Utility.h"
 
 namespace pyr {
 
@@ -25,8 +29,17 @@ namespace pyr {
     };
 
 
-    struct ProfileBlock {
+    class ProfileBlock : public RefCounted {
+    public:
         static const int REMEMBERED_FRAMES = 20;
+
+        ProfileBlock(const std::string& name) {
+            _name = name;
+        }
+
+        const std::string& getName() {
+            return _name;
+        }
 
         void update(float dt) {
             update(dt, total);
@@ -53,6 +66,25 @@ namespace pyr {
             }
             lastFrames[0] = ProfileData();
         }
+        
+        /// Returns average time in this function over the last N frames.
+        float getAverageTime() {
+            float total = 0;
+            for (int i = 0; i < REMEMBERED_FRAMES; ++i) {
+                total += lastFrames[i].time();
+            }
+            return total / REMEMBERED_FRAMES;
+        }
+
+        /// Returns average time in this function and children over the last N frames.
+        float getAverageTotalTime() {
+            float total = 0;
+            for (int i = 0; i < REMEMBERED_FRAMES; ++i) {
+                total += lastFrames[i].timePlusChildren;
+            }
+            return total / REMEMBERED_FRAMES;
+        }
+
 
         bool current;    ///< Are we currently in this block?
         float entryTime; ///< The time this block was entered.
@@ -60,6 +92,23 @@ namespace pyr {
         ProfileData total;
         /// Circular buffer of remembered frames.  The first one is always the newest.
         ProfileData lastFrames[REMEMBERED_FRAMES];
+
+    private:
+        std::string _name;
+    };
+    typedef RefPtr<ProfileBlock> ProfileBlockPtr;
+
+
+    typedef std::map<std::string, ProfileBlockPtr> ProfileBlockMap;
+    struct CallNode;
+    typedef RefPtr<CallNode> CallNodePtr;
+    typedef std::list<CallNodePtr> CallNodeList;
+
+
+    /// Facilitates construction of a tree of calls.
+    struct CallNode : public RefCounted {
+        ProfileBlockPtr block;
+        CallNodeList children;
     };
 
 
@@ -73,14 +122,16 @@ namespace pyr {
     class Profiler {
         PYR_DECLARE_SINGLETON(Profiler)
 
-        Profiler();
-        ~Profiler();
+        Profiler()  { }
+        ~Profiler() { }
 
     public:
-        typedef std::map<std::string, ProfileBlock*> BlockMap;
-
-        const BlockMap& getBlockMap() const {
+        const ProfileBlockMap& getBlockMap() const {
             return _blocks;
+        }
+        
+        const CallNodeList& getLastCallTree() const {
+            return _lastCallTree;
         }
 
         float getTotalTime() const {
@@ -93,13 +144,18 @@ namespace pyr {
         void nextFrame();
 
     private:
+        void pushBlock(ProfileBlockPtr block);
+        ProfileBlockPtr popBlock();
+
         /// Total time spent profiling.
         float _totalTime;
 
         /// Set of profiled blocks and their names.
-        BlockMap _blocks;
-        
-        std::stack<ProfileBlock*> _callStack;
+        ProfileBlockMap _blocks;
+
+        std::stack<CallNodePtr> _callStack;
+        CallNodeList _callTree;
+        CallNodeList _lastCallTree;
     };
 
 

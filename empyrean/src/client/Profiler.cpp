@@ -6,21 +6,11 @@
 namespace pyr {
 
     PYR_DEFINE_SINGLETON(Profiler)
-    
-    Profiler::Profiler() {
-    }
-
-    Profiler::~Profiler() {
-        for (BlockMap::iterator i = _blocks.begin(); i != _blocks.end(); ++i) {
-            delete i->second;
-        }
-        _blocks.clear();
-    }
 
     void Profiler::beginBlock(const std::string& name) {
-        ProfileBlock* block = _blocks[name];
+        ProfileBlockPtr block = _blocks[name];
         if (!block) {
-            block = new ProfileBlock;
+            block = new ProfileBlock(name);
             _blocks[name] = block;
             block->current = false;
         }
@@ -29,32 +19,60 @@ namespace pyr {
 
         block->current   = true;
         block->entryTime = getNow();
-        _callStack.push(block);
+        pushBlock(block);
     }
 
     void Profiler::endBlock() {
-        PYR_ASSERT(!_callStack.empty(), "endBlock() called when call stack is empty.");
-
-        ProfileBlock* block = _callStack.top();
-        _callStack.pop();
+        ProfileBlockPtr block = popBlock();
         PYR_ASSERT(block->current, "Can't end block that isn't started.");
 
         float dt = getNow() - block->entryTime;
         if (dt > 0) { // ignore timer wraparound
-            _totalTime += dt;
-            block->update(dt);
             
+            // Only record total time for top-level profiling blocks.
+            if (_callStack.empty()) {
+                _totalTime += dt;
+            }
+
+            block->update(dt);
+
             // If call stack isn't empty, update parent with time in children.
             if (!_callStack.empty()) {
-                _callStack.top()->updateParent(dt);
+                _callStack.top()->block->updateParent(dt);
             }
         }
         block->current = false;
     }
-    
+
     void Profiler::nextFrame() {
-        for (BlockMap::iterator i = _blocks.begin(); i != _blocks.end(); ++i) {
+        // For now, require that nextFrame() has to be called outside of profiling blocks.
+        PYR_ASSERT(_callStack.empty(), "nextFrame() must be called from outside of profiling blocks.");
+        _lastCallTree = _callTree;
+        _callTree.clear();
+
+        for (ProfileBlockMap::iterator i = _blocks.begin(); i != _blocks.end(); ++i) {
             i->second->nextFrame();
         }
+    }
+
+    void Profiler::pushBlock(ProfileBlockPtr block) {
+        CallNode* cn = new CallNode;
+        cn->block = block;
+        
+        if (_callStack.empty()) {
+            _callTree.push_back(cn);
+        } else {
+            _callStack.top()->children.push_back(cn);
+        }
+
+        _callStack.push(cn);
+    }
+
+    ProfileBlockPtr Profiler::popBlock() {
+        PYR_ASSERT(!_callStack.empty(), "endBlock() called when call stack is empty.");
+
+        ProfileBlockPtr top = _callStack.top()->block;
+        _callStack.pop();
+        return top;
     }
 };
