@@ -5,7 +5,6 @@
 #include "Texture.h"
 
 namespace pyr {
-    PYR_DEFINE_SINGLETON(HUD)
 
     HUD::HUD() {
         // Initialize HUD values

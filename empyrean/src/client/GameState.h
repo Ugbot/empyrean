@@ -4,6 +4,7 @@
 #include <audiere.h>
 #include <gltext.h>
 #include <vector>
+#include "HUD.h"
 #include "InputManager.h"
 #include "Player.h"
 #include "State.h"
@@ -32,8 +33,8 @@ namespace pyr {
         audiere::SoundEffectPtr _sfx;
 
         InputManager _im;
-	Input* _inputLeft;
-	Input* _inputRight;
+        Input* _inputLeft;
+        Input* _inputRight;
         Input* _inputJump;
         Input* _inputAttack;
         Input* _inputAttackA;
@@ -49,6 +50,7 @@ namespace pyr {
         Input* _inputJoyAttack;
 
         Player _player;
+        HUD _hud;
 
         struct comboEvent {
             comboEvent(std::string t) {

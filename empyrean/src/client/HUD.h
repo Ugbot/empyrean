@@ -3,7 +3,6 @@
 
 #include <gltext.h>
 #include "ClientEntity.h"
-#include "Singleton.h"
 #include "VecMath.h"
 
 namespace pyr {
@@ -11,13 +10,11 @@ namespace pyr {
     class Texture;
 
     class HUD {
-        PYR_DECLARE_SINGLETON(HUD)
-
+    public:
         HUD();
         ~HUD(){}
 
-    public:
-        void draw(gltext::FontRendererPtr rend, ClientEntityPtr entity); 
+        void draw(gltext::FontRendererPtr rend, ClientEntityPtr entity);
         void update(float dt);
 
     private:

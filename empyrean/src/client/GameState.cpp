@@ -14,7 +14,6 @@
 #include "Scene.h"
 #include "ServerConnection.h"
 #include "Texture.h"
-#include "HUD.h"
 
 namespace pyr {
 
@@ -92,7 +91,7 @@ namespace pyr {
         scene.draw(_renderer);
 
         if (ClientEntityPtr entity = scene.getFocus()) {
-            the<HUD>().draw(_renderer,entity);
+            _hud.draw(_renderer,entity);
 
             if (_showPlayerData) {
                 Application& app = the<Application>();
@@ -113,7 +112,7 @@ namespace pyr {
         PYR_PROFILE_BLOCK("GameState::update");
         
         the<Scene>().update(dt);
-        the<HUD>().update(dt);
+        _hud.update(dt);
 
         ServerConnection& sc = the<ServerConnection>();
         sc.update();
