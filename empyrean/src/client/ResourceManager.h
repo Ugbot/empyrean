@@ -18,6 +18,11 @@ namespace pyr {
     class CachePolicy;
 
 
+    /**
+     * This class is the base for all ResourceCache implementations.
+     * It has a virtual destructor so implementations are destroyed
+     * properly.
+     */
     class ResourceCache {
     public:
         virtual ~ResourceCache() { }
@@ -56,6 +61,10 @@ namespace pyr {
         static ResourceManager& instance();
         static void destroy();
         
+        /**
+         * Returns the cached version of a resource, or creates a new
+         * one if it isn't cached.  Throws std::runtime_error if it fails.
+         */
         template<typename T>
         T get(const std::string& id) {
             return static_cast<T>(getCache<T>().get(id));
@@ -64,6 +73,10 @@ namespace pyr {
     private:
         ~ResourceManager();
         
+        /**
+         * Return the cache for a given resource type.  If it doesn't exist,
+         * this function creates one.
+         */
         template<typename T>
         ResourceCache& getCache() {
             TypeInfo typeT(typeid(T));
