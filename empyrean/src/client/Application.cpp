@@ -88,7 +88,10 @@ namespace pyr {
 
             // Display FPS & profile tree.
             GLTEXT_STREAM(_renderer) << "FPS: " << _fps.getFPS();
-            renderCallTree(the<Profiler>().getLastCallTree());
+
+            if (_showCPUInfo == 2) {
+                renderCallTree(0, the<Profiler>().getLastCallTree());
+            }
         }
     }
 
@@ -119,7 +122,7 @@ namespace pyr {
 
     void Application::onKeyPress(SDLKey key, bool down) {
         if (down && key == SDLK_F1) {
-            _showCPUInfo = !_showCPUInfo;
+            _showCPUInfo = (_showCPUInfo + 1) % 3;
             return;
         }
 
@@ -169,22 +172,31 @@ namespace pyr {
         return (_currentState == 0);
     }
 
-    void Application::renderCallTree(const CallNodeList& callTree) {
+    void Application::renderCallTree(CallNodePtr parent, const CallNodeList& callTree, float offset) {
+        float total = 0;
+        for (CallNodeList::const_iterator i = callTree.begin(); i != callTree.end(); ++i) {
+            CallNodePtr cn = *i;
+            total += cn->block->getAverageTotalTime();
+        }
+
         for (CallNodeList::const_iterator i = callTree.begin(); i != callTree.end(); ++i) {
             CallNodePtr cn = *i;
 
             glTranslatef(0, 24, 0);
+            
             GLTEXT_STREAM(_renderer) << cn->block->getName();
+            
             glPushMatrix();
-            glTranslatef(300, 0, 0);
-            GLTEXT_STREAM(_renderer) << std::setprecision(4) << cn->block->getAverageTime();
-            glTranslatef(200, 0, 0);
-            GLTEXT_STREAM(_renderer) << std::setprecision(4) << cn->block->getAverageTotalTime();
+            glTranslatef(350 - offset, 0, 0);
+            GLTEXT_STREAM(_renderer) << std::setprecision(3)
+                << 100 * cn->block->getAverageTotalTime() / total << "%";
             glPopMatrix();
 
-            glTranslatef(32, 0, 0);
-            renderCallTree(cn->children);
-            glTranslatef(-32, 0, 0);
+            const float INDENT = 32;
+
+            glTranslatef(INDENT, 0, 0);
+            renderCallTree(cn, cn->children, offset + INDENT);
+            glTranslatef(-INDENT, 0, 0);
         }
     }
 

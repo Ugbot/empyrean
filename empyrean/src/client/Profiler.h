@@ -25,11 +25,7 @@ namespace pyr {
 
     class ProfileBlock : public RefCounted {
     public:
-        static const int REMEMBERED_FRAMES = 20;
-
-        ProfileBlock(const std::string& name) {
-            _name = name;
-        }
+        ProfileBlock(const std::string& name);
 
         const std::string& getName() const {
             return _name;
@@ -54,30 +50,13 @@ namespace pyr {
             data.timeInChildren += dt;
         }
 
-        void nextFrame() {
-            for (int i = REMEMBERED_FRAMES - 1; i > 0; --i) {
-                lastFrames[i] = lastFrames[i - 1];
-            }
-            lastFrames[0] = ProfileData();
-        }
-        
+        void nextFrame();
+
         /// Returns average time in this function over the last N frames.
-        float getAverageTime() const {
-            float total = 0;
-            for (int i = 0; i < REMEMBERED_FRAMES; ++i) {
-                total += lastFrames[i].time();
-            }
-            return total / REMEMBERED_FRAMES;
-        }
+        float getAverageTime() const;
 
         /// Returns average time in this function and children over the last N frames.
-        float getAverageTotalTime() const {
-            float total = 0;
-            for (int i = 0; i < REMEMBERED_FRAMES; ++i) {
-                total += lastFrames[i].timePlusChildren;
-            }
-            return total / REMEMBERED_FRAMES;
-        }
+        float getAverageTotalTime() const;
 
 
         bool current;    ///< Are we currently in this block?
@@ -85,19 +64,19 @@ namespace pyr {
 
         ProfileData total;
         /// Circular buffer of remembered frames.  The first one is always the newest.
-        ProfileData lastFrames[REMEMBERED_FRAMES];
+        std::vector<ProfileData> lastFrames;
 
     private:
         std::string _name;
     };
     typedef RefPtr<ProfileBlock> ProfileBlockPtr;
 
-
     typedef std::map<std::string, ProfileBlockPtr> ProfileBlockMap;
+
+
     struct CallNode;
     typedef RefPtr<CallNode> CallNodePtr;
     typedef std::list<CallNodePtr> CallNodeList;
-
 
     /// Facilitates construction of a tree of calls.
     struct CallNode : public RefCounted {

@@ -5,6 +5,42 @@
 
 namespace pyr {
 
+    static const size_t REMEMBERED_FRAMES = 60;
+
+    
+    // class ProfileBlock
+
+    ProfileBlock::ProfileBlock(const std::string& name) {
+        _name = name;
+        lastFrames.resize(REMEMBERED_FRAMES);
+    }
+
+    void ProfileBlock::nextFrame() {
+        for (int i = REMEMBERED_FRAMES - 1; i > 0; --i) {
+            lastFrames[i] = lastFrames[i - 1];
+        }
+        lastFrames[0] = ProfileData();
+    }
+
+    float ProfileBlock::getAverageTime() const {
+        float total = 0;
+        for (int i = 0; i < REMEMBERED_FRAMES; ++i) {
+            total += lastFrames[i].time();
+        }
+        return total / REMEMBERED_FRAMES;
+    }
+
+    float ProfileBlock::getAverageTotalTime() const {
+        float total = 0;
+        for (int i = 0; i < REMEMBERED_FRAMES; ++i) {
+            total += lastFrames[i].timePlusChildren;
+        }
+        return total / REMEMBERED_FRAMES;
+    }
+
+
+    // class Profiler
+
     PYR_DEFINE_SINGLETON(Profiler)
 
     void Profiler::beginBlock(const std::string& name) {

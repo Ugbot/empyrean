@@ -50,7 +50,7 @@ namespace pyr {
         int getMousePosY();
 
     private:
-        void renderCallTree(const CallNodeList& callTree);
+        void renderCallTree(CallNodePtr parent, const CallNodeList& callTree, float offset = 0);
 
         // dimensions of the window or screen
         Zeroed<int> _width;
@@ -71,7 +71,8 @@ namespace pyr {
         Zeroed<float> _totalFadeTime;
         Zeroed<float> _currentFadeTime;
 
-        Inited<bool, false> _showCPUInfo;
+        /// 0 = show nothing, 1 = show FPS, 2 = show profiler
+        Zeroed<int> _showCPUInfo;
 
         gltext::FontRendererPtr _renderer;
         Texture* _pointer;

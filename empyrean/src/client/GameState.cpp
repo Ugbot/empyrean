@@ -48,6 +48,7 @@ namespace pyr {
         
         scene.draw();
         
+/*
         if (Entity* entity = scene.getFocus()) {
             glEnable(GL_BLEND);
             setOrthoProjection(float(app.getWidth()), float(app.getHeight()));
@@ -55,6 +56,7 @@ namespace pyr {
             glColor3f(1, 1, 1);
             GLTEXT_STREAM(_renderer) << entity->getPos();
         }
+*/
     }
 
     void GameState::update(float dt) {

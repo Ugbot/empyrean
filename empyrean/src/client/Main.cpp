@@ -118,23 +118,27 @@ namespace pyr {
         while (!app.shouldQuit()) {
             float now = getNow();
 
-            bool should_quit = handleSDLEvents();
-            if (should_quit) {
-                break;
-            }
+            {
+                PYR_PROFILE_BLOCK("Frame");
 
-            // Ignore the case where the timer wraps around.
-            if (now >= last_time) {
-                float dt = now - last_time;
+                bool should_quit = handleSDLEvents();
+                if (should_quit) {
+                    break;
+                }
 
-                app.update(dt);
-                app.draw();
-                {
-                    PYR_PROFILE_BLOCK("glSwapBuffers");
-                    SDL_GL_SwapBuffers();
+                // Ignore the case where the timer wraps around.
+                if (now >= last_time) {
+                    float dt = now - last_time;
+
+                    app.update(dt);
+                    app.draw();
+                    {
+                        PYR_PROFILE_BLOCK("glSwapBuffers");
+                        SDL_GL_SwapBuffers();
+                    }
                 }
             }
-            
+
             the<Profiler>().nextFrame();
 
             last_time = now;
