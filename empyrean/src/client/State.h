@@ -18,7 +18,6 @@ namespace pyr {
     template<typename T>
     struct StateFactory {
         static State* create();
-        static void invokeTransition();
     };
 
     class State {
@@ -31,11 +30,6 @@ namespace pyr {
 
         /// @param dt  elapsed time in seconds
         virtual void update(float dt) { }
-
-        /**
-         * @param fade  normalized value [0,1] representing how
-         *              much fade has happened
-         */
         virtual void draw() = 0;
 
         virtual void onKeyPress(SDLKey key, bool down) { }
@@ -51,7 +45,7 @@ namespace pyr {
     protected:
         template<typename T>
         static void invokeTransition() {
-            StateFactory<T>::invokeTransition();
+	    invokeTransition(StateFactory<T>::create());
         }
         
         static void quit();
@@ -60,14 +54,12 @@ namespace pyr {
         void hidePointer() { _pointerVisible = false; }
                
     private:
+	static void invokeTransition(State* state);
+
         Inited<bool, false> _pointerVisible;
     };
 
 
-    /**
-     * This magic lets us invoke transitions and instantiate states
-     * without needing to include the state class we want to instantiate.
-     */
     template<typename T>
     State* instantiateState() {
         return StateFactory<T>::create();

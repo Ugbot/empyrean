@@ -14,9 +14,6 @@ namespace pyr {
     #define PYR_ENABLE_STATE(StateT)                            \
         State* StateFactory<StateT>::create() {                 \
             return new StateT;                                  \
-        }                                                       \
-        void StateFactory<StateT>::invokeTransition() {         \
-            the<Application>().invokeTransition(create());      \
         }
     
     
@@ -27,6 +24,10 @@ namespace pyr {
     PYR_ENABLE_STATE(LobbyState)
     PYR_ENABLE_STATE(MenuState)
     
+
+    void State::invokeTransition(State* state) {
+	the<Application>().invokeTransition(state);
+    }
 
     void State::quit() {
         the<Application>().quit();
