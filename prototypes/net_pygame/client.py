@@ -1,3 +1,4 @@
+import sys
 import threading
 import socket
 
@@ -37,7 +38,14 @@ class NetworkThread(threading.Thread):
         
         threading.Thread.__init__(self)
         self.socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        self.socket.connect(('localhost', 8765))
+
+        host = 'localhost'
+        if len(sys.argv) >= 2:
+            host = sys.argv[1]
+        port = 8765
+
+        print "Connecting to %s, port %d" % (host, port)
+        self.socket.connect((host, port))
 
     def run(self):
         print "Connected to server"
