@@ -118,7 +118,7 @@ namespace pyr {
                     meshes.push_back(child->getAttr("file"));
                 } else if (child->getName() == "material") {
                     materials.push_back(child->getAttr("file"));
-                } else {
+                } else if (!child->getName().empty()) {
                     PYR_LOG() << "Unknown child node of model: " << child->getName();
                 }
             }
