@@ -31,7 +31,6 @@ HUD for gamestate
 python scripting for entities
 MD5 / challenge password authentication system
 server-side resource management.  client downloads resource files.
-good general logging framework for both client and server
 physics engine
 collision detection
 scene culling

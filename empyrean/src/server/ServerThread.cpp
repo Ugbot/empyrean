@@ -10,12 +10,11 @@
 
 namespace pyr {
 
-    void ServerThread::run() {
+    void ServerThread::run(Thread* self) {
         World world;
 
         int port = the<Configuration>().serverPort;
         
-        /// @todo IS THIS A LEAK?
         ListenerThread* listener = new ListenerThread(port);
         ScopedPtr<Thread> thread(new Thread(listener, PR_PRIORITY_HIGH));
         
@@ -24,7 +23,7 @@ namespace pyr {
         logMessage("Listening on port " + std::string(str));
         
         float last = getNow();
-        while (!shouldQuit()) {
+        while (!self->shouldQuit()) {
             float now = getNow();
             float dt = now - last;
             last = now;

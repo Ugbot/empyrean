@@ -20,7 +20,7 @@ namespace pyr {
     
         ServerConnectionThread(const std::string& server, int port);
 
-        void run();
+        void run(Thread* thread);
         
         Status getStatus();
         Socket* getSocket();           // valid if status == CONNECT_SUCCEEDED

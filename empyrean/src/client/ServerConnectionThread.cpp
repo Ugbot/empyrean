@@ -12,7 +12,7 @@ namespace pyr {
         _socket = 0;
     }
     
-    void ServerConnectionThread::run() {
+    void ServerConnectionThread::run(Thread* /*thread*/) {
         try {
             Socket* socket = new Socket(_server, _port);
             

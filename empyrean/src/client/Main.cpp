@@ -2,15 +2,12 @@
 #include <stdexcept>
 #include <string>
 #include <SDL.h>
-
-#ifdef PYR_USE_EXTGL
-#include "extgl.h"
-#endif
-
 #include "Application.h"
 #include "Configuration.h"
 #include "Error.h"
 #include "InputManager.h"
+#include "Log.h"
+#include "OpenGL.h"
 #include "Platform.h"
 #include "Profiler.h"
 #include "SDLUtility.h"
@@ -22,35 +19,43 @@ namespace pyr {
         PYR_PROFILE_BLOCK("main");
         
         try {
-            the<Configuration>().load();
+            the<Log>().open("client.log");
         }
-        catch (const ConfigurationError&) {
-            // Could not load configuration.  That's okay, use the defaults.
-        }
-
-        initializeSDL(SDL_INIT_NOPARACHUTE | SDL_INIT_VIDEO | SDL_INIT_TIMER);
-
-        const SDL_VideoInfo* info = SDL_GetVideoInfo();
-        if (!info) {
-            throwSDLError("Retrieving video information failed");
+        catch (const LogFileOpenFailure&) {
+            // Could not open log file.  That's okay, defer any problems until later.
         }
         
+        try {
+            the<Configuration>().load();
+        }
+        catch (const ConfigurationError& e) {
+            PYR_LOG() << "Could not load client configuration: " << e.what()
+                      << "  That's okay, using defaults.";
+        }
+
+        PYR_LOG() << "Initializing SDL...";
+        initializeSDL(SDL_INIT_NOPARACHUTE | SDL_INIT_VIDEO | SDL_INIT_TIMER);
+
         // define our minimum requirements for the GL window
         SDL_GL_SetAttribute(SDL_GL_RED_SIZE,     5);
         SDL_GL_SetAttribute(SDL_GL_GREEN_SIZE,   5);
         SDL_GL_SetAttribute(SDL_GL_BLUE_SIZE,    5);
         SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE,   16);
         SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
-
-        int mode = SDL_OPENGL;
+        
+        int mode = SDL_OPENGL | SDL_ANYFORMAT;
         if (the<Configuration>().fullscreen) {
             mode |= SDL_FULLSCREEN;
         }
         
+        /**
+         * @note SDL does silly things when the created window is larger
+         * than the desktop.
+         */
         const int width  = the<Configuration>().screenWidth;
         const int height = the<Configuration>().screenHeight;
-        const int bpp    = info->vfmt->BitsPerPixel;
-        if (!SDL_SetVideoMode(width, height, bpp, mode)) {
+        PYR_LOG() << "Setting video mode...";
+        if (!SDL_SetVideoMode(width, height, 32, mode)) {
             throwSDLError("Setting video mode failed");
         }
 
@@ -59,6 +64,11 @@ namespace pyr {
             throw std::runtime_error("extgl_Initialize() failed");
         }
 #endif
+
+        PYR_LOG() << "GL_VENDOR: " << glGetString(GL_VENDOR);
+        PYR_LOG() << "GL_RENDERER: " << glGetString(GL_RENDERER);
+        PYR_LOG() << "GL_VERSION: " << glGetString(GL_VERSION);
+        PYR_LOG() << "GL_EXTENSIONS: " << glGetString(GL_EXTENSIONS);
 
         SDL_WM_SetCaption("Empyrean", 0);
         SDL_ShowCursor(SDL_DISABLE);
@@ -122,7 +132,7 @@ namespace pyr {
                 app.update(dt);
                 app.draw();
                 {
-                    PYR_PROFILE_BLOCK("PageFlip");
+                    PYR_PROFILE_BLOCK("glSwapBuffers");
                     SDL_GL_SwapBuffers();
                 }
             }

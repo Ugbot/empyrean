@@ -11,8 +11,8 @@ namespace pyr {
         _listener = new ServerSocket(port);
     }
     
-    void ListenerThread::run() {
-        while (!shouldQuit()) {
+    void ListenerThread::run(Thread* thread) {
+        while (!thread->shouldQuit()) {
             Socket* socket = _listener->accept(0.5f);
             if (socket) {
                 ScopedLock lock(_connectionsLock);

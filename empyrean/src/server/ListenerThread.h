@@ -17,7 +17,7 @@ namespace pyr {
     public:
         ListenerThread(int port);
         
-        void run();
+        void run(Thread* thread);
         
         /**
          * Get a list of connections, taking ownership from the listener

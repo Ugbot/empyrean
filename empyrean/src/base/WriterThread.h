@@ -19,7 +19,7 @@ namespace pyr {
         WriterThread(Socket* socket);
         ~WriterThread();
         
-        void run();
+        void run(Thread* thread);
         
         void addPacket(Packet* packet);
         void addPackets(const std::vector<Packet*>& packets);

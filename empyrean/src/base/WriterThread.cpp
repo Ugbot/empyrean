@@ -19,16 +19,16 @@ namespace pyr {
         delete _outgoingLock;
     }
     
-    void WriterThread::run() {
-        while (!shouldQuit()) {
+    void WriterThread::run(Thread* thread) {
+        while (!thread->shouldQuit()) {
             _outgoingLock->lock();
             while (_outgoing.empty()) {
                 _packetsAvailable->wait(0.5f);
-                if (shouldQuit()) {
+                if (thread->shouldQuit()) {
                     break;
                 }
             }
-            if (shouldQuit()) {
+            if (thread->shouldQuit()) {
                 _outgoingLock->unlock();
                 break;
             }

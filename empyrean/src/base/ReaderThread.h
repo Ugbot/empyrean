@@ -18,7 +18,7 @@ namespace pyr {
     public:
         ReaderThread(Socket* socket);
         
-        void run();
+        void run(Thread* thread);
         
         std::queue<Packet*> getPackets();
         

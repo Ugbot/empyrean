@@ -1,5 +1,6 @@
 #include "Editor.h"
 #include "Error.h"
+#include "Log.h"
 #include "MainFrame.h"
 #include "Platform.h"
 
@@ -10,6 +11,13 @@ namespace pyr {
         PYR_BEGIN_EXCEPTION_TRAP()
         
             setStartDirectory(argc, argv);
+        
+            try {
+                the<Log>().open("editor.log");
+            }
+            catch (const LogFileOpenFailure&) {
+                // ignore the error
+            }
         
             // we use PNG images for the UI
             wxInitAllImageHandlers();

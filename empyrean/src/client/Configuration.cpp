@@ -16,7 +16,7 @@ namespace pyr {
         fullscreen = false;
 
         server = "localhost";
-        username = "aegis";
+        username = "EmpyreanPlayer";
     }
     
     void Configuration::load() {

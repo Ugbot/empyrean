@@ -1,9 +1,12 @@
-
 #include "SDLUtility.h"
 
 
 namespace pyr {
 
+    /**
+     * SDL_Quit could have a different calling convention, since it comes
+     * from another library.
+     */
     void quitSDL() {
         SDL_Quit();
     }

@@ -10,10 +10,10 @@ namespace pyr {
         _socket = socket;
     }
     
-    void ReaderThread::run() {
+    void ReaderThread::run(Thread* thread) {
         ByteBuffer bb;
 
-        while (!shouldQuit()) {
+        while (!thread->shouldQuit()) {
             u8 buffer[1024];
             int read = _socket->read(buffer, sizeof(buffer), 0.5f);
             if (read < 0) {

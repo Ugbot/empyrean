@@ -8,17 +8,8 @@
 
 namespace pyr {
 
-    void Runnable::setThread(Thread* thread) {
-        _thread = thread;
-    }
-        
-    bool Runnable::shouldQuit() {
-        return (_thread ? _thread->shouldQuit() : true);
-    }
-    
     Thread::Thread(Runnable* runnable, PRThreadPriority priority) {
-        _object = runnable;
-        _object->setThread(this);
+        _runnable = runnable;
     
         PR_AtomicSet(&_shouldQuit, 0);
         _stopped = 0;
@@ -43,19 +34,19 @@ namespace pyr {
     
     void Thread::stop(bool interrupt) {
         if (!_stopped) {
-			writeLog("Stop line 1");
-			PR_AtomicSet(&_shouldQuit, 1);
-			writeLog("Stop line 2");
+            writeLog("Stop line 1");
+            PR_AtomicSet(&_shouldQuit, 1);
+            writeLog("Stop line 2");
             if (interrupt) {
-				writeLog("Stop line 3");
+                writeLog("Stop line 3");
                 PR_Interrupt(_thread);
-				writeLog("Stop line 4");
+                writeLog("Stop line 4");
             }
-			writeLog("Stop line 5");
+            writeLog("Stop line 5");
             join();
-			writeLog("Stop line 6");
+            writeLog("Stop line 6");
             PR_AtomicSet(&_stopped, 1);
-			writeLog("Stop line 7");
+            writeLog("Stop line 7");
         }
     }
     
@@ -76,7 +67,7 @@ namespace pyr {
     
     void Thread::threadRoutine() {
         PYR_BEGIN_EXCEPTION_TRAP()
-        _object->run();
+        _runnable->run(this);
         PYR_END_EXCEPTION_TRAP()
         PR_AtomicSet(&_stopped, 1);
     }

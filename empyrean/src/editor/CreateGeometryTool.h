@@ -44,13 +44,18 @@ namespace pyr {
             if (_down) {
                 return false;
             } else {
-                /*GeometryElementPtr elt = new GeometryElement;
+            /*
+                GeometryElementPtr elt = new GeometryElement;
                 elt->texture = "images/pointer.png";
                 
                 
                 MapElementPtr parent = getMap()->getRoot();
                 event.cmd->handleCommand(
-                    new CreateMapElementCommand(elt, parent));*/
+                    new CreateMapElementCommand(elt, parent));
+                    
+                _points.clear();
+            */
+                return true;
             }
         }
         

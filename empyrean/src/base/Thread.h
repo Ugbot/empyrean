@@ -10,19 +10,11 @@ namespace pyr {
 
     class Thread;
     
-    /**
-     * Your class should implement this interface.
-     */
+    /// Your thread class should implement this interface.
     class Runnable {
     public:
         virtual ~Runnable() { }
-        virtual void run() = 0;
-        
-        void setThread(Thread* thread);
-        bool shouldQuit();
-        
-    private:
-        Thread* _thread;
+        virtual void run(Thread* thread) = 0;
     };
 
     /**
@@ -30,6 +22,9 @@ namespace pyr {
      * The creator of the thread is responsible for deleting it.
      * While the thread may stop execution, the Thread object will
      * not be destroyed automatically.
+     *
+     * Thread takes ownership of the Runnable passed to it, and deletes
+     * it when the Thread object itself is destroyed.
      *
      * *NOTE* Your derived thread's destructor should call stop() before it
      * does any cleanup.
@@ -50,20 +45,22 @@ namespace pyr {
          */
         void stop(bool interrupt = false);
         
-        /**
-         * Waits for the thread to finish execution.
-         */
+        /// Waits for the thread to finish execution.
         void join();
         
         bool isRunning();
         
+        /**
+         * Intended for use within Runnable::run implementations.  A thread
+         * should periodically poll whether it should end.
+         */
         bool shouldQuit();
 
     private:
         void threadRoutine();
         static void PR_CALLBACK threadRoutine(void* self);
         
-        ScopedPtr<Runnable> _object;
+        ScopedPtr<Runnable> _runnable;
         
         PRThread* _thread;
         PRInt32   _stopped;  ///< has the thread been stopped?
