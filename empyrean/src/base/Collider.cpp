@@ -125,7 +125,7 @@ namespace pyr {
         
         CollisionData rv;
 
-        collision::COLLISION_TYPE result = entityBox.collideWithDynamic(0,ent1->getVel(),ent2->getVel(), otherBox, rv.points);
+        /*collision::COLLISION_TYPE result = */entityBox.collideWithDynamic(0,ent1->getVel(),ent2->getVel(), otherBox, rv.points);
     };
 
     void resolveCollisions(float dt, const Map* terrain, std::vector<Entity*>& ents) {

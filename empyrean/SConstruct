@@ -187,9 +187,9 @@ if env['PLATFORM'] == 'irix':
 
 # Process build options.
 if env.get('dbg'):
-    env.Append(CCFLAGS = ['-g'], CPPDEFINES=['DEBUG'])
+    env.Append(CCFLAGS = ['-g'], CPPDEFINES=['DEBUG', '_DEBUG'])
 if env.get('opt'):
-    env.Append(CCFLAGS = ['-O2'], LINKFLAGS = ['-s'])
+    env.Append(CCFLAGS = ['-O2'], LINKFLAGS = ['-s'], CPPDEFINES=['NDEBUG'])
 if env.get('distcc'):
     env['CC']  = ['$(', 'distcc', '$)', env['CC']]
     env['CXX'] = ['$(', 'distcc', '$)', env['CXX']]
