@@ -24,8 +24,6 @@ namespace pyr {
     class Behavior {
     public:
         virtual ~Behavior() { }
-        // Should getName() and getResource() return std::string instead?
-        // It gets rid of the null pointer issue.
         virtual const std::string getName() = 0;
         virtual const std::string getResource() = 0;
         virtual void update(Entity* entity, float dt, const Map* map) = 0;
