@@ -1,5 +1,6 @@
 #include <stdexcept>
 #include "Entity.h"
+#include "GameEntity.h"
 #include "GLUtility.h"
 #include "MapLoader.h"
 #include "MapRenderer.h"
@@ -86,8 +87,17 @@ namespace pyr {
     
     void Scene::update(float dt) {
         EntityMap::iterator itr = _entities.begin();
+        // Update all entities (regardless of collision with others
         for (; itr != _entities.end(); ++itr) {
             itr->second->update(dt,_map.get());
+        }
+        // Now that everyone has moved do a collision amongst entities (game entities that is)
+        itr = _entities.begin();
+        for (; itr != _entities.end(); ++itr) {
+            GameEntity* gentity = dynamic_cast<GameEntity*>(itr->second);
+            if(gentity) {
+                gentity->collideWithOthers(_entities);
+            }
         }
     }
     

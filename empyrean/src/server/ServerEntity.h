@@ -33,6 +33,9 @@ namespace pyr {
             _id = id;
             _appearance = appearance;
             _behavior = behavior;
+            _height = 1.9f;
+            _width = 0.3f;
+
         }
 
         u16 getID() const {
@@ -51,7 +54,14 @@ namespace pyr {
         gmtl::Vec2f& getVel()               { return _vel; }
         const gmtl::Vec2f& getVel() const   { return _vel; }
 
+        float& getHeight()                    { return _height; }
+        const float& getHeight()     const    { return _height; }
+
+        float& getWidth()                    { return _width; }
+        const float& getWidth()     const    { return _width; }
+
         void update(float dt, Map* terrain);
+        void collideWithOthers(std::vector<ServerEntity*>& entities);
 
     private:
         u16 _id;
@@ -60,6 +70,9 @@ namespace pyr {
 
         Vec2f _pos;
         Vec2f _vel;
+
+        float _height;
+        float _width;
         
     };
     

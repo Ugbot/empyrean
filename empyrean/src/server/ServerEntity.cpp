@@ -25,11 +25,18 @@ namespace pyr {
                 _vel[1] = constants::TERMINAL_VELOCITY;
             }
 
-            float height = 1.9f;
-            float width = 0.3f;
-
-            collide(dt, origPos, _pos, _vel, width, height, terrain);
+            collide(dt, origPos, _pos, _vel, _width, _height, terrain);
         }
    }
+
+   void ServerEntity::collideWithOthers(std::vector<ServerEntity*>& entities) {
+        // Proceed to collide with all other game entities
+        for (size_t i = 0; i < entities.size(); ++i) {
+            if(entities[i]->getPos() != getPos()) { // if the entities aren't in the same exact position
+                collideWithEntity(getPos(), getVel(), getWidth(), getHeight(), 
+                        entities[i]->getPos(), entities[i]->getVel(), entities[i]->getWidth(),entities[i]->getHeight());
+            }
+        }
+    }
 
 }

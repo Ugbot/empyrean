@@ -27,6 +27,8 @@ namespace pyr {
         Vec2f getDisplacement(float dt, Vec2f& vel, const std::vector<Segment>& segs,
                               std::vector<Vec2f>& points);
 
+        void segment(std::vector<Segment>& segs);
+
     private:
         bool interestingSeg(const Segment& seg);
         void pointIntersect(std::vector<Vec2f>& points, const Segment& seg);

@@ -99,5 +99,32 @@ namespace pyr {
         newPos += displacement;
 
         return rv;
-    }
+    };
+
+    
+    void collideWithEntity(Vec2f& entityPos, Vec2f& entityVel, const float width, const float height, 
+                           Vec2f& otherPos, Vec2f& otherVel, const float otherwidth, const float otherheight) {
+        
+        CollisionBox entityBox(entityPos - Vec2f(width / 2.0f, 0),
+                               entityPos + Vec2f(width / 2.0f, height));
+
+        CollisionBox otherBox(otherPos - Vec2f(otherwidth / 2.0f, 0),
+                              otherPos + Vec2f(otherwidth / 2.0f, otherheight));
+
+
+        std::vector<Segment> segs;
+        otherBox.segment(segs);
+
+        CollisionData rv;
+        entityBox.getIntersectingSegs(rv.interesting, segs);
+
+        if(!segs.empty()) {
+            Vec2f displacement = entityBox.getDisplacement(0,entityVel,rv.interesting, rv.points);
+            entityPos += displacement;
+        }
+        
+    };
+
+       
+
 }

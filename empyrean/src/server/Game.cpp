@@ -53,6 +53,10 @@ namespace pyr {
         }
 
         for (size_t i = 0; i < _entities.size(); ++i) {
+            _entities[i]->collideWithOthers(_entities);
+        }
+
+        for (size_t i = 0; i < _entities.size(); ++i) {
             ServerEntity* e = _entities[i];
             sendAll(new EntityUpdatedPacket(
                         e->getID(), e->getPos(), e->getVel()));

@@ -1,6 +1,7 @@
 #ifndef PYR_GAME_ENTITY_H
 #define PYR_GAME_ENTITY_H
 
+#include <map>
 #include "Collider.h"
 #include "Entity.h"
 #include "Utility.h"
@@ -39,6 +40,9 @@ namespace pyr {
 
         void draw();
         void update(float dt, const Map* terrain);
+        
+        typedef std::map<u16, Entity*> EntityMap;
+        void collideWithOthers(EntityMap entities);
 
         void getVitalityUpdate(int& current, int& max);
         void getEtherUpdate(int& current, int& max);
@@ -94,6 +98,11 @@ namespace pyr {
         bool _jumpStart;
         float _jumpStartTime;
 
+        // Attacking animation information
+        bool _attackStart;
+        float _attackingStartTime;
+        float _origDirection;
+
         // Character Information
         float _direction;
         Zeroed<u16> _jumping;
@@ -106,9 +115,7 @@ namespace pyr {
         Zeroed<float> _height; 
         Zeroed<float> _width; 
 
-        // Attacking information
-        bool _attackStart;
-        float _attackingStartTime;
+        
         
     };
 

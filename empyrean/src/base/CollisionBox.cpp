@@ -196,6 +196,14 @@ namespace pyr {
 
     }
 
+    void CollisionBox::segment(std::vector<Segment>& segs) {
+        
+        for(int i = 0; i < 4; ++i) {
+            Segment s(_verts[i],_verts[(i+1)%4]);
+            segs.push_back(s);
+        }
+    }
+
     bool CollisionBox::segmentInside(const Segment& seg) {
         if(pointInside(seg.v1) && pointInside(seg.v2)) {
             return true;

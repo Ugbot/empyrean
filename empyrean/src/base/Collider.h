@@ -17,6 +17,8 @@ namespace pyr {
     CollisionData collide(float dt, const Vec2f& origPos, Vec2f& newPos, Vec2f& vel,
                           float width, float height, const Map* terrain);
 
+    void collideWithEntity(Vec2f& entityPos, Vec2f& entityVel, const float width, const float height, 
+                           Vec2f& otherPos, Vec2f& otherVel, const float otherwidth, const float otherheight);
 }
 
 #endif

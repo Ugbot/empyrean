@@ -132,6 +132,21 @@ namespace pyr {
         _model->update(dt);
     }
 
+    void GameEntity::collideWithOthers(EntityMap entities) {
+        // Proceed to collide with all other game entities
+        EntityMap::iterator itr = entities.begin();
+        for (; itr != entities.end(); ++itr) {
+            GameEntity* gentity = dynamic_cast<GameEntity*>(itr->second);
+            if(gentity) {
+                if(gentity->getPos() != getPos()) { // if the entities aren't in the same exact position
+                    collideWithEntity(getPos(), getVel(), getWidth(), getHeight(), 
+                         gentity->getPos(), gentity->getVel(), gentity->getWidth(),gentity->getHeight());
+                }
+
+            }
+        }
+    }
+
     // Action Functions
     bool GameEntity::jump() {
          if(getJumping() < 2) {
@@ -154,7 +169,7 @@ namespace pyr {
 
     // Utitlity Animation functions
     void GameEntity::phaseOutAnimation(Animation name) {
-        _model->getModel().getMixer()->clearCycle((int) name, 0.0f);
+        _model->getModel().getMixer()->clearCycle((int) name, 0.1f);
     }
 
     void GameEntity::correctDirection(float xvel) {
@@ -167,9 +182,11 @@ namespace pyr {
 
     // Attack state transition in
     void GameEntity::startAttackState() {
-        _model->getModel().getMixer()->blendCycle(ATTACKING, 1.0f, 10.0f);
+        _model->getModel().getMixer()->executeAction(ATTACKING, 0.1f, 0.1f);
         _attackingStartTime = 0;
+        _origDirection = _direction;
         _state = &GameEntity::updateAttackState;
+        
     }
 
     // Attack state
@@ -180,7 +197,8 @@ namespace pyr {
     //
     void GameEntity::updateAttackState(float dt) {
         float xvel = getVel()[0];
-        if(_attackingStartTime > 0.5) {
+        _attackingStartTime += dt;
+        if(_attackingStartTime > 2.0) {
             _attackStart = false;
             phaseOutAnimation(ATTACKING);
             if (_jumpStart) {
@@ -196,12 +214,13 @@ namespace pyr {
                 startStandState();
             }
         }
-        correctDirection(xvel);
+        
+        //correctDirection(xvel);
     }
     
     // Jump state transition in
     void GameEntity::startJumpState() {
-        _model->getModel().getMixer()->blendCycle(JUMPING, 1.0f, 10.0f);
+        _model->getModel().getMixer()->blendCycle(JUMPING, 1.0f, 0.1f);
         _jumpStart = false;
         _state = &GameEntity::updateJumpState;
     }
@@ -236,7 +255,7 @@ namespace pyr {
 
     // Jump start state transition in
     void GameEntity::startJumpStartState() {
-        _model->getModel().getMixer()->blendCycle(JUMPSTART, 1.0f, 10.0f);
+        _model->getModel().getMixer()->blendCycle(JUMPSTART, 1.0f, 0.1f);
         _jumpStart = false;
         _state = &GameEntity::updateJumpStartState;
         _jumpStartTime = 0;
@@ -264,7 +283,7 @@ namespace pyr {
 
     // Stand state transition in
     void GameEntity::startStandState() {
-        _model->getModel().getMixer()->blendCycle(STANDING, 1.0f, 10.0f);
+        _model->getModel().getMixer()->blendCycle(STANDING, 1.0f, 0.1f);
         _state = &GameEntity::updateStandState;
     }
     
@@ -292,7 +311,7 @@ namespace pyr {
 
     // Walk state transition in
     void GameEntity::startWalkState() {
-        _model->getModel().getMixer()->blendCycle(WALKING, 1.0f, 5.0f);
+        _model->getModel().getMixer()->blendCycle(WALKING, 1.0f, 0.1f);
         _state = &GameEntity::updateWalkState;
     }
 
