@@ -2,8 +2,8 @@
 <VisualStudioProject
 	ProjectType="Visual C++"
 	Version="7.00"
-	Name="server"
-	ProjectGUID="{084A19A1-07D9-4C88-BA1F-B47A04427F6D}"
+	Name="base"
+	ProjectGUID="{03B95B05-B6D6-4FB1-B9AC-269467287C88}"
 	Keyword="Win32Proj">
 	<Platforms>
 		<Platform
@@ -14,13 +14,13 @@
 			Name="Debug|Win32"
 			OutputDirectory="Debug"
 			IntermediateDirectory="Debug"
-			ConfigurationType="1"
+			ConfigurationType="4"
 			CharacterSet="2">
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="../../src/third-party/include,../../src/base"
-				PreprocessorDefinitions="WIN32;_DEBUG;_CONSOLE"
+				AdditionalIncludeDirectories="../../src/third-party/include"
+				PreprocessorDefinitions="WIN32;_DEBUG;_LIB"
 				MinimalRebuild="TRUE"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
@@ -32,15 +32,8 @@
 			<Tool
 				Name="VCCustomBuildTool"/>
 			<Tool
-				Name="VCLinkerTool"
-				AdditionalDependencies="SDL.lib SDLmain.lib SDL_net.lib ../base/Debug/base.lib"
-				OutputFile="../bin/Debug/server.exe"
-				LinkIncremental="2"
-				AdditionalLibraryDirectories="../../src/third-party/lib"
-				GenerateDebugInformation="TRUE"
-				ProgramDatabaseFile="$(OutDir)/server.pdb"
-				SubSystem="1"
-				TargetMachine="1"/>
+				Name="VCLibrarianTool"
+				OutputFile="$(OutDir)/base.lib"/>
 			<Tool
 				Name="VCMIDLTool"/>
 			<Tool
@@ -53,22 +46,20 @@
 				Name="VCResourceCompilerTool"/>
 			<Tool
 				Name="VCWebServiceProxyGeneratorTool"/>
-			<Tool
-				Name="VCWebDeploymentTool"/>
 		</Configuration>
 		<Configuration
 			Name="Release|Win32"
 			OutputDirectory="Release"
 			IntermediateDirectory="Release"
-			ConfigurationType="1"
+			ConfigurationType="4"
 			CharacterSet="2">
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="2"
 				InlineFunctionExpansion="1"
 				OmitFramePointers="TRUE"
-				AdditionalIncludeDirectories="../../src/third-party/include,../../src/base"
-				PreprocessorDefinitions="WIN32;NDEBUG;_CONSOLE"
+				AdditionalIncludeDirectories="../../src/third-party/include"
+				PreprocessorDefinitions="WIN32;NDEBUG;_LIB"
 				StringPooling="TRUE"
 				RuntimeLibrary="2"
 				EnableFunctionLevelLinking="TRUE"
@@ -80,16 +71,8 @@
 			<Tool
 				Name="VCCustomBuildTool"/>
 			<Tool
-				Name="VCLinkerTool"
-				AdditionalDependencies="SDL.lib SDLmain.lib SDL_net.lib ../base/Release/base.lib"
-				OutputFile="../bin/Release/server.exe"
-				LinkIncremental="1"
-				AdditionalLibraryDirectories="../../src/third-party/lib"
-				GenerateDebugInformation="TRUE"
-				SubSystem="1"
-				OptimizeReferences="2"
-				EnableCOMDATFolding="2"
-				TargetMachine="1"/>
+				Name="VCLibrarianTool"
+				OutputFile="$(OutDir)/base.lib"/>
 			<Tool
 				Name="VCMIDLTool"/>
 			<Tool
@@ -102,22 +85,35 @@
 				Name="VCResourceCompilerTool"/>
 			<Tool
 				Name="VCWebServiceProxyGeneratorTool"/>
-			<Tool
-				Name="VCWebDeploymentTool"/>
 		</Configuration>
 	</Configurations>
 	<Files>
 		<Filter
 			Name="files"
-			Filter="">
+			Filter="cpp;c;cxx;def;odl;idl;hpj;bat;asm">
 			<File
-				RelativePath="..\..\src\server\ConnectionThread.cpp">
+				RelativePath="..\..\src\base\Error.cpp">
 			</File>
 			<File
-				RelativePath="ConnectionThread.h">
+				RelativePath="..\..\src\base\Error.h">
 			</File>
 			<File
-				RelativePath="..\..\src\server\Main.cpp">
+				RelativePath="..\..\src\base\SDLUtility.cpp">
+			</File>
+			<File
+				RelativePath="..\..\src\base\SDLUtility.h">
+			</File>
+			<File
+				RelativePath="..\..\src\base\Thread.cpp">
+			</File>
+			<File
+				RelativePath="..\..\src\base\Thread.h">
+			</File>
+			<File
+				RelativePath="..\..\src\base\Utility.cpp">
+			</File>
+			<File
+				RelativePath="..\..\src\base\Utility.h">
 			</File>
 		</Filter>
 	</Files>

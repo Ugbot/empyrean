@@ -14,9 +14,10 @@ namespace pyr {
     class Application {
     public:
         static Application& instance();
-        static void destroy();
 
     private:
+        static void destroy();
+
         Application();
         
     public:

@@ -19,11 +19,11 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="../../src/third-party/include;../../src/client"
+				AdditionalIncludeDirectories="../../src/third-party/include,../../src/base"
 				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS"
 				MinimalRebuild="TRUE"
 				BasicRuntimeChecks="3"
-				RuntimeLibrary="5"
+				RuntimeLibrary="3"
 				RuntimeTypeInfo="TRUE"
 				UsePrecompiledHeader="0"
 				WarningLevel="3"
@@ -33,7 +33,7 @@
 				Name="VCCustomBuildTool"/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="SDL.lib corona.lib opengl32.lib glu32.lib cal3d_d.lib"
+				AdditionalDependencies="../base/Debug/base.lib SDL.lib SDL_net.lib corona.lib cal3d_d.lib opengl32.lib glu32.lib"
 				OutputFile="../bin/Debug/client.exe"
 				LinkIncremental="2"
 				AdditionalLibraryDirectories="../../src/third-party/lib"
@@ -68,10 +68,10 @@
 				Optimization="2"
 				InlineFunctionExpansion="1"
 				OmitFramePointers="TRUE"
-				AdditionalIncludeDirectories="../../src/third-party/include;../../src/client"
+				AdditionalIncludeDirectories="../../src/third-party/include,../../src/base"
 				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS"
 				StringPooling="TRUE"
-				RuntimeLibrary="4"
+				RuntimeLibrary="2"
 				EnableFunctionLevelLinking="TRUE"
 				RuntimeTypeInfo="TRUE"
 				UsePrecompiledHeader="2"
@@ -82,7 +82,7 @@
 				Name="VCCustomBuildTool"/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="SDL.lib corona.lib opengl32.lib glu32.lib cal3d.lib"
+				AdditionalDependencies="../base/Release/base.lib SDL.lib SDL_net.lib corona.lib cal3d.lib opengl32.lib glu32.lib"
 				OutputFile="../bin/Release/client.exe"
 				LinkIncremental="1"
 				AdditionalLibraryDirectories="../../src/third-party/lib"
@@ -194,12 +194,6 @@
 			</File>
 			<File
 				RelativePath="..\..\src\client\Types.h">
-			</File>
-			<File
-				RelativePath="..\..\src\client\Utility.cpp">
-			</File>
-			<File
-				RelativePath="..\..\src\client\Utility.h">
 			</File>
 		</Filter>
 	</Files>

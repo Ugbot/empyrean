@@ -66,7 +66,6 @@ namespace pyr {
     class ResourceManager {
     public:
         static ResourceManager& instance();
-        static void destroy();
         
         /**
          * Returns the cached version of a resource, or creates a new
@@ -78,6 +77,8 @@ namespace pyr {
         }
         
     private:
+        static void destroy();
+
         ~ResourceManager();
         
         /**
