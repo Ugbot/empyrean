@@ -1,6 +1,16 @@
-aegisz: I want a map format defined, skills to be worked out (but Bryan's in charge of that), models to be made, textures to be made, a map editor made, the chat client stuff worked on, theming in phui, network latency looked at, UDP for networking...
-aegisz: layout managers in phui, sound system, music and sound effects made, cal3d profiling, better empyrean profiling code...
-aegisz: monsters sketched out and modeled and animated...
-aegisz: AI, and a way to attach things to cal3d models, like weapons and stuff
-aegisz: modal dialogs
+map format defined
+skills to be worked out (but Bryan's in charge of that)
+models to be made
+textures to be made
+a map editor made
+theming in phui
+network latency looked at
+UDP for networking...
+sound system
+music and sound effects made
+cal3d profiling
+better empyrean profiling code...
+monsters sketched out and modeled and animated...
+AI
+and a way to attach things to cal3d models, like weapons and stuff
 fix phui focus model
