@@ -14,10 +14,9 @@ namespace pyr {
     class Packet;
     class Socket;
 
-    class ReaderThread : public Thread {
+    class ReaderThread : public Runnable {
     public:
         ReaderThread(Socket* socket);
-        ~ReaderThread();
         
         void run();
         

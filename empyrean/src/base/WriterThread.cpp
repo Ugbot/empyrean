@@ -15,7 +15,6 @@ namespace pyr {
     }
     
     WriterThread::~WriterThread() {
-        stop();
         delete _packetsAvailable;
         delete _outgoingLock;
     }

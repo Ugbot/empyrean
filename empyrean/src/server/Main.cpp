@@ -15,8 +15,7 @@ namespace pyr {
     void runServer() {
         World& world = World::instance();
     
-        ScopedPtr<Thread> listener(new ListenerThread(PORT));
-        listener->start();
+        ScopedPtr<Thread> listener(new Thread(new ListenerThread(PORT)));
         
         float last = getNow();
         for (;;) {

@@ -86,8 +86,10 @@ namespace pyr {
     
         ScopedPtr<Socket> _tcpSocket;
         
-        ScopedPtr<ReaderThread> _reader;
-        ScopedPtr<WriterThread> _writer;
+        ReaderThread* _reader;
+        WriterThread* _writer;
+        ScopedPtr<Thread> _readerThread;
+        ScopedPtr<Thread> _writerThread;
         
         std::vector<Packet*> _unhandledPackets;
         HandlerMap _handlers;

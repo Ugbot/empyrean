@@ -10,10 +10,6 @@ namespace pyr {
         _listener = new ServerSocket(port);
     }
     
-    ListenerThread::~ListenerThread() {
-        stop();
-    }
-    
     void ListenerThread::run() {
         while (!shouldQuit()) {
             Socket* socket = _listener->accept(1);

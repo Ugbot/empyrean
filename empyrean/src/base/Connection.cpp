@@ -14,9 +14,8 @@ namespace pyr {
         _tcpSocket = socket;
         _reader = new ReaderThread(socket);
         _writer = new WriterThread(socket);
-        
-        _reader->start();
-        _writer->start();
+        _readerThread = new Thread(_reader);
+        _writerThread = new Thread(_writer);
     }
     
     Connection::~Connection() {
@@ -50,7 +49,7 @@ namespace pyr {
     }
     
     bool Connection::isClosed() {
-        return (!_reader->isRunning() && !_writer->isRunning());
+        return (!_readerThread->isRunning() && !_writerThread->isRunning());
     }
 
 }

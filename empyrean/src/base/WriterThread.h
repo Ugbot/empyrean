@@ -14,7 +14,7 @@ namespace pyr {
     class Packet;
     class Socket;
 
-    class WriterThread : public Thread {
+    class WriterThread : public Runnable {
     public:
         WriterThread(Socket* socket);
         ~WriterThread();

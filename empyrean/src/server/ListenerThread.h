@@ -10,10 +10,9 @@ namespace pyr {
 
     class ServerSocket;
 
-    class ListenerThread : public Thread {
+    class ListenerThread : public Runnable {
     public:
         ListenerThread(int port);
-        ~ListenerThread();
         
         void run();
         

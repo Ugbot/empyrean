@@ -3,13 +3,8 @@
 
 #include <SDL.h>
 
-#include "Utility.h"
 #include "Font.h"
-
-/*namespace gltext {
-    class Font;
-    class FontRenderer;
-}*/
+#include "Utility.h"
 
 namespace pyr {
 

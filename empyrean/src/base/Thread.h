@@ -3,12 +3,27 @@
 
 
 #include <prthread.h>
+#include "Utility.h"
 
 
 namespace pyr {
 
-    class CondVar;
-    class Mutex;
+    class Thread;
+    
+    /**
+     * Your class should implement this interface.
+     */
+    class Runnable {
+    public:
+        virtual ~Runnable() { }
+        virtual void run() = 0;
+        
+        void setThread(Thread* thread);
+        bool shouldQuit();
+        
+    private:
+        Thread* _thread;
+    };
 
     /**
      * Thread-derived classes should not be allocated on the stack.
@@ -22,18 +37,8 @@ namespace pyr {
     class Thread {
     public:
         /// @throws std::runtime_error if thread cannot be created
-        Thread(PRThreadPriority priority = PR_PRIORITY_NORMAL);
-        virtual ~Thread();
-        
-        /**
-         * Starts the thread, does nothing if the thread is already
-         * started.  The thread calls run().  If the thread creation
-         * fails, start() deletes the thread object and throws an
-         * exception.
-         *
-         * @throws std::runtime_error if thread cannot be started.
-         */
-        void start();
+        Thread(Runnable* runnable, PRThreadPriority priority = PR_PRIORITY_NORMAL);
+        ~Thread();
         
         /**
          * Notifies the thread that it should stop execution by setting
@@ -52,29 +57,17 @@ namespace pyr {
         
         bool isRunning();
         
-    protected:
-        /// Should be overridden by the deriving class.
-        virtual void run() = 0;
-        
         bool shouldQuit();
-        
+
     private:
+        void threadRoutine();
         static void PR_CALLBACK threadRoutine(void* self);
         
+        ScopedPtr<Runnable> _object;
+        
         PRThread* _thread;
-        bool      _started;  ///< has the thread been started yet?
         PRInt32   _stopped;  ///< has the thread been stopped?
 
-        Mutex* _mutex;
-        
-        /// used to implement start()
-        /// @{
-        Mutex*   _m_threadStarting;
-        CondVar* _threadStarting;
-        Mutex*   _m_threadStarted;
-        CondVar* _threadStarted;
-        /// @}
-        
         PRInt32   _shouldQuit;
     };
 
