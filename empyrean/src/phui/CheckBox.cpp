@@ -24,8 +24,8 @@
  *
  * -----------------------------------------------------------------
  * File:          $RCSfile: CheckBox.cpp,v $
- * Date modified: $Date: 2003-08-08 03:09:44 $
- * Version:       $Revision: 1.2 $
+ * Date modified: $Date: 2003-10-06 06:54:18 $
+ * Version:       $Revision: 1.3 $
  * -----------------------------------------------------------------
  *
  ************************************************************** phui-cpr-end */
@@ -47,7 +47,7 @@ namespace phui
       const int SIZE = 50;
       
       int x = SIZE / 20;
-      int y = height / 2 - SIZE / 2;
+      int y = (height - SIZE) / 2;
 
       glColor(getBackgroundColor());
       glBegin(GL_TRIANGLE_FAN);
@@ -74,6 +74,14 @@ namespace phui
          glVertex2i(x,        y + SIZE);
          glEnd();
       }
+      
+      glPushMatrix();
+      glTranslatef(
+        float(2 * x + SIZE),
+        float((height - getFont()->getAscent()) / 2),
+        0);
+      GLTEXT_STREAM(getFontRenderer()) << getText();
+      glPopMatrix();
    }
 
    void CheckBox::setChecked(bool checked)
@@ -84,6 +92,16 @@ namespace phui
    bool CheckBox::isChecked() const
    {
       return mIsChecked;
+   }
+   
+   void CheckBox::setText(const std::string& text)
+   {
+      mText = text;
+   }
+   
+   const std::string& CheckBox::getText() const
+   {
+      return mText;
    }
 
    void CheckBox::onMouseDown(InputButton button, const Point& p)
