@@ -92,16 +92,40 @@
 			Name="files"
 			Filter="cpp;c;cxx;def;odl;idl;hpj;bat;asm">
 			<File
+				RelativePath="..\..\src\base\ByteBuffer.h">
+			</File>
+			<File
+				RelativePath="..\..\src\base\CondVar.h">
+			</File>
+			<File
 				RelativePath="..\..\src\base\Error.cpp">
 			</File>
 			<File
 				RelativePath="..\..\src\base\Error.h">
 			</File>
 			<File
+				RelativePath="..\..\src\base\Mutex.h">
+			</File>
+			<File
 				RelativePath="..\..\src\base\SDLUtility.cpp">
 			</File>
 			<File
 				RelativePath="..\..\src\base\SDLUtility.h">
+			</File>
+			<File
+				RelativePath="..\..\src\base\ScopedLock.h">
+			</File>
+			<File
+				RelativePath="..\..\src\base\ServerSocket.cpp">
+			</File>
+			<File
+				RelativePath="..\..\src\base\ServerSocket.h">
+			</File>
+			<File
+				RelativePath="..\..\src\base\Socket.cpp">
+			</File>
+			<File
+				RelativePath="..\..\src\base\Socket.h">
 			</File>
 			<File
 				RelativePath="..\..\src\base\Thread.cpp">

@@ -33,7 +33,7 @@
 				Name="VCCustomBuildTool"/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="../base/Debug/base.lib SDL.lib SDL_net.lib corona.lib cal3d_d.lib opengl32.lib glu32.lib"
+				AdditionalDependencies="../base/Debug/base.lib SDL.lib nspr4.lib corona.lib cal3d_d.lib opengl32.lib glu32.lib"
 				OutputFile="../bin/Debug/client.exe"
 				LinkIncremental="2"
 				AdditionalLibraryDirectories="../../src/third-party/lib"
@@ -82,7 +82,7 @@
 				Name="VCCustomBuildTool"/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="../base/Release/base.lib SDL.lib SDL_net.lib corona.lib cal3d.lib opengl32.lib glu32.lib"
+				AdditionalDependencies="../base/Release/base.lib SDL.lib nspr4.lib corona.lib cal3d.lib opengl32.lib glu32.lib"
 				OutputFile="../bin/Release/client.exe"
 				LinkIncremental="1"
 				AdditionalLibraryDirectories="../../src/third-party/lib"

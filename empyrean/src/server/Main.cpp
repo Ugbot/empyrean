@@ -1,53 +1,37 @@
 #include <iostream>
 #include <stdexcept>
-#include <SDL_net.h>
-#include "ConnectionThread.h"
 #include "Error.h"
-#include "SDLUtility.h"
+#include "ListenerThread.h"
+#include "Utility.h"
+#include "World.h"
 
 
 namespace pyr {
 
     static int PORT = 8765;
     
-    void runServer() {
-        initializeSDL(SDL_INIT_NOPARACHUTE);
-        
-        
-        IPaddress address;
-        if (SDLNet_ResolveHost(&address, 0, PORT) < 0) {
-            throwSDLNetError("Could not resolve listen address");
-        }
-        
-        TCPsocket listener = SDLNet_TCP_Open(&address);
-        if (!listener) {
-            throwSDLNetError("Listener socket creation failed");
-        }
-        
-        try {
-            for (;;) {
-                TCPsocket connection = SDLNet_TCP_Accept(listener);
-                if (connection) {
-                    std::cout << "Connection" << std::endl;
-                    new ConnectionThread(connection);
-                }
 
-                SDL_Delay(100);
-            }
-        }
-        catch (...) {
-            // make sure the listener is destroyed properly
-            SDLNet_TCP_Close(listener);
-            throw;
-        }
+    void runServer() {
+        World& world = World::instance();
+    
+        ScopedPtr<Thread> listener(new ListenerThread(PORT));
+        listener->start();
         
-        SDLNet_TCP_Close(listener);
+        PRIntervalTime last = PR_IntervalNow();        
+        for (;;) {
+            PRIntervalTime now = PR_IntervalNow();
+            float dt = 1000000.0f * PR_IntervalToMicroseconds(now - last);
+            last = now;
+        
+            world.update(dt);
+            PR_Sleep(20);
+        }
     }
 }
 
 
 // main must be defined this way for SDL to work
-int main(int /*argc*/, char* /*argv*/[]) {
+int main() {
     try {
         pyr::runServer();
         return EXIT_SUCCESS;

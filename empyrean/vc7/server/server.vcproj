@@ -33,7 +33,7 @@
 				Name="VCCustomBuildTool"/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="SDL.lib SDLmain.lib SDL_net.lib ../base/Debug/base.lib"
+				AdditionalDependencies="../base/Debug/base.lib nspr4.lib"
 				OutputFile="../bin/Debug/server.exe"
 				LinkIncremental="2"
 				AdditionalLibraryDirectories="../../src/third-party/lib"
@@ -81,7 +81,7 @@
 				Name="VCCustomBuildTool"/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="SDL.lib SDLmain.lib SDL_net.lib ../base/Release/base.lib"
+				AdditionalDependencies="../base/Release/base.lib nspr4.lib"
 				OutputFile="../bin/Release/server.exe"
 				LinkIncremental="1"
 				AdditionalLibraryDirectories="../../src/third-party/lib"
@@ -111,13 +111,37 @@
 			Name="files"
 			Filter="">
 			<File
-				RelativePath="..\..\src\server\ConnectionThread.cpp">
+				RelativePath="..\..\src\server\Connection.cpp">
 			</File>
 			<File
-				RelativePath="..\..\src\server\ConnectionThread.h">
+				RelativePath="..\..\src\server\Connection.h">
+			</File>
+			<File
+				RelativePath="..\..\src\server\ListenerThread.cpp">
+			</File>
+			<File
+				RelativePath="..\..\src\server\ListenerThread.h">
 			</File>
 			<File
 				RelativePath="..\..\src\server\Main.cpp">
+			</File>
+			<File
+				RelativePath="..\..\src\server\ReaderThread.cpp">
+			</File>
+			<File
+				RelativePath="..\..\src\server\ReaderThread.h">
+			</File>
+			<File
+				RelativePath="..\..\src\server\World.cpp">
+			</File>
+			<File
+				RelativePath="..\..\src\server\World.h">
+			</File>
+			<File
+				RelativePath="..\..\src\server\WriterThread.cpp">
+			</File>
+			<File
+				RelativePath="..\..\src\server\WriterThread.h">
 			</File>
 		</Filter>
 	</Files>

@@ -11,6 +11,7 @@ Global
 		ConfigName.1 = Release
 	EndGlobalSection
 	GlobalSection(ProjectDependencies) = postSolution
+		{084A19A1-07D9-4C88-BA1F-B47A04427F6D}.0 = {03B95B05-B6D6-4FB1-B9AC-269467287C88}
 		{9A8DD0EB-2ADD-4815-9E3D-E818A9297C9C}.0 = {03B95B05-B6D6-4FB1-B9AC-269467287C88}
 	EndGlobalSection
 	GlobalSection(ProjectConfiguration) = postSolution

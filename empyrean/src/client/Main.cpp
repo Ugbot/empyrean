@@ -6,7 +6,6 @@
 #include <time.h>
 #include <SDL.h>
 #include <SDL_opengl.h>
-#include <SDL_net.h>
 #include "Application.h"
 #include <Error.h>
 #include "FPSCounter.h"
