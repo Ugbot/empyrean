@@ -220,6 +220,9 @@ namespace pyr {
         //g_SymCleanup(g_process);
         
         // We should cleanup the loaded dbghelp.dll too.
+        
+        // We could fix this with a refcounting scheme for initializing the
+        // callstack module.
     }
 
     static void requireProcessHandle() {
@@ -273,13 +276,23 @@ namespace pyr {
         
         void get() {
             requireProcessHandle();
-            requireDbgHelpAPI();
             
             HANDLE thread = GetCurrentThread();
             if (!thread) {
                 throw CallStackError("GetCurrentThread() failed");
             }
             
+            // According to MSDN, GetThreadContext shouldn't be called
+            // from a running thread.  However, we've found it seems to
+            // work in practice.  See
+            // http://www.flipcode.com/cgi-bin/msg.cgi?showThread=00005090&forum=general&id=-1
+            // for solutions that don't use GetThreadContext.
+            CONTEXT context;
+            context.ContextFlags = CONTEXT_FULL;
+            if (!GetThreadContext(thread, &context)) {
+                throw CallStackError("GetThreadContext() failed");
+            }
+
             STACKFRAME64 stackframe;
             ZeroMemory(&stackframe, sizeof(stackframe));
             // These modes might be different for the 64-bit archs?
@@ -288,11 +301,6 @@ namespace pyr {
             stackframe.AddrFrame.Mode  = AddrModeFlat;
             stackframe.AddrBStore.Mode = AddrModeFlat;
             
-            CONTEXT context;
-            context.ContextFlags = CONTEXT_FULL;
-            if (!GetThreadContext(thread, &context)) {
-                throw CallStackError("GetThreadContext() failed");
-            }
             stackframe.AddrPC.Offset    = context.Eip;
             stackframe.AddrStack.Offset = context.Esp;
             stackframe.AddrFrame.Offset = context.Ebp;
