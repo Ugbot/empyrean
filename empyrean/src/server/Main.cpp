@@ -2,6 +2,7 @@
 #include <stdexcept>
 #include "Error.h"
 #include "ListenerThread.h"
+#include "TimeUtility.h"
 #include "Utility.h"
 #include "World.h"
 
@@ -17,10 +18,10 @@ namespace pyr {
         ScopedPtr<Thread> listener(new ListenerThread(PORT));
         listener->start();
         
-        PRIntervalTime last = PR_IntervalNow();        
+        float last = getNow();
         for (;;) {
-            PRIntervalTime now = PR_IntervalNow();
-            float dt = 1000000.0f * PR_IntervalToMicroseconds(now - last);
+            float now = getNow();
+            float dt = now - last;
             last = now;
         
             world.update(dt);

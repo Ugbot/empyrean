@@ -1,4 +1,3 @@
-
 #include <SDL_opengl.h>
 
 #include "GameState.h"
@@ -74,27 +73,6 @@ namespace pyr {
             _particles->setPos(gmtl::Vec2f(x,y));
         }
 
-        /*
-        glDisable(GL_TEXTURE_2D);
-        glPushMatrix();
-            float x = _inputX->getValue() * 400;
-            float y = _inputY->getValue() * 300;
-            glTranslatef(x, y, 0);
-            
-            glRotatef(_rotation, 0, 0, 1);
-            
-            float scale = fade * 1000 + 100;
-            glScalef(scale, scale, scale);
-            
-            glBegin(GL_QUADS);
-            glColor3f(1, 0, 0); glVertex2f(-0.5f, -0.5f);
-            glColor3f(0, 1, 0); glVertex2f(-0.5f,  0.5f);
-            glColor3f(0, 0, 1); glVertex2f( 0.5f,  0.5f);
-            glColor3f(1, 0, 1); glVertex2f( 0.5f, -0.5f);
-            glEnd();
-        glPopMatrix();
-        */
-        
         for (unsigned i = 0; i < _entities.size(); ++i) {
             glPushMatrix();
             glTranslate(_entities[i]->getPos());

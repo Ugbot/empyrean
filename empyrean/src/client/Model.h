@@ -1,8 +1,7 @@
 #ifndef PYR_MODEL_H
 #define PYR_MODEL_H
 
-class CalCoreModel;
-class CalModel;
+#include <cal3d/cal3d.h>
 
 namespace pyr {
     class CoreModel;

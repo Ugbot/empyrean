@@ -1,6 +1,7 @@
 #include <fstream>
 #include <prinrval.h>
 #include "Profiler.h"
+#include "TimeUtility.h"
 
 namespace pyr {
     using std::map;
@@ -15,10 +16,6 @@ namespace pyr {
     map<string, Profiler::Process> Profiler::_processes;
     stack<Profiler::Process*>      Profiler::_procHistory;
     
-    float getNow() {
-        return float(PR_IntervalToMicroseconds(PR_IntervalNow())) * 1000000.0f;
-    }
-
     Profiler::Profiler(const string& name) {
         float now = getNow();
 

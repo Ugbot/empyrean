@@ -7,17 +7,20 @@
 #include <SDL.h>
 #include <SDL_opengl.h>
 #include "Application.h"
-#include <Error.h>
+#include "Error.h"
 #include "FPSCounter.h"
 #include "InputManager.h"
 #include "Profiler.h"
-#include <SDLUtility.h>
+#include "SDLUtility.h"
+#include "TimeUtility.h"
 
 namespace pyr {
 
     void runClient() {
         pyr::Profiler("main");
 
+        // initialize the random number generator in case we ever
+        // decide to use rand()
         srand(time(0));
         
         initializeSDL(SDL_INIT_NOPARACHUTE | SDL_INIT_VIDEO | SDL_INIT_TIMER);
@@ -34,8 +37,8 @@ namespace pyr {
         SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE,   16);
         SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
 
-        const int width  = 1024;
-        const int height = 768;
+        const int width  = 640;
+        const int height = 480;
         const int bpp    = info->vfmt->BitsPerPixel;
         if (!SDL_SetVideoMode(width, height, bpp, SDL_OPENGL)) {
             throwSDLError("Setting video mode failed");
@@ -50,7 +53,7 @@ namespace pyr {
         
         pyr::FPSCounter counter;
 
-        Uint32 last_time = SDL_GetTicks();
+        float last_time = getNow();
         while (!app.shouldQuit()) {
             bool should_quit = false;
 
@@ -95,12 +98,12 @@ namespace pyr {
                 break;
             }
 
-            Uint32 now = SDL_GetTicks();
+            float now = getNow();
 
             // ignore wraparound
             if (now >= last_time) {
-                float dt = float(now - last_time) / 1000.0f;
-            
+                float dt = now - last_time;
+                
                 app.update(dt);
                 app.draw();
                 SDL_GL_SwapBuffers();
