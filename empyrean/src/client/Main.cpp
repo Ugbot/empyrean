@@ -110,7 +110,10 @@ namespace pyr {
                 
                 app.update(dt);
                 app.draw();
-                SDL_GL_SwapBuffers();
+                {
+                    PYR_PROFILE_BLOCK("PageFlip");
+                    SDL_GL_SwapBuffers();
+                }
 
                 counter.update(dt);
                 

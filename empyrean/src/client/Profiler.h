@@ -82,7 +82,7 @@ namespace pyr {
 
 };
 
-#if defined(DEBUG) || defined(_DEBUG)
+#if 1 || defined(DEBUG) || defined(_DEBUG)
 #   define PYR_ENABLE_PROFILE
 #endif
 

@@ -37,9 +37,7 @@ namespace pyr {
         _totalFadeTime = 0;
         _currentFadeTime = 0;
 
-        _fontRenderer = gltext::CreateRenderer(gltext::BITMAP);
-        _font = gltext::CreateFont("fonts/arial.ttf", gltext::PLAIN, 14);
-        _fontRenderer->setFont(_font);
+        _font = new Font("fonts/arial.ttf", 16);
     }
     
     void Application::resize(int width, int height) {
@@ -56,23 +54,19 @@ namespace pyr {
         }
 
         if (_showCPUInfo) {
+            PYR_PROFILE_BLOCK("Render");
+
             const Profiler::ProcessMap& pi = Profiler::getProfileInfo();
             float totaltime = Profiler::getTotalTime();
 
-            glDisable(GL_BLEND);
             glPushMatrix();
 
-            glTranslatef(0,(float)_font->getAscent(),0);
-
-            std::stringstream ss;
+            // Temp hack.  We'll have to do something about this sooner or later.   
+            glScalef(400.0f / _width, 300.0f / _height, 1.0f);
             for (Profiler::ProcessMap::const_iterator iter = pi.begin(); iter != pi.end(); iter++) {
-                
+                glTranslatef(0,16,0);
                 int i = int(iter->second.time / totaltime * 100);
-                ss << iter->first << ": " << i << "%";
-                _fontRenderer->render(ss.str().c_str());
-                glTranslatef(0, float(_font->getAscent() + _font->getDescent() + _font->getLineGap()), 0);
-
-                ss.clear();
+                (*_font) << iter->first << ": " << i << "%\n";
             }
 
             glPopMatrix();

@@ -3,6 +3,7 @@
 #include "extgl.h"
 #include "ParticleSystem.h"
 #include "Texture.h"
+#include "Profiler.h"
 
 namespace pyr {
     ParticleSystem::Particle::Particle(
@@ -47,6 +48,8 @@ namespace pyr {
     }
 
     void ParticleSystem::draw() {
+        PYR_PROFILE_BLOCK("Render");
+
         static const float particleSize = 5;
 
         glEnable(GL_TEXTURE_2D);

@@ -4,11 +4,12 @@
 #include <SDL.h>
 
 #include "Utility.h"
+#include "Font.h"
 
-namespace gltext {
+/*namespace gltext {
     class Font;
     class FontRenderer;
-}
+}*/
 
 namespace pyr {
 
@@ -62,8 +63,7 @@ namespace pyr {
 
         bool _showCPUInfo;
 
-        gltext::FontRenderer* _fontRenderer;
-        gltext::Font* _font;
+        Font* _font;
     };
     
 }

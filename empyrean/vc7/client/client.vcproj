@@ -33,7 +33,7 @@
 				Name="VCCustomBuildTool"/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="../base/Debug/base.lib SDL.lib nspr4.lib corona.lib cal3d_d.lib opengl32.lib glu32.lib gltext.lib"
+				AdditionalDependencies="../base/Debug/base.lib SDL.lib nspr4.lib corona.lib cal3d_d.lib opengl32.lib glu32.lib gltext.lib freetype211MT_D.lib"
 				OutputFile="../bin/Debug/client.exe"
 				LinkIncremental="2"
 				AdditionalLibraryDirectories="../../src/third-party/lib"
@@ -82,7 +82,7 @@
 				Name="VCCustomBuildTool"/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="../base/Debug/base.lib SDL.lib nspr4.lib corona.lib cal3d.lib opengl32.lib glu32.lib gltext.lib"
+				AdditionalDependencies="../base/Debug/base.lib SDL.lib nspr4.lib corona.lib cal3d.lib opengl32.lib glu32.lib gltext.lib freetype211MT.lib"
 				OutputFile="../bin/Release/client.exe"
 				LinkIncremental="1"
 				AdditionalLibraryDirectories="../../src/third-party/lib"
@@ -125,6 +125,12 @@
 			</File>
 			<File
 				RelativePath="..\..\src\client\FPSCounter.h">
+			</File>
+			<File
+				RelativePath="..\..\src\client\Font.cpp">
+			</File>
+			<File
+				RelativePath="..\..\src\client\Font.h">
 			</File>
 			<File
 				RelativePath="..\..\src\client\GLUtility.h">

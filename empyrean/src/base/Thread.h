@@ -64,6 +64,8 @@ namespace pyr {
         PRThread* _thread;
         bool      _started;  ///< has the thread been started yet?
         PRInt32   _stopped;  ///< has the thread been stopped?
+
+        Mutex* _mutex;
         
         /// used to implement start()
         /// @{

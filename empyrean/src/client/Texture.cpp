@@ -49,12 +49,59 @@ namespace pyr {
         if (!image) {
             throwTextureError("Could not load image '" + filename + "'");
         }
-      
+
+        createTexture(image->getWidth(), image->getHeight(), (u32*)image->getPixels());
+    }
+
+    Texture::Texture(int width,int height,u32* pixeldata) {
+        createTexture(width, height, pixeldata);
+    }
+
+    Texture::~Texture() {
+        glDeleteTextures(1, &_texture);
+    }    
+
+    void Texture::bind() {
+        glBindTexture(GL_TEXTURE_2D, _texture);
+    }
+
+
+    void Texture::unbind() {
+        glBindTexture(GL_TEXTURE_2D, 0);
+    }
+
+
+    void Texture::drawRectangle(float x1, float y1, float x2, float y2) {
+        bind();
+        glBegin(GL_QUADS);
+        glTexCoord2f(0,          0);           glVertex2f(x1, y1);
+        glTexCoord2f(_realWidth, 0);           glVertex2f(x2, y1); 
+        glTexCoord2f(_realWidth, _realHeight); glVertex2f(x2, y2); 
+        glTexCoord2f(0,          _realHeight); glVertex2f(x1, y2); 
+        glEnd();
+    }
+
+    void Texture::drawRectangle(float x, float y) {
+        drawRectangle(x, y, x + _width, y + _height);
+    }
+
+    int Texture::width() const {
+        return _width;
+    }
+
+    int Texture::height() const {
+        return _height;
+    }
+
+    void Texture::createTexture(int width,int height,u32* pixeldata) {
+        _width = width;
+        _height = height;
+
         // remember the actual size of the image so we know how much of the
         // texture to use when calculating texture coordinates
-        int  real_width  = image->getWidth();
-        int  real_height = image->getHeight();
-        u32* real_pixels = (u32*)image->getPixels();
+        int  real_width  = width;
+        int  real_height = height;
+        u32* real_pixels = pixeldata;
 
         // allocate power of two buffer to store actual texture memory
         // and zero it
@@ -87,31 +134,5 @@ namespace pyr {
         glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
         glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
         glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-    };
-
-
-    Texture::~Texture() {
-        glDeleteTextures(1, &_texture);
-    }
-    
-
-    void Texture::bind() {
-        glBindTexture(GL_TEXTURE_2D, _texture);
-    }
-
-
-    void Texture::unbind() {
-        glBindTexture(GL_TEXTURE_2D, 0);
-    }
-
-
-    void Texture::drawRectangle(float x1, float y1, float x2, float y2) {
-        bind();
-        glBegin(GL_QUADS);
-        glTexCoord2f(0,          0);           glVertex2f(x1, y1);
-        glTexCoord2f(_realWidth, 0);           glVertex2f(x2, y1); 
-        glTexCoord2f(_realWidth, _realHeight); glVertex2f(x2, y2); 
-        glTexCoord2f(0,          _realHeight); glVertex2f(x1, y2); 
-        glEnd();
     }
 }
