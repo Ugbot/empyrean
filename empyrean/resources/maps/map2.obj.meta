@@ -33,7 +33,7 @@
   <node name="Fish" position="25 2 0">
     <property key="entity" value="true"/>
     <property key="behavior" value="python"/>
-    <property key="behaviorResource" value="maps/entity.py"/>
+    <property key="behaviorResource" value="maps/fishmonster.py"/>
     <property key="appearance" value="obj"/>
     <property key="appearanceResource" value="maps/fish-smoothed2.obj"/>
   </node>
