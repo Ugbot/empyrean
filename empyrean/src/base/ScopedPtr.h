@@ -69,15 +69,15 @@ namespace pyr {
     }
 
     template<typename T>
-    bool operator==(const ScopedPtr<T>& a, const T* b) {
+    bool operator==(const ScopedPtr<T>& a, T b) {
         return (a.get() == b);
     }
 
     template<typename T>
-    bool operator==(const T* a, const ScopedPtr<T>& b) {
+    bool operator==(T a, const ScopedPtr<T>& b) {
         return (a == b.get());
     }
-    
+
 
     template<typename T, typename U>
     bool operator!=(const ScopedPtr<T>& a, const ScopedPtr<U>& b) {
@@ -85,15 +85,15 @@ namespace pyr {
     }
 
     template<typename T>
-    bool operator!=(const ScopedPtr<T>& a, const T* b) {
+    bool operator!=(const ScopedPtr<T>& a, T b) {
         return (a.get() != b);
     }
 
     template<typename T>
-    bool operator!=(const T* a, const ScopedPtr<T>& b) {
+    bool operator!=(T a, const ScopedPtr<T>& b) {
         return (a != b.get());
     }
-    
+
 }
 
 
