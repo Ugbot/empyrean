@@ -8,11 +8,11 @@
 #include <SDL_opengl.h>
 #include <SDL_net.h>
 #include "Application.h"
-#include "Error.h"
+#include <Error.h>
 #include "FPSCounter.h"
 #include "InputManager.h"
 #include "Profiler.h"
-#include "SDLUtility.h"
+#include <SDLUtility.h>
 
 namespace pyr {
 

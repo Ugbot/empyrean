@@ -69,4 +69,7 @@ def SetupGL(env):
 base_env = Environment(
     ENV = os.environ)
 Export('base_env SetupSDL SetupGL')
+
+base_env['CCFLAGS'] += "-Isrc/base "
+
 SConscript(dirs = ['src'])
