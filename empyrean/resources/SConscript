@@ -14,7 +14,8 @@ EXTENSIONS = Split("""
     mtl
     meta
     wav
-    
+    mp3
+
     cal3d
     caf
     cfg
@@ -69,4 +70,4 @@ for t in map(Dir, tdirs):
     Default(t)
     env = base_env.Copy(DEST=t)
     Export('env')
-    SConscript(dirs=['cutscene', 'editorrc', 'fonts', 'images', 'maps', 'models', 'sounds'])
+    SConscript(dirs=['cutscene', 'editorrc', 'fonts', 'images', 'maps', 'models', 'music', 'sounds'])

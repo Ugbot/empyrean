@@ -3,6 +3,7 @@ Import('*')
 SOURCES = Split("""
     AppearanceFactory.cpp
     Application.cpp
+    AudioSystem.cpp
     Cal3DAppearance.cpp
     ClientEntity.cpp
     Configuration.cpp

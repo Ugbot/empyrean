@@ -1,3 +1,4 @@
+#include "AudioSystem.h"
 #include "GLUtility.h"
 #include "IntroState.h"
 #include "OpenGL.h"
@@ -9,9 +10,10 @@ namespace pyr {
 
     class MenuState;
 
-    IntroState::IntroState() 
+    IntroState::IntroState()
         : _image(Texture::create("images/intro.tga"))
     {
+        the<AudioSystem>().playMusic("music/minorTune.mp3");
     }
 
     void IntroState::draw() {

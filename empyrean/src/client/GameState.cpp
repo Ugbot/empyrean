@@ -1,6 +1,7 @@
 #include <stdexcept>
 #include "AppearanceFactory.h"
 #include "Application.h"
+#include "AudioSystem.h"
 #include "Constants.h"
 #include "GameState.h"
 #include "GLUtility.h"
@@ -20,14 +21,14 @@
 namespace pyr {
 
     namespace {
-    
+
         Logger& _logger = Logger::get("pyr.State.GameState");
-    
+
     }
 
     GameState::GameState() {
         PYR_PROFILE_BLOCK("GameState::GameState");
-        
+
         definePacketHandler(this, &GameState::handleSetPlayer);
         definePacketHandler(this, &GameState::handleEntityAdded);
         definePacketHandler(this, &GameState::handleEntityRemoved);
@@ -36,17 +37,6 @@ namespace pyr {
         definePacketHandler(this, &GameState::handleCharacterUpdate);
         the<ServerConnection>().addReceiver(this);
 
-        _device = audiere::OpenDevice();
-        if (!_device) {
-            PYR_LOG(_logger, WARN) << "Couldn't open normal Audiere device, trying null...";
-            _device = audiere::OpenDevice("null");
-            if (!_device) {
-                throw std::runtime_error("Error opening null Audiere device");
-            }
-        }
-
-        _sfx = audiere::OpenSoundEffect(_device, "sounds/attack.wav", audiere::MULTIPLE);
-        
         _inputLeft   = &_im.getInput("Left");
         _inputRight  = &_im.getInput("Right");
         _inputJump   = &_im.getInput("Space");
@@ -298,27 +288,25 @@ namespace pyr {
             fastCombo.push_back(comboEvent("AttackB"));
         }
 
-        if(fastCombo.size() > 0 && 
-           fastCombo[0].timer > constants::FAST_COMBO) {
-        
-           // Check combos here
-           std::string combo = checkFastCombos();
+        if(fastCombo.size() > 0 &&
+            fastCombo[0].timer > constants::FAST_COMBO) {
 
-           if(combo != "None") {
-               sc.sendAttack(combo);
-               PYR_LOG(_logger, INFO) << combo << " Special Attack";
-               fastCombo.clear();
-               return;
-           }
+            // Check combos here
+            std::string combo = checkFastCombos();
 
-           // Now if no combos arrived send the commands
-           for(size_t i = 0; i < fastCombo.size(); ++i) {
-               if (_sfx) {
-                   _sfx->play();
-               }
-               sc.sendAttack("Attack");
-           }
-           fastCombo.clear();
+            if(combo != "None") {
+                sc.sendAttack(combo);
+                PYR_LOG(_logger, INFO) << combo << " Special Attack";
+                fastCombo.clear();
+                return;
+            }
+
+            // Now if no combos arrived send the commands
+            for(size_t i = 0; i < fastCombo.size(); ++i) {
+                the<AudioSystem>().playSound("sounds/attack.wav");
+                sc.sendAttack("Attack");
+            }
+            fastCombo.clear();
         }
     }
 

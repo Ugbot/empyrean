@@ -1,7 +1,6 @@
 #ifndef PYR_GAME_STATE_H
 #define PYR_GAME_STATE_H
 
-#include <audiere.h>
 #include <gltext.h>
 #include <vector>
 #include "Connection.h"
@@ -26,9 +25,9 @@ namespace pyr {
         GameState();
         ~GameState();
 
-	const char* getName() const {
+        const char* getName() const {
             return "GameState";
-	}
+        }
 
         void update(float dt);
         void draw();
@@ -49,9 +48,6 @@ namespace pyr {
 
         void comboInterpreter(float dt);
         std::string checkFastCombos();
-
-        audiere::AudioDevicePtr _device;
-        audiere::SoundEffectPtr _sfx;
 
         InputManager _im;
         Input* _inputLeft;
@@ -90,7 +86,7 @@ namespace pyr {
         };
 
         std::vector<comboEvent> fastCombo;
-        std::vector<comboDef> fastComboDefs; 
+        std::vector<comboDef> fastComboDefs;
 
         Inited<bool, false> _showPlayerData;
         Zeroed<int> _lastJoyX;
