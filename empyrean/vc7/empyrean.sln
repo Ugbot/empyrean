@@ -20,6 +20,7 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "phui", "phui\phui.vcproj", 
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "server", "server\server.vcproj", "{084A19A1-07D9-4C88-BA1F-B47A04427F6D}"
 	ProjectSection(ProjectDependencies) = postProject
+		{03B95B05-B6D6-4FB1-B9AC-269467287C88} = {03B95B05-B6D6-4FB1-B9AC-269467287C88}
 	EndProjectSection
 EndProject
 Global
