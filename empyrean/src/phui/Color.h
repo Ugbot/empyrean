@@ -1,5 +1,3 @@
-/* -*- Mode: C++; tab-width: 3; indent-tabs-mode: nil c-basic-offset: 3 -*- */
-// vim:cindent:ts=3:sw=3:et:tw=80:sta:
 /***************************************************************** phui-cpr beg
  *
  * phui - flexible user interface subsystem
@@ -24,8 +22,8 @@
  *
  * -----------------------------------------------------------------
  * File:          $RCSfile: Color.h,v $
- * Date modified: $Date: 2003-08-08 00:17:54 $
- * Version:       $Revision: 1.2 $
+ * Date modified: $Date: 2004-06-05 02:23:23 $
+ * Version:       $Revision: 1.3 $
  * -----------------------------------------------------------------
  *
  ************************************************************** phui-cpr-end */
@@ -36,110 +34,90 @@
 #include "OpenGL.h"
 
 
-namespace phui
-{
-   /**
-    * Color tuple for easier color handling.
-    */
-   template<class TYPE>
-   struct Color
-   {
-      /**
-       * Creates a new color initialized to transparent black.
-       */
-      Color()
-      {
-         r = 0;
-         g = 0;
-         b = 0;
-         a = 0;
-      }
+namespace phui {
+   
+    /**
+     * Color tuple for easier color handling.
+     */
+    struct Color {
+        /**
+         * Creates a new color initialized to transparent black.
+         */
+        Color() {
+            r = 0;
+            g = 0;
+            b = 0;
+            a = 0;
+        }
 
-      /**
-       * Creates a color with the given color values.
-       *
-       * @param r_   the red part of the color
-       * @param g_   the green part of the color
-       * @param b_   the blue part of the color
-       * @param a_   the alpha/transparent part of the color
-       */
-      Color(TYPE r_, TYPE g_, TYPE b_, TYPE a_ = 1.0f)
-      {
-         r = r_;
-         g = g_;
-         b = b_;
-         a = a_;
-      }
+        /**
+         * Creates a color with the given color values.
+         *
+         * @param r_   the red part of the color
+         * @param g_   the green part of the color
+         * @param b_   the blue part of the color
+         * @param a_   the alpha/transparent part of the color
+         */
+        Color(float r_, float g_, float b_, float a_ = 1.0f) {
+            r = r_;
+            g = g_;
+            b = b_;
+            a = a_;
+        }
 
-      /**
-       * Changes this color to the new color values.
-       *
-       * @param r_   the red part of the color
-       * @param g_   the green part of the color
-       * @param b_   the blue part of the color
-       * @param a_   the alpha/transparent part of the color
-       */
-      void set(TYPE r_, TYPE g_, TYPE b_, TYPE a_)
-      {
-         r = r_;
-         g = g_;
-         b = b_;
-         a = a_;
-      }
+        /**
+         * Changes this color to the new color values.
+         *
+         * @param r_   the red part of the color
+         * @param g_   the green part of the color
+         * @param b_   the blue part of the color
+         * @param a_   the alpha/transparent part of the color
+         */
+        void set(float r_, float g_, float b_, float a_) {
+            r = r_;
+            g = g_;
+            b = b_;
+            a = a_;
+        }
 
-      TYPE r;  /**< The red part of the color. */
-      TYPE g;  /**< The green part of the color. */
-      TYPE b;  /**< The blue part of the color. */
-      TYPE a;  /**< The alpha/transparent part of the color. */
+        float r;  /**< The red part of the color. */
+        float g;  /**< The green part of the color. */
+        float b;  /**< The blue part of the color. */
+        float a;  /**< The alpha/transparent part of the color. */
    };
 
-   typedef Color<float>  Colorf;
-   typedef Color<double> Colord;
-
-   template< typename T >
-   inline std::ostream& operator<<(std::ostream& out, const Color<T>& clr)
-   {
-      out<<"("<<clr.r<<", "<<clr.g<<", "<<clr.b<<", "<<clr.a<<")";
+   inline std::ostream& operator<<(std::ostream& out, const Color& clr) {
+      return out << clr.r << ", " << clr.g << ", " << clr.b << ", " << clr.a;
    }
 
-   template< typename T >
-   inline bool operator==(const Color<T>& lhs, const Color<T>& rhs)
-   {
+   inline bool operator==(const Color& lhs, const Color& rhs) {
       return lhs.r == rhs.r && lhs.g == rhs.g && lhs.b == rhs.b && lhs.a == rhs.a;
    }
 
-   template< typename T >
-   inline bool operator!=(const Color<T>& lhs, const Color<T>& rhs)
-   {
+   inline bool operator!=(const Color& lhs, const Color& rhs) {
       return !(lhs == rhs);
    }
 
-   //@{
    /**
     * OpenGL helper function to set our color struct as the current GL color.
     *
     * @param clr     the color to set as the current color
     */
-   inline void glColor(const Colorf& clr)
+   inline void glColor(const Color& clr)
    {
       glColor4f(clr.r, clr.g, clr.b, clr.a);
    }
-   inline void glColor(const Colord& clr)
-   {
-      glColor4d(clr.r, clr.g, clr.b, clr.a);
-   }
-   //@}
 
-   static const Colorf NONE (0, 0, 0, 0);
-   static const Colorf WHITE(1, 1, 1, 1);
-   static const Colorf BLACK(0, 0, 0, 1);
+   static const Color NONE (0, 0, 0, 0);
+   static const Color WHITE(1, 1, 1, 1);
+   static const Color BLACK(0, 0, 0, 1);
 
-   static const Colorf RED    (1, 0,    0, 1);
-   static const Colorf ORANGE (1, 0.5,  0, 1);
-   static const Colorf YELLOW (1, 1,    0, 1);
-   static const Colorf GREEN  (0, 1,    0, 1);
-   static const Colorf BLUE   (0, 0,    1, 1);
-   static const Colorf PURPLE (1, 0,    1, 1);
+   static const Color RED    (1, 0,    0, 1);
+   static const Color ORANGE (1, 0.5,  0, 1);
+   static const Color YELLOW (1, 1,    0, 1);
+   static const Color GREEN  (0, 1,    0, 1);
+   static const Color BLUE   (0, 0,    1, 1);
+   static const Color PURPLE (1, 0,    1, 1);
 }
 
 #endif

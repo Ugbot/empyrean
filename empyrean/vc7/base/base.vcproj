@@ -170,6 +170,9 @@
 				RelativePath="..\..\src\base\Constants.h">
 			</File>
 			<File
+				RelativePath="..\..\src\base\Debug.cpp">
+			</File>
+			<File
 				RelativePath="..\..\src\base\Debug.h">
 			</File>
 			<File

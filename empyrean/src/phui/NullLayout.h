@@ -9,7 +9,7 @@ namespace phui {
 
     class NullLayout : public Layout {
     public:
-        void layout(WidgetContainer* /*container*/) {
+        void layout(Widget* /*widget*/) {
         }
     };
     

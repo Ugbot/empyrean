@@ -1,5 +1,3 @@
-/* -*- Mode: C++; tab-width: 3; indent-tabs-mode: nil c-basic-offset: 3 -*- */
-// vim:cindent:ts=3:sw=3:et:tw=80:sta:
 /***************************************************************** phui-cpr beg
  *
  * phui - flexible user interface subsystem
@@ -24,62 +22,57 @@
  *
  * -----------------------------------------------------------------
  * File:          $RCSfile: RootWidget.h,v $
- * Date modified: $Date: 2004-04-26 00:39:44 $
- * Version:       $Revision: 1.4 $
+ * Date modified: $Date: 2004-06-05 02:23:23 $
+ * Version:       $Revision: 1.5 $
  * -----------------------------------------------------------------
  *
  ************************************************************** phui-cpr-end */
 #ifndef PHUI_ROOT_WIDGET_H
 #define PHUI_ROOT_WIDGET_H
 
-#include "OpenGL.h"
-#include "WidgetContainer.h"
+#include "Widget.h"
 
-namespace phui
-{
-   class RootWidget : public WidgetContainer
-   {
-   public:
-      /**
-       * Creates a new root widget with the given size.
-       *
-       * @param width      the width of the UI
-       * @param height     the height of the UI
-       */
-      RootWidget(int width, int height);
+namespace phui {
 
-      /**
-       * First the projection matrix is modified to 2D orthographic projection.
-       * Then the modelview matrix is setup to support drawing in window
-       * coordinates. Then WidgetContainer::draw() is called.
-       *
-       * @see WidgetContainer::draw()
-       */
-      void draw();
+    class RootWidget : public pyr::RefCounted {
+    public:
+        RootWidget(int width, int height);
 
-      // called from the outside world
-      void genKeyDownEvent(InputKey key);
-      void genKeyUpEvent(InputKey key);
-      void genMouseDownEvent(InputButton button, const Point& p);
-      void genMouseUpEvent(InputButton button, const Point& p);
-      void genMouseMoveEvent(const Point& p);
+        void update(float dt);
+        void draw() const;
 
-      bool isPointerVisible() const;
-      void setPointerVisible(bool visible);
-      void showPointer() { setPointerVisible(true);  }
-      void hidePointer() { setPointerVisible(false); }
+        void add(Widget* w);
+        void remove(Widget* w);
 
-   private:
-      void drawPointer();
-      void drawChildren();
+        // Events generated from the outside world.
+        void genKeyDownEvent(InputKey key);
+        void genKeyUpEvent(InputKey key);
+        void genMouseDownEvent(InputButton button, const Point& p);
+        void genMouseUpEvent(InputButton button, const Point& p);
+        void genMouseMoveEvent(const Point& p);
+        
+    private:
+        static void focus(Widget* w);
+        void capture(Widget* w);
 
-      Point mPointerPosition;
-      bool mPointerVisible;
+        WidgetPtr getMouseEventTarget(const Point& p) const;
+        
+        /// Point p is in coordinate space of Widget w.
+        WidgetPtr findWidgetAtPoint(Widget* w, const Point& p) const;
 
-      InputModifiers mModifiers;
-   };
+        static void updateWidget(Widget* w, float dt);
+        static void drawWidget(Widget* w);
 
-   typedef pyr::RefPtr<RootWidget> RootWidgetPtr;
+        static Point getAbsolutePosition(Widget* w);
+
+        InputModifiers mModifiers;
+
+        Size mSize;
+        WidgetPtr mRoot;
+        WidgetPtr mCapture;
+    };
+    typedef pyr::RefPtr<RootWidget> RootWidgetPtr;
+
 }
 
 #endif

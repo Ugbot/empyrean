@@ -1,5 +1,3 @@
-/* -*- Mode: C++; tab-width: 3; indent-tabs-mode: nil c-basic-offset: 3 -*- */
-// vim:cindent:ts=3:sw=3:et:tw=80:sta:
 /***************************************************************** phui-cpr beg
  *
  * phui - flexible user interface subsystem
@@ -24,14 +22,13 @@
  *
  * -----------------------------------------------------------------
  * File:          $RCSfile: TextField.cpp,v $
- * Date modified: $Date: 2004-03-01 07:17:55 $
- * Version:       $Revision: 1.9 $
+ * Date modified: $Date: 2004-06-05 02:23:23 $
+ * Version:       $Revision: 1.10 $
  * -----------------------------------------------------------------
  *
  ************************************************************** phui-cpr-end */
 #include "OpenGL.h"
 #include "TextField.h"
-#include "WidgetContainer.h"
 
 namespace phui
 {
@@ -40,10 +37,10 @@ namespace phui
         , mCursorScreenPosition(0)
         , mCursorCharacterPosition(0)
     {
-        setBackgroundColor(Colorf(1.0f, 1.0f, 1.0f, 0.2f));
+        setBackgroundColor(Color(1.0f, 1.0f, 1.0f, 0.2f));
     }
 
-    void TextField::draw() {
+    void TextField::draw() const {
         const Size& size = getSize();
         const int width = size.getWidth();
         const int height = size.getHeight();

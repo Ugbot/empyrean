@@ -1,5 +1,3 @@
-/* -*- Mode: C++; tab-width: 3; indent-tabs-mode: nil c-basic-offset: 3 -*- */
-// vim:cindent:ts=3:sw=3:et:tw=80:sta:
 /***************************************************************** phui-cpr beg
  *
  * phui - flexible user interface subsystem
@@ -24,139 +22,234 @@
  *
  * -----------------------------------------------------------------
  * File:          $RCSfile: RootWidget.cpp,v $
- * Date modified: $Date: 2003-09-23 09:24:56 $
- * Version:       $Revision: 1.6 $
+ * Date modified: $Date: 2004-06-05 02:23:23 $
+ * Version:       $Revision: 1.7 $
  * -----------------------------------------------------------------
  *
  ************************************************************** phui-cpr-end */
 #include "RootWidget.h"
 
-namespace phui
-{
-   RootWidget::RootWidget(int width, int height)
-   {
-      mPointerVisible = true;
-      mModifiers = IMOD_NONE;
-      setSize(Size(width, height));
-   }
-
-   void RootWidget::draw()
-   {
-      const Size& size = getSize();
-      const int width = size.getWidth();
-      const int height = size.getHeight();
-
-      // setup the projection matrix
-      glMatrixMode(GL_PROJECTION);
-      glPushMatrix();
-      glLoadIdentity();
-      gluOrtho2D(0, width, height, 0);
-
-      // setup the modelview matrix
-      glMatrixMode(GL_MODELVIEW);
-      glPushMatrix();
-      glLoadIdentity();
-
-      // Make sure the client isn't affected by our changes to OpenGL state.
-      glPushAttrib(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT |
-                   GL_ENABLE_BIT | GL_SCISSOR_BIT);
-      {
-         // disable depth testing since all draws occur at the same level
-         glDisable(GL_DEPTH_TEST);
-
-         // we need to clip widgets
-         glEnable(GL_SCISSOR_TEST);
-
-         // turn on alpha blending
-         glEnable(GL_BLEND);
-         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-
-         drawChildren();
-         if (mPointerVisible)
-         {
-            drawPointer();
-         }
-      }
-      glPopAttrib();
-
-      // restore old matrices
-      glMatrixMode(GL_MODELVIEW);
-      glPopMatrix();
-      glMatrixMode(GL_PROJECTION);
-      glPopMatrix();
-   }
-
-   InputModifiers getPlainMod(InputKey key) {
-      switch (key) {
-         case KEY_CTRL:  return IMOD_CTRL;
-         case KEY_ALT:   return IMOD_ALT;
-         case KEY_SHIFT: return IMOD_SHIFT;
-         default:        return IMOD_NONE;
-      }
-   }
-
-   InputModifiers getStickyMod(InputKey key) {
-      switch (key) {
-         case KEY_CAPS_LOCK:   return IMOD_CAPS_LOCK;
-         case KEY_NUM_LOCK:    return IMOD_NUM_LOCK;
-         case KEY_SCROLL_LOCK: return IMOD_SCROLL_LOCK;
-         default:              return IMOD_NONE;
-      }
-   }
-
-   void RootWidget::genKeyDownEvent(InputKey key)
-   {
-      mModifiers |= getPlainMod(key);
-      mModifiers ^= getStickyMod(key);
-
-      onKeyDown(key, mModifiers);
-   }
-
-   void RootWidget::genKeyUpEvent(InputKey key)
-   {
-      mModifiers &= ~getPlainMod(key);
-      mModifiers ^= getStickyMod(key);
-
-      onKeyUp(key, mModifiers);
-   }
-
-   void RootWidget::genMouseDownEvent(InputButton button, const Point& p)
-   {
-      onMouseDown(button, p);
-   }
-
-   void RootWidget::genMouseUpEvent(InputButton button, const Point& p)
-   {
-      onMouseUp(button, p);
-   }
-
-   void RootWidget::genMouseMoveEvent(const Point& p)
-   {
-      mPointerPosition = p;
-      onMouseMove(p);
-   }
+namespace phui {
    
-   bool RootWidget::isPointerVisible() const
-   {
-      return mPointerVisible;
-   }
-   
-   void RootWidget::setPointerVisible(bool visible)
-   {
-      mPointerVisible = visible;
-   }
-   
-   void RootWidget::drawPointer()
-   {
-      glColor(WHITE);
-      glBegin(GL_LINES);
-      glVertex(mPointerPosition);
-      glVertex(mPointerPosition + Point(5, 5));
-      glEnd();
-   }
+    RootWidget::RootWidget(int width, int height) {
+        mModifiers = IMOD_NONE;
+        mSize = Size(width, height);
+        mRoot = new Widget;
+        mRoot->setSize(mSize);
+    }
 
-   void RootWidget::drawChildren()
-   {
-      WidgetContainer::draw();
-   }
+    void RootWidget::update(float dt) {
+        updateWidget(mRoot, dt);
+    }
+
+    void RootWidget::draw() const {
+        const int width  = mSize.getWidth();
+        const int height = mSize.getHeight();
+
+        // setup the projection matrix
+        glMatrixMode(GL_PROJECTION);
+        glPushMatrix();
+        glLoadIdentity();
+        gluOrtho2D(0, width, height, 0);
+
+        // setup the modelview matrix
+        glMatrixMode(GL_MODELVIEW);
+        glPushMatrix();
+        glLoadIdentity();
+
+        // Make sure the client isn't affected by our changes to OpenGL state.
+        glPushAttrib(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT |
+                     GL_ENABLE_BIT | GL_SCISSOR_BIT);
+            // disable depth testing since all draws occur at the same level
+            glDisable(GL_DEPTH_TEST);
+
+            // we need to clip widgets
+            glEnable(GL_SCISSOR_TEST);
+
+            // turn on alpha blending
+            glEnable(GL_BLEND);
+            glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+            drawWidget(mRoot);
+        glPopAttrib();
+
+        // restore old matrices
+        glMatrixMode(GL_MODELVIEW);
+        glPopMatrix();
+        glMatrixMode(GL_PROJECTION);
+        glPopMatrix();
+    }
+
+    void RootWidget::add(Widget* w) {
+        mRoot->add(w);
+    }
+
+    void RootWidget::remove(Widget* w) {
+        mRoot->remove(w);
+    }
+
+    InputModifiers getPlainMod(InputKey key) {
+        switch (key) {
+            case KEY_CTRL:  return IMOD_CTRL;
+            case KEY_ALT:   return IMOD_ALT;
+            case KEY_SHIFT: return IMOD_SHIFT;
+            default:        return IMOD_NONE;
+        }
+    }
+
+    InputModifiers getStickyMod(InputKey key) {
+        switch (key) {
+            case KEY_CAPS_LOCK:   return IMOD_CAPS_LOCK;
+            case KEY_NUM_LOCK:    return IMOD_NUM_LOCK;
+            case KEY_SCROLL_LOCK: return IMOD_SCROLL_LOCK;
+            default:              return IMOD_NONE;
+        }
+    }
+
+    WidgetPtr getRecursiveFocus(WidgetPtr w) {
+        if (w) {
+            WidgetPtr focus = w->getFocus();
+            if (focus) {
+                return getRecursiveFocus(focus);
+            }
+        }
+        return w;
+    }
+
+    void RootWidget::genKeyDownEvent(InputKey key) {
+        mModifiers |= getPlainMod(key);
+        mModifiers ^= getStickyMod(key);
+
+        WidgetPtr w = getRecursiveFocus(mRoot);
+        if (w) {
+            w->onKeyDown(key, mModifiers);
+        }
+    }
+
+    void RootWidget::genKeyUpEvent(InputKey key) {
+        mModifiers &= ~getPlainMod(key);
+        mModifiers ^= getStickyMod(key);
+
+        WidgetPtr w = getRecursiveFocus(mRoot);
+        if (w) {
+            w->onKeyUp(key, mModifiers);
+        }
+    }
+
+    void RootWidget::genMouseDownEvent(InputButton button, const Point& p) {
+        // OnMouseDown always releases capture.
+        capture(0);
+
+        if (WidgetPtr widget = getMouseEventTarget(p)) {
+            // we'll want to simply ignore this event if widget is disabled
+            if (widget->isEnabled()) {
+                if (widget->isFocusable()) {
+                    focus(widget);
+                }
+                capture(widget);
+                widget->onMouseDown(button, p - getAbsolutePosition(widget));
+            }
+        } else {
+            mRoot->onMouseDown(button, p);
+        }
+    }
+
+    void RootWidget::genMouseUpEvent(InputButton button, const Point& p) {
+        if (WidgetPtr widget = getMouseEventTarget(p)) {
+            if (widget->isEnabled()) {
+                widget->onMouseUp(button, p - getAbsolutePosition(widget));
+            }
+        } else {
+            mRoot->onMouseUp(button, p);
+        }
+        capture(0);
+    }
+
+    void RootWidget::genMouseMoveEvent(const Point& p) {
+        if (WidgetPtr widget = getMouseEventTarget(p)) {
+            if (widget->isEnabled()) {
+                widget->onMouseMove(p - getAbsolutePosition(widget));
+            }
+        } else {
+            mRoot->onMouseMove(p);
+        }
+    }
+
+    void RootWidget::focus(Widget* w) {
+        while (w->getParent()) {
+            w->getParent()->focus(w);
+            w = w->getParent();
+        }
+    }
+
+    void RootWidget::capture(Widget* w) {
+        mCapture = w;
+    }
+
+    WidgetPtr RootWidget::getMouseEventTarget(const Point& p) const {
+        return (mCapture ? mCapture : findWidgetAtPoint(mRoot, p));
+    }
+
+    WidgetPtr RootWidget::findWidgetAtPoint(Widget* w, const Point& p) const {
+        if (!w) {
+            return 0;
+        }
+
+        if (WidgetPtr modal = w->getModal()) {
+            return findWidgetAtPoint(modal, p - modal->getPosition());
+        }
+        
+        WidgetPtr found = 0;
+
+        // Check this widget.
+        if (w->contains(p)) {
+            found = w;
+        }
+
+        // Check all children.
+        for (size_t i = 0; i < w->getChildCount(); ++i) {
+            WidgetPtr child = w->getChild(i);
+            if (WidgetPtr r = findWidgetAtPoint(child, p - child->getPosition())) {
+                found = r;
+            }
+        }
+
+        return found;
+    }
+
+    void RootWidget::updateWidget(Widget* w, float dt) {
+        if (w->isEnabled()) {
+            w->update(dt);
+        }
+        for (size_t i = 0; i < w->getChildCount(); ++i) {
+            updateWidget(w->getChild(i), dt);
+        }
+        if (WidgetPtr modal = w->getModal()) {
+            updateWidget(modal, dt);
+        }
+    }
+
+    void RootWidget::drawWidget(Widget* w) {
+        glPushMatrix();
+        glTranslate(w->getPosition());
+        w->draw();
+
+        for (size_t i = 0; i < w->getChildCount(); ++i) {
+            drawWidget(w->getChild(i));
+        }
+        if (WidgetPtr modal = w->getModal()) {
+            drawWidget(modal);
+        }
+        glPopMatrix();
+    }
+
+    Point RootWidget::getAbsolutePosition(Widget* w) {
+        if (w) {
+            return getAbsolutePosition(w->getParent()) + w->getPosition();
+        } else {
+            return Point(0, 0);
+        }
+        
+    }
+
 }

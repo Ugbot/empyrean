@@ -4,7 +4,7 @@
 #include "GLUtility.h"
 #include "Input.h"
 #include "InputManager.h"
-#include "MenuState.h"
+#include "LobbyState.h"
 #include "Model.h"
 #include "ModelRenderer.h"
 #include "PacketTypes.h"
@@ -187,13 +187,13 @@ namespace pyr {
         // Start
         if(_inputJoyStart->getDelta() > gmtl::GMTL_EPSILON) {
             sc.disconnect();
-            invokeTransition<MenuState>();
+            invokeTransition<LobbyState>();
         }
 
         // Quit
         if (_inputQuit->getValue() >= 0.50f) {
             sc.disconnect();
-            invokeTransition<MenuState>();
+            invokeTransition<LobbyState>();
         }
         
         // interpret attack and jump commands for combos

@@ -170,6 +170,8 @@ namespace pyr {
         GameConnectionData* cd = getData(connection);
         PYR_ASSERT(cd, "No ConnectionData.  connectionRemoved() called before connectionAdded()?");
 
+        // Why do we send it to all connections, and then the connection passed?
+        // Is the passed connection removed before calling this function?
         sendAll(new EntityRemovedPacket(cd->playerEntity->getID()));
         connection->sendPacket(new EntityRemovedPacket(
                                    cd->playerEntity->getID()));

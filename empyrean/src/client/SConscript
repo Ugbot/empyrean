@@ -6,16 +6,25 @@ SOURCES = Split("""
     Cal3DAppearance.cpp
     ClientEntity.cpp
     Configuration.cpp
+    ConnectWindow.cpp
+    ConnectingWindow.cpp
     CreditsState.cpp
     CutSceneState.cpp
     GameState.cpp
     HUD.cpp
     InputManager.cpp
     IntroState.cpp
+    JoinGameWindow.cpp
+    JoiningGameWindow.cpp
+    LobbyState.cpp
+    LoggingInWindow.cpp
+    LoginWindow.cpp
     Main.cpp
+    MainMenuWindow.cpp
     MenuState.cpp
     Model.cpp
     ModelRenderer.cpp
+    NewGameWindow.cpp
     ParticleEmitter.cpp
     ParticleSystem.cpp
     Player.cpp
@@ -24,6 +33,7 @@ SOURCES = Split("""
     SDLUtility.cpp
     ServerConnection.cpp
     ServerConnectionThread.cpp
+    UIState.cpp
 """)
 
 env = env.Copy()

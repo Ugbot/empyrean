@@ -161,6 +161,15 @@
 				RelativePath="..\..\src\phui\ListSelectionListener.h">
 			</File>
 			<File
+				RelativePath="..\..\src\phui\MessageBox.cpp">
+			</File>
+			<File
+				RelativePath="..\..\src\phui\MessageBox.h">
+			</File>
+			<File
+				RelativePath="..\..\src\phui\ModalListener.h">
+			</File>
+			<File
 				RelativePath="..\..\src\phui\NullLayout.h">
 			</File>
 			<File
@@ -221,22 +230,10 @@
 				RelativePath="..\..\src\phui\Widget.h">
 			</File>
 			<File
-				RelativePath="..\..\src\phui\WidgetContainer.cpp">
-			</File>
-			<File
-				RelativePath="..\..\src\phui\WidgetContainer.h">
-			</File>
-			<File
 				RelativePath="..\..\src\phui\Window.cpp">
 			</File>
 			<File
 				RelativePath="..\..\src\phui\Window.h">
-			</File>
-			<File
-				RelativePath="..\..\src\phui\WindowAdapter.h">
-			</File>
-			<File
-				RelativePath="..\..\src\phui\WindowListener.h">
 			</File>
 		</Filter>
 	</Files>

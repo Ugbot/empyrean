@@ -8,14 +8,16 @@
 
 namespace phui {
 
-    class WidgetContainer;
+    class Widget;
 
     class Layout : public pyr::RefCounted {
     public:
-        /** container is not a smart pointer because this is called indirectly
+        /**
+         * widget is not a smart pointer because this is called indirectly
          * from WidgetContainer's constructor, which causes the container to be
-         * deleted. */
-        virtual void layout(WidgetContainer* container) = 0;
+         * deleted.
+         */
+        virtual void layout(Widget* widget) = 0;
     };
     
     typedef pyr::RefPtr<Layout> LayoutPtr;

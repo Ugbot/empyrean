@@ -17,7 +17,7 @@ namespace phui {
         
         BoxLayout(Type type);
     
-        void layout(WidgetContainer* container);   
+        void layout(Widget* widget);   
         
     private:
         Type _type;

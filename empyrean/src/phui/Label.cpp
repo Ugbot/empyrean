@@ -1,5 +1,3 @@
-/* -*- Mode: C++; tab-width: 3; indent-tabs-mode: nil c-basic-offset: 3 -*- */
-// vim:cindent:ts=3:sw=3:et:tw=80:sta:
 /***************************************************************** phui-cpr beg
  *
  * phui - flexible user interface subsystem
@@ -24,14 +22,13 @@
  *
  * -----------------------------------------------------------------
  * File:          $RCSfile: Label.cpp,v $
- * Date modified: $Date: 2003-11-09 08:15:56 $
- * Version:       $Revision: 1.5 $
+ * Date modified: $Date: 2004-06-05 02:23:23 $
+ * Version:       $Revision: 1.6 $
  * -----------------------------------------------------------------
  *
  ************************************************************** phui-cpr-end */
 #include "OpenGL.h"
 #include "Label.h"
-#include "WidgetContainer.h"
 
 namespace phui
 {
@@ -41,7 +38,7 @@ namespace phui
       setBackgroundColor(NONE);
    }
 
-   void Label::draw()
+   void Label::draw() const
    {
       const Size& size = getSize();
       const int width = size.getWidth();

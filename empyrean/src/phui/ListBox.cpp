@@ -1,5 +1,3 @@
-/* -*- Mode: C++; tab-width: 3; indent-tabs-mode: nil c-basic-offset: 3 -*- */
-// vim:cindent:ts=3:sw=3:et:tw=80:sta:
 /***************************************************************** phui-cpr beg
  *
  * phui - flexible user interface subsystem
@@ -24,8 +22,8 @@
  *
  * -----------------------------------------------------------------
  * File:          $RCSfile: ListBox.cpp,v $
- * Date modified: $Date: 2004-04-26 00:39:44 $
- * Version:       $Revision: 1.7 $
+ * Date modified: $Date: 2004-06-05 02:23:23 $
+ * Version:       $Revision: 1.8 $
  * -----------------------------------------------------------------
  *
  ************************************************************** phui-cpr-end */
@@ -34,7 +32,6 @@
 
 #include "OpenGL.h"
 #include "ListBox.h"
-#include "WidgetContainer.h"
 
 namespace phui
 {
@@ -43,7 +40,7 @@ namespace phui
       mSelectedItem = -1;
    }
 
-   void ListBox::draw()
+   void ListBox::draw() const
    {
       const Size& size = getSize();
       const int width = size.getWidth();

@@ -13,9 +13,9 @@ namespace phui {
     public:
         Picture(const std::string& filename);
         
-        void draw();
+        void draw() const;
         
-        bool isFocusable() {
+        bool isFocusable() const {
             return false;
         }
         

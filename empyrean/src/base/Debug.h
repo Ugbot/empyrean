@@ -6,26 +6,21 @@
     do { } while (false)
 
 
-
 #if defined(DEBUG) || defined(_DEBUG)
 
     #ifdef _MSC_VER
     
-        #ifndef STRICT
-            #define STRICT
-        #endif
-        #ifndef WIN32_LEAN_AND_MEAN
-            #define WIN32_LEAN_AND_MEAN
-        #endif
-        #ifndef NOMINMAX
-            #define NOMINMAX
-        #endif
-        #include <windows.h>
-    
-        #define PYR_ASSERT(condition, label)                            \
-            if (!(condition)) {                                         \
-                MessageBox(NULL, (label), "Empyrean Assertion", MB_OK); \
-                __asm int 3                                             \
+        namespace pyr {
+
+            // Do the MessageBox in a source file to avoid namespace pollution.
+            void showMessageBox(const char* text, const char* caption);
+
+        }
+
+        #define PYR_ASSERT(condition, label)                    \
+            if (!(condition)) {                                 \
+                showMessageBox((label), "Empyrean Assertion");  \
+                __asm int 3                                     \
             } PYR_REQUIRE_SEMI
         
     #else

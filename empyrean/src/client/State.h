@@ -11,6 +11,10 @@ namespace pyr {
     class State {
     public:
         virtual ~State() { }
+        
+        // The order of the update and draw methods in this class reflect the
+        // fact that update is called just before draw in order to minimize
+        // perceived system latency.  (Or maybe it's just a wrong guess.)
 
         /// @param dt  elapsed time in seconds
         virtual void update(float dt) { }
@@ -30,7 +34,7 @@ namespace pyr {
         bool isPointerVisible() const {
             return _pointerVisible;
         }
-        
+
     protected:
         template<typename T>
         static void invokeTransition(Type2Type<T> = Type2Type<T>()) {

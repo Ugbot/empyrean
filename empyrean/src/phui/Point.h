@@ -1,5 +1,3 @@
-/* -*- Mode: C++; tab-width: 3; indent-tabs-mode: nil c-basic-offset: 3 -*- */
-// vim:cindent:ts=3:sw=3:et:tw=80:sta:
 /***************************************************************** phui-cpr beg
  *
  * phui - flexible user interface subsystem
@@ -24,8 +22,8 @@
  *
  * -----------------------------------------------------------------
  * File:          $RCSfile: Point.h,v $
- * Date modified: $Date: 2003-08-11 23:19:57 $
- * Version:       $Revision: 1.2 $
+ * Date modified: $Date: 2004-06-05 02:23:23 $
+ * Version:       $Revision: 1.3 $
  * -----------------------------------------------------------------
  *
  ************************************************************** phui-cpr-end */
@@ -35,75 +33,64 @@
 #include "OpenGL.h"
 #include <iostream>
 
-namespace phui
-{
-   class Point
-   {
-   public:
-      Point()               { x = 0;   y = 0; }
-      Point(int x_, int y_) { x = x_ ; y = y_; }
-      Point(const Point& p) { x = p.x; y = p.y; }
+namespace phui {
 
-      void set(int x_, int y_)
-      {
-         x = x_;
-         y = y_;
-      }
+    class Point {
+    public:
+        Point()               { x = 0;   y = 0; }
+        Point(int x_, int y_) { x = x_ ; y = y_; }
+        Point(const Point& p) { x = p.x; y = p.y; }
 
-      int x;
-      int y;
+        void set(int x_, int y_) {
+            x = x_;
+            y = y_;
+        }
 
-      Point& operator+=(const Point& p)
-      {
-         x += p.x;
-         y += p.y;
-         return *this;
-      }
+        int x;
+        int y;
 
-      Point& operator-=(const Point& p)
-      {
-         x -= p.x;
-         y -= p.y;
-         return *this;
-      }
-   };
+        Point& operator+=(const Point& p) {
+            x += p.x;
+            y += p.y;
+            return *this;
+        }
+
+        Point& operator-=(const Point& p) {
+            x -= p.x;
+            y -= p.y;
+            return *this;
+        }
+    };
 
 
-   inline Point operator-(const Point& lhs, const Point& rhs)
-   {
-      return Point(lhs.x - rhs.x, lhs.y - rhs.y);
-   }
+    inline Point operator-(const Point& lhs, const Point& rhs) {
+        return Point(lhs.x - rhs.x, lhs.y - rhs.y);
+    }
 
-   inline Point operator+(const Point& lhs, const Point& rhs)
-   {
-      return Point(lhs.x + rhs.x, lhs.y + rhs.y);
-   }
+    inline Point operator+(const Point& lhs, const Point& rhs) {
+        return Point(lhs.x + rhs.x, lhs.y + rhs.y);
+    }
 
-   inline bool operator==(const Point& lhs, const Point& rhs)
-   {
-      return (lhs.x == rhs.x && lhs.y == rhs.y);
-   }
+    inline bool operator==(const Point& lhs, const Point& rhs) {
+        return (lhs.x == rhs.x && lhs.y == rhs.y);
+    }
 
-   inline bool operator!=(const Point& lhs, const Point& rhs)
-   {
-      return !(lhs == rhs);
-   }
+    inline bool operator!=(const Point& lhs, const Point& rhs) {
+        return !(lhs == rhs);
+    }
 
-   inline std::ostream& operator<<(std::ostream& os, const Point& p)
-   {
-      os << "(" << p.x << ", " << p.y << ")";
-      return os;
-   }
+    inline std::ostream& operator<<(std::ostream& os, const Point& p) {
+        os << "(" << p.x << ", " << p.y << ")";
+        return os;
+    }
 
-   inline void glVertex(const Point& p)
-   {
-      glVertex2i(p.x, p.y);
-   }
+    inline void glVertex(const Point& p) {
+        glVertex2i(p.x, p.y);
+    }
    
-   inline void glTranslate(const Point& p)
-   {
-      glTranslatef(float(p.x), float(p.y), 0);
-   }
+    inline void glTranslate(const Point& p) {
+        glTranslatef(float(p.x), float(p.y), 0);
+    }
 }
 
 #endif

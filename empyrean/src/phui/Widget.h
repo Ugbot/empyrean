@@ -1,5 +1,3 @@
-/* -*- Mode: C++; tab-width: 3; indent-tabs-mode: nil c-basic-offset: 3 -*- */
-// vim:cindent:ts=3:sw=3:et:tw=80:sta:
 /***************************************************************** phui-cpr beg
  *
  * phui - flexible user interface subsystem
@@ -24,8 +22,8 @@
  *
  * -----------------------------------------------------------------
  * File:          $RCSfile: Widget.h,v $
- * Date modified: $Date: 2003-11-09 08:15:56 $
- * Version:       $Revision: 1.10 $
+ * Date modified: $Date: 2004-06-05 02:23:23 $
+ * Version:       $Revision: 1.11 $
  * -----------------------------------------------------------------
  *
  ************************************************************** phui-cpr-end */
@@ -36,100 +34,114 @@
 #include "Color.h"
 #include "Input.h"
 #include "Insets.h"
+#include "Layout.h"
+#include "ModalListener.h"
 #include "Point.h"
 #include "Rect.h"
 #include "RefCounted.h"
 #include "RefPtr.h"
 #include "Size.h"
+#include "UnownedPtr.h"
 
 namespace phui {
 
-    // forward declare so we can point to our parent
-    class WidgetContainer;
+    class Widget;
+    typedef pyr::RefPtr<Widget> WidgetPtr;
 
     /// Abstract base class for all Widgets.
     class Widget : public pyr::RefCounted {
     protected:
-        ~Widget() { }
-      
-    public:
-        /// Creates a new widget with width and height 0 and size (0,0).
-        Widget();
+        ~Widget();
 
-        virtual void draw() { };
-        virtual void update(float dt) { };
-      
-        virtual bool isFocusable() { return true; }
-      
+    public:
+        Widget(LayoutPtr layout = 0);
+
+        virtual void update(float dt) { }
+        virtual void draw() const { }
+
+        /// This should probably be false, and have specific widgets return true.
+        virtual bool isFocusable() const { return true; }
+
 
         /// Gets the position of this widget relative to its parent.
-        virtual const Point& getPosition() const;
+        const Point& getPosition() const;
 
         /// Sets the position of this widget relative to its parent.
-        virtual void setPosition(const Point& p);
+        void setPosition(const Point& p);
         void setPosition(int x, int y) { setPosition(Point(x, y)); }
-      
+
         /// Centers the widget within its parent based on its size.
         void center();
-      
+
+        /// Centers the widget on the "screen", which is the highest-level parent.
+        void centerOnScreen();
+
         const Size& getSize() const;
         int getWidth() const  { return getSize().getWidth(); }
         int getHeight() const { return getSize().getHeight(); }
 
-        virtual void setSize(const Size& size);
+        void setSize(const Size& size);
         void setSize(int w, int h) { setSize(Size(w, h)); }
-      
+
         void setPositionAndSize(const Rect& r) {
             setPosition(r.x, r.y);
             setSize(r.width, r.height);
         }
-      
+
         void setPositionAndSize(const Point& pos, const Size& size) {
             setPosition(pos);
             setSize(size);
         }
-      
+
         void setPositionAndSize(int x, int y, int w, int h) {
             setPosition(x, y);
             setSize(w, h);
         }
 
-        /// Gets the insets for this widget.
-        virtual const Insets& getInsets() const;
+        const Insets& getInsets() const;
+        void setInsets(const Insets& insets);
 
-        /// Sets the insets for the widget.
-        virtual void setInsets(const Insets& insets);
+        bool isEnabled() const;
+        void setEnabled(bool enabled);
 
-        virtual bool isEnabled() const;
-        virtual void setEnabled(bool enabled);
-      
         void enable()  { setEnabled(true);  }
         void disable() { setEnabled(false); }
 
-        /// Tests if this widget is visible.
-        virtual bool isVisible() const;
-        virtual void setVisible(bool visible);
-
+        // Visibility.
+        bool isVisible() const;
+        void setVisible(bool visible);
         void show() { setVisible(true); }
         void hide() { setVisible(false); }
 
-        virtual void setBackgroundColor(const Colorf& clr);
-        virtual const Colorf& getBackgroundColor() const;
+        void setBackgroundColor(const Color& clr);
+        const Color& getBackgroundColor() const;
 
-        virtual void setForegroundColor(const Colorf& clr);
-        virtual const Colorf& getForegroundColor() const;
+        void setForegroundColor(const Color& clr);
+        const Color& getForegroundColor() const;
 
-        virtual void setFont(const gltext::FontPtr& font);
-        virtual gltext::FontPtr getFont() const;
+        void setFont(const gltext::FontPtr& font);
+        gltext::FontPtr getFont() const;
 
-        virtual const gltext::FontRendererPtr& getFontRenderer() const;
+        const gltext::FontRendererPtr& getFontRenderer() const;
+
+        void setLayout(LayoutPtr layout);
+        LayoutPtr getLayout() const;
 
         /**
          * Gets the parent container for this widget or NULL if this
          * widget has no container.
          */
-        WidgetContainer* getParent() const;
-      
+        Widget* getParent() const;
+
+        void add(WidgetPtr widget);
+        void remove(WidgetPtr widget);
+
+        size_t getChildCount() const;
+        WidgetPtr getChild(size_t idx) const;
+
+        void focus(WidgetPtr widget);
+        WidgetPtr getFocus() const;
+
         /**
          * Tests if the given point is contained within this widget where the
          * point is relative to this widget's coordinate system.
@@ -147,18 +159,25 @@ namespace phui {
          */
         Point getScreenPosition() const;
 
-        bool hasFocus();
+        bool hasFocus() const;
 
-        // external events
+        void setModal(WidgetPtr w, ModalListener* listener = 0, bool centered = true);
+        WidgetPtr getModal() const;
+        void endModal(int result = 0);
+
+        // Input event handlers.
         virtual void onKeyDown(InputKey key, InputModifiers modifiers) { }
         virtual void onKeyUp(InputKey key, InputModifiers modifiers) { }
         virtual void onMouseDown(InputButton button, const Point& p) { }
         virtual void onMouseUp(InputButton button, const Point& p) { }
         virtual void onMouseMove(const Point& p) { }
-      
+
     private:
-        /// This method is private and should only be used by WidgetContainer.
-        void setParent(WidgetContainer* parent);
+        /**
+         * This method is private because the parent widget calls it on
+         * children that are added.
+         */
+        void setParent(Widget* parent);
 
     private:
         /// The position of the widget in pixels relative to its parent.
@@ -173,19 +192,34 @@ namespace phui {
         bool mEnabled;
         bool mVisible;
 
-        Colorf mBackgroundColor;
-        Colorf mForegroundColor;
+        Color mBackgroundColor;
+        Color mForegroundColor;
 
         gltext::FontRendererPtr mFontRenderer;
 
-        /// The parent container for this widget.
-        WidgetContainer* mParent;
+        /**
+         * The parent container for this widget, only set by the parent
+         * when addChild is called.  This is a weak pointer because we'd
+         * have cyclic references otherwise.
+         */
+        Widget* mParent;
 
-        /// WidgetContainer calls setParent()
-        friend class WidgetContainer;
+        /**
+         * The children of this list, ordered from bottom to top.  The widget
+         * with focus is the last one in the list.
+         */
+        std::vector<WidgetPtr> mChildren;
+
+        WidgetPtr mModal;
+        pyr::UnownedPtr<ModalListener> mModalListener;
+
+        LayoutPtr mLayout;
     };
 
-    typedef pyr::RefPtr<Widget> WidgetPtr;
+
+    /// This is a hack for now.
+    typedef Widget Panel;
+    typedef pyr::RefPtr<Panel> PanelPtr;
 }
 
 #endif

@@ -275,6 +275,12 @@
 				RelativePath="..\..\src\client\IntroState.h">
 			</File>
 			<File
+				RelativePath="..\..\src\client\LobbyState.cpp">
+			</File>
+			<File
+				RelativePath="..\..\src\client\LobbyState.h">
+			</File>
+			<File
 				RelativePath="..\..\src\client\MenuState.cpp">
 			</File>
 			<File
@@ -283,39 +289,67 @@
 			<File
 				RelativePath="..\..\src\client\State.h">
 			</File>
+			<File
+				RelativePath="..\..\src\client\UIState.cpp">
+			</File>
+			<File
+				RelativePath="..\..\src\client\UIState.h">
+			</File>
 		</Filter>
 		<Filter
-			Name="menu screens"
+			Name="main menu"
 			Filter="">
 			<File
-				RelativePath="..\..\src\client\ConnectingScreen.h">
+				RelativePath="..\..\src\client\ConnectingWindow.cpp">
 			</File>
 			<File
-				RelativePath="..\..\src\client\JoinGameScreen.h">
+				RelativePath="..\..\src\client\ConnectingWindow.h">
 			</File>
 			<File
-				RelativePath="..\..\src\client\JoiningGameScreen.h">
+				RelativePath="..\..\src\client\ConnectWindow.cpp">
 			</File>
 			<File
-				RelativePath="..\..\src\client\LobbyScreen.h">
+				RelativePath="..\..\src\client\ConnectWindow.h">
 			</File>
 			<File
-				RelativePath="..\..\src\client\LoggingInScreen.h">
+				RelativePath="..\..\src\client\LoggingInWindow.cpp">
 			</File>
 			<File
-				RelativePath="..\..\src\client\LoginScreen.h">
+				RelativePath="..\..\src\client\LoggingInWindow.h">
 			</File>
 			<File
-				RelativePath="..\..\src\client\MainScreen.h">
+				RelativePath="..\..\src\client\LoginWindow.cpp">
 			</File>
 			<File
-				RelativePath="..\..\src\client\MenuScreen.h">
+				RelativePath="..\..\src\client\LoginWindow.h">
 			</File>
 			<File
-				RelativePath="..\..\src\client\NewCharacterScreen.h">
+				RelativePath="..\..\src\client\MainMenuWindow.cpp">
 			</File>
 			<File
-				RelativePath="..\..\src\client\NewGameScreen.h">
+				RelativePath="..\..\src\client\MainMenuWindow.h">
+			</File>
+		</Filter>
+		<Filter
+			Name="lobby"
+			Filter="">
+			<File
+				RelativePath="..\..\src\client\JoinGameWindow.cpp">
+			</File>
+			<File
+				RelativePath="..\..\src\client\JoinGameWindow.h">
+			</File>
+			<File
+				RelativePath="..\..\src\client\JoiningGameWindow.cpp">
+			</File>
+			<File
+				RelativePath="..\..\src\client\JoiningGameWindow.h">
+			</File>
+			<File
+				RelativePath="..\..\src\client\NewGameWindow.cpp">
+			</File>
+			<File
+				RelativePath="..\..\src\client\NewGameWindow.h">
 			</File>
 		</Filter>
 	</Files>

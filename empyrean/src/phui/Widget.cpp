@@ -1,5 +1,3 @@
-/* -*- Mode: C++; tab-width: 3; indent-tabs-mode: nil c-basic-offset: 3 -*- */
-// vim:cindent:ts=3:sw=3:et:tw=80:sta:
 /***************************************************************** phui-cpr beg
  *
  * phui - flexible user interface subsystem
@@ -24,20 +22,20 @@
  *
  * -----------------------------------------------------------------
  * File:          $RCSfile: Widget.cpp,v $
- * Date modified: $Date: 2003-11-09 08:15:56 $
- * Version:       $Revision: 1.4 $
+ * Date modified: $Date: 2004-06-05 02:23:23 $
+ * Version:       $Revision: 1.5 $
  * -----------------------------------------------------------------
  *
  ************************************************************** phui-cpr-end */
 #include <stdio.h>
 #include <stdexcept>
+#include "NullLayout.h"
 #include "Widget.h"
-#include "WidgetContainer.h"
 
 
 namespace phui {
 
-    Widget::Widget()
+    Widget::Widget(LayoutPtr layout)
         : mEnabled(true)
         , mVisible(true)
         , mBackgroundColor(BLACK)
@@ -48,8 +46,17 @@ namespace phui {
             throw std::runtime_error("phui: Font not found");
         }
         setFont(font);  // creates the renderer
-      
+
         mParent = 0;
+
+        setLayout(layout);
+    }
+    
+    Widget::~Widget() {
+        while (!mChildren.empty()) {
+            remove(mChildren[0]);
+        }
+        setModal(0);
     }
 
     const Point& Widget::getPosition() const {
@@ -59,7 +66,7 @@ namespace phui {
     void Widget::setPosition(const Point& p) {
         mPosition = p;
     }
-   
+
     void Widget::center() {
         if (mParent) {
             int x = (mParent->getWidth()  - getWidth())  / 2;
@@ -68,12 +75,27 @@ namespace phui {
         }
     }
 
+    void Widget::centerOnScreen() {
+        // Find highest parent.
+        Widget* p = this;
+        Point offset;
+        while (p->mParent) {
+            p = p->mParent;
+            offset += p->getPosition();
+        }
+
+        Point pos((p->getWidth() - getWidth()) / 2,
+                  (p->getHeight() - getHeight()) / 2);
+        setPosition(pos - offset);
+    }
+
     const Size& Widget::getSize() const {
         return mSize;
     }
 
     void Widget::setSize(const Size& size) {
         mSize = size;
+        mLayout->layout(this);
     }
 
     const Insets& Widget::getInsets() const {
@@ -85,7 +107,7 @@ namespace phui {
     }
 
     bool Widget::isEnabled() const {
-        return mEnabled;
+        return mEnabled && !mModal;
     }
 
     void Widget::setEnabled(bool enabled) {
@@ -100,19 +122,19 @@ namespace phui {
         mVisible = visible;
     }
 
-    void Widget::setBackgroundColor(const Colorf& clr) {
+    void Widget::setBackgroundColor(const Color& clr) {
         mBackgroundColor = clr;
     }
 
-    const Colorf& Widget::getBackgroundColor() const {
+    const Color& Widget::getBackgroundColor() const {
         return mBackgroundColor;
     }
 
-    void Widget::setForegroundColor(const Colorf& clr) {
+    void Widget::setForegroundColor(const Color& clr) {
         mForegroundColor = clr;
     }
 
-    const Colorf& Widget::getForegroundColor() const {
+    const Color& Widget::getForegroundColor() const {
         return mForegroundColor;
     }
 
@@ -126,13 +148,86 @@ namespace phui {
     gltext::FontPtr Widget::getFont() const {
         return mFontRenderer->getFont();
     }
-   
+
     const gltext::FontRendererPtr& Widget::getFontRenderer() const {
         return mFontRenderer;
     }
 
-    WidgetContainer* Widget::getParent() const {
+    void Widget::setLayout(LayoutPtr layout) {
+        if (!layout) {
+            layout = new NullLayout;
+        }
+        mLayout = layout;
+        mLayout->layout(this);
+    }
+
+    LayoutPtr Widget::getLayout() const {
+        return mLayout;
+    }
+
+    Widget* Widget::getParent() const {
         return mParent;
+    }
+    
+    void Widget::add(WidgetPtr widget) {
+        // First remove the widget from its old parent.
+        if (widget->getParent()) {
+            widget->getParent()->remove(widget);
+        }
+
+        // Now add the widget.
+        mChildren.push_back(widget);
+        widget->setParent(this);
+
+        mLayout->layout(this);
+    }
+
+    void Widget::remove(WidgetPtr widget) {
+        for (size_t i = 0; i < mChildren.size(); ++i) {
+            if (mChildren[i] == widget) {
+                mChildren.erase(mChildren.begin() + i);
+                widget->setParent(0);
+
+                mLayout->layout(this);
+            }
+        }
+    }
+
+    size_t Widget::getChildCount() const {
+        return mChildren.size();
+    }
+
+    WidgetPtr Widget::getChild(size_t idx) const {
+        // assert within bounds?
+        return mChildren[idx];
+    }
+
+    void Widget::focus(WidgetPtr child) {
+        // Find the index of the child.
+        size_t idx;
+        for (idx = 0; idx < getChildCount(); ++idx) {
+            if (child == getChild(idx)) {
+                break;
+            }
+        }
+
+        // Move it to the end.
+        while (idx + 1 < getChildCount()) {
+            std::swap(mChildren[idx], mChildren[idx + 1]);
+            ++idx;
+        }
+    }
+
+    WidgetPtr Widget::getFocus() const {
+        if (mModal) {
+            return mModal;
+        }
+
+        if (mChildren.empty()) {
+            return 0;
+        } else {
+            return mChildren[mChildren.size() - 1];
+        }
     }
 
     bool Widget::contains(const Point& p) const {
@@ -142,7 +237,7 @@ namespace phui {
 
     Point Widget::getScreenPosition() const {
         Point p = getPosition();
-        WidgetContainerPtr parent = getParent();
+        WidgetPtr parent = getParent();
         while (parent) {
             p += parent->getPosition();
             parent = parent->getParent();
@@ -150,20 +245,49 @@ namespace phui {
         return p;
     }
 
-    bool Widget::hasFocus() {
-        WidgetContainerPtr parent = getParent();
-        WidgetPtr child = this;
+    bool Widget::hasFocus() const {
+        const Widget* parent = getParent();
+        const Widget* child = this;
         while (parent) {
             if (parent->getFocus() != child) {
                 return false;
             }
-            child = parent.get();
+            child = parent;
             parent = parent->getParent();
         }
         return true;
     }
 
-    void Widget::setParent(WidgetContainer* parent) {
+    void Widget::setModal(WidgetPtr w, ModalListener* listener, bool centered) {
+        if (mModal) {
+            mModal->setParent(0);
+        }
+        mModal = w;
+        mModalListener = listener;
+        if (mModal) {
+            mModal->setParent(this);
+            if (centered) {
+                mModal->centerOnScreen();
+            }
+        }
+    }
+
+    void Widget::endModal(int result) {
+        if (Widget* parent = getParent()) {
+            ModalListener* listener = parent->mModalListener;
+            parent->setModal(0);
+            if (listener) {
+                listener->onEndModal(this, result);
+            }
+        }
+    }
+
+    WidgetPtr Widget::getModal() const {
+        return mModal;
+    }
+
+    void Widget::setParent(Widget* parent) {
         mParent = parent;
     }
+
 }

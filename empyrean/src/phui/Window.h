@@ -1,5 +1,3 @@
-/* -*- Mode: C++; tab-width: 3; indent-tabs-mode: nil c-basic-offset: 3 -*- */
-// vim:cindent:ts=3:sw=3:et:tw=80:sta:
 /***************************************************************** phui-cpr beg
  *
  * phui - flexible user interface subsystem
@@ -24,8 +22,8 @@
  *
  * -----------------------------------------------------------------
  * File:          $RCSfile: Window.h,v $
- * Date modified: $Date: 2003-09-23 00:36:30 $
- * Version:       $Revision: 1.5 $
+ * Date modified: $Date: 2004-06-05 02:23:23 $
+ * Version:       $Revision: 1.6 $
  * -----------------------------------------------------------------
  *
  ************************************************************** phui-cpr-end */
@@ -35,52 +33,33 @@
 #include <string>
 #include <list>
 #include "Layout.h"
-#include "WidgetContainer.h"
-#include "WindowListener.h"
+#include "Widget.h"
 
-namespace phui
-{
-   class Window : public WidgetContainer
-   {
-   public:
-      Window(const std::string& title = "", LayoutPtr layout = 0);
+namespace phui {
 
-      void draw();
+    class Window : public Widget {
+    public:
+        typedef Widget Base;
 
-      /// Overloaded to fire window events.
-      virtual void setVisible(bool visible);
+        Window(const std::string& title = "", LayoutPtr layout = 0);
 
-      /**
-       * Adds the given window listener that wishes to receive window events.
-       */
-      void addWindowListener(WindowListenerPtr listener);
+        void draw() const;
 
-      /**
-       * Removes the given window listener for this button.
-       */
-      void removeWindowListener(WindowListenerPtr listener);
+        bool isFocusable() const { return false; }
 
-   private:
-      /// Helper initializing method called by constructors.
-      void init(const std::string& title, bool visible);
+        void setTitle(const std::string& title) {
+            mTitle = title;
+        }
+        const std::string& getTitle() const {
+            return mTitle;
+        }
 
-      /// Helper to fire a window opened event to all listeners.
-      void fireWindowOpenedEvent();
+    private:
+        /// The title of the window.
+        std::string mTitle;
+    };
 
-      /// Helper to fire a window closed event to all listeners.
-      void fireWindowClosedEvent();
-
-   private:
-      /// The title of the window.
-      std::string mTitle;
-
-      /// All listeners for this window.
-      typedef std::list<WindowListenerPtr> ListenerList;
-      typedef ListenerList::iterator ListenerIter;
-      std::list<WindowListenerPtr> mListeners;
-   };
-
-   typedef pyr::RefPtr<Window> WindowPtr;
+    typedef pyr::RefPtr<Window> WindowPtr;
 }
 
 #endif

@@ -1,5 +1,3 @@
-/* -*- Mode: C++; tab-width: 3; indent-tabs-mode: nil c-basic-offset: 3 -*- */
-// vim:cindent:ts=3:sw=3:et:tw=80:sta:
 /***************************************************************** phui-cpr beg
  *
  * phui - flexible user interface subsystem
@@ -24,8 +22,8 @@
  *
  * -----------------------------------------------------------------
  * File:          $RCSfile: Button.h,v $
- * Date modified: $Date: 2003-09-24 00:48:56 $
- * Version:       $Revision: 1.8 $
+ * Date modified: $Date: 2004-06-05 02:23:23 $
+ * Version:       $Revision: 1.9 $
  * -----------------------------------------------------------------
  *
  ************************************************************** phui-cpr-end */
@@ -37,81 +35,74 @@
 #include "Widget.h"
 #include "ActionListener.h"
 
-namespace phui
-{
+namespace phui {
 
-   class Button : public Widget
-   {
-   public:
-      /**
-       * Creates a new button with the given text at (0,0) with size (0,0).
-       *
-       * @param text      the text for the button
-       */
-      Button(const std::string& text = "");
+    class Button : public Widget {
+    public:
+        /**
+         * Creates a new button with the given text at (0,0) with size (0,0).
+         *
+         * @param text      the text for the button
+         */
+        Button(const std::string& text = "");
 
-      void draw();
+        void draw() const;
 
-      void setText(const std::string& text);
-      const std::string& getText() const;
+        void setText(const std::string& text);
+        const std::string& getText() const;
 
-      /**
-       * Called whenever a mouse button has been pressed inside this button. In
-       * this case, we want to set the button's down state so that it can update
-       * its visual appearance and test if the next MouseUp event will be inside
-       * this button.
-       */
-      void onMouseDown(InputButton button, const Point& p);
+        /**
+         * Called whenever a mouse button has been pressed inside this button. In
+         * this case, we want to set the button's down state so that it can update
+         * its visual appearance and test if the next MouseUp event will be inside
+         * this button.
+         */
+        void onMouseDown(InputButton button, const Point& p);
 
-      /**
-       * Called whenever the mouse has moved inside this button. In this case,
-       * we want to make the button only appear pressed while the mouse is inside
-       * its rectangle (like a real windows button).
-       */
-      void onMouseMove(const Point& p);
+        /**
+         * Called whenever the mouse has moved inside this button. In this case,
+         * we want to make the button only appear pressed while the mouse is inside
+         * its rectangle (like a real windows button).
+         */
+        void onMouseMove(const Point& p);
 
-      /**
-       * Called whenever a mouse button has been released after it has been
-       * pressed inside this button. If the button is released inside this
-       * button then we will fire a ButtonPressed event, otherwise we'll just
-       * toggle the button's down state.
-       */
-      void onMouseUp(InputButton button, const Point& p);
+        /**
+         * Called whenever a mouse button has been released after it has been
+         * pressed inside this button. If the button is released inside this
+         * button then we will fire a ButtonPressed event, otherwise we'll just
+         * toggle the button's down state.
+         */
+        void onMouseUp(InputButton button, const Point& p);
 
+        void addListener(ActionListenerPtr listener);
 
-      void addListener(ActionListenerPtr listener);
-      
-      
-      template<typename T>
-      void addListener(T* object, void (T::*method)(const ActionEvent&))
-      {
-         addListener(new MethodActionListener<T>(object, method));
-      }
+        template<typename T>
+        void addListener(T* object, void (T::*method)(const ActionEvent&)) {
+            addListener(new MethodActionListener<T>(object, method));
+        }
 
-      void removeListener(ActionListenerPtr listener);
+        void removeListener(ActionListenerPtr listener);
 
-   private:
-      /// Helper to fire action events to listeners.
-      void fireActionEvent();
+    private:
+        /// Helper to fire action events to listeners.
+        void fireActionEvent();
 
-   private:
-      std::string mText;
+    private:
+        std::string mText;
 
-      /// Button down state. True if the button appears down.
-      bool mButtonDown;
+        /// Button down state. True if the button appears down.
+        bool mButtonDown;
 
-      /// Button press state. True if the button is being pressed.
-      bool mButtonPressed;
+        /// Button press state. True if the button is being pressed.
+        bool mButtonPressed;
 
-      /**
-       * All listeners for this button
-       */
-      typedef std::list<ActionListenerPtr> ListenerList;
-      typedef ListenerList::iterator ListenerIter;
-      ListenerList mListeners;
-   };
+        /// All listeners for this button.
+        typedef std::list<ActionListenerPtr> ListenerList;
+        typedef ListenerList::iterator ListenerIter;
+        ListenerList mListeners;
+    };
 
-   typedef pyr::RefPtr<Button> ButtonPtr;
+    typedef pyr::RefPtr<Button> ButtonPtr;
 }
 
 #endif
