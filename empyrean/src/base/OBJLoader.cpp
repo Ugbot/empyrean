@@ -259,9 +259,12 @@ namespace pyr {
                     if (!currentGeometry->triangles.empty()) {
                         currentGeometry->material = currentMaterial;
                         currentGeometry->vertexArray = vertexArray;
+                        currentGeometry->calculateBounds();
                         result->addChild(currentGeometry);
                     }
+                    std::string oldName = currentGeometry->name;
                     currentGeometry = new GeometryElement;
+                    currentGeometry->name = oldName + "+";
 
                     string material;
                     if (ss >> material) {
@@ -271,6 +274,7 @@ namespace pyr {
                     if (!currentGeometry->triangles.empty()) {
                         currentGeometry->material = currentMaterial;
                         currentGeometry->vertexArray = vertexArray;
+                        currentGeometry->calculateBounds();
                         result->addChild(currentGeometry);
                     }
                     currentGeometry = new GeometryElement;
@@ -332,6 +336,7 @@ namespace pyr {
         if (!currentGeometry->triangles.empty()) {
             currentGeometry->material = currentMaterial;
             currentGeometry->vertexArray = vertexArray;
+            currentGeometry->calculateBounds();
             result->addChild(currentGeometry);
         }
 

@@ -100,7 +100,9 @@ namespace pyr {
         glEnable(GL_DEPTH_TEST);
         glMaterialf(GL_FRONT_AND_BACK, GL_SHININESS, 4);
         
-        drawMap();
+        Vec2f center(focusX, focusY + height / 4);
+        Vec2f off(width / 2, height / 2);
+        drawMap(center - off, center + off);
 
         glMaterialf(GL_FRONT_AND_BACK, GL_SHININESS, 0);
 
@@ -197,12 +199,13 @@ namespace pyr {
         _collision = !_collision;
     }
 
-    void Scene::drawMap() {
+    void Scene::drawMap(Vec2f ll, Vec2f ur) {
         PYR_PROFILE_BLOCK("Scene::drawMap");
         if (_map) {
             MapRenderer renderer;
             renderer.drawWireframe(_wireframe);
             renderer.drawNormals(_normals);
+            renderer.setViewport(ll, ur);
             _map->handleVisitor(renderer);
 
             if (_collision) {

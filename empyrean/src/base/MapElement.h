@@ -80,7 +80,14 @@ namespace pyr {
         VertexArrayPtr vertexArray;
         std::vector<Triangle> triangles;
 
+        void calculateBounds();
+        bool visible(Vec2f ll, Vec2f ur);
+
         virtual void handleVisitor(MapVisitor& v);
+
+    private:
+        Vec2f _min;
+        Vec2f _max;
     };
     PYR_REF_PTR(GeometryElement);
 
