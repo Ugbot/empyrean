@@ -24,8 +24,8 @@
  *
  * -----------------------------------------------------------------
  * File:          $RCSfile: Button.cpp,v $
- * Date modified: $Date: 2003-08-08 02:51:24 $
- * Version:       $Revision: 1.4 $
+ * Date modified: $Date: 2003-08-08 04:14:54 $
+ * Version:       $Revision: 1.5 $
  * -----------------------------------------------------------------
  *
  ************************************************************** phui-cpr-end */
@@ -114,7 +114,7 @@ namespace phui
       //the button and render the text.
       float xLoc = std::max((width  - labelWidth) / 2.0f, 0.0f);
       float yLoc = std::max((height - fontHeight) / 2.0f, 0.0f);
-      glTranslatef(xLoc, height - yLoc, 0.0f);
+      glTranslatef(xLoc, yLoc, 0.0f);
       
       renderer->render(mText.c_str());
 
