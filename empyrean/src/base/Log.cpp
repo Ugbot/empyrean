@@ -31,11 +31,13 @@ namespace pyr {
 #if defined(WIN32) && defined(PYR_LOG_TO_STDOUT)
         AllocConsole();
 
+#ifndef __CYGWIN__
         // See http://www.flipcode.com/cgi-bin/msg.cgi?showThread=00003996&forum=general&id=-1
         FILE* out = _fdopen(_open_osfhandle((intptr_t)GetStdHandle(STD_OUTPUT_HANDLE), _O_TEXT), "w");
         FILE* err = _fdopen(_open_osfhandle((intptr_t)GetStdHandle(STD_ERROR_HANDLE),  _O_TEXT), "w");
         if (out) *stdout = *out;
         if (err) *stderr = *err;
+#endif
 #endif
 
         if (_file.is_open()) {
