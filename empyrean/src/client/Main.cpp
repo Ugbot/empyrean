@@ -5,10 +5,9 @@
 #include <stdlib.h>
 #include <time.h>
 #include <SDL.h>
-#include <SDL_opengl.h>
-#include <extgl.h>
 #include "Application.h"
 #include "Error.h"
+#include "extgl.h"
 #include "FPSCounter.h"
 #include "InputManager.h"
 #include "Profiler.h"
@@ -45,7 +44,9 @@ namespace pyr {
             throwSDLError("Setting video mode failed");
         }
 
-        extgl_Initialize();
+        if (extgl_Initialize() != 0) {
+            throw std::runtime_error("extgl_Initialize() failed");
+        }
 
         SDL_WM_SetCaption("Empyrean", 0);
         

@@ -20,7 +20,7 @@
 				Name="VCCLCompilerTool"
 				Optimization="0"
 				AdditionalIncludeDirectories="../../src/third-party/include,../../src/base"
-				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS"
+				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;GL_GLEXT_PROTOTYPES"
 				MinimalRebuild="TRUE"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
@@ -69,7 +69,7 @@
 				InlineFunctionExpansion="1"
 				OmitFramePointers="TRUE"
 				AdditionalIncludeDirectories="../../src/third-party/include,../../src/base"
-				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS"
+				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;GL_GLEXT_PROTOTYPES"
 				StringPooling="TRUE"
 				RuntimeLibrary="2"
 				EnableFunctionLevelLinking="TRUE"
@@ -125,6 +125,9 @@
 			</File>
 			<File
 				RelativePath="..\..\src\client\FPSCounter.h">
+			</File>
+			<File
+				RelativePath="..\..\src\client\GLUtility.h">
 			</File>
 			<File
 				RelativePath="..\..\src\client\GameState.cpp">
@@ -199,6 +202,12 @@
 				RelativePath="..\..\src\client\ResourceManager.h">
 			</File>
 			<File
+				RelativePath="..\..\src\client\SDLUtility.cpp">
+			</File>
+			<File
+				RelativePath="..\..\src\client\SDLUtility.h">
+			</File>
+			<File
 				RelativePath="..\..\src\client\ServerConnection.cpp">
 			</File>
 			<File
@@ -214,7 +223,10 @@
 				RelativePath="..\..\src\client\Texture.h">
 			</File>
 			<File
-				RelativePath="..\..\src\client\Types.h">
+				RelativePath="..\..\src\client\extgl.c">
+			</File>
+			<File
+				RelativePath="..\..\src\client\extgl.h">
 			</File>
 		</Filter>
 	</Files>

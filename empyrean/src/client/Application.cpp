@@ -1,9 +1,9 @@
+#include <gltext.h>
 #include <stdlib.h>
 #include <sstream>
 
-#include <gltext.h>
-
 #include "Application.h"
+#include "extgl.h"
 #include "IntroState.h"
 #include "Profiler.h"
 

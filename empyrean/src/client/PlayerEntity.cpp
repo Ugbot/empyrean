@@ -1,14 +1,13 @@
-
-#include <SDL_opengl.h>
 #include <gmtl/Vec.h>
 #include <gmtl/VecOps.h>
 #include <cal3d/cal3d.h>
 
-#include "PlayerEntity.h"
-#include "Model.h"
-#include "Renderer.h"
-#include "InputManager.h"
+#include "extgl.h"
 #include "Input.h"
+#include "InputManager.h"
+#include "Model.h"
+#include "PlayerEntity.h"
+#include "Renderer.h"
 #include "ResourceManager.h"
 
 namespace pyr {

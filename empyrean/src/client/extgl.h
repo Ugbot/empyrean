@@ -227,6 +227,8 @@ typedef void GLvoid;
 #include <GL/glx.h>
 #endif /* _WIN32 */
 
+#include <GL/glu.h>
+
 /* for mingw compatibility */
 typedef void (*_GLfuncptr)();
 

@@ -1,14 +1,9 @@
-#include <exception>
-
-#include <SDL_opengl.h>
-#include <SDL_video.h> // SDL_GL_GetProcAddress
 #include <cal3d/cal3d.h>
 #include <gmtl/Vec.h>
 #include <gmtl/Matrix.h>
 #include <gmtl/VecOps.h>
 #include <gmtl/Xforms.h>
-#include <extgl.h>
-
+#include "extgl.h"
 #include "Renderer.h"
 #include "Model.h"
 #include "Texture.h"
@@ -28,7 +23,7 @@ namespace {
      */
     void renderMesh(Model& model,bool cellshade=false,u32 shadetex=0) {
 
-glEnableClientState(GL_VERTEX_ARRAY);
+        glEnableClientState(GL_VERTEX_ARRAY);
         glEnableClientState(GL_NORMAL_ARRAY);
         glEnable(GL_TEXTURE_2D);
 
@@ -78,16 +73,16 @@ glEnableClientState(GL_VERTEX_ARRAY);
 
                         texcoords2[i]=light;
                     }
-
-                    glClientActiveTexture(GL_TEXTURE1_ARB);
-                    glActiveTexture(GL_TEXTURE1_ARB);
+                    
+                    glClientActiveTextureARB(GL_TEXTURE1_ARB);
+                    glActiveTextureARB(GL_TEXTURE1_ARB);
                     glEnable(GL_TEXTURE_1D);
                     glEnableClientState(GL_TEXTURE_COORD_ARRAY);
                     glBindTexture(GL_TEXTURE_1D,shadetex);
                     glTexCoordPointer(1,GL_FLOAT,0,texcoords2);
 
-                    glClientActiveTexture(GL_TEXTURE0_ARB);
-                    glActiveTexture(GL_TEXTURE0_ARB);
+                    glClientActiveTextureARB(GL_TEXTURE0_ARB);
+                    glActiveTextureARB(GL_TEXTURE0_ARB);
 
                 } else {
                     glEnableClientState(GL_NORMAL_ARRAY);
@@ -112,11 +107,11 @@ glEnableClientState(GL_VERTEX_ARRAY);
                 glDrawElements(GL_TRIANGLES, nFaces*3, GL_UNSIGNED_INT, &faces[0][0]);
 
                 if (cellshade) {
-                    glClientActiveTexture(GL_TEXTURE1_ARB);
+                    glClientActiveTextureARB(GL_TEXTURE1_ARB);
                     glDisableClientState(GL_TEXTURE_COORD_ARRAY);
-                    glActiveTexture(GL_TEXTURE1_ARB);
+                    glActiveTextureARB(GL_TEXTURE1_ARB);
                     glDisable(GL_TEXTURE_1D);
-                    glActiveTexture(GL_TEXTURE0_ARB);
+                    glActiveTextureARB(GL_TEXTURE0_ARB);
                 }
             }
         }
@@ -257,19 +252,19 @@ namespace pyr {
             _lightVec.set(0.5,0.5,1);
             gmtl::normalize(_lightVec);
 
-            glActiveTexture(GL_TEXTURE1_ARB);
+            glActiveTextureARB(GL_TEXTURE1_ARB);
             glBindTexture(GL_TEXTURE_1D,_shadeTex);
             glEnable(GL_TEXTURE_1D);
-            glActiveTexture(GL_TEXTURE0_ARB);
+            glActiveTextureARB(GL_TEXTURE0_ARB);
             glEnable(GL_TEXTURE_2D);
         }
 
         inline void end() {
-            glActiveTexture(GL_TEXTURE1_ARB);
+            glActiveTextureARB(GL_TEXTURE1_ARB);
             Texture::unbind();
             glDisable(GL_TEXTURE_1D);
 
-            glActiveTexture(GL_TEXTURE0_ARB);
+            glActiveTextureARB(GL_TEXTURE0_ARB);
             Texture::unbind();
             glDisable(GL_TEXTURE_2D);
         }
@@ -279,7 +274,7 @@ namespace pyr {
             float light = gmtl::dot(v,_lightVec);
             if (light<0) light=0;
 
-            glMultiTexCoord1f(GL_TEXTURE1_ARB, light);
+            glMultiTexCoord1fARB(GL_TEXTURE1_ARB, light);
             glTexCoord2fv(texcoords);
             glVertex3fv(verts);
         }
@@ -336,9 +331,6 @@ namespace pyr {
     }
 
     CellShadeRenderer::CellShadeRenderer() {
-        if (!extgl_Extensions.ARB_multitexture)
-            throw std::runtime_error("CellShadeRenderer requires the GL_ARB_multitexture extension.");
-
         _useVertexArrays=false;
     }
 

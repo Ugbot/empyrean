@@ -7,6 +7,7 @@
 
 #include <cal3d/cal3d.h>
 
+#include "extgl.h"
 #include "Model.h"
 #include "ResourceManager.h"
 #include "Profiler.h"

@@ -1,8 +1,8 @@
-#include <SDL_opengl.h>
 #include <gmtl/VecOps.h>
 
 #include "Entity.h"
 #include "GameState.h"
+#include "GLUtility.h"
 #include "Input.h"
 #include "InputManager.h"
 #include "MenuState.h"

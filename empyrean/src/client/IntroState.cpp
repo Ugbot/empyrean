@@ -1,4 +1,4 @@
-#include <SDL_opengl.h>
+#include "extgl.h"
 #include "IntroState.h"
 #include "MenuState.h"
 #include "Texture.h"

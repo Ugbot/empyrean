@@ -1,18 +1,12 @@
 #ifndef PYR_UTILITY_H
 #define PYR_UTILITY_H
 
+
 #include <string>
 #include <vector>
 
-#include <gmtl/Vec.h>
-#include <SDL_opengl.h>
-
 
 namespace pyr {
-
-    inline void glTranslate(const gmtl::Vec2f& vec) {
-        glTranslatef(vec[0], vec[1], 0);
-    }
 
     /**
      * Loki's Type2Type.

@@ -1,6 +1,6 @@
-#include <SDL_opengl.h>
 #include <gmtl/VecOps.h>
 
+#include "extgl.h"
 #include "ParticleSystem.h"
 #include "Texture.h"
 

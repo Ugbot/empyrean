@@ -146,12 +146,6 @@
 				RelativePath="..\..\src\base\ReaderThread.h">
 			</File>
 			<File
-				RelativePath="..\..\src\base\SDLUtility.cpp">
-			</File>
-			<File
-				RelativePath="..\..\src\base\SDLUtility.h">
-			</File>
-			<File
 				RelativePath="..\..\src\base\ScopedLock.h">
 			</File>
 			<File
@@ -192,12 +186,6 @@
 			</File>
 			<File
 				RelativePath="..\..\src\base\WriterThread.h">
-			</File>
-			<File
-				RelativePath="..\..\src\base\extgl.c">
-			</File>
-			<File
-				RelativePath="..\..\src\base\extgl.h">
 			</File>
 		</Filter>
 	</Files>
