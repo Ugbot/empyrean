@@ -22,6 +22,8 @@ namespace pyr {
     Server::~Server() {
         for_each(_games.begin(), _games.end(), delete_function<Game>);
         _games.clear();
+    
+        clearConnections();
     }
 
     void Server::update(float dt) {

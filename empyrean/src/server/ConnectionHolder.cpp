@@ -19,8 +19,7 @@ namespace pyr {
     }
     
     ConnectionHolder::~ConnectionHolder() {
-        clearConnections();
-        PYR_ASSERT(getConnectionCount() == 0, "clearConnections() didn't get rid of all connections.");
+        PYR_ASSERT(getConnectionCount() == 0, "ConnectionHolder derived class must call clearConnections() in destructor.");
     }
     
     void ConnectionHolder::update() {

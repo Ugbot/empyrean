@@ -94,6 +94,8 @@ namespace pyr {
 
     Game::~Game() {
         PYR_LOG_SCOPE(_logger, INFO, "Game::~Game");
+
+        clearConnections();
     }
 
     void Game::update(float dt) {
