@@ -1,4 +1,2 @@
-import dumbdbm
-SConsignFile(dbm_module=dumbdbm)
-
+SConsignFile()
 SConscript('SConscript')

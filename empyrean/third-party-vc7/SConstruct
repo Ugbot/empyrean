@@ -1,7 +1,6 @@
-import dumbdbm
 import os
 
-SConsignFile(dbm_module=dumbdbm)
+SConsignFile()
 
 builds = [Dir('../vc7/bin/Debug'), Dir('../vc7/bin/Release')]
 debug  = [True, False]
