@@ -5,6 +5,7 @@
 //#include "RectangleTool.h"
 #include "Texture.h"
 #include "MapRenderer.h"
+#include "MapOutliner.h"
 
 namespace pyr {
 
@@ -126,40 +127,11 @@ namespace pyr {
         glEnable(GL_BLEND);
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-        MapRenderer r;
-        getMap()->getRoot()->handleVisitor(&r);
-        /*const Map* map = getMap();
+        MapRenderer renderer;
+        getMap()->getRoot()->handleVisitor(&renderer);
 
-        glEnable(GL_TEXTURE_2D);
-        glEnable(GL_BLEND);
-        glBindTexture(GL_TEXTURE_2D, _testTex->getHandle());
-        glColor4f(1, 1, 1, 1);
-
-        for (std::vector<Map::Rect>::const_iterator
-            iter = map->_terrain.rects.begin();
-            iter != map->_terrain.rects.end();
-            iter++) {
-            drawRect(&*iter);
-        }
-
-        glDisable(GL_TEXTURE_2D);
-
-        // TODO: templates, obstructions, entities, et cetera
-
-        glColor4f(1, 0, 0, 1);
-        glBegin(GL_LINES);
-        for (std::vector<Map::Obstruction>::const_iterator
-            iter = map->_obstructions.obstructions.begin();
-            iter != map->_obstructions.obstructions.end();
-            iter++)
-        {
-            const Map::Point& p1 = map->_obstructions.points[iter->p1];
-            const Map::Point& p2 = map->_obstructions.points[iter->p2];
-
-            glVertex2f(p1.x, p1.y);
-            glVertex2f(p2.x, p2.y);
-        }
-        glEnd();*/
+        MapOutliner outliner;
+        getMap()->getRoot()->handleVisitor(&outliner);
 
         //_tool->onRender();
     }
