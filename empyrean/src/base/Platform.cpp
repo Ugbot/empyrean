@@ -48,7 +48,7 @@ std::string pyr::getCurrentDirectory() {
 
 #include <windows.h>
 
-std::string pyr::getStartDirectory(int /*argc*/, char* /*argv*/[]) {
+std::string pyr::getStartDirectory(const char* /*argv0*/) {
     char filename[MAX_PATH];
     GetModuleFileName(GetModuleHandle(0), filename, MAX_PATH);
     if (char* backslash = strrchr(filename, '\\')) {
@@ -70,14 +70,14 @@ std::string pyr::getStartDirectory(int /*argc*/, char* /*argv*/[]) {
 // Another way to implement this:
 // http://www.flipcode.org/cgi-bin/fcarticles.cgi?show=4&id=64160
 
-std::string pyr::getStartDirectory(int argc, char* argv[]) {
-    if (argc < 1) {
+std::string pyr::getStartDirectory(const char* argv0) {
+    if (!argv0) {
         return "";
     }
 
     std::string rv;
 
-    char* path = strdup(argv[0]);
+    char* path = strdup(argv0);
     if (char* slash = strrchr(path, '/')) {
         *slash = 0;
         rv = path;
@@ -97,8 +97,8 @@ namespace pyr {
         Logger& _logger = Logger::get("pyr.Platform");
     }
 
-    void setStartDirectory(int argc, char* argv[]) {
-        std::string startDir = getStartDirectory(argc, argv);
+    void setStartDirectory(const char* argv0) {
+        std::string startDir = getStartDirectory(argv0);
         PYR_LOG(_logger, INFO) << "Setting start directory to: " << startDir;
         if (!startDir.empty()) {
             if (!setCurrentDirectory(startDir.c_str())) {

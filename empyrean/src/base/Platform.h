@@ -12,10 +12,10 @@ namespace pyr {
      * startup directory to the directory in which the executable
      * resides.
      */
-    std::string getStartDirectory(int argc, char* argv[]);
+    std::string getStartDirectory(const char* argv0);
 
     /// chdir to the directory in which the current executable resides.
-    void setStartDirectory(int argc, char* argv[]);
+    void setStartDirectory(const char* argv0);
 
 }
 

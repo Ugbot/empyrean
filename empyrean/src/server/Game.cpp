@@ -112,7 +112,7 @@ namespace pyr {
     }
     
     void Game::loadGameResources() {
-        _map = loadMap("maps/map2.obj");
+        _map = loadMap(the<Configuration>().map);
 
         // Find start position.
         MapElementPtr start = _map->findElementByName("start");

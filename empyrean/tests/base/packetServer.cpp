@@ -34,7 +34,7 @@ int run() {
 
 int main(int argc, char** argv) {
     PYR_EXCEPTION_TRAP({
-        setStartDirectory(argc, argv);
+        setStartDirectory(argv[0]);
         initializeLog("packetServer.log", "packetServer.log.config");
         return run();
     })

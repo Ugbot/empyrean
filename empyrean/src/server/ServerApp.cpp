@@ -23,13 +23,10 @@ namespace pyr {
 
     bool ServerApp::OnInit() {
         PYR_EXCEPTION_TRAP({
-	    string startDirectory = getStartDirectory(argc, argv);
-            initializeLog(
-		startDirectory + "/server.log",
-		startDirectory + "/server.log.config");
+            setStartDirectory(argv[0]);
+            initializeLog("server.log", "server.log.config");
 
             _startDirectory = getCurrentDirectory();
-            setStartDirectory(argc, argv);
             try {
                 the<Configuration>().load();
             }
@@ -67,7 +64,7 @@ namespace pyr {
             // setStartDirectory requires that we chdir *from* the directory we
             // started in.
             setCurrentDirectory(_startDirectory);
-            setStartDirectory(argc, argv);
+            setStartDirectory(argv[0]);
             _frame = 0;
             the<Database>().save(getDatabaseFilename());
             the<Configuration>().save();

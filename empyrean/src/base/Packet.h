@@ -139,7 +139,7 @@ namespace pyr {
         }                                                                   \
                                                                             \
         const char* name::getName() const {                                 \
-            return #name;                                                   \
+            return PYR_STR(name);                                           \
         }                                                                   \
                                                                             \
         void name::log() const {                                            \

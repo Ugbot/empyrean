@@ -13,7 +13,7 @@ Logger& barBazLogger = Logger::get("bar.baz");
 
 void test(Logger& logger) {
     // assert that Logger::get("") == Logger::get(".");
-    
+
     logger.log(VERBOSE, logger.getName() + ": VERBOSE");
     logger.log(INFO,    logger.getName() + ": INFO");
     logger.log(WARN,    logger.getName() + ": WARN");
@@ -23,10 +23,8 @@ void test(Logger& logger) {
 
 
 int main(int argc, char** argv) {
-    string startDirectory = getStartDirectory(argc, argv);
-    initializeLog(
-        startDirectory + "/testLog.log",
-        startDirectory + "/testLog.log.config");
+    setStartDirectory(argv[0]);
+    initializeLog("testLog.log", "testLog.log.config");
 
     PYR_LOG_SCOPE(root, FATAL, "root - LoggingTest");
     
