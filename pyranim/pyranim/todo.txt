@@ -1,0 +1,110 @@
+The implementation schedule:
+
+12/7/02 - Starting project.
+
+12/8/02
+
+-> Use C++ for data model, manipulation. Use wxPython for interface.
+- Get a window up and running.
+
+12/9/02
+
+- Hello world from Python.
+- Make SConstruct file.
+-> scons is broken under windows.  Reinstall?
+- Make makefile or batch file.
+- Design document structures.
+- Design actions.
+- Implement Model stubs in C
+- Implement View stubs in C
+- Implement Anim stubs in C
+- Load skeleton.
+
+12/10/02 (2273 LOC, 64434 bytes)
+
+- OpenGL communicating OK in C++ class through Python.
+- OpenGL initializing view correctly.
+- Display ground plane.
+- Mouse events getting through to view correctly.
+
+12/11/02 (2351 LOC, 66569 bytes)
+
+- Add redraw listener support.
+
+12/17/02 (2601 LOC, 75195 bytes)
+
+- OpenGL scene navigation.
+  - Trackball rotate.
+  - Panning.
+  - Zooming.
+  - Visual aid?
+
+12/18/02
+
+- Added advanced Camera (from CS123 assignment source).
+- Tried to get skeleton displaying...  Doesn't seem to be rotating correctly.
+
+12/18/02
+
+- Check rotation.
+  -> Was interpreting quaternion xyzw (cal3d) as wxyz.
+- Display skeleton.
+  -> Milkshape3D models are off by 90 degrees from default cal3d models.
+     Andy says it's OK to stick with the Milkshape orientation.
+- Get OpenGL window working with external model drawing.
+
+12/19/02
+
+- Started implementation of rotation widget.
+
+12/21/02
+
+- Got Camera project/unproject working.
+
+12/22/02 (3228 LOC, 92375 bytes)
+
+- Select joint.
+
+12/23/02 (3242 LOC, 92858 bytes)
+
+- Improve joint drawing.
+
+--- WE ARE HERE ---
+
+- Draw rotation widget.
+- Rotation widget interaction?
+- Position widget?
+- Compute skeleton joint angles for current view.
+- Load animation.
+- Display animation.
+- Design user interface.
+- Get interface working with stubs.
+- Edit animation.
+- Save animation.
+- Do some animations to make sure it all works OK.
+
+- Load mesh?
+- Display mesh?
+- Some sort of text for navigation prompts?
+- Add matrix-to-quaternion routine?
+- Test matrix-to-quat vs. quat-to-matrix?
+- Make an IQuat type?
+
+- Set up auxilliary drawing context?
+  - Initialization:
+      - CreateDC
+      - CreateCompatibleBitmap?
+      - SelectObject?
+      - wglCreateContext
+  - OpenGL calls
+  - Queries
+  - Helpful funcs:
+      - wglGetCurrentContext
+      - wglGetCurrentDC
+      - wglMakeCurrent
+  - Deletion:
+      - wglDeleteContext
+      - SelectObject?
+      - DeleteObject?
+      - DeleteDC
+  - May need to link in some other Windows libraries.

@@ -1,0 +1,124 @@
+Primary Goal: Edit animations.
+
+Future goals:
+  - Edit skeleton, mesh, skinning
+
+---
+
+PyrModel interface:
+
+Model()
+
+model.loadMesh(filename)
+model.loadSkeleton(filename)
+
+model.addUndoListener(listener)
+  - Adds an undo listner to the undo notification list.
+
+model.removeUndoListener(listner)
+  - Removes an undo listener from the undo notification list.
+
+model.modified()
+  - Returns true if the model has been modified (needs to be saved).
+
+model.pushUndoToken(name)
+model.canUndo()
+model.canRedo()
+model.getUndoName()
+model.getRedoName()
+model.undo()
+model.redo()
+
+----- View functions:
+
+model.newView()
+  - Creates a new view with the default drawing parameters.
+
+view.setPosition(p)
+
+view.setDirection(v)
+
+view.draw()
+  - Executes the necessary OpenGL commands to draw the model from this view.
+
+view.setSize(w,h)
+
+view.addViewListener(listener)
+  - Adds a view listener to the redraw notification list.
+
+view.removeViewListener(listener)
+  - Removes a view listener from the redraw notification list.
+
+view.setCurrent()
+  - ?
+
+view.navMouseDown(x, y)
+view.navMouseMove(x, y)
+view.navMouseUp(x, y)
+
+view.mouseDown(x, y)
+view.mouseMove(x, y)
+view.mouseUp(x, y)
+
+----- Animation functions:
+
+model.setTime(time)
+
+model.getNumAnims()
+model.getAnim(index)
+model.loadAnim(filename)
+
+model.newAnim()
+  - Creates a new animation object.
+
+model.getKeyInfo()
+  - Returns the keyInfo structure for the current time and the currently selected joint.
+
+anim.setCurrent()
+  - Sets this animation to be the one observed by the model.
+
+anim.addAnimListener(listener)
+  - Adds an animation listener to the update notification list.
+
+anim.removeAnimListener(listener)
+  - Removes an animation listener from the update notification list.
+
+anim.getKeyTimes(boneID)
+anim.getKeyInfoAtTime(boneID, time)
+
+anim.removeKey(time)
+  - Removes a key from the current bone.
+
+anim.addKey(time, keyInfo)
+  - Adds (or resets) a key on the current bone.
+
+keyInfo structure:
+  - time
+  - posx
+  - posy
+  - posz
+  - rotx
+  - roty
+  - rotz
+  - rotw
+
+
+----- Bone functions:
+
+model.getNumBones()
+model.getBoneInfo(index)
+
+boneInfo structure:
+  - name
+  - childrenIDs
+
+
+-----
+
+Actions (on the C++ side):
+
+- Change joint selection
+- Set joint rotation
+- Change keyframe
+- Add keyframe
+- Remove keyframe
