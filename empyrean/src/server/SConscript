@@ -1,2 +1,15 @@
-Import('base_env')
-base_env.Program('#/build/server$EXESUF', 'Main.cpp')
+Import('base_env SetupSDL')
+
+SOURCES = [
+    'ListenerThread.cpp',
+    'Main.cpp',
+    'World.cpp']
+
+env = base_env.Copy()
+
+SetupSDL(env)
+
+env['LIBPATH'] += ['../base']
+env['LIBS'] += ['base','nspr4']    
+
+env.Program('#/build/server$EXESUF', SOURCES)
