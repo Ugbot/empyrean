@@ -9,7 +9,6 @@
 #include "PlayerEntity.h"
 #include "Renderer.h"
 #include "ResourceManager.h"
-#include "Coroutine.h"
 
 namespace pyr {
     PlayerEntity::PlayerEntity(Model* model,Renderer* renderer,InputManager* im) {
@@ -68,6 +67,7 @@ namespace pyr {
 
     void PlayerEntity::startWalkState() {
         _model->getModel().getMixer()->blendCycle(0, 1.0f, 5.0f);
+        _state = &PlayerEntity::updateWalkState;
     }
 
     void PlayerEntity::updateWalkState(double dt) {
