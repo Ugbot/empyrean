@@ -53,11 +53,9 @@ void run() {
     SDL_WM_SetCaption("Empyrean", 0);
     
     pyr::Application& app = pyr::Application::instance();
-    pyr::InputManager& im = pyr::InputManager::instance();
     
     // notify the app and the input manager of the window size
     app.resize(width, height);
-    im.resize(width, height);
     
     pyr::FPSCounter counter;
 
@@ -71,19 +69,18 @@ void run() {
             switch (event.type) {
                 case SDL_VIDEORESIZE:
                     app.resize(event.resize.w, event.resize.h);
-                    im.resize(event.resize.w, event.resize.h);
                     break;
 
                 case SDL_KEYDOWN:
                 case SDL_KEYUP:
-                    im.onKeyPress(
+                    app.onKeyPress(
                         event.key.keysym.sym,
                         event.key.state == SDL_PRESSED);
                     break;
 
                 case SDL_MOUSEBUTTONDOWN:
                 case SDL_MOUSEBUTTONUP:
-                    im.onMousePress(
+                    app.onMousePress(
                         event.button.button,
                         event.button.state == SDL_PRESSED,
                         event.button.x,
@@ -91,7 +88,7 @@ void run() {
                     break;
 
                 case SDL_MOUSEMOTION:
-                    im.onMouseMove(event.motion.x, event.motion.y);
+                    app.onMouseMove(event.motion.x, event.motion.y);
                     break;
 
                 case SDL_QUIT:
@@ -117,11 +114,6 @@ void run() {
             app.draw();
             SDL_GL_SwapBuffers();
 
-            // this needs to come after the application update and draw
-            // because we want to update edge states AFTER the application
-            // has read from the input objects.
-            im.update(dt);
-            
             counter.update(dt);
             
             char str[80];
@@ -133,9 +125,10 @@ void run() {
 }
 
 
-int main() {
-    void error(const std::string& message);
+void error(const std::string& message);
 
+
+int main() {
     try {
         run();
         return EXIT_SUCCESS;
@@ -152,6 +145,17 @@ int main() {
     #include <windows.h>
 
     int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
+        // set the current path to where the executable resides
+        char filename[MAX_PATH];
+        GetModuleFileName(GetModuleHandle(0), filename, MAX_PATH);
+
+        // remove the basename
+        char* backslash = strrchr(filename, '\\');
+        if (backslash) {
+            *backslash = 0;
+            SetCurrentDirectory(filename);
+        }
+        
         return main();
     }
     

@@ -32,7 +32,7 @@
 				Name="VCCustomBuildTool"/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="SDL.lib opengl32.lib glu32.lib"
+				AdditionalDependencies="SDL.lib corona.lib opengl32.lib glu32.lib"
 				OutputFile="$(OutDir)/client.exe"
 				LinkIncremental="2"
 				AdditionalLibraryDirectories="../../src/third-party/lib"
@@ -79,7 +79,7 @@
 				Name="VCCustomBuildTool"/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="SDL.lib opengl32.lib glu32.lib"
+				AdditionalDependencies="SDL.lib corona.lib opengl32.lib glu32.lib"
 				OutputFile="$(OutDir)/client.exe"
 				LinkIncremental="1"
 				AdditionalLibraryDirectories="../../src/third-party/lib"
@@ -133,10 +133,28 @@
 				RelativePath="..\..\src\client\InputManager.h">
 			</File>
 			<File
+				RelativePath="..\..\src\client\IntroState.cpp">
+			</File>
+			<File
+				RelativePath="..\..\src\client\IntroState.h">
+			</File>
+			<File
 				RelativePath="..\..\src\client\Main.cpp">
 			</File>
 			<File
 				RelativePath="..\..\src\client\State.h">
+			</File>
+			<File
+				RelativePath="..\..\src\client\Texture.cpp">
+			</File>
+			<File
+				RelativePath="..\..\src\client\Texture.h">
+			</File>
+			<File
+				RelativePath="..\..\src\client\Types.h">
+			</File>
+			<File
+				RelativePath="..\..\src\client\Utility.h">
 			</File>
 		</Filter>
 	</Files>

@@ -2,6 +2,10 @@
 #define PYR_APPLICATION_H
 
 
+#include <SDL.h>
+#include "Utility.h"
+
+
 namespace pyr {
 
     class State;
@@ -14,23 +18,38 @@ namespace pyr {
 
     private:
         Application();
-        ~Application();
         
     public:
         void resize(int width, int height);
+        int getWidth()  { return _width; }
+        int getHeight() { return _height; }
+        
         void draw();
         
         /// @param dt  elapsed time in milliseconds
         void update(float dt);
         
+        void onKeyPress(SDLKey key, bool down);
+        void onMousePress(Uint8 button, bool down, int x, int y);
+        void onMouseMove(int x, int y);
+        
+        void invokeTransition(State* state);
         bool shouldQuit();
 
     private:
         static Application* _instance;
     
+        // dimensions of the window or screen
         int _width;
         int _height;
-        State* _currentState;
+        
+        // last position of the mouse (so we can notify new states of
+        // the mouse's position)
+        int _lastX;
+        int _lastY;
+                
+        ScopedPtr<State> _currentState;
+        ScopedPtr<State> _nextState;
     };
     
 }

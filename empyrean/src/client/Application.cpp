@@ -1,9 +1,12 @@
 #include <stdlib.h>
 #include "Application.h"
-#include "GameState.h"
+#include "IntroState.h"
 
 
 namespace pyr {
+
+    typedef IntroState InitialState;
+
 
     Application* Application::_instance = 0;
 
@@ -23,11 +26,9 @@ namespace pyr {
     Application::Application() {
         _width  = 0;
         _height = 0;
-        _currentState = new GameState();
-    }
-    
-    Application::~Application() {
-        delete _currentState;
+        _lastX = 0;
+        _lastY = 0;
+        _currentState = new InitialState();
     }
     
     void Application::resize(int width, int height) {
@@ -45,10 +46,38 @@ namespace pyr {
         if (_currentState) {
             _currentState->update(dt);
         }
+        if (_nextState) {
+            _currentState = _nextState;
+            _currentState->onMouseMove(_lastX, _lastY);
+        }
+    }
+    
+    void Application::onKeyPress(SDLKey key, bool down) {
+        if (_currentState) {
+            _currentState->onKeyPress(key, down);
+        }
+    }
+    
+    void Application::onMousePress(Uint8 button, bool down, int x, int y) {
+        if (_currentState) {
+            _currentState->onMousePress(button, down, x, y);
+        }
+    }
+    
+    void Application::onMouseMove(int x, int y) { 
+        if (_currentState) {
+            _currentState->onMouseMove(x, y);
+        }
+        _lastX = x;
+        _lastY = y;
+    }
+    
+    void Application::invokeTransition(State* state) {
+        _nextState = state;
     }
     
     bool Application::shouldQuit() {
-        return (_currentState == 0);
+        return !bool(_currentState);
     }
 
 }
