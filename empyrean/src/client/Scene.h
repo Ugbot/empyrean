@@ -5,9 +5,9 @@
 #include <map>
 #include <memory>
 #include "Map.h"
+#include "ScopedPtr.h"
 #include "Singleton.h"
 #include "Types.h"
-#include "Utility.h"
 
 
 namespace pyr {

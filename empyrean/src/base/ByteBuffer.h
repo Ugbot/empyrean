@@ -3,12 +3,13 @@
 
 
 #include <algorithm>
+#include <string>
 #include <stdlib.h>
 #include <string.h>
 #include <prnetdb.h>
 #include <gmtl/Vec.h>
+#include "ScopedArray.h"
 #include "Types.h"
-#include "Utility.h"
 
 
 namespace pyr {

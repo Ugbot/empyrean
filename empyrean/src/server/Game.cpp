@@ -11,7 +11,7 @@ namespace pyr {
         _name = name;
         _password = password;
         _map = loadOBJFile("maps/map1.obj");
-        if (!_map.get()) {
+        if (!_map) {
             throw std::runtime_error("Loading maps/map1.obj failed");
         }
     }

@@ -3,7 +3,7 @@
 
 
 #include "Map.h"
-#include "Utility.h"
+#include "ScopedPtr.h"
 #include "VecMath.h"
 #include "wx.h"
 

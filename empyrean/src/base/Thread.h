@@ -3,7 +3,7 @@
 
 
 #include <prthread.h>
-#include "Utility.h"
+#include "ScopedPtr.h"
 
 
 namespace pyr {

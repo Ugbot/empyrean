@@ -2,9 +2,10 @@
 #include <stdexcept>
 #include <corona.h>
 #include "ResourceManager.h"
+#include "ScopedArray.h"
+#include "ScopedPtr.h"
 #include "Texture.h"
 #include "Types.h"
-#include "Utility.h"
 using namespace corona;
 
 

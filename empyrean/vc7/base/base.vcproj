@@ -275,7 +275,13 @@
 				RelativePath="..\..\src\base\ResourceManager.h">
 			</File>
 			<File
+				RelativePath="..\..\src\base\ScopedArray.h">
+			</File>
+			<File
 				RelativePath="..\..\src\base\ScopedLock.h">
+			</File>
+			<File
+				RelativePath="..\..\src\base\ScopedPtr.h">
 			</File>
 			<File
 				RelativePath="..\..\src\base\ServerSocket.cpp">

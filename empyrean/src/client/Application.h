@@ -3,9 +3,9 @@
 
 #include <SDL.h>
 #include <gltext.h>
-#include "Utility.h"
 #include "FPSCounter.h"
 #include "Profiler.h"
+#include "ScopedPtr.h"
 #include "Singleton.h"
 
 namespace pyr {

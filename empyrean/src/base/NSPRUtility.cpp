@@ -1,7 +1,7 @@
 #include <stdexcept>
 #include <prerror.h>
 #include "NSPRUtility.h"
-#include "Utility.h"
+#include "ScopedArray.h"
 
 
 namespace pyr {

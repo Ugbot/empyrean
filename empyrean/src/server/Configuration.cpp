@@ -1,6 +1,7 @@
 #include <stdlib.h>
 #include "Configuration.h"
 #include "Constants.h"
+#include "ScopedPtr.h"
 #include "XMLParser.h"
 
 

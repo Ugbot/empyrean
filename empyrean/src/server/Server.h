@@ -3,7 +3,7 @@
 
 
 #include <string>
-#include "Utility.h"
+#include "ScopedPtr.h"
 #include "wx.h"
 
 

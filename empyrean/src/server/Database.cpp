@@ -1,7 +1,7 @@
 #include <stdexcept>
 #include <stdio.h>
 #include "Database.h"
-#include "Utility.h"
+#include "ScopedPtr.h"
 #include "XMLParser.h"
 
 
