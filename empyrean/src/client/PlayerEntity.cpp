@@ -28,7 +28,10 @@ namespace pyr {
     }
 
     void PlayerEntity::update(float dt) {
-	setPos(getPos() + getVel() * dt);
+        // Provide client-side estimation of server physics model.
+	getPos() += getVel() * dt;
+	getPos()[1] = std::max(getPos()[1], 0.0f);
+	
         if (_state) {
             (this->*_state)(dt);
         }
