@@ -46,7 +46,7 @@ namespace pyr {
         u16 _id;
         u16 _size;
     };
-    typedef RefPtr<Packet> PacketPtr;
+    PYR_REF_PTR(Packet);
 
 
     // For an explanation of the magic below, see

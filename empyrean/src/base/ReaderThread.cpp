@@ -17,6 +17,8 @@ namespace pyr {
     }
 
     void ReaderThread::run(Thread* thread) {
+        PYR_LOG_SCOPE(_logger, INFO, "ReaderThread::run");
+
         ByteBuffer bb;
 
         while (!thread->shouldQuit()) {
@@ -41,6 +43,7 @@ namespace pyr {
     std::queue<PacketPtr> ReaderThread::getPackets() {
         PYR_SYNCHRONIZED(_incomingLock, {
             std::queue<PacketPtr> packets = _incoming;
+            // std::queue has no clear.  o_O
             while (!_incoming.empty()) {
                 _incoming.pop();
             }

@@ -4,6 +4,7 @@
 
 #include <queue>
 #include <vector>
+#include "CondVar.h"
 #include "Packet.h"
 #include "Thread.h"
 #include "UnownedPtr.h"
@@ -11,27 +12,22 @@
 
 namespace pyr {
 
-    class CondVar;
-    class Mutex;
     class Socket;
 
     class WriterThread : public Runnable {
     public:
         WriterThread(Socket* socket);
-        ~WriterThread();
+        ~WriterThread() { }
         
         void run(Thread* thread);
         
-        void addPacket(PacketPtr packet);
-        void addPackets(const std::vector<PacketPtr>& packets);
+        void addPacket(Packet* packet);
+        void addPackets(const std::vector<Packet*>& packets);
         
     private:
         UnownedPtr<Socket> _socket;
         
-        // Not ScopedPtr because we need to be in control of when they
-        // are destroyed.
-        Mutex* _outgoingLock;
-        CondVar* _packetsAvailable;
+        CondVar _packetsAvailable;
         std::queue<PacketPtr> _outgoing;
     };
 

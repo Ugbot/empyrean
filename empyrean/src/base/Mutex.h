@@ -2,13 +2,13 @@
 #define PYR_MUTEX_H
 
 
-#include <prlock.h>
+#include "Lock.h"
 #include "NSPRUtility.h"
 
 
 namespace pyr {
 
-    class Mutex {
+    class Mutex : public Lock {
     public:
         Mutex() {
             _lock = PR_NewLock();

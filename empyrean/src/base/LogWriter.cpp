@@ -6,6 +6,7 @@
 
 #include "Log.h"
 #include "LogWriter.h"
+#include "ScopedLock.h"
 #include "XMLParser.h"
 
 
@@ -36,6 +37,7 @@ namespace pyr {
     }
 
     void FileWriter::write(const string& message) {
+        PYR_SYNCHRONIZE_SCOPE(_mutex);
         fprintf(_file, "%s\n", message.c_str());
         fflush(_file);
     }

@@ -131,9 +131,9 @@ namespace pyr {
         void processIncomingPackets();
 
         /// Adds a packet to the outgoing queue.
-        void sendPacket(PacketPtr packet);
+        void sendPacket(Packet* packet);
         
-        void sendPackets(const std::vector<PacketPtr>& packets);
+        void sendPackets(const std::vector<Packet*>& packets);
 
         /// Begins disconnecting.
         void close();
@@ -167,7 +167,6 @@ namespace pyr {
         /// I think storing unhandled packets is a hack.
         typedef std::list<PacketPtr> PacketQueue;
         typedef PacketQueue::iterator PacketQueueIter;
-        PacketQueue _unhandled;
 
         /// Used to store user-defined, connection-specific data.
         ScopedPtr<ConnectionData> _data;

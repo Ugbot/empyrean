@@ -3,6 +3,7 @@
 
 
 #include <iostream>
+#include "Mutex.h"
 #include "RefCounted.h"
 #include "RefPtr.h"
 #include "Types.h"
@@ -53,6 +54,7 @@ namespace pyr {
 
     private:
         FILE* _file;
+        Mutex _mutex;
     };
 
 

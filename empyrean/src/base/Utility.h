@@ -214,6 +214,16 @@ namespace pyr {
     inline string str(const string& s) {
         return s;
     }
+
+    inline string pad(size_t size, const string& s) {
+        if (s.size() > size) {
+            return s.substr(0, size);
+        } else if (s.size() == size) {
+            return s;
+        } else {
+            return s + string(size - s.size(), ' ');
+        }
+    }
 }
 
 #endif

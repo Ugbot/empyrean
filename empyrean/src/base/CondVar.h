@@ -12,11 +12,10 @@ namespace pyr {
     /**
      * See NSPR's condition variable documentation.
      */
-    class CondVar {
+    class CondVar : public Mutex {
     public:
-        // create a condition variable based 
-        CondVar(Mutex* m) {
-            _cvar = PR_NewCondVar(m->_lock);
+        CondVar() {
+            _cvar = PR_NewCondVar(_lock);
             if (!_cvar) {
                 throwNSPRError("PR_NewCondVar() failed");
             }
@@ -25,7 +24,7 @@ namespace pyr {
         ~CondVar() {
             PR_DestroyCondVar(_cvar);
         }
-        
+
         void wait(float timeout = -1) {
             PRStatus status = PR_WaitCondVar(_cvar, secondsToInterval(timeout));
             if (status != PR_SUCCESS) {

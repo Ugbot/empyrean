@@ -1,6 +1,7 @@
 #include <iostream>
 #include "Log.h"
 #include "ScopedPtr.h"
+#include "Thread.h"
 #include "ThreadStorage.h"
 #include "XMLParser.h"
 
@@ -71,6 +72,10 @@ namespace pyr {
         if (enabled(level)) {
             const string& spaces = _threadData->spaces;
 
+            std::ostringstream os;
+            os << '[' << pad(16, Thread::getCurrentThreadName()) << "] "
+               << spaces << message;
+            
             Logger* p = this;
             // Maybe an 'additivity' flag a la log4j would be nice.
             while (p /*&& p->_additivity*/) {
@@ -78,7 +83,7 @@ namespace pyr {
                      i != p->_writers.end();
                      ++i
                 ) {
-                    (*i)->write(spaces + message);
+                    (*i)->write(os.str());
                 }
                 p = p->_parent;
             }

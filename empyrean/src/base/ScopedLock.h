@@ -2,7 +2,7 @@
 #define PYR_SCOPED_LOCK_H
 
 
-#include "Mutex.h"
+#include "Lock.h"
 #include "Utility.h"
 
 
@@ -10,22 +10,22 @@ namespace pyr {
 
     class ScopedLock {
     public:
-        ScopedLock(Mutex* m) {
-            _mutex = m;
-            _mutex->lock();
+        ScopedLock(Lock* lock) {
+            _lock = lock;
+            _lock->lock();
         }
     
-        ScopedLock(Mutex& m) {
-            _mutex = &m;
-            _mutex->lock();
+        ScopedLock(Lock& lock) {
+            _lock = &lock;
+            _lock->lock();
         }
         
         ~ScopedLock() {
-            _mutex->unlock();
+            _lock->unlock();
         }
 
-    private:    
-        Mutex* _mutex;
+    private:
+        Lock* _lock;
     };
         
     #define PYR_SYNCHRONIZE_SCOPE(mutex)        \

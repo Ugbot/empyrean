@@ -10,7 +10,10 @@
  #define PYR_HAVE_LONG_LONG
 #endif
 
+#include <pratom.h>
 #include <prinrval.h>
+#include <prlock.h>
+#include <prnetdb.h>
 #include <prthread.h>
 #include <prtypes.h>
 

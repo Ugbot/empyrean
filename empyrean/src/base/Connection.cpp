@@ -55,16 +55,16 @@ namespace pyr {
             }
 
             if (!handled) {
-                _unhandled.push_back(p);
+                PYR_LOG(_logger, WARN) << "Unhandled: " << p->getName();
             }
         }
     }
 
-    void Connection::sendPacket(PacketPtr p) {
+    void Connection::sendPacket(Packet* p) {
         _writer->addPacket(p);
     }
 
-    void Connection::sendPackets(const std::vector<PacketPtr>& packets) {
+    void Connection::sendPackets(const std::vector<Packet*>& packets) {
         _writer->addPackets(packets);
     }
 
@@ -81,6 +81,8 @@ namespace pyr {
     }
     
     void Connection::addReceiver(PacketReceiver* receiver) {
+        // We no longer store packets for later handlers.
+#if 0
         // See if this receiver can handle any of the unhandled packets.
         PacketQueueIter i = _unhandled.begin();
         while (i != _unhandled.end()) {
@@ -93,6 +95,7 @@ namespace pyr {
                 ++i;
             }
         }
+#endif
     
         _receivers.insert(receiver);
     }

@@ -1,4 +1,3 @@
-#include <prnetdb.h>
 #include "ByteBuffer.h"
 #include "CondVar.h"
 #include "Packet.h"
@@ -6,6 +5,8 @@
 #include "Socket.h"
 #include "WriterThread.h"
 
+
+#include "PacketTypes.h"
 
 namespace pyr {
 
@@ -15,23 +16,16 @@ namespace pyr {
 
     WriterThread::WriterThread(Socket* socket) {
         _socket = socket;
-        _outgoingLock = new Mutex();
-        _packetsAvailable = new CondVar(_outgoingLock);
     }
     
-    WriterThread::~WriterThread() {
-        delete _packetsAvailable;
-        delete _outgoingLock;
-    }
-
     void WriterThread::run(Thread* thread) {
         PYR_LOG_SCOPE(_logger, INFO, "WriterThread::run");
         while (!thread->shouldQuit()) {
             PacketPtr p;  // The packet we get.
 
-            PYR_SYNCHRONIZED(_outgoingLock, {
+            PYR_SYNCHRONIZED(_packetsAvailable, {
                 while (_outgoing.empty()) {
-                    _packetsAvailable->wait(0.5f);
+                    _packetsAvailable.wait(0.5f);
                     if (thread->shouldQuit()) {
                         return;
                     }
@@ -46,6 +40,8 @@ namespace pyr {
 
             PYR_ASSERT(p, "Read a null packet out of the writer queue.");
 
+            PYR_LOG_SCOPE(_logger, VERBOSE, "Write packet to socket");
+
             ByteBuffer out;
             p->serialize(out);
 
@@ -59,25 +55,23 @@ namespace pyr {
             ) {
                 break;
             }
-
-            PYR_LOG(_logger, VERBOSE) << "Wrote packet to socket.";            
         }
     }
     
-    void WriterThread::addPacket(PacketPtr packet) {
-        std::vector<PacketPtr> packets(1);
+    void WriterThread::addPacket(Packet* packet) {
+        std::vector<Packet*> packets(1);
         packets[0] = packet;
         addPackets(packets);
     }
 
-    void WriterThread::addPackets(const std::vector<PacketPtr>& packets) {
+    void WriterThread::addPackets(const std::vector<Packet*>& packets) {
         if (packets.empty()) {
             return;
         }
 
         PYR_LOG_SCOPE(_logger, INFO, "WriterThread::addPackets");
 
-        PYR_SYNCHRONIZED(_outgoingLock, {
+        PYR_SYNCHRONIZED(_packetsAvailable, {
             PYR_LOG(_logger, VERBOSE) << "Queuing packets...";
             for (size_t i = 0; i < packets.size(); ++i) {
                 PYR_LOG(_logger, INFO) << "Queueing packet for writing:";
@@ -86,7 +80,7 @@ namespace pyr {
             }
             PYR_LOG(_logger, VERBOSE) << "Notifying writer thread.";
 
-            _packetsAvailable->notify();
+            _packetsAvailable.notify();
         })
     }
 
