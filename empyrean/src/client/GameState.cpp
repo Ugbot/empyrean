@@ -91,7 +91,7 @@ namespace pyr {
         Scene& scene = the<Scene>();
         scene.draw(_renderer);
 
-        if (ClientEntity* entity = scene.getFocus()) {
+        if (ClientEntityPtr entity = scene.getFocus()) {
             the<HUD>().draw(_renderer,entity);
 
             if (_showPlayerData) {

@@ -22,8 +22,8 @@
  *
  * -----------------------------------------------------------------
  * File:          $RCSfile: RootWidget.h,v $
- * Date modified: $Date: 2004-06-05 02:23:23 $
- * Version:       $Revision: 1.5 $
+ * Date modified: $Date: 2004-06-26 17:02:53 $
+ * Version:       $Revision: 1.6 $
  * -----------------------------------------------------------------
  *
  ************************************************************** phui-cpr-end */
@@ -41,8 +41,8 @@ namespace phui {
         void update(float dt);
         void draw() const;
 
-        void add(Widget* w);
-        void remove(Widget* w);
+        void add(WidgetPtr w);
+        void remove(WidgetPtr w);
 
         // Events generated from the outside world.
         void genKeyDownEvent(InputKey key);
@@ -52,18 +52,18 @@ namespace phui {
         void genMouseMoveEvent(const Point& p);
         
     private:
-        static void focus(Widget* w);
-        void capture(Widget* w);
+        static void focus(WidgetPtr w);
+        void capture(WidgetPtr w);
 
         WidgetPtr getMouseEventTarget(const Point& p) const;
         
         /// Point p is in coordinate space of Widget w.
-        WidgetPtr findWidgetAtPoint(Widget* w, const Point& p) const;
+        WidgetPtr findWidgetAtPoint(WidgetPtr w, const Point& p) const;
 
-        static void updateWidget(Widget* w, float dt);
-        static void drawWidget(Widget* w);
+        static void updateWidget(WidgetPtr w, float dt);
+        static void drawWidget(WidgetPtr w);
 
-        static Point getAbsolutePosition(Widget* w);
+        static Point getAbsolutePosition(WidgetPtr w);
 
         InputModifiers mModifiers;
 

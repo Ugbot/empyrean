@@ -10,7 +10,11 @@
   <node name="Line04" position="27.8393 17.8492 9.62532">
   </node>
   <node name="Dummy01" position="-32.0946 -8.37314e-008 1.91555">
-    <property key="enemy" value="true"/>
+    <property key="entity" value="true"/>
+    <property key="behavior" value="python"/>
+    <property key="behaviorResource" value="maps/entity.py"/>
+    <property key="appearance" value="cal3d"/>
+    <property key="appearanceResource" value="models/paladin/paladin.cal3d"/>
   </node>
   <node name="Dummy02" position="6.18181 -3.89528e-007 8.91136">
     <property key="enemy" value="true"/>

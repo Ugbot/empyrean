@@ -107,8 +107,14 @@ namespace pyr {
             return *get();
         }
 
-        operator RefDerivedSafe<T>*() const {
-            return get();
+        typedef RefPtr<T> this_type;
+
+        /// Inspired by boost's smart_ptr facilities.
+        typedef Zeroed<T*> this_type::*unspecified_bool_type;
+
+        /// This lets us write code like: if (ptr && ptr->valid())
+        operator unspecified_bool_type() const {
+            return (get() ? &this_type::_ptr : 0);
         }
 
         RefDerivedSafe<T>* get() const {

@@ -2,6 +2,7 @@
 #include "Entity.h"
 #include "MonsterBehavior.h"
 #include "PlayerBehavior.h"
+#include "PythonBehavior.h"
 #include "Utility.h"
 #include "VecMath.h"
 
@@ -15,11 +16,13 @@ namespace pyr {
         _slots.clear();
     }
 
-    void Behavior::sendAppearanceCommand(Entity* entity, const std::string& command) {
+    void Behavior::sendAppearanceCommand(Entity* entity,
+                                         const std::string& command) {
         getAppearance(entity)->sendCommand(command);
     }
 
-    void Behavior::beginAnimationCycle(Entity* entity, const std::string& animation) {
+    void Behavior::beginAnimationCycle(Entity* entity,
+                                       const std::string& animation) {
         getAppearance(entity)->beginAnimationCycle(animation);
     }
 
@@ -77,7 +80,8 @@ namespace pyr {
     };
 
 
-    Behavior* instantiateBehavior(const std::string& name, const std::string& resource) {
+    BehaviorPtr instantiateBehavior(const std::string& name,
+                                    const std::string& resource) {
 #define TRY_TYPE(type)                          \
         if (name == type::getClassName()) {     \
             return new type(resource);          \
@@ -86,6 +90,7 @@ namespace pyr {
         TRY_TYPE(DumbBehavior);
         TRY_TYPE(NullBehavior);
         TRY_TYPE(PlayerBehavior);
+        TRY_TYPE(PythonBehavior);
         TRY_TYPE(MonsterBehavior);
         return new NullBehavior(resource);
     }

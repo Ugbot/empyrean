@@ -7,6 +7,8 @@
 #include "Appearance.h"
 #include "Behavior.h"
 #include "BoundingRectangle.h"
+#include "RefCounted.h"
+#include "RefPtr.h"
 #include "ScopedPtr.h"
 #include "VecMath.h"
 
@@ -15,16 +17,17 @@ namespace pyr {
 
     class Map;
 
-    class Entity {
+    class Entity : public RefCounted {
+    protected:
+        virtual ~Entity() { }
+
     public:
-        Entity(Behavior* behavior, Appearance* appearance) {
+        Entity(BehaviorPtr behavior, Appearance* appearance) {
             PYR_ASSERT(behavior,   "Behavior cannot be null");
             PYR_ASSERT(appearance, "Appearance cannot be null");
             _behavior   = behavior;
             _appearance = appearance;
         }
-
-        virtual ~Entity() { }
 
         /**
          * Updates the entity's behavior.  If you need to update something else,
@@ -51,7 +54,7 @@ namespace pyr {
         void setAngleWithGround(float val) { _angleWithGround = val; }
         
     private:
-        ScopedPtr<Behavior> _behavior;
+        BehaviorPtr _behavior;
         ScopedPtr<Appearance> _appearance;
 
         Vec2f _pos;
@@ -59,6 +62,7 @@ namespace pyr {
         BoundingRectangle _bounds;
         Zeroed<float> _angleWithGround;
     };
+    typedef RefPtr<Entity> EntityPtr;
 
 }
 

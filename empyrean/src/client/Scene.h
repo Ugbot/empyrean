@@ -21,30 +21,28 @@ namespace pyr {
         PYR_DECLARE_SINGLETON(Scene)
     
         Scene();
-        ~Scene();
+        ~Scene() { }
         
     public:
         void draw(gltext::FontRendererPtr rend);
         void update(float dt);
         
-        /** The scene takes ownership of entities that are given to it,
-         *  unless they are removed. */
-        void addEntity(u16 id, ClientEntity* entity);
+        void addEntity(u16 id, ClientEntityPtr entity);
         void removeEntity(u16 id);
-        ClientEntity* getEntity(u16 id) const;
+        ClientEntityPtr getEntity(u16 id) const;
 
         void clear();
         
         void setFocus(u16 id);
-        ClientEntity* getFocus() const;
+        ClientEntityPtr getFocus() const;
         
     private:
         void drawMap();
         void addParticles(MapElementPtr elt);
 
-        typedef std::map<u16, ClientEntity*> EntityMap;
+        typedef std::map<u16, ClientEntityPtr> EntityMap;
 
-        ClientEntity* _focus;
+        ClientEntityPtr _focus;
         Texture* _backdrop;
         EntityMap _entities;
         ScopedPtr<Map> _map;

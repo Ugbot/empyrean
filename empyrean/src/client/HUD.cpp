@@ -40,7 +40,7 @@ namespace pyr {
         }
     }
 
-    void HUD::draw(gltext::FontRendererPtr rend, ClientEntity* entity) {
+    void HUD::draw(gltext::FontRendererPtr rend, ClientEntityPtr entity) {
         PYR_ASSERT(entity, "Invalid entity passed to the HUD!");
 
         int vitality, ether, maxVitality, maxEther;

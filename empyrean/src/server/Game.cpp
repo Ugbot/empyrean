@@ -37,12 +37,29 @@ namespace pyr {
                 ServerEntity* entity = new ServerEntity(
                     _idGenerator.reserve(),
                     instantiateBehavior("monster"),
-                    new ServerAppearance("cal3d", "models/paladin/paladin.cal3d"),
+                    new ServerAppearance("cal3d",
+                                         "models/paladin/paladin.cal3d"),
                     new Monster());
 
                 float width  = 0.3f;
                 float height = 1.9f;
-                entity->setBounds(BoundingRectangle(Vec2f(-width / 2, 0), Vec2f(width / 2, height)));
+                entity->setBounds(BoundingRectangle(Vec2f(-width / 2, 0),
+                                                    Vec2f(width / 2, height)));
+                entity->setPos(elt->pos);
+                addEntity(entity);
+            } else if (elt->properties["entity"] == "true") {
+                ServerEntity* entity = new ServerEntity(
+                    _idGenerator.reserve(),
+                    instantiateBehavior(elt->properties["behavior"],
+                                        elt->properties["behaviorResource"]),
+                    new ServerAppearance(elt->properties["appearance"],
+                                         elt->properties["appearanceResource"]),
+                    new Monster());
+
+                float width  = 0.3f;
+                float height = 1.9f;
+                entity->setBounds(BoundingRectangle(Vec2f(-width / 2, 0),
+                                                    Vec2f(width / 2, height)));
                 entity->setPos(elt->pos);
                 addEntity(entity);
             }
@@ -51,21 +68,21 @@ namespace pyr {
 
     Game::~Game() {
         clearConnections();
-
-        for_each(_entities.begin(), _entities.end(), delete_function<ServerEntity>);
-        _entities.clear();
     }
 
     void Game::update(float dt) {
         ConnectionHolder::update();
-        std::vector<Entity*> entityVector;
+
         Environment env;
         env.map = _map.get();
-        env.entities = std::vector<const Entity*>(_entities.begin(), _entities.end());
+        for (size_t i = 0; i < _entities.size(); ++i) {
+            env.entities.push_back(_entities[i].get());
+        }
 
+        std::vector<Entity*> entityVector;
         for (size_t i = 0; i < _entities.size(); ++i) {
             _entities[i]->update(dt, env);
-            entityVector.push_back(_entities[i]);
+            entityVector.push_back(_entities[i].get());
         }
 
         resolveCollisions(dt, _map.get(),entityVector);
@@ -81,7 +98,7 @@ namespace pyr {
         }
 
         for (size_t i = 0; i < _entities.size(); ++i) {
-            ServerEntity* e = _entities[i];
+            ServerEntityPtr e = _entities[i];
             sendAll(new EntityUpdatedPacket(
                         e->getID(), e->getPos(), e->getVel()));
         }
@@ -91,11 +108,11 @@ namespace pyr {
         return checked_cast<GameConnectionData*>(c->getData());
     }
 
-    void Game::addEntity(ServerEntity* entity) {
+    void Game::addEntity(ServerEntityPtr entity) {
         _entities.push_back(entity);
     }
 
-    void Game::removeEntity(ServerEntity* entity) {
+    void Game::removeEntity(ServerEntityPtr entity) {
         for (size_t i = 0; i < _entities.size(); ++i) {
             if (_entities[i] == entity) {
                 _entities.erase(_entities.begin() + i);
@@ -104,7 +121,7 @@ namespace pyr {
         }
     }
 
-    EntityAddedPacket* Game::buildEntityAddedPacket(ServerEntity* entity) {
+    EntityAddedPacket* Game::buildEntityAddedPacket(ServerEntityPtr entity) {
         return new EntityAddedPacket(
             entity->getID(),
             entity->getBehavior()->getName(),
@@ -178,8 +195,8 @@ namespace pyr {
 
         _idGenerator.release(cd->playerEntity->getID());
         removeEntity(cd->playerEntity);
-        delete cd->playerEntity;
-        // Don't need to delete the behavior, because the entity does that for us.
+        // Don't need to delete the behavior, because the entity does
+        // that for us.
 
         // Maybe this will need to specifically unregister handlers as
         // opposed to clearing them all.
@@ -277,7 +294,7 @@ namespace pyr {
         
         // See if the attack hits any other entities
         std::vector<CollisionBox::Side> sidesHit;
-        std::vector<ServerEntity*> entitiesToClean;
+        std::vector<ServerEntityPtr> entitiesToClean;
         for (size_t i=0; i < _entities.size(); i++) {
             if (_entities[i] != attacker) {
                 CollisionBox otherEntityBox(_entities[i]->getPos() + _entities[i]->getBounds().min, 

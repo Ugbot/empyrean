@@ -6,6 +6,8 @@
 #include <string>
 #include <vector>
 #include "LokiTypeInfo.h"
+#include "RefCounted.h"
+#include "RefPtr.h"
 #include "Utility.h"
 #include "VecMath.h"
 
@@ -51,9 +53,11 @@ namespace pyr {
     /**
      * Responsible for controlling an entity's motion and actions.
      */
-    class Behavior {
-    public:
+    class Behavior : public RefCounted {
+    protected:
         virtual ~Behavior();
+
+    public:
         virtual std::string getName() = 0;
         virtual std::string getResource() = 0;
         virtual void update(Entity* entity, float dt, const Environment& env) = 0;
@@ -89,6 +93,7 @@ namespace pyr {
         typedef std::map<TypeInfo, BehaviorSlot*> SlotMap;
         SlotMap _slots;
     };
+    typedef RefPtr<Behavior> BehaviorPtr;
 
     /**
      * Instantiates a behavior from the type 'name'.  Returns a default (naive)
@@ -96,8 +101,8 @@ namespace pyr {
      *
      * This function will not return a null pointer.
      */
-    Behavior* instantiateBehavior(const std::string& name,
-                                  const std::string& resource = "");
+    BehaviorPtr instantiateBehavior(const std::string& name,
+                                    const std::string& resource = "");
 }
 
 #endif

@@ -6,6 +6,7 @@
 #include "Database.h"
 #include "Entity.h"
 #include "ScopedPtr.h"
+#include "ServerAppearance.h"
 #include "Types.h"
 #include "Utility.h"
 #include "VecMath.h"
@@ -18,8 +19,12 @@ namespace pyr {
     class Map;
 
     class ServerEntity : public Entity {
+    protected:
+        ~ServerEntity() { }
+
     public:
-        ServerEntity(u16 id, Behavior* behavior, ServerAppearance* appearance, GameStatisticsPtr gameStats)
+        ServerEntity(u16 id, BehaviorPtr behavior, ServerAppearance* appearance,
+                     GameStatisticsPtr gameStats)
             : Entity(behavior, appearance)
         {
             _id = id;
@@ -44,6 +49,7 @@ namespace pyr {
         u16 _id;
         GameStatisticsPtr _gameStats;
     };
+    typedef RefPtr<ServerEntity> ServerEntityPtr;
     
 }
 

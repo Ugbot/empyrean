@@ -13,20 +13,36 @@ namespace pyr {
 
     PYR_DEFINE_RUNTIME_ERROR(PythonError);
 
-    /// This helps clean up the PYR_END_PYTHON_CODE() macro.
+    std::string getPythonErrorString();
     void checkForPythonError();
+    void requirePythonError();
 
-    #define PYR_BEGIN_PYTHON_CODE()                                                     \
-        try {
+    /**
+     * Allows us to check for Python errors at the end of a Python
+     * code block whether control left the end of the block or
+     * 'return' was used.
+     */
+    struct PythonCodeErrorSentry {
+        ~PythonCodeErrorSentry() {
+            if (!std::uncaught_exception()) {
+                checkForPythonError();
+            }
+        }
+    };
 
-    #define PYR_END_PYTHON_CODE()                                                       \
-        }                                                                               \
-        catch (const boost::python::error_already_set&) {                               \
-            if (!PyErr_Occurred()) {                                                    \
-                throw PythonError("Boost.Python exception, but no Python error set.");  \
-            }                                                                           \
-        }                                                                               \
-        checkForPythonError();
+    #define PYR_NO_UNUSED_WARNING(x) ((void)&(x))
+
+    #define PYR_BEGIN_PYTHON_CODE()                          \
+        try {                                                \
+            PythonCodeErrorSentry sentry__;                  \
+            PYR_NO_UNUSED_WARNING(sentry__);  // silly gcc
+
+    #define PYR_END_PYTHON_CODE()                            \
+        }                                                    \
+        catch (const boost::python::error_already_set&) {    \
+            requirePythonError();                            \
+            throw PythonError(getPythonErrorString());       \
+        }
 
     class PythonInterpreter {
         PYR_DECLARE_SINGLETON(PythonInterpreter)
@@ -38,8 +54,8 @@ namespace pyr {
         void addSubModule(void (*init)());
 
         /// Generates a unique module in which to run scripts.
-        boost::python::handle<> createModule(const std::string& contents,
-                                             const std::string& filename);
+        boost::python::object createModule(const std::string& contents,
+                                           const std::string& filename);
 
     private:
         Zeroed<int> _moduleCount;

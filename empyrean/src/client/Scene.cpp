@@ -16,18 +16,10 @@ namespace pyr {
     PYR_DEFINE_SINGLETON(Scene)
 
     Scene::Scene() {
-        _focus = 0;
         _backdrop = Texture::create("images/stars.tga");
         _map = loadMap("maps/map2.obj");
         if (!_map) {
             throw std::runtime_error("Loading maps/map1.obj failed");
-        }
-    }
-    
-    Scene::~Scene() {
-        EntityMap::iterator itr = _entities.begin();
-        for (; itr != _entities.end(); ++itr) {
-            delete itr->second;
         }
     }
     
@@ -74,7 +66,7 @@ namespace pyr {
 
         EntityMap::iterator itr = _entities.begin();
         for (; itr != _entities.end(); ++itr) {
-            ClientEntity* e = itr->second;
+            ClientEntityPtr e = itr->second;
             glPushMatrix();
             glTranslate(e->getPos());
             e->draw(rend);
@@ -88,7 +80,7 @@ namespace pyr {
         
         for (EntityMap::iterator itr = _entities.begin();
              itr != _entities.end(); ++itr) {
-            entityVector.push_back(itr->second);
+            entityVector.push_back(itr->second.get());
         }
 
         Environment env;
@@ -100,14 +92,14 @@ namespace pyr {
         for (EntityMap::iterator itr = _entities.begin();
             itr != _entities.end(); ++itr) {
             itr->second->update(dt, env);
-            entityVector.push_back(itr->second);
+            entityVector.push_back(itr->second.get());
         }
         
         resolveCollisions(dt,_map.get(),entityVector);
 
     }
     
-    void Scene::addEntity(u16 id, ClientEntity* entity) {
+    void Scene::addEntity(u16 id, ClientEntityPtr entity) {
         PYR_ASSERT(_entities.count(id) == 0, "Two entities have same ID");
         _entities[id] = entity;
     }
@@ -119,7 +111,7 @@ namespace pyr {
         _entities.erase(id);
     }
     
-    ClientEntity* Scene::getEntity(u16 id) const {
+    ClientEntityPtr Scene::getEntity(u16 id) const {
         EntityMap::const_iterator i = _entities.find(id);
         return (i == _entities.end() ? 0 : i->second);
     }
@@ -133,7 +125,7 @@ namespace pyr {
         _focus = getEntity(id);
     }
     
-    ClientEntity* Scene::getFocus() const {
+    ClientEntityPtr Scene::getFocus() const {
         return _focus;
     }
 

@@ -22,8 +22,8 @@
  *
  * -----------------------------------------------------------------
  * File:          $RCSfile: RootWidget.cpp,v $
- * Date modified: $Date: 2004-06-05 02:23:23 $
- * Version:       $Revision: 1.7 $
+ * Date modified: $Date: 2004-06-26 17:02:53 $
+ * Version:       $Revision: 1.8 $
  * -----------------------------------------------------------------
  *
  ************************************************************** phui-cpr-end */
@@ -39,7 +39,7 @@ namespace phui {
     }
 
     void RootWidget::update(float dt) {
-        updateWidget(mRoot, dt);
+        updateWidget(mRoot.get(), dt);
     }
 
     void RootWidget::draw() const {
@@ -70,7 +70,7 @@ namespace phui {
             glEnable(GL_BLEND);
             glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-            drawWidget(mRoot);
+            drawWidget(mRoot.get());
         glPopAttrib();
 
         // restore old matrices
@@ -80,11 +80,11 @@ namespace phui {
         glPopMatrix();
     }
 
-    void RootWidget::add(Widget* w) {
+    void RootWidget::add(WidgetPtr w) {
         mRoot->add(w);
     }
 
-    void RootWidget::remove(Widget* w) {
+    void RootWidget::remove(WidgetPtr w) {
         mRoot->remove(w);
     }
 
@@ -175,14 +175,14 @@ namespace phui {
         }
     }
 
-    void RootWidget::focus(Widget* w) {
+    void RootWidget::focus(WidgetPtr w) {
         while (w->getParent()) {
             w->getParent()->focus(w);
             w = w->getParent();
         }
     }
 
-    void RootWidget::capture(Widget* w) {
+    void RootWidget::capture(WidgetPtr w) {
         mCapture = w;
     }
 
@@ -190,7 +190,7 @@ namespace phui {
         return (mCapture ? mCapture : findWidgetAtPoint(mRoot, p));
     }
 
-    WidgetPtr RootWidget::findWidgetAtPoint(Widget* w, const Point& p) const {
+    WidgetPtr RootWidget::findWidgetAtPoint(WidgetPtr w, const Point& p) const {
         if (!w) {
             return 0;
         }
@@ -217,7 +217,7 @@ namespace phui {
         return found;
     }
 
-    void RootWidget::updateWidget(Widget* w, float dt) {
+    void RootWidget::updateWidget(WidgetPtr w, float dt) {
         if (w->isEnabled()) {
             w->update(dt);
         }
@@ -229,7 +229,7 @@ namespace phui {
         }
     }
 
-    void RootWidget::drawWidget(Widget* w) {
+    void RootWidget::drawWidget(WidgetPtr w) {
         glPushMatrix();
         glTranslate(w->getPosition());
         w->draw();
@@ -243,7 +243,7 @@ namespace phui {
         glPopMatrix();
     }
 
-    Point RootWidget::getAbsolutePosition(Widget* w) {
+    Point RootWidget::getAbsolutePosition(WidgetPtr w) {
         if (w) {
             return getAbsolutePosition(w->getParent()) + w->getPosition();
         } else {

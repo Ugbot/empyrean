@@ -27,6 +27,7 @@ SOURCES = Split("""
     Platform.cpp
     PlayerBehavior.cpp
     Profiler.cpp
+    PythonBehavior.cpp
     PythonBindings.cpp
     PythonInterpreter.cpp
     PythonLog.cpp

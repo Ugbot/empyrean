@@ -6,29 +6,46 @@ using namespace boost::python;
 
 namespace pyr {
 
+    // We don't use Boost.Python in these because it might throw
+    // an exception.
+
+    std::string getPythonErrorString() {
+        // Extra paranoia...
+        if (!PyErr_Occurred()) {
+            return "No Python error";
+        }
+
+        PyObject *type, *value, *traceback;
+        PyErr_Fetch(&type, &value, &traceback);
+        PyErr_Clear();
+
+        std::string message = "Python error: ";
+        if (type) {
+            type = PyObject_Str(type);
+            message += PyString_AsString(type);
+        }
+        if (value) {
+            value = PyObject_Str(value);
+            message += ": ";
+            message += PyString_AsString(value);
+        }
+        Py_XDECREF(type);
+        Py_XDECREF(value);
+        Py_XDECREF(traceback);
+
+        return message;
+    }
+
     void checkForPythonError() {
-        // We don't use Boost.Python here because it might throw
-        // an exception.
         if (PyErr_Occurred()) {
-            PyObject *type, *value, *traceback;
-            PyErr_Fetch(&type, &value, &traceback);
-            PyErr_Clear();
+            throw PythonError(getPythonErrorString());
+        }
+    }
 
-            std::string message = "Python error: ";
-            if (type) {
-                type = PyObject_Str(type);
-                message += PyString_AsString(type);
-            }
-            if (value) {
-                value = PyObject_Str(value);
-                message += ": ";
-                message += PyString_AsString(value);
-            }
-            Py_XDECREF(type);
-            Py_XDECREF(value);
-            Py_XDECREF(traceback);
-
-            throw PythonError(message.c_str());
+    void requirePythonError() {
+        if (!PyErr_Occurred()) {
+            throw PythonError("Boost.Python exception, "
+                              "but no Python error set.");
         }
     }
 
@@ -49,7 +66,8 @@ namespace pyr {
         init();
     }
 
-    handle<> PythonInterpreter::createModule(const std::string& contents, const std::string& filename) {
+    object PythonInterpreter::createModule(const std::string& contents,
+                                           const std::string& filename) {
         PYR_BEGIN_PYTHON_CODE()
 
         handle<> code( Py_CompileString(
@@ -62,11 +80,9 @@ namespace pyr {
             const_cast<char*>(name.c_str()),
             code.get()) );
 
-        return module;
+        return object(module);
 
         PYR_END_PYTHON_CODE()
-
-        throw PythonError("generateModule() failed");
     }
 
 }

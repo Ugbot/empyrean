@@ -7,6 +7,7 @@
 #include "ConnectionHolder.h"
 #include "Map.h"
 #include "ServerConnectionData.h"
+#include "ServerEntity.h"
 #include "Types.h"
 #include "UIDGenerator.h"
 
@@ -16,7 +17,6 @@ namespace pyr {
     class PlayerBehavior;
     class PlayerEventPacket;
     class TempHUDPacket;
-    class ServerEntity;
     class PlayerAttackPacket;
     class CollisionBox;
 
@@ -59,9 +59,9 @@ namespace pyr {
     private:
         static GameConnectionData* getData(Connection* c);
 
-        void addEntity(ServerEntity* entity);
-        void removeEntity(ServerEntity* entity);
-        static EntityAddedPacket* buildEntityAddedPacket(ServerEntity* entity);
+        void addEntity(ServerEntityPtr entity);
+        void removeEntity(ServerEntityPtr entity);
+        static EntityAddedPacket* buildEntityAddedPacket(ServerEntityPtr entity);
 
         void connectionAdded(Connection* connection);
         void connectionRemoved(Connection* connection);
@@ -79,7 +79,7 @@ namespace pyr {
         ScopedPtr<Map> _map;
         Vec2f _startPosition;
 
-        std::vector<ServerEntity*> _entities;
+        std::vector<ServerEntityPtr> _entities;
 
         UIDGenerator<u16> _idGenerator;
     };

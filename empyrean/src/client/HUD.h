@@ -1,8 +1,9 @@
 #ifndef PYR_HUD_H
 #define PYR_HUD_H
 
-#include "Singleton.h"
 #include <gltext.h>
+#include "ClientEntity.h"
+#include "Singleton.h"
 #include "VecMath.h"
 
 namespace pyr {
@@ -16,7 +17,7 @@ namespace pyr {
         ~HUD(){}
 
     public:
-        void draw(gltext::FontRendererPtr rend, ClientEntity* entity); 
+        void draw(gltext::FontRendererPtr rend, ClientEntityPtr entity); 
         void update(float dt);
 
     private:

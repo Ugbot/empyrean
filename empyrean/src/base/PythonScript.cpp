@@ -35,9 +35,15 @@ namespace pyr {
         PYR_END_PYTHON_CODE()
     }
 
-    void PythonScript::call(const std::string& name, object o) {
+    object PythonScript::call(const std::string& name) {
         PYR_BEGIN_PYTHON_CODE()
-            object(_module).attr(name.c_str())(o);
+            return _module.attr(name.c_str())();
+        PYR_END_PYTHON_CODE()
+    }
+
+    object PythonScript::call(const std::string& name, object o) {
+        PYR_BEGIN_PYTHON_CODE()
+            return _module.attr(name.c_str())(o);
         PYR_END_PYTHON_CODE()
     }
 

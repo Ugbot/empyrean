@@ -9,8 +9,11 @@
 namespace pyr {
 
     class ClientEntity : public Entity {
+    protected:
+        ~ClientEntity() { }
+
     public:
-        ClientEntity(Behavior* behavior, ClientAppearance* appearance)
+        ClientEntity(BehaviorPtr behavior, ClientAppearance* appearance)
             : Entity(behavior, appearance)
         {
         }
@@ -45,6 +48,7 @@ namespace pyr {
             return static_cast<ClientAppearance*>(getAppearance());
         }
     };
+    typedef RefPtr<ClientEntity> ClientEntityPtr;
 
 }
 

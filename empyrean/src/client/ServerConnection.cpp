@@ -175,17 +175,16 @@ namespace pyr {
     }
 
     void ServerConnection::handleEntityRemoved(Connection*, EntityRemovedPacket* p) {
-        Entity* entity = the<Scene>().getEntity(p->id());
+        EntityPtr entity = the<Scene>().getEntity(p->id());
         if (entity) {
             the<Scene>().removeEntity(p->id());
-            delete entity;
         } else {
             PYR_LOG() << "Received remove entity packet for nonexistent entity " << p->id();
         }
     }
 
     void ServerConnection::handleEntityUpdated(Connection*, EntityUpdatedPacket* p) {
-        Entity* entity = the<Scene>().getEntity(p->id());
+        EntityPtr entity = the<Scene>().getEntity(p->id());
         if (entity) {
             entity->setPos(p->pos());
             entity->setVel(p->vel());
@@ -195,7 +194,7 @@ namespace pyr {
     }
 
     void ServerConnection::handleAppearance(Connection*, AppearancePacket* p) {
-        Entity* entity = the<Scene>().getEntity(p->id());
+        EntityPtr entity = the<Scene>().getEntity(p->id());
         if (entity) {
             Appearance* appearance = entity->getAppearance();
             switch (p->code()) {
@@ -213,7 +212,7 @@ namespace pyr {
     }
 
     void ServerConnection::handleCharacterUpdate(Connection*, CharacterUpdatedPacket* p) {
-        ClientEntity* entity = the<Scene>().getEntity(p->id());
+        ClientEntityPtr entity = the<Scene>().getEntity(p->id());
         if (entity) {
             entity->setCurrentVitality(p->currVit());
             entity->setMaxVitality(p->maxVit());

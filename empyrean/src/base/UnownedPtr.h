@@ -58,6 +58,16 @@ namespace pyr {
             return *get();
         }
 
+        typedef UnownedPtr<T> this_type;
+
+        /// Inspired by boost's smart_ptr facilities.
+        typedef T* this_type::*unspecified_bool_type;
+
+        /// This lets us write code like: if (ptr && ptr->valid())
+        operator unspecified_bool_type() const {
+            return (get() ? &(this_type::_ptr.get()) : 0);
+        }
+
         operator UnownedDerivedSafe<T>*() const {
             return get();
         }
