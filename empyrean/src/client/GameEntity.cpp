@@ -118,27 +118,27 @@ namespace pyr {
 
     void GameEntity::update(float dt, const Map* terrain) {
         // TEMP!!
-        std::cout << "I have two weapons! They are : " << _meleeWeapon->_name;
-        std::cout << " and " << _rangeWeapon->_name << std::endl;
-        std::cout << "I am wearing armor that is : " << _armor->_name << std::endl;
+        //std::cout << "I have two weapons! They are : " << _meleeWeapon->_name;
+        //std::cout << " and " << _rangeWeapon->_name << std::endl;
+        //std::cout << "I am wearing armor that is : " << _armor->_name << std::endl;
 
         // Provide client-side estimation of server physics model.
         Vec2f origPos = getPos();
-        
+
         getPos() += getVel() * dt;
         getVel()[1] -= 9.81f * dt;             // gravity
         if(getVel()[1] < -56) {                // terminal velocity
             getVel()[1] = -56;
         }
-       
+
         // For testing to see if jumping is done
         Vec2f precollideposition = getPos();
         Vec2f precollidevelocity = getVel();
 
         _lastCD = collide(dt, origPos, getPos(), getVel(), getWidth(), getHeight(), terrain);
 
-        // If you are higher than you once were so you were forced up and you were falling 
-        // (before the collision) This means that you hit a surface below you so therefore 
+        // If you are higher than you once were so you were forced up and you were falling
+        // (before the collision) This means that you hit a surface below you so therefore
         // reset jumping
         if((precollideposition[1]-getPos()[1]) < 0 && precollidevelocity[1] < FALLING_SPEED) {
              getJumping() = 0;
