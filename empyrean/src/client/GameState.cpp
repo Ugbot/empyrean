@@ -1,4 +1,5 @@
 #include <stdexcept>
+#include "AppearanceFactory.h"
 #include "Constants.h"
 #include "GameState.h"
 #include "GLUtility.h"
@@ -19,6 +20,14 @@ namespace pyr {
 
     GameState::GameState() {
         PYR_PROFILE_BLOCK("GameState::GameState");
+        
+        definePacketHandler(this, &GameState::handleSetPlayer);
+        definePacketHandler(this, &GameState::handleEntityAdded);
+        definePacketHandler(this, &GameState::handleEntityRemoved);
+        definePacketHandler(this, &GameState::handleEntityUpdated);
+        definePacketHandler(this, &GameState::handleAppearance);
+        definePacketHandler(this, &GameState::handleCharacterUpdate);
+        the<ServerConnection>().addReceiver(this);
 
         _device = audiere::OpenDevice();
         if (!_device) {
@@ -80,17 +89,15 @@ namespace pyr {
     }
 
     GameState::~GameState() {
-        // The scene is owned by the GameState.
-        the<Scene>().clear();
+        the<ServerConnection>().removeReceiver(this);
     }
 
     void GameState::draw(float fade) {
         PYR_PROFILE_BLOCK("GameState::draw");
         
-        Scene& scene = the<Scene>();
-        scene.draw(_renderer);
+        _scene.draw(_renderer);
 
-        if (ClientEntityPtr entity = scene.getFocus()) {
+        if (ClientEntityPtr entity = _scene.getFocus()) {
             _hud.draw(_renderer,entity);
 
             if (_showPlayerData) {
@@ -111,7 +118,7 @@ namespace pyr {
     void GameState::update(float dt) {
         PYR_PROFILE_BLOCK("GameState::update");
         
-        the<Scene>().update(dt);
+        _scene.update(dt);
         _hud.update(dt);
 
         ServerConnection& sc = the<ServerConnection>();
@@ -201,6 +208,68 @@ namespace pyr {
         _im.update(dt);
     }
     
+    void GameState::handleSetPlayer(Connection*, SetPlayerPacket* p) {
+        _scene.setFocus(p->id());
+    }
+
+    void GameState::handleEntityAdded(Connection*, EntityAddedPacket* p) {
+        ClientEntity* entity = new ClientEntity(
+            instantiateBehavior(p->behavior(), p->behaviorResource()),
+            instantiateAppearance(p->appearance(), p->appearanceResource()));
+        // Hardcoded for now.  Hardcoded in the server as well.
+        entity->setBounds(BoundingRectangle(p->boundsMin(), p->boundsMax()));
+        _scene.addEntity(p->id(), entity);
+    }
+
+    void GameState::handleEntityRemoved(Connection*, EntityRemovedPacket* p) {
+        EntityPtr entity = _scene.getEntity(p->id());
+        if (entity) {
+            _scene.removeEntity(p->id());
+        } else {
+            PYR_LOG() << "Received remove entity packet for nonexistent entity " << p->id();
+        }
+    }
+
+    void GameState::handleEntityUpdated(Connection*, EntityUpdatedPacket* p) {
+        EntityPtr entity = _scene.getEntity(p->id());
+        if (entity) {
+            entity->setPos(p->pos());
+            entity->setVel(p->vel());
+        } else {
+            PYR_LOG() << "Received update entity packet for nonexistent entity " << p->id();
+        }
+    }
+
+    void GameState::handleAppearance(Connection*, AppearancePacket* p) {
+        EntityPtr entity = _scene.getEntity(p->id());
+        if (entity) {
+            Appearance* appearance = entity->getAppearance();
+            switch (p->code()) {
+                case AP_COMMAND:         appearance->sendCommand(p->str()); break;
+                case AP_ANIMATION:       appearance->beginAnimation(p->str()); break;
+                case AP_ANIMATION_CYCLE: appearance->beginAnimationCycle(p->str()); break;
+                default:
+                    PYR_LOG() << "Unknown code in appearance packet:";
+                    p->log();
+                    break;
+            }
+        } else {
+            PYR_LOG() << "Received appearance packet for nonexistent entity " << p->id();
+        }
+    }
+
+    void GameState::handleCharacterUpdate(Connection*, CharacterUpdatedPacket* p) {
+        ClientEntityPtr entity = _scene.getEntity(p->id());
+        if (entity) {
+            entity->setCurrentVitality(p->currVit());
+            entity->setMaxVitality(p->maxVit());
+            entity->setCurrentEther(p->currEth());
+            entity->setMaxEther(p->maxEth());
+        } else {
+            PYR_LOG() << "Received update entity packet for nonexistent entity " << p->id();
+        }
+    }
+
     void GameState::comboInterpreter(float dt) {
         
         ServerConnection& sc = the<ServerConnection>();

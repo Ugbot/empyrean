@@ -1,4 +1,4 @@
-#include "CutSceneState.h"
+#include "GameState.h"
 #include "JoinGameWindow.h"
 #include "LobbyState.h"
 #include "MenuState.h"
@@ -63,18 +63,15 @@ namespace pyr {
 
     void LobbyState::onJoinGame(const phui::ActionEvent&) {
         setModal(new JoinGameWindow);
-        //getState()->onLobbyJoinGame();
     }
 
     void LobbyState::onNewGame(const phui::ActionEvent&) {
         setModal(new NewGameWindow);
-        //getState()->onLobbyNewGame();
     }
 
     void LobbyState::onQuit(const phui::ActionEvent&) {
         the<ServerConnection>().disconnect();
         invokeTransition<MenuState>();
-        //getState()->onLobbyQuit();
     }
 
     void LobbyState::onSay(const phui::ActionEvent&) {
@@ -88,7 +85,7 @@ namespace pyr {
 
     void LobbyState::onEndModal(phui::Widget* widget, int result) {
         if (result) {
-            invokeTransition<CutSceneState>();
+            invokeTransition<GameState>();
         }
     }
 

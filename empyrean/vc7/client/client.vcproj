@@ -181,9 +181,6 @@
 				RelativePath="..\..\src\client\HUD.h">
 			</File>
 			<File
-				RelativePath="..\..\src\client\IncludePython.h">
-			</File>
-			<File
 				RelativePath="..\..\src\client\Input.h">
 			</File>
 			<File
@@ -224,18 +221,6 @@
 			</File>
 			<File
 				RelativePath="..\..\src\client\Player.h">
-			</File>
-			<File
-				RelativePath="..\..\src\client\PythonClientBindings.cpp">
-			</File>
-			<File
-				RelativePath="..\..\src\client\PythonClientBindings.h">
-			</File>
-			<File
-				RelativePath="..\..\src\client\PythonCutScene.cpp">
-			</File>
-			<File
-				RelativePath="..\..\src\client\PythonCutScene.h">
 			</File>
 			<File
 				RelativePath="..\..\src\client\Renderer.cpp">
@@ -371,6 +356,22 @@
 			</File>
 			<File
 				RelativePath="..\..\src\client\NewGameWindow.h">
+			</File>
+		</Filter>
+		<Filter
+			Name="python"
+			Filter="">
+			<File
+				RelativePath="..\..\src\client\PythonClientBindings.cpp">
+			</File>
+			<File
+				RelativePath="..\..\src\client\PythonClientBindings.h">
+			</File>
+			<File
+				RelativePath="..\..\src\client\PythonCutScene.cpp">
+			</File>
+			<File
+				RelativePath="..\..\src\client\PythonCutScene.h">
 			</File>
 		</Filter>
 	</Files>

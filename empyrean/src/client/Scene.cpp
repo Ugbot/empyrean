@@ -13,8 +13,6 @@
 
 namespace pyr {
 
-    PYR_DEFINE_SINGLETON(Scene)
-
     Scene::Scene() {
         _backdrop = Texture::create("images/stars.tga");
         _map = loadMap("maps/map2.obj");

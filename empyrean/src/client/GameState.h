@@ -4,14 +4,24 @@
 #include <audiere.h>
 #include <gltext.h>
 #include <vector>
+#include "Connection.h"
 #include "HUD.h"
 #include "InputManager.h"
 #include "Player.h"
+#include "Scene.h"
 #include "State.h"
 
 namespace pyr {
 
-    class GameState : public State {
+    class SetPlayerPacket;
+    class AppearancePacket;
+    class EntityAddedPacket;
+    class EntityRemovedPacket;
+    class EntityUpdatedPacket;
+    class CharacterUpdatedPacket;
+    class SetPlayerPacket;
+
+    class GameState : public State, public PacketReceiver {
     public:
         GameState();
         ~GameState();
@@ -26,6 +36,13 @@ namespace pyr {
         void onJoyMove(int axis, float value);
         
     private:
+        void handleSetPlayer(Connection*, SetPlayerPacket* p);
+        void handleEntityAdded(Connection*, EntityAddedPacket* p);
+        void handleEntityRemoved(Connection*, EntityRemovedPacket* p);
+        void handleEntityUpdated(Connection*, EntityUpdatedPacket* p);
+        void handleAppearance(Connection*, AppearancePacket* p);
+        void handleCharacterUpdate(Connection*, CharacterUpdatedPacket* p);
+
         void comboInterpreter(float dt);
         std::string checkFastCombos();
 
@@ -51,6 +68,7 @@ namespace pyr {
 
         Player _player;
         HUD _hud;
+        Scene _scene;
 
         struct comboEvent {
             comboEvent(std::string t) {

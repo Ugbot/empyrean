@@ -7,7 +7,6 @@
 #include <gltext.h>
 #include "Map.h"
 #include "ScopedPtr.h"
-#include "Singleton.h"
 #include "Types.h"
 
 
@@ -18,12 +17,10 @@ namespace pyr {
     class Texture;
 
     class Scene {
-        PYR_DECLARE_SINGLETON(Scene)
-    
+    public:
         Scene();
         ~Scene() { }
         
-    public:
         void draw(gltext::FontRendererPtr rend);
         void update(float dt);
         

@@ -18,17 +18,11 @@
 
 namespace pyr {
 
-    class AppearancePacket;
-    class EntityAddedPacket;
-    class EntityRemovedPacket;
-    class EntityUpdatedPacket;
     class JoinGameResponsePacket;
     class LobbyPacket;
     class LoginResponsePacket;
     class Packet;
     class ServerConnectionThread;
-    class SetPlayerPacket;
-    class CharacterUpdatedPacket;
     
     class ServerConnection : public PacketReceiver {
         PYR_DECLARE_SINGLETON(ServerConnection)
@@ -57,6 +51,9 @@ namespace pyr {
         const std::string& getError();
         
         void update();
+        
+        bool addReceiver(PacketReceiver* receiver);
+        bool removeReceiver(PacketReceiver* receiver);
 
         std::vector<std::string> getLobbyMessages();
         
@@ -83,14 +80,7 @@ namespace pyr {
         void handleLoginResponse(Connection*, LoginResponsePacket* p);
         void handleLobby(Connection*, LobbyPacket* p);
         void handleJoinGameResponse(Connection*, JoinGameResponsePacket* p);
-        void handleSetPlayer(Connection*, SetPlayerPacket* p);
 
-        void handleEntityAdded(Connection*, EntityAddedPacket* p);
-        void handleEntityRemoved(Connection*, EntityRemovedPacket* p);
-        void handleEntityUpdated(Connection*, EntityUpdatedPacket* p);
-        void handleAppearance(Connection*, AppearancePacket* p);
-        void handleCharacterUpdate(Connection*, CharacterUpdatedPacket* p);
-    
         Inited<Status, DISCONNECTED> _status;
         
         // if CONNECTING...

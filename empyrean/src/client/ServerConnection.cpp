@@ -1,4 +1,3 @@
-#include "AppearanceFactory.h"
 #include "ClientEntity.h"
 #include "Connection.h"
 #include "Model.h"
@@ -17,12 +16,6 @@ namespace pyr {
         definePacketHandler(this, &ServerConnection::handleLoginResponse);
         definePacketHandler(this, &ServerConnection::handleLobby);
         definePacketHandler(this, &ServerConnection::handleJoinGameResponse);
-        definePacketHandler(this, &ServerConnection::handleSetPlayer);
-        definePacketHandler(this, &ServerConnection::handleEntityAdded);
-        definePacketHandler(this, &ServerConnection::handleEntityRemoved);
-        definePacketHandler(this, &ServerConnection::handleEntityUpdated);
-        definePacketHandler(this, &ServerConnection::handleAppearance);
-        definePacketHandler(this, &ServerConnection::handleCharacterUpdate);
     }
 
     void ServerConnection::beginConnecting(const std::string& server, int port) {
@@ -76,6 +69,24 @@ namespace pyr {
         
         if (_connection) {
             _connection->processIncomingPackets();
+        }
+    }
+    
+    bool ServerConnection::addReceiver(PacketReceiver* receiver) {
+        if (_connection) {
+            _connection->addReceiver(receiver);
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    bool ServerConnection::removeReceiver(PacketReceiver* receiver) {
+        if (_connection) {
+            _connection->removeReceiver(receiver);
+            return true;
+        } else {
+            return false;
         }
     }
 
@@ -162,68 +173,6 @@ namespace pyr {
     void ServerConnection::handleJoinGameResponse(Connection*, JoinGameResponsePacket* p) {
         _hasJoinGameResponse = true;
         _joinGameResponse = p->code();
-    }
-
-    void ServerConnection::handleSetPlayer(Connection*, SetPlayerPacket* p) {
-        the<Scene>().setFocus(p->id());
-    }
-
-    void ServerConnection::handleEntityAdded(Connection*, EntityAddedPacket* p) {
-        ClientEntity* entity = new ClientEntity(
-            instantiateBehavior(p->behavior(), p->behaviorResource()),
-            instantiateAppearance(p->appearance(), p->appearanceResource()));
-        // Hardcoded for now.  Hardcoded in the server as well.
-        entity->setBounds(BoundingRectangle(p->boundsMin(), p->boundsMax()));
-        the<Scene>().addEntity(p->id(), entity);
-    }
-
-    void ServerConnection::handleEntityRemoved(Connection*, EntityRemovedPacket* p) {
-        EntityPtr entity = the<Scene>().getEntity(p->id());
-        if (entity) {
-            the<Scene>().removeEntity(p->id());
-        } else {
-            PYR_LOG() << "Received remove entity packet for nonexistent entity " << p->id();
-        }
-    }
-
-    void ServerConnection::handleEntityUpdated(Connection*, EntityUpdatedPacket* p) {
-        EntityPtr entity = the<Scene>().getEntity(p->id());
-        if (entity) {
-            entity->setPos(p->pos());
-            entity->setVel(p->vel());
-        } else {
-            PYR_LOG() << "Received update entity packet for nonexistent entity " << p->id();
-        }
-    }
-
-    void ServerConnection::handleAppearance(Connection*, AppearancePacket* p) {
-        EntityPtr entity = the<Scene>().getEntity(p->id());
-        if (entity) {
-            Appearance* appearance = entity->getAppearance();
-            switch (p->code()) {
-                case AP_COMMAND:         appearance->sendCommand(p->str()); break;
-                case AP_ANIMATION:       appearance->beginAnimation(p->str()); break;
-                case AP_ANIMATION_CYCLE: appearance->beginAnimationCycle(p->str()); break;
-                default:
-                    PYR_LOG() << "Unknown code in appearance packet:";
-                    p->log();
-                    break;
-            }
-        } else {
-            PYR_LOG() << "Received appearance packet for nonexistent entity " << p->id();
-        }
-    }
-
-    void ServerConnection::handleCharacterUpdate(Connection*, CharacterUpdatedPacket* p) {
-        ClientEntityPtr entity = the<Scene>().getEntity(p->id());
-        if (entity) {
-            entity->setCurrentVitality(p->currVit());
-            entity->setMaxVitality(p->maxVit());
-            entity->setCurrentEther(p->currEth());
-            entity->setMaxEther(p->maxEth());
-        } else {
-            PYR_LOG() << "Received update entity packet for nonexistent entity " << p->id();
-        }
     }
 
 }
