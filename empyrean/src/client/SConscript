@@ -1,0 +1,13 @@
+Import('base_env SetupSDL SetupGL')
+
+SOURCES = [
+    'Application.cpp',
+    'GameState.cpp',
+    'InputManager.cpp',
+    'Main.cpp']
+
+env = base_env.Copy()
+SetupSDL(env)
+SetupGL(env)
+
+env.Program('#/build/client.exe', SOURCES)

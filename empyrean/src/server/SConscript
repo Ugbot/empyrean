@@ -1,0 +1,2 @@
+Import('base_env')
+base_env.Program('#/build/server$EXESUF', 'Main.cpp')
