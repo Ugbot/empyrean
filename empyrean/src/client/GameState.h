@@ -33,6 +33,7 @@ namespace pyr {
         Input* _inputJoyStart;
 
         Zeroed<int> _lastJoyX;
+        Inited<bool, false> _showPlayerData;
         gltext::FontRendererPtr _renderer;
     };
 

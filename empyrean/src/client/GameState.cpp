@@ -46,16 +46,18 @@ namespace pyr {
         Scene& scene = the<Scene>();
         scene.draw();
         
-/*
-        if (Entity* entity = scene.getFocus()) {
-            Application& app = the<Application>();
-            glEnable(GL_BLEND);
-            setOrthoProjection(float(app.getWidth()), float(app.getHeight()));
-            glTranslatef(app.getWidth() / 2.0f, 0, 0);
-            glColor3f(1, 1, 1);
-            GLTEXT_STREAM(_renderer) << entity->getPos();
+        if (_showPlayerData) {
+            if (Entity* entity = scene.getFocus()) {
+                Application& app = the<Application>();
+                glEnable(GL_BLEND);
+                setOrthoProjection(float(app.getWidth()), float(app.getHeight()));
+                glTranslatef(app.getWidth() / 2.0f, 0, 0);
+                glColor3f(1, 1, 1);
+                GLTEXT_STREAM(_renderer)
+                    << "Position: " << entity->getPos() << "\n"
+                    << "Velocity: " << entity->getVel();
+            }
         }
-*/
     }
 
     void GameState::update(float dt) {
@@ -137,6 +139,10 @@ namespace pyr {
     }
     
     void GameState::onKeyPress(SDLKey key, bool down) {
+        if (key == SDLK_F2 && down) {
+            _showPlayerData = !_showPlayerData;
+        }
+
         _im.onKeyPress(key, down);
     }
     
