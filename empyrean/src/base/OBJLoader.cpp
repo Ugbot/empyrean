@@ -281,19 +281,19 @@ namespace pyr {
                     while (ss >> s) {
                         vertices.push_back(s);
                     }
-                    
+
                     if (vertices.size() >= 3) {
                         string first = vertices[0];
                         string last  = vertices[1];
                         for (size_t i = 2; i < vertices.size(); ++i) {
                             string current = vertices[i];
-                            
+
                             GeometryElement::Triangle tri;
                             parseFace(first, last, current, tri);
                             if (isValidTriangle(tri, vertexArray)) {
                                 currentGeometry->triangles.push_back(tri);
                             }
-                            
+
                             last = current;
                         }
                     }

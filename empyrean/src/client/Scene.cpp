@@ -17,13 +17,13 @@ namespace pyr {
         _backdrop = Texture::create("images/stars.tga");
         _map = loadMap("maps/map2.obj");
     }
-    
+
     void Scene::draw(gltext::FontRendererPtr rend) {
         // Nominal viewport is 12 meters wide and 9 meters high.
         const float width = 12.0f;
         const float height = 9.0f;
         setOrthoProjection(width, height, true);
-        
+
         float focusX = 0;
         float focusY = 0;
         if (_focus) {
@@ -46,7 +46,7 @@ namespace pyr {
         glTexCoord2f(1 + focusX / width, 1 + focusY / height); glVertex2f(width, height);
         glTexCoord2f(1 + focusX / width, 0 + focusY / height); glVertex2f(width, 0);
         glEnd();
-        
+
         glTranslatef(width / 2 - focusX, height / 4 - focusY, 0);
 
         glEnable(GL_DEPTH_TEST);
@@ -55,9 +55,10 @@ namespace pyr {
         glPointSize(5);
         drawMap();
 
-        glDisable(GL_DEPTH_TEST);
-        
         glEnable(GL_TEXTURE_2D);
+
+        glEnable(GL_LIGHTING);
+        glEnable(GL_LIGHT0);
 
         EntityMap::iterator itr = _entities.begin();
         for (; itr != _entities.end(); ++itr) {
@@ -67,12 +68,16 @@ namespace pyr {
             e->draw(rend);
             glPopMatrix();
         }
+
+        glDisable(GL_LIGHTING);
+        glDisable(GL_LIGHT0);
+        glDisable(GL_DEPTH_TEST);
     }
 
     void Scene::update(float dt) {
         PYR_PROFILE_BLOCK("Scene::update");
         std::vector<Entity*> entityVector;
-        
+
         for (EntityMap::iterator itr = _entities.begin();
              itr != _entities.end(); ++itr) {
             entityVector.push_back(itr->second.get());
@@ -89,16 +94,16 @@ namespace pyr {
             itr->second->update(dt, env);
             entityVector.push_back(itr->second.get());
         }
-        
+
         resolveCollisions(dt,_map.get(),entityVector);
 
     }
-    
+
     void Scene::addEntity(u16 id, ClientEntityPtr entity) {
         PYR_ASSERT(_entities.count(id) == 0, "Two entities have same ID");
         _entities[id] = entity;
     }
-    
+
     void Scene::removeEntity(u16 id) {
         if (_focus && getEntity(id) == _focus) {
             _focus = 0;

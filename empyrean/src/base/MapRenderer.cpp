@@ -27,6 +27,7 @@ namespace pyr {
         glTranslate(e->pos);
 
         std::vector<Vec3f>& v = e->vertexArray->positions;
+        std::vector<Vec3f>& n = e->vertexArray->normals;
         std::vector<Vec2f>& tc = e->vertexArray->texCoords;
         std::vector<GeometryElement::Triangle>& tris = e->triangles;
         MaterialPtr mtl = e->material;
@@ -45,9 +46,11 @@ namespace pyr {
             texture->bind();
             glBegin(GL_TRIANGLES);
             for (size_t i = 0; i < tris.size(); ++i) {
-                glTexCoord(mult(tc[tris[i].tc[0]], mtl->texture_scale) + mtl->texture_offset); glVertex(v[tris[i].pos[0]]);
-                glTexCoord(mult(tc[tris[i].tc[1]], mtl->texture_scale) + mtl->texture_offset); glVertex(v[tris[i].pos[1]]);
-                glTexCoord(mult(tc[tris[i].tc[2]], mtl->texture_scale) + mtl->texture_offset); glVertex(v[tris[i].pos[2]]);
+                for (size_t j = 0; j < 3; ++j) {
+                    glTexCoord(mult(tc[tris[i].tc[j]], mtl->texture_scale) + mtl->texture_offset);
+                    glNormal(n[tris[i].n[j]]);
+                    glVertex(v[tris[i].pos[j]]);
+                }
             }
             glEnd();
             glDisable(GL_TEXTURE_2D);
@@ -56,9 +59,10 @@ namespace pyr {
             glDisable(GL_TEXTURE_2D);
             glBegin(GL_TRIANGLES);
             for (size_t i = 0; i < tris.size(); ++i) {
-                glVertex(v[tris[i].pos[0]]);
-                glVertex(v[tris[i].pos[1]]);
-                glVertex(v[tris[i].pos[2]]);
+                for (size_t j = 0; j < 3; ++j) {
+                    glNormal(n[tris[i].n[j]]);
+                    glVertex(v[tris[i].pos[j]]);
+                }
             }
             glEnd();
         }
