@@ -28,6 +28,8 @@ namespace pyr {
         glEnable(GL_DEPTH_TEST);
 
         glPushMatrix();
+// IGF HACK
+        glRotatef(-90, 0, 1, 0);
         //glRotatef(_time * 43 / 200, 1, 0, 0);
         //glRotatef(_time * 47 / 200, 0, 1, 0);
         //glRotatef(_time * 53 / 200, 0, 0, 1);

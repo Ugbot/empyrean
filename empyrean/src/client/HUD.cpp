@@ -27,7 +27,7 @@ namespace pyr {
         // Load the character thumbnail
         _thumbWidth = _ethCenter[0]-_vitCenter[0]-2*(_barShortStraight+3);
         _thumbHeight = _ethCenter[1]-_vitCenter[1]+2*(_barRadius-_barHeight/2.0f-3);
-        _thumbnail = Texture::create("images/CaphrielFace.jpg");
+        _thumbnail = Texture::create("images/robot_screen.jpg");
     }
 
     void HUD::update(float dt) {

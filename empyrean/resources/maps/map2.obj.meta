@@ -9,24 +9,17 @@
   </node>
   <node name="Line04" position="27.8393 17.8492 9.62532">
   </node>
-  <node name="Dummy01" position="10 2 0">
+  <node name="Dummy01" position="15 2 0">
     <property key="entity" value="true"/>
     <property key="behavior" value="python"/>
     <property key="behaviorResource" value="maps/entity.py"/>
     <property key="appearance" value="cal3d"/>
     <property key="appearanceResource" value="models/paladin/paladin.cal3d"/>
   </node>
-  <node name="MOUSE" position="15 2 0">
+  <node name="Gargon" position="20 0 0">
     <property key="entity" value="true"/>
-    <property key="behavior" value="python"/>
-    <property key="behaviorResource" value="maps/entity.py"/>
-    <property key="appearance" value="obj"/>
-    <property key="appearanceResource" value="maps/MOUSE_Final.obj"/>
-  </node>
-  <node name="Gargon" position="20 2 0">
-    <property key="entity" value="true"/>
-    <property key="behavior" value="python"/>
-    <property key="behaviorResource" value="maps/entity.py"/>
+    <property key="behavior" value="null"/>
+    <property key="behaviorResource" value=""/>
     <property key="appearance" value="obj"/>
     <property key="appearanceResource" value="maps/gargon.skeleton.obj"/>
   </node>
@@ -114,5 +107,11 @@
     <property key="appearance" value="cal3d"/>
     <property key="appearanceResource" value="models/fish/fish.cal3d"/>
   </node>
-
+  <node name="CaveFish3" position="35 4 0">
+    <property key="entity" value="true"/>
+    <property key="behavior" value="python"/>
+    <property key="behaviorResource" value="maps/entity.py"/>
+    <property key="appearance" value="cal3d"/>
+    <property key="appearanceResource" value="models/fish/fish.cal3d"/>
+  </node>
 </map-metadata>

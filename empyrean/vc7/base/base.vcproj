@@ -118,9 +118,6 @@
 				RelativePath="..\..\src\base\CallStack.h">
 			</File>
 			<File
-				RelativePath="..\..\src\base\ComboLoader.h">
-			</File>
-			<File
 				RelativePath="..\..\src\base\CondVar.h">
 			</File>
 			<File
