@@ -15,6 +15,7 @@ SOURCES = Split("""
     glew.c
     GLUtility.cpp
     Log.cpp
+    LogWriter.cpp
     Map.cpp
     MapElement.cpp
     MapLoader.cpp

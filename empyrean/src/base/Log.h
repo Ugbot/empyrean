@@ -12,6 +12,7 @@
 #include <set>
 #include <sstream>
 #include "Error.h"
+#include "LogWriter.h"
 #include "RefCounted.h"
 #include "RefPtr.h"
 #include "Singleton.h"
@@ -35,16 +36,6 @@ namespace pyr {
     };
     
 
-    class LogWriter : public RefCounted {
-    protected:
-        ~LogWriter() { }
-        
-    public:
-        virtual void write(const string& message) = 0;
-    };
-    PYR_REF_PTR(LogWriter);
-    
-    
     class Logger {
     private:
         Logger(const string& name, Logger* parent);
