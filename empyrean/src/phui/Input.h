@@ -24,8 +24,8 @@
  *
  * -----------------------------------------------------------------
  * File:          $RCSfile: Input.h,v $
- * Date modified: $Date: 2003-08-12 20:58:02 $
- * Version:       $Revision: 1.3 $
+ * Date modified: $Date: 2003-08-13 03:44:31 $
+ * Version:       $Revision: 1.4 $
  * -----------------------------------------------------------------
  *
  ************************************************************** phui-cpr-end */
@@ -128,18 +128,18 @@ namespace phui
 
       KEY_UNKNOWN
    };
-
+   
    enum
    {
-      MOD_NONE        = 0x00,
+      IMOD_NONE        = 0x00,
 
-      MOD_CTRL        = 0x01,
-      MOD_ALT         = 0x02,
-      MOD_SHIFT       = 0x04,
+      IMOD_CTRL        = 0x01,
+      IMOD_ALT         = 0x02,
+      IMOD_SHIFT       = 0x04,
 
-      MOD_CAPS_LOCK   = 0x10,
-      MOD_NUM_LOCK    = 0x20,
-      MOD_SCROLL_LOCK = 0x40,
+      IMOD_CAPS_LOCK   = 0x10,
+      IMOD_NUM_LOCK    = 0x20,
+      IMOD_SCROLL_LOCK = 0x40,
    };
 
    // because they're ANDed and ORed together

@@ -24,8 +24,8 @@
  *
  * -----------------------------------------------------------------
  * File:          $RCSfile: RootWidget.cpp,v $
- * Date modified: $Date: 2003-08-12 20:58:02 $
- * Version:       $Revision: 1.4 $
+ * Date modified: $Date: 2003-08-13 03:44:31 $
+ * Version:       $Revision: 1.5 $
  * -----------------------------------------------------------------
  *
  ************************************************************** phui-cpr-end */
@@ -36,7 +36,7 @@ namespace phui
    RootWidget::RootWidget(int width, int height)
    {
       mPointerVisible = true;
-      mModifiers = MOD_NONE;
+      mModifiers = IMOD_NONE;
       setSize(width, height);
    }
 
@@ -88,19 +88,19 @@ namespace phui
 
    InputModifiers getPlainMod(InputKey key) {
       switch (key) {
-         case KEY_CTRL:  return MOD_CTRL;
-         case KEY_ALT:   return MOD_ALT;
-         case KEY_SHIFT: return MOD_SHIFT;
-         default:        return MOD_NONE;
+         case KEY_CTRL:  return IMOD_CTRL;
+         case KEY_ALT:   return IMOD_ALT;
+         case KEY_SHIFT: return IMOD_SHIFT;
+         default:        return IMOD_NONE;
       }
    }
 
    InputModifiers getStickyMod(InputKey key) {
       switch (key) {
-         case KEY_CAPS_LOCK:   return MOD_CAPS_LOCK;
-         case KEY_NUM_LOCK:    return MOD_NUM_LOCK;
-         case KEY_SCROLL_LOCK: return MOD_SCROLL_LOCK;
-         default:              return MOD_NONE;
+         case KEY_CAPS_LOCK:   return IMOD_CAPS_LOCK;
+         case KEY_NUM_LOCK:    return IMOD_NUM_LOCK;
+         case KEY_SCROLL_LOCK: return IMOD_SCROLL_LOCK;
+         default:              return IMOD_NONE;
       }
    }
 

@@ -24,8 +24,8 @@
  *
  * -----------------------------------------------------------------
  * File:          $RCSfile: TextField.cpp,v $
- * Date modified: $Date: 2003-08-12 20:58:02 $
- * Version:       $Revision: 1.4 $
+ * Date modified: $Date: 2003-08-13 03:44:31 $
+ * Version:       $Revision: 1.5 $
  * -----------------------------------------------------------------
  *
  ************************************************************** phui-cpr-end */
@@ -140,7 +140,7 @@ namespace phui
       } else if(key == KEY_SPACE) {
          toAdd+=' ';
       } else if(key >= KEY_A && key <= KEY_Z) {
-         if ((modifiers & MOD_SHIFT) || (modifiers & MOD_CAPS_LOCK))
+         if ((modifiers & IMOD_SHIFT) || (modifiers & IMOD_CAPS_LOCK))
          {
             toAdd += (char)(key-KEY_A)+'A';
          }
