@@ -1,10 +1,7 @@
 #include "Connection.h"
-#include "Model.h"
 #include "PacketTypes.h"
-#include "PlayerEntity.h"
-#include "Renderer.h"
-#include "Scene.h"
 #include "ServerConnection.h"
+#include "ServerConnectionThread.h"
 #include "Socket.h"
 
 
@@ -14,33 +11,50 @@ namespace pyr {
 
    
     ServerConnection::ServerConnection() {
-        _loggedIn = false;
-        _entityID = -1;
-	_force = 0;
+        _status = DISCONNECTED;
+        _connectionMaker = 0;
     }
     
-    void ServerConnection::connect(
-        const std::string& server,
-        int port)
-    {
-        _connection = new Connection(new Socket(server, port));
-        _connection->definePacketHandler(this, &ServerConnection::handleLoginResponse);
-        _connection->definePacketHandler(this, &ServerConnection::handleEntityAdded);
-        _connection->definePacketHandler(this, &ServerConnection::handleEntityRemoved);
-        _connection->definePacketHandler(this, &ServerConnection::handleUpdate);
+    void ServerConnection::beginConnecting(const std::string& server, int port) {
+        _status = CONNECTING;
+        _connectionMaker = new ServerConnectionThread(server, port);
+        _connectionThread = new Thread(_connectionMaker, PR_PRIORITY_HIGH);
     }
     
     void ServerConnection::disconnect() {
         _connection = 0;
-        _loggedIn = false;
-        _entityID = -1;
+        _status = DISCONNECTED;
     }
     
     bool ServerConnection::isConnected() {
         return (_connection && !_connection->isClosed());
     }
     
+    ServerConnection::Status ServerConnection::getStatus() {
+        return _status;
+    }
+    
+    const std::string& ServerConnection::getError() {
+        return _error;
+    }
+    
     void ServerConnection::update() {
+        if (_connectionMaker) {
+            ServerConnectionThread::Status status = _connectionMaker->getStatus();
+            if (status == ServerConnectionThread::CONNECT_SUCCEEDED) {
+                _connection = new Connection(_connectionMaker->getSocket());
+                _connection->definePacketHandler(this, &ServerConnection::handleLoginResponse);
+                _connectionMaker = 0;
+                _connectionThread = 0;
+                _status = CONNECTED;
+            } else if (status == ServerConnectionThread::CONNECT_FAILED) {
+                _error = _connectionMaker->getError();
+                _status = DISCONNECTED;
+                _connectionMaker = 0;
+                _connectionThread = 0;
+            }
+        }
+        
         if (_connection) {
             _connection->processIncomingPackets();
         }
@@ -51,58 +65,21 @@ namespace pyr {
         const std::string& pass,
         bool newuser)
     {
-	return sendPacket(new LoginPacket(user, pass, newuser ? 1 : 0));
+        return sendPacket(new LoginPacket(user, pass, newuser ? 1 : 0));
     }
 
-    void ServerConnection::setForce(float force) {
-	if (force != _force) {
-	    std::cout << "Sending force: " << force << std::endl;
-	    sendPacket(new PlayerStatePacket(force));
-	    _force = force;
-	}
-    }
-    
     bool ServerConnection::sendPacket(Packet* p) {
-	if (_connection) {
-	    _connection->sendPacket(p);
-	    return true;
-	} else {
-	    return false;
-	}
+        if (_connection) {
+            _connection->sendPacket(p);
+            return true;
+        } else {
+            return false;
+        }
     }
             
     void ServerConnection::handleLoginResponse(Connection*, LoginResponsePacket* p) {
         if (p->response() == LR_LOGGED_IN) {
-            _loggedIn = true;
-        }
-    }
-
-    void ServerConnection::handleEntityAdded(Connection*, EntityAddedPacket* p) {
-	std::cout << "Adding entity: " << p->entityID() << std::endl;
-
-        Entity* entity = new PlayerEntity(
-            new Model(p->appearance()),
-            new DefaultRenderer());
-//            new CellShadeRenderer());
-        entity->setPos(p->pos());
-        entity->setVel(p->vel());
-        
-        Scene::instance().addEntity(p->entityID(), entity);
-    }
-    
-    void ServerConnection::handleEntityRemoved(Connection* c, EntityRemovedPacket* p) {
-	std::cout << "Removing entity: " << p->entityID() << std::endl;
-        Scene::instance().removeEntity(p->entityID());
-    }
-    
-    void ServerConnection::handleUpdate(Connection* c, UpdatePacket* p) {
-	std::cout << "handleUpdate()" << std::endl;
-        Entity* e = Scene::instance().getEntity(p->entityID());
-        if (e) {
-            e->setPos(p->pos());
-            e->setVel(p->vel());
-        } else {
-            std::cout << "Ignoring update packet with invalid entity id" << std::endl;
+            _status = LOGGED_IN;
         }
     }
 

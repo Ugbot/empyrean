@@ -2,8 +2,15 @@
 #include <vector>
 
 namespace pyr {
+
     using std::string;
     using std::vector;
+    
+    string itos(int i) {
+        char str[80];
+        sprintf(str, "%d", i);
+        return str;
+    }
 
     string trimString(const string& s) {
         string t;

@@ -24,8 +24,8 @@
  *
  * -----------------------------------------------------------------
  * File:          $RCSfile: Button.h,v $
- * Date modified: $Date: 2003-08-08 04:55:49 $
- * Version:       $Revision: 1.5 $
+ * Date modified: $Date: 2003-08-11 23:19:57 $
+ * Version:       $Revision: 1.6 $
  * -----------------------------------------------------------------
  *
  ************************************************************** phui-cpr-end */
@@ -80,41 +80,16 @@ namespace phui
       void onMouseUp(InputButton button, const Point& p);
 
 
-      /**
-       * Adds the given action listener that wishes to receive for button events.
-       */
-      void addActionListener(ActionListenerPtr listener);
+      void addListener(ActionListenerPtr listener);
+      
       
       template<typename T>
-      void addMethodListener(T* object, void (T::*method)(const ActionEvent&))
+      void addListener(T* object, void (T::*method)(const ActionEvent&))
       {
-         typedef void (T::*Method)(const ActionEvent&);
-      
-         struct Listener : public ActionListener
-         {
-            Listener(T* object, Method method)
-            {
-               mObject = object;
-               mMethod = method;
-            }
-         
-            void onAction(const ActionEvent& evt)
-            {
-               (mObject->*mMethod)(evt);
-            }
-            
-         private:
-            T* mObject;
-            Method mMethod;
-         };
-         
-         addActionListener(new Listener(object, method));
+         addListener(new MethodActionListener<T>(object, method));
       }
 
-      /**
-       * Removes the given action listener for this button.
-       */
-      void removeActionListener(ActionListenerPtr listener);
+      void removeListener(ActionListenerPtr listener);
 
    private:
       /// Helper to fire action events to listeners.

@@ -193,6 +193,9 @@ namespace pyr {
         T* _ptr;
     };
     
+    
+    std::string itos(int i);
+    
 
     /// Returns the string, stripped of leading and trailing whitespace
     std::string trimString(const std::string& s);

@@ -24,15 +24,17 @@
  *
  * -----------------------------------------------------------------
  * File:          $RCSfile: ActionListener.h,v $
- * Date modified: $Date: 2003-07-22 03:24:31 $
- * Version:       $Revision: 1.1 $
+ * Date modified: $Date: 2003-08-11 23:19:57 $
+ * Version:       $Revision: 1.2 $
  * -----------------------------------------------------------------
  *
  ************************************************************** phui-cpr-end */
 #ifndef PHUI_ACTION_LISTENER_H
 #define PHUI_ACTION_LISTENER_H
 
+
 #include "Widget.h"
+
 
 namespace phui
 {
@@ -65,6 +67,7 @@ namespace phui
       /// The source of the event.
       WidgetPtr mSource;
    };
+   
 
    /**
     * Interface to a class that wishes to receive action events from a widgets.
@@ -83,8 +86,31 @@ namespace phui
        */
       virtual void onAction(const ActionEvent& evt) = 0;
    };
-
    typedef RefPtr<ActionListener> ActionListenerPtr;
+   
+   
+   template<typename T>
+   class MethodActionListener : public ActionListener
+   {
+   public:
+      typedef void (T::*Method)(const ActionEvent&);
+   
+      MethodActionListener(T* object, Method method)
+      {
+         mObject = object;
+         mMethod = method;
+      }
+      
+      void onAction(const ActionEvent& evt)
+      {
+         (mObject->*mMethod)(evt);
+      }
+   
+   private:
+      T*     mObject;
+      Method mMethod;
+   };
 }
+
 
 #endif

@@ -62,8 +62,8 @@ namespace pyr {
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
         glColor4f(1, 1, 1, 1);
         glTranslatef(0, 8, 0);
-        bool loggedIn = ServerConnection::instance().isLoggedIn();
-        GLTEXT_STREAM(_renderer) << (loggedIn ? "Logged In" : "Not Logged In");
+        //bool loggedIn = ServerConnection::instance().isLoggedIn();
+        //GLTEXT_STREAM(_renderer) << (loggedIn ? "Logged In" : "Not Logged In");
     }
 
     void GameState::update(float dt) {

@@ -24,8 +24,8 @@
  *
  * -----------------------------------------------------------------
  * File:          $RCSfile: Widget.h,v $
- * Date modified: $Date: 2003-08-08 02:51:24 $
- * Version:       $Revision: 1.3 $
+ * Date modified: $Date: 2003-08-11 23:19:57 $
+ * Version:       $Revision: 1.4 $
  * -----------------------------------------------------------------
  *
  ************************************************************** phui-cpr-end */
@@ -52,17 +52,18 @@ namespace phui
     */
    class Widget : public RefCounted
    {
-      friend class WidgetContainer;
+   protected:
+      ~Widget() { }
+      
    public:
       /**
        * Creates a new widget with width and height 0 and size (0,0).
        */
       Widget();
 
-      /**
-       * Draws this widget.
-       */
-      virtual void draw() = 0;
+      virtual void draw() { };
+      virtual void update(float dt) { };
+      
 
       /**
        * Gets the position of this widget relative to its parent.
@@ -266,6 +267,8 @@ namespace phui
 
       /// The parent container for this widget.
       WidgetContainer* mParent;
+
+      friend class WidgetContainer;
    };
 
    typedef RefPtr<Widget> WidgetPtr;

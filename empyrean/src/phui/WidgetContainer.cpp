@@ -24,8 +24,8 @@
  *
  * -----------------------------------------------------------------
  * File:          $RCSfile: WidgetContainer.cpp,v $
- * Date modified: $Date: 2003-08-08 04:55:49 $
- * Version:       $Revision: 1.3 $
+ * Date modified: $Date: 2003-08-11 23:19:57 $
+ * Version:       $Revision: 1.4 $
  * -----------------------------------------------------------------
  *
  ************************************************************** phui-cpr-end */
@@ -52,7 +52,12 @@ namespace phui
    {}
 
    WidgetContainer::~WidgetContainer()
-   {}
+   {
+      while (!mWidgets.empty())
+      {
+         remove(mWidgets[0]);
+      }
+   }
 
    void WidgetContainer::add(WidgetPtr widget)
    {
@@ -109,15 +114,23 @@ namespace phui
       for (int i = int(mWidgets.size()) - 1; i >= 0; --i)
       {
          WidgetPtr wgt = mWidgets[i];
-         Point pos = wgt->getPosition();
 
          // only draw if the widget is visible
          if (wgt->isVisible())
          {
-            glTranslatef((float)pos.x, (float)pos.y, 0);
+            glPushMatrix();
+            glTranslate(wgt->getPosition());
             wgt->draw();
-            glTranslatef((float)-pos.x, (float)-pos.y, 0);
+            glPopMatrix();
          }
+      }
+   }
+   
+   void WidgetContainer::update(float dt)
+   {
+      for (size_t i = 0; i < mWidgets.size(); ++i)
+      {
+         mWidgets[i]->update(dt);
       }
    }
 
@@ -196,7 +209,10 @@ namespace phui
 
    void WidgetContainer::onMouseDown(InputButton button, const Point& p)
    {
+      WidgetContainerPtr kungFuDeathGrip = this;
+
       // mouse down always releases widget capture
+      // why?  -- aegis
       WidgetPtr null;
       capture(null);
 
@@ -214,6 +230,8 @@ namespace phui
 
    void WidgetContainer::onMouseUp(InputButton button, const Point& p)
    {
+      WidgetContainerPtr kungFuDeathGrip = this;
+
       if (WidgetPtr widget = getMouseWidget(p))
       {
          // we'll want to simply ignore this event if widget is disabled
@@ -228,6 +246,8 @@ namespace phui
 
    void WidgetContainer::onMouseMove(const Point& p)
    {
+      WidgetContainerPtr kungFuDeathGrip = this;
+
       if (WidgetPtr widget = getMouseWidget(p))
       {
          // we'll want to simply ignore this event if widget is disabled

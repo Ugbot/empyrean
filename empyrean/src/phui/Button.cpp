@@ -24,8 +24,8 @@
  *
  * -----------------------------------------------------------------
  * File:          $RCSfile: Button.cpp,v $
- * Date modified: $Date: 2003-08-08 04:55:49 $
- * Version:       $Revision: 1.6 $
+ * Date modified: $Date: 2003-08-11 23:19:57 $
+ * Version:       $Revision: 1.7 $
  * -----------------------------------------------------------------
  *
  ************************************************************** phui-cpr-end */
@@ -169,6 +169,10 @@ namespace phui
 
    void Button::onMouseUp(InputButton button, const Point& p)
    {
+      // The event listeners could cause this object to get deleted, so
+      // hold onto ourselves until the event handler is over.
+      ButtonPtr kungFuDeathGrip = this;
+   
       // Only fire button pressed event if the mouse was released
       // inside this button.
       if (mButtonPressed && button == BUTTON_LEFT && contains(p))
@@ -185,12 +189,12 @@ namespace phui
       mButtonPressed = false;
    }
 
-   void Button::addActionListener(ActionListenerPtr listener)
+   void Button::addListener(ActionListenerPtr listener)
    {
       mListeners.push_back(listener);
    }
 
-   void Button::removeActionListener(ActionListenerPtr listener)
+   void Button::removeListener(ActionListenerPtr listener)
    {
       ListenerIter itr =
          std::find(mListeners.begin(), mListeners.end(), listener);

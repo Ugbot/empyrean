@@ -17,28 +17,38 @@ namespace pyr {
         void onKeyPress(SDLKey key, bool down);
         void onMousePress(Uint8 button, bool down, int x, int y);
         void onMouseMove(int x, int y);
+        
+        void onErrorOK();
+        
+        void onMainConnect();
+        void onMainOptions();
+        void onMainQuit();
+        
+        void onConnectConnect(const std::string& server, int port);
+        void onConnectCancel();
+        
+        void onConnectingConnected();
+        void onConnectingCancel();
+        void onConnectingError(const std::string& error);
+        
+        void onLoginLogin(
+            const std::string& username,
+            const std::string& password,
+            bool newuser);
+        void onLoginCancel();
 
     private:
         void createInterface();
         void createMainScreen();
         void createLoginScreen();
         
-        void onButtonPressed(const phui::ActionEvent& e);
-        
     
-        phui::RootWidgetPtr _root;
+        phui::RootWidgetPtr _screen;
         
-        phui::RootWidgetPtr _mainRoot;
-        phui::ButtonPtr _connect;
-        phui::ButtonPtr _options;
-        phui::ButtonPtr _quit;
-        
-        phui::RootWidgetPtr _loginRoot;
-        phui::TextFieldPtr _name;
-        phui::TextFieldPtr _password;
-        phui::CheckBoxPtr  _newuser;
-        phui::ButtonPtr    _login;
-        phui::ButtonPtr    _cancel;
+        phui::RootWidgetPtr _mainScreen;
+        phui::RootWidgetPtr _connectScreen;
+        phui::RootWidgetPtr _connectingScreen;
+        phui::RootWidgetPtr _loginScreen;
     };
 
 }

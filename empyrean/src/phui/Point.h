@@ -24,8 +24,8 @@
  *
  * -----------------------------------------------------------------
  * File:          $RCSfile: Point.h,v $
- * Date modified: $Date: 2003-07-22 03:24:31 $
- * Version:       $Revision: 1.1 $
+ * Date modified: $Date: 2003-08-11 23:19:57 $
+ * Version:       $Revision: 1.2 $
  * -----------------------------------------------------------------
  *
  ************************************************************** phui-cpr-end */
@@ -98,6 +98,11 @@ namespace phui
    inline void glVertex(const Point& p)
    {
       glVertex2i(p.x, p.y);
+   }
+   
+   inline void glTranslate(const Point& p)
+   {
+      glTranslatef(float(p.x), float(p.y), 0);
    }
 }
 

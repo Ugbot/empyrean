@@ -235,6 +235,12 @@
 				RelativePath="..\..\src\client\ServerConnection.h">
 			</File>
 			<File
+				RelativePath="..\..\src\client\ServerConnectionThread.cpp">
+			</File>
+			<File
+				RelativePath="..\..\src\client\ServerConnectionThread.h">
+			</File>
+			<File
 				RelativePath="..\..\src\client\Texture.cpp">
 			</File>
 			<File

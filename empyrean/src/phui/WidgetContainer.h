@@ -24,8 +24,8 @@
  *
  * -----------------------------------------------------------------
  * File:          $RCSfile: WidgetContainer.h,v $
- * Date modified: $Date: 2003-08-08 02:51:24 $
- * Version:       $Revision: 1.2 $
+ * Date modified: $Date: 2003-08-11 23:19:57 $
+ * Version:       $Revision: 1.3 $
  * -----------------------------------------------------------------
  *
  ************************************************************** phui-cpr-end */
@@ -93,6 +93,8 @@ namespace phui
        * Draws this widget and all of its children.
        */
       void draw();
+      
+      void update(float dt);
 
       /**
        * Sets the layout manager for this container

@@ -2,7 +2,6 @@
 #define PYR_MUTEX_H
 
 
-#include <stdexcept>
 #include <prlock.h>
 #include "NSPRUtility.h"
 
