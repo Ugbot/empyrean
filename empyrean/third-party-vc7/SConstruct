@@ -7,6 +7,6 @@ builds = [Dir('../vc7/bin/Debug'), Dir('../vc7/bin/Release')]
 debug  = [True, False]
 for b, d in zip(builds, debug):
     Default(b)
-    env = Environment(ENV=os.environ, TARGET=b, DEBUG=d)
+    env = Environment(ENV=os.environ, DEST=b, DEBUG=d)
     Export('env')
     SConscript(dirs=['lib'])

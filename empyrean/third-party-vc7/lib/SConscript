@@ -33,6 +33,6 @@ else:
     Specific = Release
     SystemSpecific = SystemRelease
 
-target = env['TARGET']
+target = env['DEST']
 env.Install(target, Both + Specific)
 env.Install(target, [env.WhereIs(k) for k in SystemSpecific if k])

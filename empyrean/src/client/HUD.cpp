@@ -248,4 +248,4 @@ namespace pyr {
         _vertsLeft.push_back(Vec2f(centerX,                    float(_barBufferY)));
         _vertsLeft.push_back(Vec2f(centerX + _barLongStraight, float(_barBufferY)));
      }
-};
+}

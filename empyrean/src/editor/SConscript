@@ -34,7 +34,10 @@ if env['PLATFORM'] == 'cygwin':
         env['RCCOM'] = '$RC $RCINCFLAGS $RCFLAGS -i $SOURCE -o $TARGET'
         CScan = env.get_scanner('.c')
         if CScan:
-            CScan.add_skey('.rc')
+            if type(CScan.skeys) == type([]):
+                CScan.add_skey('.rc')
+            else:
+                CScan.skeys = [CScan.skeys, '.rc']
         env['BUILDERS']['RES'] = SCons.Builder.Builder(action='$RCCOM')
 
     CygwinRES(env)

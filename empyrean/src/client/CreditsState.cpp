@@ -23,10 +23,7 @@ namespace pyr {
         setOrthoProjection(640, 480);
         
         glClear(GL_COLOR_BUFFER_BIT);
-        _renderer->render(
-            "Lead Programmer:  Chad Austin\n"
-            "Programmer:    Andy Friesen\n"
-            "Artwork:   Corey Annis\n");
+        _renderer->render("Credits to be determined.");
     }
     
     

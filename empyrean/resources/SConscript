@@ -18,10 +18,10 @@ def Install(env, files):
     if type(files) is not ListType:
         files = [files]
     for f in files:
-        env.Install(env['TARGET'].Dir(Here()), f)
+        env.Install(env['DEST'].Dir(Here()), f)
 
 def ConvertImage(env, target, source):
-    env.ConvertImage(env['TARGET'].Dir(Here()).File(target), source)
+    env.ConvertImage(env['DEST'].Dir(Here()).File(target), source)
 
 Export('Install ConvertImage')
 
@@ -33,6 +33,6 @@ if base_env.get('PLATFORM') == 'cygwin':
 
 for t in map(Dir, tdirs):
     Default(t)
-    env = base_env.Copy(TARGET=t)
+    env = base_env.Copy(DEST=t)
     Export('env')
     SConscript(dirs=['editorrc', 'fonts', 'images', 'maps', 'models'])
