@@ -2,6 +2,7 @@
 #include "ByteBuffer.h"
 #include "Connection.h"
 #include "Packet.h"
+#include "Profiler.h"
 #include "ReaderThread.h"
 #include "Socket.h"
 #include "Types.h"
@@ -38,6 +39,8 @@ namespace pyr {
     }
 
     void Connection::processIncomingPackets() {
+        PYR_PROFILE_BLOCK("Connection::processIncomingPackets");
+
         std::queue<PacketPtr> packets(_reader->getPackets());
         while (!packets.empty()) {
             PacketPtr p = packets.front();

@@ -18,7 +18,7 @@ namespace pyr {
 
     void IntroState::draw() {
         beginPass(OrthoProjection(1, 1));
-        drawTexture(Vec2f(0, 0), Vec2f(1, 1), _image);
+        drawTexture(Vec2f(0, 0), Vec2f(1, 1), _image, false);
         endPass();
     }
     

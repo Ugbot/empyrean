@@ -1,9 +1,12 @@
 #include <fstream>
 #include <sstream>
+#include "File.h"
+#include "LineParser.h"
 #include "Log.h"
 #include "Map.h"
 #include "OBJLoader.h"
 #include "PathHandler.h"
+#include "ScopedPtr.h"
 using namespace std;
 
 
@@ -225,11 +228,8 @@ namespace pyr {
         PathHandler ph;
         ScopedPathSearch sps(ph, getPath(filename));
 
-        ifstream file(ph.findFile(filename).c_str());
-        if (!file) {
-            PYR_LOG(_logger, WARN, "OBJ file not found: " << filename);
-            return 0;
-        }
+        ScopedPtr<File> file(openFile(ph.findFile(filename)));
+        ScopedPtr<LineParser> lineParser(new LineParser(file.get()));
 
         GroupElementPtr result = new GroupElement;
         MaterialLibrary mtllib;
@@ -241,7 +241,7 @@ namespace pyr {
         GeometryElementPtr currentGeometry = new GeometryElement;
 
         string line;
-        while (getline(file, line)) {
+        while (lineParser->readLine(line)) {
             istringstream ss(line);
 
             string command;

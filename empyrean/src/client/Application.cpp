@@ -63,7 +63,8 @@ namespace pyr {
                 beginPass(OrthoProjection(_width, _height));
                 drawTexture(
                     Vec2f(float(_lastX), float(_lastY)),
-                    _pointer);
+                    _pointer,
+                    true);
                 endPass();
             }
         }

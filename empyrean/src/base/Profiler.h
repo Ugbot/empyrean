@@ -8,6 +8,7 @@
 #include "RefCounted.h"
 #include "RefPtr.h"
 #include "Singleton.h"
+#include "ThreadStorage.h"
 #include "Utility.h"
 
 namespace pyr {
@@ -92,9 +93,6 @@ namespace pyr {
     /**
      * A Simple class for figuring out what's going on when, and for
      * how long.  Use PYR_PROFILE_BLOCK(name) instead of this class directly.
-     *
-     * @note  This class is not threadsafe.  Do not use it in different
-     *        threads.
      */
     class Profiler {
         PYR_DECLARE_SINGLETON(Profiler)
@@ -104,35 +102,40 @@ namespace pyr {
 
     public:
         const ProfileBlockMap& getBlockMap() const {
-            return _blocks;
+            return _state->blocks;
         }
         
         const CallNodeList& getLastCallTree() const {
-            return _lastCallTree;
+            return _state->lastCallTree;
         }
 
         float getTotalTime() const {
-            return _totalTime;
+            return _state->totalTime;
         }
 
         void beginBlock(const std::string& name);
         void endBlock();
 
+        // Must be called once per frame for each thread that is profiling!
         void nextFrame();
 
     private:
         void pushBlock(ProfileBlockPtr block);
         ProfileBlockPtr popBlock();
 
-        /// Total time spent profiling.
-        Zeroed<float> _totalTime;
+        struct ProfilerState {
+            /// Total time spent profiling.
+            Zeroed<float> totalTime;
 
-        /// Set of profiled blocks and their names.
-        ProfileBlockMap _blocks;
+            /// Set of profiled blocks and their names.
+            ProfileBlockMap blocks;
 
-        std::stack<CallNodePtr> _callStack;
-        CallNodeList _callTree;
-        CallNodeList _lastCallTree;
+            std::stack<CallNodePtr> callStack;
+            CallNodeList callTree;
+            CallNodeList lastCallTree;
+        };
+
+        ThreadStorage<ProfilerState> _state;
     };
 
 

@@ -32,8 +32,6 @@ namespace pyr {
         float getRealWidth() const;
         float getRealHeight() const;
 
-        bool hasAlpha() const;
-
     private:
         GLuint _texture;
         float _realWidth;
@@ -42,7 +40,6 @@ namespace pyr {
         int _height;
         int _texWidth;
         int _texHeight;
-        bool _hasAlpha;
 
         void createTexture(int width,int height,u32* pixeldata);
     };

@@ -190,8 +190,8 @@ namespace pyr {
     #define PYR_TEXT_STREAM(renderer, pos) pyr::TextStream(renderer, pos).get()
 
 
-    void drawTexture(const Vec2f& pos, Texture* texture);
-    void drawTexture(const Vec2f& pos, const Vec2f& size, Texture* texture);
+    void drawTexture(const Vec2f& pos, Texture* texture, bool blend);
+    void drawTexture(const Vec2f& pos, const Vec2f& size, Texture* texture, bool blend);
 
 }
 

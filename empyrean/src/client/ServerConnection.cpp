@@ -2,6 +2,7 @@
 #include "Connection.h"
 #include "Model.h"
 #include "PacketTypes.h"
+#include "Profiler.h"
 #include "Scene.h"
 #include "ServerConnection.h"
 #include "ServerConnectionThread.h"
@@ -48,6 +49,8 @@ namespace pyr {
     }
 
     void ServerConnection::update() {
+        PYR_PROFILE_BLOCK("ServerConnection::update");
+
         if (_connectionMaker) {
             ServerConnectionThread::Status status = _connectionMaker->getStatus();
             if (status == ServerConnectionThread::CONNECT_SUCCEEDED) {

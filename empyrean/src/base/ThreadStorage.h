@@ -20,20 +20,25 @@ namespace pyr {
         operator T&() const {
             return *get();
         }
+
+        T& operator*() const {
+            return *get();
+        }
         
         T* operator->() const {
             return get();
         }
 
         T* get() const {        
-            void* data = PR_GetThreadPrivate(_index);
-            if (!data) {
-                data = new T;
-                PR_SetThreadPrivate(_index, data);
+            if (void* data = PR_GetThreadPrivate(_index)) {
+                T* t = static_cast<T*>(data);
+                PYR_ASSERT(t, "ThreadData should be non-null.");
+                return t;
+            } else {
+                T* t = new T;
+                PR_SetThreadPrivate(_index, t);
+                return t;
             }
-            T* t = static_cast<T*>(data);
-            PYR_ASSERT(t, "ThreadData should be non-null.");
-            return t;
         }
         
     private:
@@ -43,6 +48,10 @@ namespace pyr {
         }
         
         PRUintn _index;
+
+        // Noncopyable.
+        ThreadStorage(const ThreadStorage<T>& rhs);
+        void operator=(const ThreadStorage<T>& rhs);
     };
 
 }

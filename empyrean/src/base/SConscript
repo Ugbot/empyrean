@@ -12,8 +12,10 @@ SOURCES = Split("""
     Debug.cpp
     Entity.cpp
     Error.cpp
+    File.cpp
     glew.c
     GLUtility.cpp
+    LineParser.cpp
     Log.cpp
     LogWriter.cpp
     Map.cpp

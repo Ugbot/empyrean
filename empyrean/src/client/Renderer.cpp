@@ -83,17 +83,17 @@ namespace pyr {
     };
 
 
-    void drawTexture(const Vec2f& pos, Texture* texture) {
+    void drawTexture(const Vec2f& pos, Texture* texture, bool blend) {
         PYR_ASSERT(texture, "Can't draw an unspecified texture.");
-        drawTexture(pos, Vec2f(float(texture->width()), float(texture->height())), texture);
+        drawTexture(pos, Vec2f(float(texture->width()), float(texture->height())), texture, blend);
     }
 
-    void drawTexture(const Vec2f& pos, const Vec2f& size, Texture* texture) {
+    void drawTexture(const Vec2f& pos, const Vec2f& size, Texture* texture, bool blend) {
         PYR_ASSERT(texture, "Can't draw an unspecified texture.");
 
         StateSet ss;
         ss.setTexture(texture);
-        ss.setBlend(texture->hasAlpha());
+        ss.setBlend(blend);
 
         float w  = size[0];
         float h  = size[1];

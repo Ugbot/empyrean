@@ -362,43 +362,6 @@
 			</File>
 		</Filter>
 		<Filter
-			Name="entity"
-			Filter="">
-			<File
-				RelativePath="..\..\src\base\Appearance.h">
-			</File>
-			<File
-				RelativePath="..\..\src\base\Behavior.cpp">
-			</File>
-			<File
-				RelativePath="..\..\src\base\Behavior.h">
-			</File>
-			<File
-				RelativePath="..\..\src\base\BoundingRectangle.h">
-			</File>
-			<File
-				RelativePath="..\..\src\base\Entity.cpp">
-			</File>
-			<File
-				RelativePath="..\..\src\base\Entity.h">
-			</File>
-			<File
-				RelativePath="..\..\src\base\Environment.h">
-			</File>
-			<File
-				RelativePath="..\..\src\base\MonsterBehavior.cpp">
-			</File>
-			<File
-				RelativePath="..\..\src\base\MonsterBehavior.h">
-			</File>
-			<File
-				RelativePath="..\..\src\base\PlayerBehavior.cpp">
-			</File>
-			<File
-				RelativePath="..\..\src\base\PlayerBehavior.h">
-			</File>
-		</Filter>
-		<Filter
 			Name="game"
 			Filter="">
 			<File
@@ -540,6 +503,59 @@
 			</File>
 			<File
 				RelativePath="..\..\src\base\Win32Memory.h">
+			</File>
+		</Filter>
+		<Filter
+			Name="filesystem"
+			Filter="">
+			<File
+				RelativePath="..\..\src\base\File.cpp">
+			</File>
+			<File
+				RelativePath="..\..\src\base\File.h">
+			</File>
+			<File
+				RelativePath="..\..\src\base\LineParser.cpp">
+			</File>
+			<File
+				RelativePath="..\..\src\base\LineParser.h">
+			</File>
+		</Filter>
+		<Filter
+			Name="entity"
+			Filter="">
+			<File
+				RelativePath="..\..\src\base\Appearance.h">
+			</File>
+			<File
+				RelativePath="..\..\src\base\Behavior.cpp">
+			</File>
+			<File
+				RelativePath="..\..\src\base\Behavior.h">
+			</File>
+			<File
+				RelativePath="..\..\src\base\BoundingRectangle.h">
+			</File>
+			<File
+				RelativePath="..\..\src\base\Entity.cpp">
+			</File>
+			<File
+				RelativePath="..\..\src\base\Entity.h">
+			</File>
+			<File
+				RelativePath="..\..\src\base\Environment.h">
+			</File>
+			<File
+				RelativePath="..\..\src\base\MonsterBehavior.cpp">
+			</File>
+			<File
+				RelativePath="..\..\src\base\MonsterBehavior.h">
+			</File>
+			<File
+				RelativePath="..\..\src\base\PlayerBehavior.cpp">
+			</File>
+			<File
+				RelativePath="..\..\src\base\PlayerBehavior.h">
 			</File>
 		</Filter>
 	</Files>
