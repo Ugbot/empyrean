@@ -2,7 +2,9 @@
 #define PYR_CREATE_GEOMETRY_TOOL_H
 
 
+#include "CreateMapElementCommand.h"
 #include "GLUtility.h"
+#include "Log.h"
 #include "MapView.h"
 #include "Tool.h"
 
@@ -44,17 +46,15 @@ namespace pyr {
             if (_down) {
                 return false;
             } else {
-            /*
+                PYR_LOG() << "Creating geometry element.";
+
                 GeometryElementPtr elt = new GeometryElement;
-                elt->texture = "images/pointer.png";
-                
-                
-                MapElementPtr parent = getMap()->getRoot();
-                event.cmd->handleCommand(
-                    new CreateMapElementCommand(elt, parent));
-                    
+                elt->geometry.addFace(_points);
                 _points.clear();
-            */
+
+                GroupElementPtr parent = getMap()->getRoot();
+                event.handleCommand(new CreateMapElementCommand(elt, parent));
+
                 return true;
             }
         }

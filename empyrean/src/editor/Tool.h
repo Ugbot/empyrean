@@ -3,14 +3,14 @@
 
 #include <map>
 #include <string>
+#include "Command.h"
 #include "VecMath.h"
 
 namespace pyr {
 
     class MainFrame;
-    class MapView;
     class Map;
-    class CommandReceiver;
+    class MapView;
 
     struct ToolEvent {
         CommandReceiver* cmd;
@@ -22,6 +22,10 @@ namespace pyr {
         bool shift;
         bool ctrl;
         bool alt;
+
+        void handleCommand(Command* command) {
+            return cmd->handleCommand(command);
+        }
     };
 
     struct GridEvent {

@@ -130,7 +130,7 @@ namespace pyr {
             } else {
                 repaint = _tool->onLeftUp(te);
             }
-        } else if (button == 2) {
+        } else if (button == 3) {
             if (e.ButtonDown()) {
                 repaint = _tool->onRightDown(te);
             } else {

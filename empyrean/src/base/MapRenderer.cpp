@@ -34,6 +34,7 @@ namespace pyr {
         glPushMatrix();
         glTranslate(e->pos);
 
+        /*
         const GeometryElement::VertList& v = e->vertices;
 
         glBegin(GL_TRIANGLES);
@@ -49,6 +50,7 @@ namespace pyr {
             }
         }
         glEnd();
+        */
 
         glPopMatrix();
     }

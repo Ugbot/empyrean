@@ -3,6 +3,7 @@
 
 
 #include <vector>
+#include "Debug.h"
 #include "VecMath.h"
 
 
@@ -31,7 +32,19 @@ namespace pyr {
 
         struct Vertex {
             Vec2f pos;
+            std::vector<HalfEdgeIndex> incidentEdges;
         };
+
+    public:
+        void addFace(const std::vector<Vec2f>& points);
+
+        size_t getVertexCount() const {
+            return _vertices.size();
+        }
+        const Vertex& getVertex(size_t i) const {
+            PYR_ASSERT(i >= 0 && i < getVertexCount(), "Invalid vertex index");
+            return _vertices[i];
+        }
 
     private:
         std::vector<Face>     _faces;

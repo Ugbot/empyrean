@@ -49,22 +49,6 @@ namespace pyr {
         createContents();
         createStatusBar();
 
-        // Test code, to get a map
-        GroupElementPtr mapRoot = _map.getRoot();
-        GeometryElement* e = new GeometryElement;
-        e->material = new Material();
-        e->material->texture = "images/pointer.png";
-        e->addVert(gmtl::Vec2f(0, 0), gmtl::Vec2f(0, 0), gmtl::Vec4f(1, 1, 1, 1));
-        e->addVert(gmtl::Vec2f(1, 0), gmtl::Vec2f(1, 0), gmtl::Vec4f(1, 1, 1, 1));
-        e->addVert(gmtl::Vec2f(1, 1), gmtl::Vec2f(1, 1), gmtl::Vec4f(1, 1, 1, 1));
-        e->addVert(gmtl::Vec2f(0, 1), gmtl::Vec2f(0, 1), gmtl::Vec4f(1, 1, 1, 1));
-        e->addVert(gmtl::Vec2f(-1, 0), gmtl::Vec2f(1, 0), gmtl::Vec4f(0, 0, 0, 1));
-        e->addVert(gmtl::Vec2f(-1, 1), gmtl::Vec2f(1, 1), gmtl::Vec4f(0, 0, 0, 1));
-        e->addTri(0, 1, 2);
-        e->addTri(0, 2, 3);
-        e->addTri(0, 3, 5);
-        e->addTri(0, 4, 5);
-        mapRoot->children.push_back(e);
         updateTree();
     }
 

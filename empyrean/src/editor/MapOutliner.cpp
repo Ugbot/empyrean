@@ -20,6 +20,14 @@ namespace pyr {
         glPushMatrix();
         glTranslate(e->pos);
 
+        PlanarMap& pm = e->geometry;
+        glBegin(GL_POINTS);
+        for (size_t i = 0; i < pm.getVertexCount(); ++i) {
+            glVertex(pm.getVertex(i).pos);
+        }
+        glEnd();
+
+        /*
         // Draw segments in blue
         glColor3f(0, 0, 1);
         for (unsigned i = 0; i < e->tris.size(); i++) {
@@ -42,6 +50,7 @@ namespace pyr {
             glVertex(e->vertices[i].pos);
         }
         glEnd();
+        */
 
         glPopMatrix();
     }

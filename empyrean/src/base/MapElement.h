@@ -16,7 +16,10 @@ namespace pyr {
 
     class MapVisitor;
 
-    /// entities, triggers, obstructions should all inherit MapElement
+    /**
+     * This statement may be false: entities, triggers, obstructions
+     * should all inherit from MapElement.
+     */    
     class MapElement : public RefCounted {
     protected:
         ~MapElement() {}
@@ -24,8 +27,10 @@ namespace pyr {
     public:
         Vec2f pos;
 
-        // Allows more convenient syntax when creating MapVisitors on the stack.
-        // ie. nameless temporaries.
+        /**
+         * Allows more convenient syntax when creating MapVisitors on
+         * the stack.  i.e. nameless temporaries
+         */
         virtual void handleVisitor(MapVisitor& v) = 0;
     };
     typedef RefPtr<MapElement> MapElementPtr;
@@ -44,7 +49,10 @@ namespace pyr {
     typedef RefPtr<GeometryElement> GeometryElementPtr;
 
 
-    /// Render state changing nodes should inherit GroupElement.
+    /**
+     * This statement may be false: Render state changing nodes should
+     * inherit GroupElement.
+     */
     class GroupElement : public MapElement {
     public:
         std::vector<MapElementPtr> children;

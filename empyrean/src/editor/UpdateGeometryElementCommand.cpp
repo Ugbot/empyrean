@@ -12,15 +12,8 @@ namespace pyr {
     {}
 
     void UpdateGeometryElementCommand::perform(CommandContext& context) {
-        gmtl::Vec2f bleagh;
-        std::string blarg;
-
-        bleagh = _element->pos;
-        blarg  = _element->texture;
-        _element->pos = _pos;
-        _element->texture = _texture;
-        _pos = bleagh;
-        _texture = blarg;
+        std::swap(_element->pos,     _pos);
+        //std::swap(_element->texture, _texture);
     }
 
     void UpdateGeometryElementCommand::undo(CommandContext& context) {

@@ -12,6 +12,7 @@ SOURCES = Split("""
     NSPRUtility.cpp
     PacketFactory.cpp
     PacketTypes.cpp
+    PlanarMap.cpp
     Platform.cpp
     ReaderThread.cpp
     ResourceManager.cpp
