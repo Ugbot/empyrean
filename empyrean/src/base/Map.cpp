@@ -123,8 +123,15 @@ namespace pyr {
         _root->handleVisitor(v);
     }
 
-    void Map::getSegs(std::vector<Segment>& segs) const {
-        segs = _mapSegs;
+    void Map::getSegs(std::vector<Segment>& segs, float xposition) const {
+        for(int i = 0; i < _numberRegions; ++i) {
+            if(xposition >= _regions[i].minX &&
+                xposition < _regions[i].maxX) { 
+                segs = _regions[i]._regionSegs;
+                break;
+            }
+        }
+        
     }
     
     void Map::processMap() {
@@ -146,14 +153,43 @@ namespace pyr {
             }
         }
 
+        // Geographically divide regions
         float length = maxX - minX;
-        float regionLength;
+        float regionLength = length / (float) _numberRegions;
 
         // Create a predefined number of regions
         for(int i = 0; i < _numberRegions; ++i) {
             Region reg;
-            
             _regions.push_back(reg);
+        }
+
+        // Create boundaries for these regions
+        for(int i = 0; i < _numberRegions; ++i) {
+            _regions[i].minX = i * regionLength + minX;
+            _regions[i].maxX = (i + 1) * regionLength + minX;
+        }
+
+        // Region overlap
+        const float overlap = 2.0f;
+
+        // Check each segment to see which region it falls into
+        for(size_t i = 0; i < _mapSegs.size(); ++i) {
+            // Check against each region
+            for(int j = 0; j < _numberRegions; ++j) {
+                // Check first point
+                if(_mapSegs[i].v1[0] >= (_regions[j].minX - overlap) &&
+                    _mapSegs[i].v1[0] < (_regions[j].maxX + overlap)) {
+                    
+                    _regions[j]._regionSegs.push_back(_mapSegs[i]);
+                    continue;  // if one segment is in then this is relavant to the region no more checking needed
+                }
+                // Check second point
+                if(_mapSegs[i].v2[0] >= (_regions[j].minX - overlap) &&
+                    _mapSegs[i].v2[0] < (_regions[j].maxX + overlap)) {
+                    
+                    _regions[j]._regionSegs.push_back(_mapSegs[i]);
+                }
+            }
         }
 
 

@@ -34,7 +34,8 @@ namespace pyr {
         MapElementPtr findElementByName(const std::string& name) const;
         void getAllElements(std::vector<MapElementPtr>& elts) const;
 
-        void getSegs(std::vector<Segment>& segs) const;
+        void getSegs(std::vector<Segment>& segs, float xposition) const;
+        
         void processMap();
 
     private:
@@ -51,7 +52,7 @@ namespace pyr {
             float maxX;
         };
 
-        Inited<int,4> _numberRegions;
+        Inited<int,8> _numberRegions;
         std::vector<Region> _regions;
 
     };

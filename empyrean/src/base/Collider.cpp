@@ -23,7 +23,7 @@ namespace pyr {
                             ent->getPos() + ent->getBounds().max);
         
         std::vector<Segment> segs;
-        terrain->getSegs(segs);
+        terrain->getSegs(segs,ent->getPos()[0]);
         CollisionData rv;
         newBox.getIntersectingSegs(rv.interesting, segs);
 
