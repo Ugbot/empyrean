@@ -3,15 +3,15 @@
 
 #include <list>
 
+#include "ClientEntity.h"
 #include "Color.h"
-#include "Entity.h"
 #include "Types.h"
 #include "VecMath.h"
 
 namespace pyr {
     class Texture;
 
-    class ParticleSystem : public Entity {
+    class ParticleSystem : public ClientEntity {
     public:
         ParticleSystem();
 

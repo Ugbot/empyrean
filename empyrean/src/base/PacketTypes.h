@@ -109,9 +109,12 @@ namespace pyr {
     
     // server -> client
     #define PYR_ENTITY_ADDED_PACKET_NAME EntityAddedPacket
-    #define PYR_ENTITY_ADDED_PACKET(_) \
-        _(field)(u16, id)              \
-        _(string)(256, appearance)
+    #define PYR_ENTITY_ADDED_PACKET(_)     \
+        _(field)(u16,  id)                 \
+        _(string)(16,  behavior)           \
+        _(string)(256, behaviorResource)   \
+        _(string)(16,  appearance)         \
+        _(string)(256, appearanceResource)
 
     // server -> client
     #define PYR_ENTITY_REMOVED_PACKET_NAME EntityRemovedPacket

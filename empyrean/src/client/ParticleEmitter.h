@@ -1,15 +1,15 @@
 #ifndef PYR_PARTICLEEMITTER_H
 #define PYR_PARTICLEEMITTER_H
 
+#include "ClientEntity.h"
 #include "Color.h"
-#include "Entity.h"
 #include "VecMath.h"
 
 namespace pyr {
 
     class ParticleSystem;
 
-    class ParticleEmitter : public Entity {
+    class ParticleEmitter : public ClientEntity {
     public:
         ParticleEmitter(ParticleSystem* system);
 

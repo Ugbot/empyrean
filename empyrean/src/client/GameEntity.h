@@ -2,9 +2,10 @@
 #define PYR_GAME_ENTITY_H
 
 #include <map>
+#include "ClientEntity.h"
 #include "Collider.h"
-#include "Entity.h"
 #include "Utility.h"
+#include "Types.h"
 
 namespace pyr {
 
@@ -27,7 +28,7 @@ namespace pyr {
      * as other miscellaneous weirdness. (as is customary for any
      * code written by yours truly)
      */
-    class GameEntity : public Entity {
+    class GameEntity : public ClientEntity {
     public:
 
         enum Animation {
@@ -44,7 +45,7 @@ namespace pyr {
         void draw();
         void update(float dt, const Map* terrain);
         
-        typedef std::map<u16, Entity*> EntityMap;
+        typedef std::map<u16, ClientEntity*> EntityMap;
         void collideWithOthers(EntityMap entities);
 
         void getVitalityUpdate(int& current, int& max);

@@ -23,6 +23,7 @@ namespace pyr {
         }
 
         // Find monsters.
+#if 0
         std::vector<MapElementPtr> elements;
         _map->getAllElements(elements);
         for (size_t i = 0; i < elements.size(); ++i) {
@@ -31,11 +32,12 @@ namespace pyr {
                 ServerEntity* entity = new ServerEntity(
                     _idGenerator.reserve(),
                     "models/Walk1/walk1.cfg",
-                    new DumbBehavior());
+                    instantiateBehavior("dumb"));
                 entity->setPos(elt->pos);
                 addEntity(entity);
             }
         }
+#endif
     }
 
     Game::~Game() {
@@ -88,7 +90,10 @@ namespace pyr {
 
         sendAll(new EntityAddedPacket(
                     entity->getID(),
-                    entity->getAppearance()));
+                    "cal3d",
+                    entity->getAppearance(),
+                    "player",
+                    ""));
 
         // set connection-specific data
         ConnectionData* cd = new ConnectionData;
@@ -104,7 +109,10 @@ namespace pyr {
         for (size_t i = 0; i < _entities.size(); ++i) {
             connection->sendPacket(new EntityAddedPacket(
                 _entities[i]->getID(),
-                _entities[i]->getAppearance()));
+                "cal3d",
+                _entities[i]->getAppearance(),
+                "player",
+                ""));
         }
 
         connection->sendPacket(new SetPlayerPacket(entity->getID()));

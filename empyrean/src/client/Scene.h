@@ -12,7 +12,7 @@
 
 namespace pyr {
 
-    class Entity;
+    class ClientEntity;
     class Map;
     class Texture;
 
@@ -28,19 +28,19 @@ namespace pyr {
         
         /** The scene takes ownership of entities that are given to it,
          *  unless they are removed. */
-        void addEntity(u16 id, Entity* entity);
+        void addEntity(u16 id, ClientEntity* entity);
         void removeEntity(u16 id);
-        Entity* getEntity(u16 id) const;
+        ClientEntity* getEntity(u16 id) const;
         
         void setFocus(u16 id);
-        Entity* getFocus() const;
+        ClientEntity* getFocus() const;
         
     private:
         void addParticles(MapElementPtr elt);
 
-        typedef std::map<u16, Entity*> EntityMap;
+        typedef std::map<u16, ClientEntity*> EntityMap;
 
-        Entity* _focus;
+        ClientEntity* _focus;
         Texture* _backdrop;
         EntityMap _entities;
         ScopedPtr<Map> _map;

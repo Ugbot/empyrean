@@ -173,7 +173,7 @@ namespace pyr {
 
     void ServerConnection::handleEntityAdded(Connection*, EntityAddedPacket* p) {
         GameEntity* entity = new GameEntity(
-            new Model(p->appearance()),
+            new Model(p->appearanceResource()),
             new DefaultRenderer());
         the<Scene>().addEntity(p->id(), entity);
     }

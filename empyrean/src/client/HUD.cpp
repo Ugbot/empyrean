@@ -17,7 +17,7 @@ namespace pyr {
             _barBufferX = 10;
             _barBufferY = 10;
             _barBuffer = 3;
-            _barPathLength = _barShortStraight+3.14159f*_barRadius+_barLongStraight;
+            _barPathLength = _barShortStraight+PI*_barRadius+_barLongStraight;
  
             calcBar();
             PYR_ASSERT(_vertsRight.size() == _vertsLeft.size(),
@@ -136,7 +136,7 @@ namespace pyr {
             // Check to see if the value is inside the curved part
             if (perc <= (_barShortStraight+PI*_barRadius)/_barPathLength) {
                 barLen = (perc-_barShortStraight/_barPathLength)/
-                         (3.14159f*_barRadius/_barPathLength);
+                         (PI*_barRadius/_barPathLength);
                 vertsToDraw += (int)(barLen*_numSegsInCurves);
             }
             // The value is in the long straight
@@ -176,7 +176,7 @@ namespace pyr {
                 glVertex2f(_vertsRight[1][0],_vertsRight[1][1]);
                 glVertex2f(_vertsLeft[1][0],_vertsLeft[1][1]);
             }
-            if (perc > (_barShortStraight+3.14159*_barRadius)/_barPathLength) {
+            if (perc > (_barShortStraight+PI*_barRadius)/_barPathLength) {
                     glVertex2f(_vertsRight[vertsToDraw][0] + barLen*(_vertsRight[vertsToDraw+1][0]-_vertsRight[vertsToDraw][0]),
                             _vertsRight[vertsToDraw+1][1]);
                     glVertex2f(_vertsLeft[vertsToDraw][0] + barLen*(_vertsLeft[vertsToDraw+1][0]-_vertsLeft[vertsToDraw][0]),

@@ -110,10 +110,25 @@
 			Name="files"
 			Filter="cpp;c;cxx;def;odl;idl;hpj;bat;asm">
 			<File
+				RelativePath="..\..\src\base\Appearance.cpp">
+			</File>
+			<File
+				RelativePath="..\..\src\base\Appearance.h">
+			</File>
+			<File
 				RelativePath="..\..\src\base\ArmorPool.cpp">
 			</File>
 			<File
 				RelativePath="..\..\src\base\ArmorPool.h">
+			</File>
+			<File
+				RelativePath="..\..\src\base\Behavior.cpp">
+			</File>
+			<File
+				RelativePath="..\..\src\base\Behavior.h">
+			</File>
+			<File
+				RelativePath="..\..\src\base\BoundingRectangle.h">
 			</File>
 			<File
 				RelativePath="..\..\src\base\BufferParser.h">
@@ -159,6 +174,12 @@
 			</File>
 			<File
 				RelativePath="..\..\src\base\Debug.h">
+			</File>
+			<File
+				RelativePath="..\..\src\base\Entity.cpp">
+			</File>
+			<File
+				RelativePath="..\..\src\base\Entity.h">
 			</File>
 			<File
 				RelativePath="..\..\src\base\Error.cpp">

@@ -136,6 +136,9 @@
 				RelativePath="..\..\src\client\Application.h">
 			</File>
 			<File
+				RelativePath="..\..\src\client\ClientEntity.h">
+			</File>
+			<File
 				RelativePath="..\..\src\client\Color.h">
 			</File>
 			<File
@@ -143,9 +146,6 @@
 			</File>
 			<File
 				RelativePath="..\..\src\client\Configuration.h">
-			</File>
-			<File
-				RelativePath="..\..\src\client\Entity.h">
 			</File>
 			<File
 				RelativePath="..\..\src\client\FPSCounter.h">

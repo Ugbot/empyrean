@@ -1,5 +1,5 @@
 #include <stdexcept>
-#include "Entity.h"
+#include "ClientEntity.h"
 #include "GameEntity.h"
 #include "GLUtility.h"
 #include "MapLoader.h"
@@ -77,7 +77,7 @@ namespace pyr {
 
         EntityMap::iterator itr = _entities.begin();
         for (; itr != _entities.end(); ++itr) {
-            Entity* e = itr->second;
+            ClientEntity* e = itr->second;
             glPushMatrix();
             glTranslate(e->getPos());
             e->draw();
@@ -87,7 +87,7 @@ namespace pyr {
     
     void Scene::update(float dt) {
         EntityMap::iterator itr = _entities.begin();
-        // Update all entities (regardless of collision with others
+        // Update all entities (regardless of collision with others)
         for (; itr != _entities.end(); ++itr) {
             itr->second->update(dt,_map.get());
         }
@@ -101,7 +101,7 @@ namespace pyr {
         }
     }
     
-    void Scene::addEntity(u16 id, Entity* entity) {
+    void Scene::addEntity(u16 id, ClientEntity* entity) {
         PYR_ASSERT(_entities.count(id) == 0, "Two entities have same ID");
         _entities[id] = entity;
     }
@@ -113,7 +113,7 @@ namespace pyr {
         _entities.erase(id);
     }
     
-    Entity* Scene::getEntity(u16 id) const {
+    ClientEntity* Scene::getEntity(u16 id) const {
         EntityMap::const_iterator i = _entities.find(id);
         return (i == _entities.end() ? 0 : i->second);
     }
@@ -122,7 +122,7 @@ namespace pyr {
         _focus = getEntity(id);
     }
     
-    Entity* Scene::getFocus() const {
+    ClientEntity* Scene::getFocus() const {
         return _focus;
     }
 
