@@ -2,13 +2,16 @@
 #define PYR_PLAYER_BEHAVIOR_H
 
 
-#include "PhysicsBehavior.h"
+#include "Behavior.h"
 #include "Utility.h"
+#include "UnownedPtr.h"
 
 
 namespace pyr {
 
-    class PlayerBehavior : public PhysicsBehavior {
+    class PhysicsBehaviorSlot;
+
+    class PlayerBehavior : public Behavior {
     public:
         PYR_BEHAVIOR_NAME("player");
 
@@ -21,6 +24,11 @@ namespace pyr {
         }
 
         void handleEvent(Entity* entity, const std::string& event);
+        
+        bool facingRight() const;
+        
+    private:
+        UnownedPtr<PhysicsBehaviorSlot> _physics;
     };
 
 }

@@ -237,8 +237,10 @@ namespace pyr {
 
     void Game::handlePlayerAttack(Connection* c, PlayerAttackPacket* p) {
         GameConnectionData* cd = getData(c);
-        ServerEntity* attacker = dynamic_cast<ServerEntity*>(cd->playerEntity);
-        PYR_ASSERT(attacker,"Incorrect dynamic cast in handlePlayerAttack!");
+        ServerEntity* attacker = cd->playerEntity;
+        PYR_ASSERT(attacker, "GameConnectionData does not have an associated entity");
+        PlayerBehavior* attackerBehavior = cd->behavior;
+        PYR_ASSERT(attackerBehavior, "GameConnectionData does not have an associated entity");
 
         float damageMod = 1.0f;
 
@@ -257,8 +259,6 @@ namespace pyr {
 
         // Get the bounding box of the attack
         Vec2f lowerLeft, upperRight;
-        PlayerBehavior* attackerBehavior = dynamic_cast<PlayerBehavior*>(attacker->getBehavior());
-        PYR_ASSERT(attackerBehavior,"Incorrect dynamic cast in handlePlayerAttack!");
         if (attackerBehavior->facingRight()) {
             lowerLeft = attacker->getPos() + Vec2f(attacker->getBounds().getWidth()/2.0f,
                                                    attacker->getBounds().getHeight()/2.0f);

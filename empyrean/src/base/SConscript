@@ -22,6 +22,7 @@ SOURCES = Split("""
     PacketFactory.cpp
     PacketTypes.cpp
     PathHandler.cpp
+    PhysicsEngine.cpp
     PlanarMap.cpp
     Platform.cpp
     PlayerBehavior.cpp

@@ -88,6 +88,11 @@ namespace pyr {
      */
     template<typename T, typename U>
     T checked_cast(U u) {
+        // Null pointers should not raise an assertion.
+        if (!u) {
+            return 0;
+        }
+        
         T t = dynamic_cast<T>(u);
         PYR_ASSERT(t, "checked_cast failed");
         return t;

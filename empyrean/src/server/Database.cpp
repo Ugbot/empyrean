@@ -15,8 +15,8 @@ namespace pyr {
     
     void Database::load(const std::string& filename) {
         try {
-            ScopedPtr<XMLNode> node = XMLParser().parse(filename);
-            
+            ScopedPtr<XMLNode> node(XMLParser().parse(filename));
+
             if (!node || node->getName() != "serverdatabase") {
                 throw DatabaseError("Invalid server database file");
             }

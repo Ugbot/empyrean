@@ -1,6 +1,7 @@
 #include "Collider.h"
 #include "Constants.h"
 #include "Entity.h"
+#include "PhysicsBehaviorSlot.h"
 #include "PlayerBehavior.h"
 #include "VecMath.h"
 
@@ -8,9 +9,12 @@
 namespace pyr {
 
     PlayerBehavior::PlayerBehavior(const std::string& /*resource*/) {
+        _physics = new PhysicsBehaviorSlot;
+        setSlot(_physics);
+
         // We would like to be able to start in some sort of animation.
         //beginAnimationCycle("idle");
-        setDesiredGroundSpeed(2.0f);
+        _physics->desiredGroundSpeed = 2.0f;
     }
 
     void PlayerBehavior::update(Entity* entity, float dt, const Environment& env) {
@@ -24,12 +28,12 @@ namespace pyr {
 
         const float mu = 0.8f;
         const float acc = -mu * constants::GRAVITY;
-        
-        if(getDesiredAccel()[0] != 0) {
-            vel[0] = getDesiredAccel()[0];
+
+        if (_physics->desiredAccel[0] != 0) {
+            vel[0] = _physics->desiredAccel[0];
         }
 
-        if(!getJumpNumber()) {
+        if(!_physics->jumpNumber) {
             
             if(vel[0] > 0) {
                 vel[0] += acc * dt;
@@ -46,50 +50,50 @@ namespace pyr {
             }                        
         }
 
+        // This should probably go into physics.
         if (vel[1] < constants::TERMINAL_VELOCITY) { // terminal velocity
             vel[1] = constants::TERMINAL_VELOCITY;
         }
-
     }
 
     void PlayerBehavior::handleEvent(Entity* entity, const std::string& event) {
         const float jumpSpeed = 8;
         const float speed = 2;
-       
+
         if (event == "Begin Right") {
-            getDesiredAccel()[0] = speed;
-            setFacingRight(true);
+            _physics->desiredAccel[0] = speed;
+            _physics->facingRight = true;
             sendAppearanceCommand(entity, "Face Left");
             beginAnimationCycle(entity, "walk");
         }
 
         if (event == "Begin Left") {
-            getDesiredAccel()[0] = -speed;
-            setFacingRight(false);
+            _physics->desiredAccel[0] = -speed;
+            _physics->facingRight = false;
             sendAppearanceCommand(entity, "Face Right");
             beginAnimationCycle(entity, "walk");
         }
 
         if (event == "End Right" || event == "End Left") {
-            getDesiredAccel()[0] = 0;
+            _physics->desiredAccel[0] = 0;
             beginAnimationCycle(entity, "idle");
         }
 
         if (event == "Jump") {
-            if (getJumpNumber() < 2) {
+            if (_physics->jumpNumber < 2) {
                 entity->getVel()[1] = jumpSpeed;
-                ++getJumping();
+                ++_physics->jumpNumber;
                 beginAnimationCycle(entity, "strut");
             }
         }
 
         if (event == "Reset Jumping") {
-            if(getJumpNumber() > 0) {
-                if(getDesiredAccel()[0] > 0) {
+            if(_physics->jumpNumber > 0) {
+                if(_physics->desiredAccel[0] > 0) {
                     sendAppearanceCommand(entity, "Face Left");
                     beginAnimationCycle(entity, "walk");
                 }
-                else if(getDesiredAccel()[0] < 0) {
+                else if(_physics->desiredAccel[0] < 0) {
                     sendAppearanceCommand(entity, "Face Right");
                     beginAnimationCycle(entity, "walk");
                 }
@@ -97,12 +101,16 @@ namespace pyr {
                     beginAnimationCycle(entity, "idle");
                 }
             }
-            setJumpNumber(0);
+            _physics->jumpNumber = 0;
         }
 
         if (event == "Attack") {
             beginAnimation(entity, "attack");
         }
+    }
+    
+    bool PlayerBehavior::facingRight() const {
+        return _physics->facingRight;
     }
 
 }

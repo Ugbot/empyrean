@@ -8,6 +8,13 @@
 
 namespace pyr {
 
+    Behavior::~Behavior() {
+        for (SlotMap::iterator i = _slots.begin(); i != _slots.end(); ++i) {
+            delete i->second;
+        }
+        _slots.clear();
+    }
+
     void Behavior::sendAppearanceCommand(Entity* entity, const std::string& command) {
         getAppearance(entity)->sendCommand(command);
     }

@@ -21,7 +21,7 @@ namespace pyr {
 
     void Configuration::load() {
         try {
-            ScopedPtr<XMLNode> root = XMLParser().parse(FILENAME);
+            ScopedPtr<XMLNode> root(XMLParser().parse(FILENAME));
             if (root.get()) {
                 for (size_t i = 0; i < root->getChildCount(); ++i) {
                     XMLNode* child = root->getChild(i);

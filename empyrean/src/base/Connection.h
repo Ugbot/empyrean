@@ -62,7 +62,7 @@ namespace pyr {
         }
 
         void processPacket(Connection* c, Packet* p) {
-            (_handler->*_method)(c, static_cast<PacketT*>(p));
+            (_handler->*_method)(c, checked_cast<PacketT*>(p));
         }
 
     private:

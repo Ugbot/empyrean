@@ -37,29 +37,42 @@ namespace pyr {
         ScopedPtr(T* p = 0) {
             _ptr = p;
         }
-        
+
+        ScopedPtr(ScopedPtr<T>& p) {
+            _ptr = p._ptr;
+            p._ptr = 0;
+        }
+
         ~ScopedPtr() {
             delete _ptr;
         }
-        
+
         ScopedDerivedSafe<T>* get() const {
             return reinterpret_cast<ScopedDerivedSafe<T>*>(_ptr);
         }
         
+        /**
+         * Stupid hack so we can assign temporaries (using .ref()) to nonconst
+         * references.
+         */
+        ScopedPtr<T>& ref() {
+            return *this;
+        }
+
         ScopedDerivedSafe<T>* operator->() const {
             PYR_ASSERT(get() != 0, "Null ScopedPtr dereferenced");
             return get();
         }
-    
+
         T& operator*() {
             PYR_ASSERT(get() != 0, "Null ScopedPtr dereferenced");
             return *get();
         }
-        
+
         operator ScopedDerivedSafe<T>*() const {
             return get();
         }
-        
+
         ScopedPtr<T>& operator=(ScopedPtr<T>& p) {
             if (_ptr != p._ptr) {
                 delete _ptr;
@@ -68,7 +81,7 @@ namespace pyr {
             }
             return *this;
         }
-        
+
         ScopedPtr<T>& operator=(T* p) {
             if (_ptr != p) {
                 delete _ptr;
@@ -76,7 +89,7 @@ namespace pyr {
             }
             return *this;
         }
-        
+
     private:
         T* _ptr;
     };

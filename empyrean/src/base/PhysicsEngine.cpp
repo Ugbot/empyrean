@@ -2,6 +2,7 @@
 #include "Collider.h"
 #include "Entity.h"
 #include "Map.h"
+#include "PhysicsBehaviorSlot.h"
 #include "PhysicsEngine.h"
 #include "PlayerBehavior.h"
 
@@ -32,24 +33,24 @@ namespace pyr {
     }
 
     int getJumpNumber(const Behavior* b) {
-        if (const PhysicsBehavior* p = dynamic_cast<const PhysicsBehavior*>(b)) {
-            return p->getJumpNumber();
+        if (PhysicsBehaviorSlot* p = b->getSlot<PhysicsBehaviorSlot>()) {
+            return p->jumpNumber;
         } else {
             return 0;
         }
     }
 
     float getDesiredGroundSpeed(const Behavior* b) {
-        if (const PhysicsBehavior* p = dynamic_cast<const PhysicsBehavior*>(b)) {
-            return p->getDesiredGroundSpeed();
+        if (PhysicsBehaviorSlot* p = b->getSlot<PhysicsBehaviorSlot>()) {
+            return p->desiredGroundSpeed;
         } else {
             return 0;
         }
     }
 
     Vec2f getDesiredAccel(const Behavior* b) {
-        if (const PhysicsBehavior* p = dynamic_cast<const PhysicsBehavior*>(b)) {
-            return p->getDesiredAccel();
+        if (PhysicsBehaviorSlot* p = b->getSlot<PhysicsBehaviorSlot>()) {
+            return p->desiredAccel;
         } else {
             return Vec2f();
         }
@@ -60,7 +61,7 @@ namespace pyr {
 
         Vec2f accel;
 
-        // If the entity is on the ground use these equations 
+        // If the entity is on the ground use these equations
         if (getJumpNumber(ent->getBehavior()) == 0) {
             // Determine vector with x' along ground angle, y' along ground normal without friction
             accel[0] = getBehaviorAccel(ent) - constants::GRAVITY*sin(ent->getAngleWithGround());
