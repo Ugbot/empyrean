@@ -21,6 +21,72 @@ namespace {
     PFNGLACTIVETEXTUREARBPROC glActiveTextureARB=0;
     PFNGLMULTITEXCOORD1FARBPROC glMultiTexCoord1fARB=0;
 
+    /*
+     * I like this algorithm a lot more, as it's much cleaner and more flexible.
+     * Sadly, it's also quite a bit slower than the other method.
+     * It's still here for reference, basically.
+     */
+    void renderMesh(Model& model) {
+
+        glEnableClientState(GL_VERTEX_ARRAY);
+        glEnableClientState(GL_NORMAL_ARRAY);
+        glDisable(GL_TEXTURE_2D);
+        glDisable(GL_BLEND);
+        glColor3f(1, 1, 1);
+
+        CalRenderer* r=model.getModel().getRenderer();
+        r->beginRendering();
+
+        static float ambient[]=  { 0.5f, 0.5f, 0.5f, 1.0f };
+        static float diffuse[]=  { 1, 1, 1, 1 };
+        static float light[]= { 0, 20, 10 };
+
+        glLightfv(GL_LIGHT1, GL_AMBIENT, ambient);
+        glLightfv(GL_LIGHT1, GL_DIFFUSE, diffuse);
+        glLightfv(GL_LIGHT1, GL_POSITION, light);
+        glEnable(GL_LIGHT1);        glEnable(GL_LIGHTING);
+
+        int nMeshes=r->getMeshCount();
+        for (int curmesh=0; curmesh<nMeshes; curmesh++)
+        {
+            int nSubs=r->getSubmeshCount(curmesh);
+
+            for (int cursub=0; cursub < nSubs; cursub++)
+            {
+                r->selectMeshSubmesh(curmesh, cursub);
+
+                static float verts[30000][3];
+                int nVerts=r->getVertices(&verts[0][0]);
+                glVertexPointer(3, GL_FLOAT, 0, &verts[0][0]);
+
+                static float normals[30000][3];
+                int nNormals=r->getNormals(&normals[0][0]);
+                glEnableClientState(GL_NORMAL_ARRAY);
+                glNormalPointer(GL_FLOAT, 0, &normals[0][0]);
+
+                if (r->getMapCount()) {
+                    static float texcoords[30000][2];
+                    int nTexcoords=r->getTextureCoordinates(0, &texcoords[0][0]);
+                    glEnable(GL_TEXTURE_2D);
+                    glBindTexture(GL_TEXTURE_2D, (GLuint)r->getMapUserData(0));
+                    glEnableClientState(GL_TEXTURE_COORD_ARRAY);
+                    glTexCoordPointer(2, GL_FLOAT, 0, &texcoords[0][0]);
+                }                
+
+                static int faces[50000][3];
+                int nFaces=r->getFaces(&faces[0][0]);
+
+                glDrawElements(GL_TRIANGLES, nFaces*3, GL_UNSIGNED_INT, &faces[0][0]);
+            }
+        }
+
+        r->endRendering();
+
+        glDisableClientState(GL_VERTEX_ARRAY);
+        glDisableClientState(GL_NORMAL_ARRAY);
+        glDisable(GL_LIGHTING);
+    }
+
     /** Main model rendering function
      *
      * The ideal to shoot for is to have this function completely bereft of OpenGL calls.
@@ -62,7 +128,7 @@ namespace {
 
                 if (r.getMapCount() && nTexcoords>0)
                 {
-                    Texture* tex=(Texture*)r.getMapUserData(0);
+                    u32 tex=(u32)r.getMapUserData(0);
                     shader.setTex(tex);
                 }
 
@@ -71,13 +137,13 @@ namespace {
 
                 // The only OpenGL call in this function.  Abstract into the Shader when it becomes beneficial to do so.
                 glBegin(GL_TRIANGLES);
-                for (int f=0; f<nFaces; f++)
+                for (int f = 0; f < nFaces; f++)
                 {
                     // Will the compiler unroll this?  Is it worth it?
                     for (int i=0; i<3; i++)
                     {
-                        int n=faces[f][i];
-                        shader.drawVert(normals[n],verts[n],texcoords[n]);
+                        int n = faces[f][i];
+                        shader.drawVert(verts[n], normals[n], texcoords[n]);
                     }
                 }
                 glEnd();
@@ -92,13 +158,22 @@ namespace {
     struct DefaultShade {
 
         inline void begin() {
+            static float ambient[]=  { 0.5f, 0.5f, 0.5f, 1.0f };
+            static float diffuse[]=  { 1,1,1,1 };
+            static float light[]= {1,0,0};
+
+            glLightfv(GL_LIGHT1,GL_AMBIENT,ambient);
+            glLightfv(GL_LIGHT1,GL_DIFFUSE,diffuse);
+            glLightfv(GL_LIGHT1,GL_POSITION,light);
+            glEnable(GL_LIGHT1);
+
             glEnable(GL_LIGHTING);
             glEnable(GL_TEXTURE_2D);
         }
 
         inline void end() {
             glDisable(GL_LIGHTING);
-            glEnable(GL_TEXTURE_2D);
+            glDisable(GL_TEXTURE_2D);
         }
 
         inline void drawVert(float* verts,float* normals,float* texcoords) {
@@ -107,10 +182,9 @@ namespace {
             glVertex3fv(verts);
         }
 
-        inline void setTex(Texture* tex)
+        inline void setTex(u32 tex)
         {
-            PYR_ASSERT(tex,"DefaultShade::tex must not be 0!");
-            tex->bind();
+            glBindTexture(GL_TEXTURE_2D,tex);
         }
     };
 
@@ -159,18 +233,16 @@ namespace {
         inline void drawVert(float* verts,float* normals,float* texcoords) {
             gmtl::Vec3f v(_mat * gmtl::Vec3f(normals[0],normals[1],normals[2]));
             float light = gmtl::dot(v,_lightVec);
-            
-            //if (light < 0) light = 0;
 
             glMultiTexCoord1fARB(GL_TEXTURE1_ARB, light);
             glTexCoord2fv(texcoords);
             glVertex3fv(verts);
         }
 
-        inline void setTex(Texture* tex)
+        inline void setTex(u32 tex)
         {
             PYR_ASSERT(tex,"CellShade::tex must not be 0!");
-            tex->bind();
+            glBindTexture(GL_TEXTURE_2D,tex);
         }
     };
 
@@ -195,6 +267,7 @@ namespace pyr {
 
     void DefaultRenderer::draw(Model& m) {
         renderMesh(m,DefaultShade());
+        //renderMesh(m);
     }
 
     CellShadeRenderer::ShadeTex::ShadeTex() {

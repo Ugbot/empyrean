@@ -16,9 +16,10 @@ namespace pyr {
     using std::string;
     using std::vector;
 
-    /**
-     * @fixme CalCoremodels need to have their destroy() method called before they are
-     *        deleted.
+    /*
+     * It's clear now that we do indeed need an abstraction for CalCoreModel.
+     * Firstly, CalCoreModel doesn't clean itself up in its destructor. (wtf)  We need to call its destroy() method.
+     * Second, we need to deallocate any textures we've loaded.  We can do neither without some minimal wrapping.
      */
     template<>
     class CachePolicy<CalCoreModel*> {
@@ -87,6 +88,55 @@ namespace pyr {
 
             for (u32 i = 0; i < materials.size(); i++)
                 model.loadCoreMaterial(path+materials[i]);
+
+            for (int i=0; i<model.getCoreMaterialCount(); i++) {
+                CalCoreMaterial& material=*model.getCoreMaterial(i);
+
+                for (int j=0; j<material.getMapCount(); j++) {
+                    string s=material.getMapFilename(j);
+                    u32 hTex=loadTexture(path+s); // for now, loading RAW textures.  TODO: replace with corona
+                    material.setMapUserData(j,(Cal::UserData)hTex);
+                }
+            }
+
+            for (int i=0; i<model.getCoreMaterialCount(); i++)
+            {
+                model.createCoreMaterialThread(i);
+                model.setCoreMaterialId(i,0,i);
+            }
+        }
+
+        //! Temporary RAW texture loader.
+        static u32 loadTexture(const string& fname) {
+            ifstream file;
+            file.open(fname.c_str(),std::ios::in | std::ios::binary);
+
+            int w,h,d;
+            file.read((char*)&w,4);
+            file.read((char*)&h,4);
+            file.read((char*)&d,4);
+
+            u8* pixels=new u8[w*h*d];
+            u8* p=pixels+(h-1)*w*d;
+
+            for (int i=0; i<h; i++) {
+                file.read((char*)p,w*d);
+                p-=w*d;
+            }
+
+            file.close();
+
+            u32 tex;
+            glPixelStorei(GL_UNPACK_ALIGNMENT,1);
+            glGenTextures(1,&tex);
+            glBindTexture(GL_TEXTURE_2D,tex);
+            glTexImage2D(GL_TEXTURE_2D,0,d==3?GL_RGB:GL_RGBA,w,h,0,d==3?GL_RGB:GL_RGBA,GL_UNSIGNED_BYTE,pixels);
+            glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_LINEAR);
+            glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_LINEAR);
+
+            delete[] pixels;
+
+            return tex;
         }
     };
 
@@ -105,7 +155,13 @@ namespace pyr {
     Model::Model(const string& fname) {
         _coreModel=ResourceManager::instance().get<CalCoreModel*>(fname);
         _model=new CalModel();
+
         _model->create(_coreModel);
+        for (int i=0; i<_coreModel->getCoreMeshCount(); i++)
+            _model->attachMesh(i);
+        _model->setMaterialSet(0);
+
+        _model->getMixer()->blendCycle(0,1,4.0f);
     }
 
     Model::~Model()

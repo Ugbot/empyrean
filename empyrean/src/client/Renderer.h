@@ -12,13 +12,13 @@ namespace pyr {
         virtual void draw(Model&)=0;
     };
 
-    class DefaultRenderer : Renderer
+    class DefaultRenderer : public Renderer
     {
     public:
         virtual void draw(Model& m);
     };
 
-    class CellShadeRenderer : Renderer
+    class CellShadeRenderer : public Renderer
     {
         struct ShadeTex {
             u32 handle;

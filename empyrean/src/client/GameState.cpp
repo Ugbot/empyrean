@@ -1,11 +1,13 @@
+
 #include <SDL_opengl.h>
+
 #include "GameState.h"
 #include "Input.h"
 #include "InputManager.h"
 #include "MenuState.h"
 #include "Profiler.h"
 #include "Model.h"
-
+#include "Renderer.h"
 
 namespace pyr {
 
@@ -17,11 +19,11 @@ namespace pyr {
         _inputRight = &_im.getInput("MouseRight");
         _inputQuit  = &_im.getInput("Escape");
         _rotation = 0;
-
     }
     
     void GameState::draw(float fade) {
         PYR_PROFILE_BLOCK("Render");
+
         glDisable(GL_TEXTURE_2D);
         glDisable(GL_BLEND);
         
@@ -51,6 +53,7 @@ namespace pyr {
             glColor3f(0, 0, 1); glVertex2f( 0.5f,  0.5f);
             glColor3f(1, 0, 1); glVertex2f( 0.5f, -0.5f);
             glEnd();
+
         glPopMatrix();
         
         for (unsigned i = 0; i < _entities.size(); ++i) {
@@ -62,6 +65,7 @@ namespace pyr {
     }
         
     void GameState::update(float dt) {
+        PYR_PROFILE_BLOCK("update");
         _im.update(dt);
         _rotation += _inputLeft->getValue()  * dt * 50;
         _rotation -= _inputRight->getValue() * dt * 50;

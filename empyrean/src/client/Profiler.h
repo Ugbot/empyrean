@@ -66,7 +66,9 @@ namespace pyr {
 
 };
 
-#define PYR_ENABLE_PROFILE
+#ifdef _DEBUG
+#   define PYR_ENABLE_PROFILE
+#endif
 
 #ifdef PYR_ENABLE_PROFILE
 #   define PYR_PROFILE_BLOCK(x) ::pyr::Profiler _profileitbaby(x)

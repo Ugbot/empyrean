@@ -52,14 +52,14 @@ namespace pyr {
     void Profiler::dump() {
         ofstream file("profile.html");
         
-        file << "<table><tr><th>Process</th><th>Time</th><th>Time+children</th></tr>" << endl;
+        file << "<table border=1><tr><th>Process</th><th>Time</th><th>%</th><th>Time+children</th><th>%</th></tr>" << endl;
         for (map<string, Process>::iterator i = _processes.begin(); 
             i!=_processes.end(); i++)
         {
-            file << "<tr><td>" << i->first << "</td><td>" << i->second.time << "</td><td>" 
-                << i->second.timePlusChildren << "</td></tr>" << endl;
+            file << "<tr><td>" << i->first << "</td><td>" << i->second.time << "</td><td>" << int(i->second.time*100/_totalTime) << "</td><td>" <<
+                i->second.timePlusChildren << "</td><td>" << int(i->second.timePlusChildren*100/_totalTime) << "</tr>" << endl;
         }
-        file << "<tr><td>Total</td><td colspan=2>" << _totalTime << "</td></tr></table>" << endl;
+        file << "<tr><td>Total</td><td colspan=3>" << _totalTime << "</td><td>100</td></tr></table>" << endl;
 
         file.close();
     }

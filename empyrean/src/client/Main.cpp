@@ -30,7 +30,7 @@ void run() {
         throwSDLError("SDL initialization failed");
     }
 
-    pyr::Profiler p("etc");
+    PYR_PROFILE_BLOCK("etc");
     
     atexit(quitSDL);
 
