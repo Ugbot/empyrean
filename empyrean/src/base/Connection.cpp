@@ -22,7 +22,7 @@ namespace pyr {
     }
     
     Connection::~Connection() {
-        for (unsigned i = 0; i < _unhandledPackets.size(); ++i) {
+        for (size_t i = 0; i < _unhandledPackets.size(); ++i) {
             delete _unhandledPackets[i];
         }
         for (HandlerMapItr i = _handlers.begin(); i != _handlers.end(); ++i) {

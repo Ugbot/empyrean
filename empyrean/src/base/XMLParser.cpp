@@ -32,7 +32,7 @@ namespace pyr {
         static const int BUFFER_SIZE = 4096;
         
         for (;;) {
-            char buffer[4096];
+            char buffer[BUFFER_SIZE];
             size_t read = fread(buffer, 1, BUFFER_SIZE, file);
             
             int status = XML_Parse(_parser, buffer, static_cast<int>(read), 0);

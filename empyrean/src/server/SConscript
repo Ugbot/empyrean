@@ -6,11 +6,11 @@ SOURCES = Split("""
     Database.cpp
     Game.cpp
     ListenerThread.cpp
-    Log.cpp
     LogEvent.cpp
     Main.cpp
     Server.cpp
     ServerFrame.cpp
+    ServerLog.cpp
     ServerThread.cpp
     World.cpp
 """)

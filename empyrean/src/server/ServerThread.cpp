@@ -2,8 +2,8 @@
 #include "Configuration.h"
 #include "Connection.h"
 #include "ListenerThread.h"
-#include "Log.h"
 #include "NSPRUtility.h"
+#include "ServerLog.h"
 #include "ServerThread.h"
 #include "World.h"
 

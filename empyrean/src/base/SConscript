@@ -6,8 +6,9 @@ SOURCES = Split("""
     Connection.cpp
     Error.cpp
     GLUtility.cpp
+    Log.cpp
+    Map.cpp
     MapElement.cpp
-    MapFile.cpp
     MapRenderer.cpp
     NSPRUtility.cpp
     PacketFactory.cpp

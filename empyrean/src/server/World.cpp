@@ -1,8 +1,8 @@
 #include "Connection.h"
 #include "Database.h"
 #include "Game.h"
-#include "Log.h"
 #include "PacketTypes.h"
+#include "ServerLog.h"
 #include "World.h"
 
 
