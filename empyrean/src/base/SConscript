@@ -7,6 +7,7 @@ SOURCES = Split("""
     Collider.cpp
     CollisionBox.cpp
     Connection.cpp
+    Entity.cpp
     Error.cpp
     GLUtility.cpp
     Log.cpp
