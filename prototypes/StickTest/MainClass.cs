@@ -81,39 +81,7 @@ namespace StickTest
             InitGL();
 
             model=Ms3dAscii.Load(s);
-        }
-
-        void SetupJoints()
-        {
-            for (int i=0; i<model.meshes.Length; i++)
-            {
-                Mesh mesh=model.meshes[i];
-
-                foreach (Vertex v in mesh.vertices)
-                {
-                    if (v.joint!=null)
-                    {
-                        Vector r=v.joint.Direction.Base;
-
-                        // AHA.  Revelation.
-                        // I need to inverse multiply these vertices by the parent joints' matrices too!
-                        // TODO: find some time to actually do it. -_-
-                        Vector vec=new Vector(
-                            v.x-v.joint.Position.Base.x,
-                            v.y-v.joint.Position.Base.y,
-                            v.z-v.joint.Position.Base.z
-                            );
-
-                        Matrix matrix=Matrix.RotationMatrix(r.x,r.y,r.z);
-                        matrix.Transpose();
-                        vec=matrix * vec;
-
-                        v.x=vec.x;
-                        v.y=vec.y;
-                        v.z=vec.z;
-                    }
-                }
-            }
+            SetupJoint(model.rootbone,Matrix.identity);
 
             transformedvertices=new Vector[model.meshes.Length][];
             for (int i=0; i<transformedvertices.Length; i++)
@@ -125,6 +93,32 @@ namespace StickTest
 
                     transformedvertices[i][j]=new Vector(v.x,v.y,v.z);
                 }
+
+        }
+
+        void SetupJoint(Joint joint,Matrix parentm)
+        {
+            Matrix m=
+                parentm *
+                Matrix.TranslationMatrix(-joint.Position.Base.x,-joint.Position.Base.y,-joint.Position.Base.z) *
+                Matrix.RotationMatrix(joint.Direction.Base.x,joint.Direction.Base.y,joint.Direction.Base.z).Transpose();
+                
+            foreach (Mesh mesh in model.meshes)
+            {
+                foreach (Vertex vert in mesh.vertices)
+                {
+                    if (vert.joint==joint)
+                    {
+                        Vector v=m * new Vector(vert.x,vert.y,vert.z);
+                        vert.x=v.x;
+                        vert.y=v.y;
+                        vert.z=v.z;
+                    }
+                }
+            }
+
+            foreach (Joint j in joint.children)
+                SetupJoint(j,m);
         }
 
         void Draw(Mesh m,int idx)
@@ -160,13 +154,11 @@ namespace StickTest
                 return;
 
             Matrix m=
-                //Matrix.identity;
-                parentm *
                 Matrix.RotationMatrix(j.Direction.Base.x,j.Direction.Base.y,j.Direction.Base.z) *
                 Matrix.TranslationMatrix(j.Position.Base.x,j.Position.Base.y,j.Position.Base.z) *
                 Matrix.RotationMatrix(j.Direction.Current.x, j.Direction.Current.y, j.Direction.Current.z) *
-                Matrix.TranslationMatrix(j.Position.Current.x, j.Position.Current.y, j.Position.Current.z);
-
+                Matrix.TranslationMatrix(j.Position.Current.x, j.Position.Current.y, j.Position.Current.z) *
+                parentm;
 
             for (int i=0; i<model.meshes.Length; i++)
             {
@@ -218,7 +210,7 @@ namespace StickTest
                         Console.WriteLine(j.Direction);
                 }
                 while (time>30) time-=30;
-                //model.Animate(inc);
+                model.Animate(inc);
                 DeformJoint(model.rootbone,Matrix.identity);
 
                 Render();

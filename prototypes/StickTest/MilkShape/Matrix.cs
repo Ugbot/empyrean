@@ -54,7 +54,7 @@ namespace StickTest.MilkShape
             Copy(m.v);
         }
 
-        public void Transpose()
+        public Matrix Transpose()
         {
             for (int y=0; y<height; y++)
                 for (int x=y+1; x<width; x++)
@@ -63,6 +63,8 @@ namespace StickTest.MilkShape
                     this[y,x]=this[x,y];
                     this[x,y]=d;
                 }
+
+            return this;
         }
 
         public double this[int row,int col]
