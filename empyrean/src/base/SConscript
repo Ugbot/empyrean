@@ -46,6 +46,8 @@ SOURCES = Split("""
     XMLParser.cpp
 """)
 
-env = env.Copy(tools = [TOOLS[n] for n in
-                        ['NSPR', 'Corona', 'Boost', 'Python', 'OpenGL']])
+
+env = env.Copy(tools=['nspr', 'corona', 'boostpython', 'python', 'opengl'],
+               toolpath=[Dir('#/toolspec').abspath])
+        
 env.Library('base', SOURCES)

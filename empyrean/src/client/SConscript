@@ -1,4 +1,4 @@
-Import('env TOOLS')
+Import('*')
 
 SOURCES = Split("""
     AppearanceFactory.cpp
@@ -41,9 +41,10 @@ SOURCES = Split("""
     UIState.cpp
 """)
 
-env = env.Copy()
-for t in Split('PyrBase Boost Python PHUI Cal3D Audiere Corona Expat GLText NSPR OpenGL SDL'):
-    TOOLS[t](env)
+env = env.Copy(tools=['pyr_base', 'boostpython', 'python', 'phui', 'cal3d',
+                      'audiere', 'corona', 'expat', 'gltext', 'nspr',
+                      'opengl', 'sdl'],
+               toolpath=[Dir('#/toolspec').abspath])
 
 client = env.Program('#/build/client', SOURCES)
 Alias('client', client)

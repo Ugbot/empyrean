@@ -1,4 +1,4 @@
-Import('env TOOLS')
+Import('*')
 
 SOURCES = Split("""
     CreateMapElementCommand.cpp
@@ -19,9 +19,8 @@ SOURCES = Split("""
     UpdateMapElementCommand.cpp
 """)
 
-env = env.Copy()
-for t in Split('PyrBase NSPR Corona wxWindows OpenGL Expat'):
-    TOOLS[t](env)
+env = env.Copy(tools=['pyr_base', 'nspr', 'corona', 'wx', 'opengl', 'expat'],
+               toolpath=[Dir('#/toolspec').abspath])
 
 if env['PLATFORM'] == 'cygwin':
     def CygwinRES(env):

@@ -1,4 +1,4 @@
-Import('env TOOLS')
+Import('*')
 
 SOURCES = Split("""
     BoxLayout.cpp
@@ -19,7 +19,6 @@ SOURCES = Split("""
     Window.cpp
 """)
 
-env = env.Copy()
-for t in ['PyrBase', 'SDL', 'NSPR', 'GLText']:
-    TOOLS[t](env)
+env = env.Copy(tools=['pyr_base', 'sdl', 'nspr', 'gltext'],
+               toolpath=[Dir('#/toolspec').abspath])
 env.Library('phui', SOURCES)

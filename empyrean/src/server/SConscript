@@ -1,4 +1,4 @@
-Import('env TOOLS')
+Import('*')
 
 SOURCES = Split("""
     Account.cpp
@@ -22,9 +22,9 @@ SOURCES = Split("""
     ServerThread.cpp
 """)
 
-env = env.Copy()
-for t in Split('PyrBase Boost Python Expat NSPR Corona wxWindows'):
-    TOOLS[t](env)
+env = env.Copy(tools=['pyr_base', 'boostpython', 'python', 'expat', 'nspr',
+                      'corona', 'wx'],
+               toolpath=[Dir('#/toolspec').abspath])
 
 server = env.Program('#/build/server', SOURCES)
 Alias('server', server)
