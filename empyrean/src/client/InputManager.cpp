@@ -110,7 +110,7 @@ namespace pyr {
             mapKey("Up",         SDLK_UP);
             mapKey("Down",       SDLK_DOWN);
             mapKey("Left",       SDLK_LEFT);
-            mapKey("Right",      SDLK_RIGHT);
+            mapKey("Right",      SDLK_RIGHT);            mapKey("Caps Lock",  SDLK_CAPSLOCK);            mapKey("Num Lock",  SDLK_NUMLOCK);            mapKey("Scroll Lock",  SDLK_SCROLLOCK);
         }
         
     private:        
