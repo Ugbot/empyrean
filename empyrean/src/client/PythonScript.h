@@ -23,8 +23,6 @@ namespace pyr {
     private:
         void call(const std::string& name, boost::python::object o);
 
-        // This should probably be cached in a code object.
-        std::string _contents;
         boost::python::handle<> _module;
     };
 

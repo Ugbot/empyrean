@@ -1,3 +1,10 @@
+import __builtin__
+import pyr
+import sys
+import os
+
+pyr.log(str(len([])) + sys.version + os.name + str(os))
+
 def prepare(scene):
     images = [
         'warrior1.jpg',

@@ -24,29 +24,20 @@ namespace pyr {
     }
 
     PythonScript::PythonScript(const std::string& filename) {
-        std::string line;
+        std::string contents, line;
         std::ifstream file(filename.c_str());
         while (getline(file, line)) {
-            _contents += line + "\n";
+            contents += line + "\n";
         }
 
         PYR_BEGIN_PYTHON_CODE()
-            _module = the<PythonInterpreter>().generateModule();
+            _module = the<PythonInterpreter>().createModule(contents, filename);
         PYR_END_PYTHON_CODE()
     }
 
     void PythonScript::call(const std::string& name, object o) {
         PYR_BEGIN_PYTHON_CODE()
-
-        handle<> main_namespace(borrowed( PyModule_GetDict(_module.get()) ));
-        (handle<>( PyRun_String(
-            _contents.c_str(),
-            Py_file_input,
-            main_namespace.get(),
-            main_namespace.get()) ));
-
-        object(_module).attr(name.c_str())(o);
-
+            object(_module).attr(name.c_str())(o);
         PYR_END_PYTHON_CODE()
     }
 

@@ -3,6 +3,8 @@
 
 #if defined(WIN32)
 #include <windows.h>
+#include <io.h>
+#include <fcntl.h>
 #endif
 
 #include <iostream>
@@ -28,6 +30,12 @@ namespace pyr {
     void Log::open(const std::string& filename) {
 #if defined(WIN32) && defined(PYR_LOG_TO_STDOUT)
         AllocConsole();
+
+        // See http://www.flipcode.com/cgi-bin/msg.cgi?showThread=00003996&forum=general&id=-1
+        FILE* out = _fdopen(_open_osfhandle((intptr_t)GetStdHandle(STD_OUTPUT_HANDLE), _O_TEXT), "w");
+        FILE* err = _fdopen(_open_osfhandle((intptr_t)GetStdHandle(STD_ERROR_HANDLE),  _O_TEXT), "w");
+        if (out) *stdout = *out;
+        if (err) *stderr = *err;
 #endif
 
         if (_file.is_open()) {
@@ -74,14 +82,7 @@ namespace pyr {
         (*_stream) << message << std::endl;
 
 #ifdef PYR_LOG_TO_STDOUT
-#ifdef WIN32
-        DWORD l;
-        WriteFile(GetStdHandle(STD_OUTPUT_HANDLE), message.c_str(),
-                  static_cast<DWORD>(message.length()), &l, 0);
-        WriteFile(GetStdHandle(STD_OUTPUT_HANDLE), "\n", 1, &l, 0);
-#else
         std::cout << message << std::endl;
-#endif
 #endif
 
 #if defined(WIN32) && defined(PYR_LOG_TO_WIN32_DEBUGGER)

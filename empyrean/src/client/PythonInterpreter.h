@@ -56,7 +56,8 @@ namespace pyr {
     
     public:
         /// Generates a unique module in which to run scripts.
-        boost::python::handle<> generateModule();
+        boost::python::handle<> createModule(const std::string& contents,
+                                             const std::string& filename);
 
     private:
         Zeroed<int> _moduleCount;

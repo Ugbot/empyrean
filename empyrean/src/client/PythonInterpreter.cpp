@@ -21,11 +21,17 @@ namespace pyr {
         Py_Finalize();
     }
 
-    handle<> PythonInterpreter::generateModule() {
+    handle<> PythonInterpreter::createModule(const std::string& contents, const std::string& filename) {
         PYR_BEGIN_PYTHON_CODE()
 
+        handle<> code( Py_CompileString(
+            contents.c_str(), filename.c_str(), Py_file_input) );
+
         std::string name = va("EmpyreanScript%d", _moduleCount++);
-        handle<> module( PyModule_New(const_cast<char*>(name.c_str())) );
+        handle<> module( PyImport_ExecCodeModule(
+            const_cast<char*>(name.c_str()),
+            code.get()) );
+
         return module;
 
         PYR_END_PYTHON_CODE()
