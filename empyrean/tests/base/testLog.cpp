@@ -3,13 +3,14 @@ using namespace std;
 using namespace pyr;
 
 
-int main() {
-    Logger& root = Logger::get("");
-    Logger& fooLogger = Logger::get("foo");
-    Logger& barLogger = Logger::get("bar");
-    Logger& fooBarLogger = Logger::get("foo.bar");
-    Logger& barFooLogger = Logger::get("bar.foo");
+Logger& root = Logger::get("");
+Logger& fooLogger = Logger::get("foo");
+Logger& barLogger = Logger::get("bar");
+Logger& fooBarLogger = Logger::get("foo.bar");
+Logger& barFooLogger = Logger::get("bar.foo");
     
+
+int main() {
     root.setLevel(ERROR);
     fooLogger.setLevel(VERBOSE);
     

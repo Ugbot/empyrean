@@ -20,9 +20,6 @@
 
 namespace pyr {
 
-    //PYR_DEFINE_RUNTIME_ERROR(LogFileOpenFailure);
-    
-    
     enum LogLevel {
         ALL,     // Lowest rank, turns all levels on.
         VERBOSE,
@@ -83,8 +80,6 @@ namespace pyr {
         LogLevel _actualLevel;  ///< Propagated by parents, used for the actual test.
         WriterSet _writers;
                 
-        static Logger _root;
-    
         // Noncopyable.
         Logger(const Logger&);
         Logger& operator=(const Logger&);
