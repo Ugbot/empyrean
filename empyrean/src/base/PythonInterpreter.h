@@ -35,28 +35,13 @@ namespace pyr {
         ~PythonInterpreter();
 
     public:
-        /**
-         * Called from initpyr() in PythonBindings.cpp.  Don't call it
-         * yourself.
-         */
-        void initializeSubModules();
-
-        /// This must be called before createModule.  I know, it sucks.  :(
-        void addSubModule(const std::string& name, void (*init)());
+        void addSubModule(void (*init)());
 
         /// Generates a unique module in which to run scripts.
         boost::python::handle<> createModule(const std::string& contents,
                                              const std::string& filename);
 
     private:
-        void initializeModules();
-
-        Inited<bool, false> _initialized;
-
-        typedef void (*initfn)();
-        typedef std::pair<std::string, initfn> SubModuleDesc;
-        std::vector<SubModuleDesc> _subModules;
-
         Zeroed<int> _moduleCount;
     };
 

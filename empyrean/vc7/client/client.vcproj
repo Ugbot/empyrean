@@ -226,25 +226,16 @@
 				RelativePath="..\..\src\client\Player.h">
 			</File>
 			<File
-				RelativePath="..\..\src\client\PythonBindings.cpp">
+				RelativePath="..\..\src\client\PythonClientBindings.cpp">
+			</File>
+			<File
+				RelativePath="..\..\src\client\PythonClientBindings.h">
 			</File>
 			<File
 				RelativePath="..\..\src\client\PythonCutScene.cpp">
 			</File>
 			<File
-				RelativePath="..\..\src\client\PythonInterpreter.cpp">
-			</File>
-			<File
-				RelativePath="..\..\src\client\PythonInterpreter.h">
-			</File>
-			<File
-				RelativePath="..\..\src\client\PythonLog.cpp">
-			</File>
-			<File
-				RelativePath="..\..\src\client\PythonScript.cpp">
-			</File>
-			<File
-				RelativePath="..\..\src\client\PythonScript.h">
+				RelativePath="..\..\src\client\PythonCutScene.h">
 			</File>
 			<File
 				RelativePath="..\..\src\client\Renderer.cpp">

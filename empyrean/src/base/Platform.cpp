@@ -10,12 +10,12 @@
 #include <windows.h>
 
 bool pyr::setCurrentDirectory(const std::string& path) {
-    return SetCurrentDirectory(path) != FALSE;
+    return SetCurrentDirectory(path.c_str()) != FALSE;
 }
 
 std::string pyr::getCurrentDirectory() {
     char buffer[MAX_PATH + 1];
-    if (GetCurrentDirectory(buffer, MAX_PATH)) {
+    if (GetCurrentDirectory(MAX_PATH, buffer)) {
         return buffer;
     } else {
         return "";
@@ -33,7 +33,7 @@ bool pyr::setCurrentDirectory(const std::string& dir) {
 std::string pyr::getCurrentDirectory() {
     char buffer[2048];
     char* rv = getcwd(buffer, sizeof(buffer));
-    return (rv ? rv : 0);
+    return (rv ? rv : "");
 }
 
 #endif

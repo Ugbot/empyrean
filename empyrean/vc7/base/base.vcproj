@@ -29,7 +29,7 @@
 				UsePrecompiledHeader="0"
 				AssemblerOutput="4"
 				WarningLevel="3"
-				Detect64BitPortabilityProblems="TRUE"
+				Detect64BitPortabilityProblems="FALSE"
 				DebugInformationFormat="4"/>
 			<Tool
 				Name="VCCustomBuildTool"/>
@@ -76,7 +76,7 @@
 				UsePrecompiledHeader="0"
 				AssemblerOutput="4"
 				WarningLevel="3"
-				Detect64BitPortabilityProblems="TRUE"
+				Detect64BitPortabilityProblems="FALSE"
 				DebugInformationFormat="3"/>
 			<Tool
 				Name="VCCustomBuildTool"/>
@@ -324,6 +324,30 @@
 			</File>
 			<File
 				RelativePath="..\..\src\base\Profiler.h">
+			</File>
+			<File
+				RelativePath="..\..\src\base\PythonBindings.cpp">
+			</File>
+			<File
+				RelativePath="..\..\src\base\PythonBindings.h">
+			</File>
+			<File
+				RelativePath="..\..\src\base\PythonInterpreter.cpp">
+			</File>
+			<File
+				RelativePath="..\..\src\base\PythonInterpreter.h">
+			</File>
+			<File
+				RelativePath="..\..\src\base\PythonLog.cpp">
+			</File>
+			<File
+				RelativePath="..\..\src\base\PythonLog.h">
+			</File>
+			<File
+				RelativePath="..\..\src\base\PythonScript.cpp">
+			</File>
+			<File
+				RelativePath="..\..\src\base\PythonScript.h">
 			</File>
 			<File
 				RelativePath="..\..\src\base\ReaderThread.cpp">

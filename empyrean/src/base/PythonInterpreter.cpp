@@ -36,34 +36,21 @@ namespace pyr {
 
     PythonInterpreter::PythonInterpreter() {
         Py_Initialize();
+        initpyr();
     }
 
     PythonInterpreter::~PythonInterpreter() {
         Py_Finalize();
     }
 
-    void PythonInterpreter::initializeSubModules() {
-        for (size_t i = 0; i < _subModules.size(); ++i) {
-            const std::string& name = _subModules[i].first;
-            initfn init = _subModules[i].second;
-
-            char* cname = const_cast<char*>(name.c_str());
-            handle<> inner_module(PyModule_New(cname));
-            scope().attr(name.c_str()) = inner_module;
-            scope module = object(inner_module);
-
-            init();
-        }
-    }
-
-    void PythonInterpreter::addSubModule(const std::string& name, void (*init)()) {
-        _subModules.push_back(SubModuleDesc(name, init));
+    void PythonInterpreter::addSubModule(void (*init)()) {
+        // We don't have to anything fancier than just call the module
+        // initialization function at this time.
+        init();
     }
 
     handle<> PythonInterpreter::createModule(const std::string& contents, const std::string& filename) {
         PYR_BEGIN_PYTHON_CODE()
-
-        initializeModules();
 
         handle<> code( Py_CompileString(
             const_cast<char*>(contents.c_str()),
@@ -80,16 +67,6 @@ namespace pyr {
         PYR_END_PYTHON_CODE()
 
         throw PythonError("generateModule() failed");
-    }
-
-    void PythonInterpreter::initializeModules() {
-        if (!_initialized) {
-            // Register pyr module.  This calls back into this singleton, which
-            // registers submodules in the 'pyr' scope.
-            initpyr();
-
-            _initialized = true;
-        }
     }
 
 }

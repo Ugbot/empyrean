@@ -168,8 +168,8 @@ namespace pyr {
                       << "  That's okay, using defaults.";
         }
 
-        // Register pyr.client module with the PythonInterpreter.
-        the<PythonInterpreter>().addSubModule("client", initpyr_client);
+        // Register the pyr_client module with the PythonInterpreter.
+        the<PythonInterpreter>().addSubModule(initpyr_client);
 
         PYR_LOG() << "Initializing SDL...";
         initializeSDL(SDL_INIT_NOPARACHUTE | SDL_INIT_VIDEO | SDL_INIT_TIMER | SDL_INIT_JOYSTICK);
