@@ -118,6 +118,9 @@
 				RelativePath="..\..\src\client\Application.h">
 			</File>
 			<File
+				RelativePath="..\..\src\client\Color.h">
+			</File>
+			<File
 				RelativePath="..\..\src\client\Debug.h">
 			</File>
 			<File
@@ -203,6 +206,9 @@
 			</File>
 			<File
 				RelativePath="..\..\src\client\Texture.h">
+			</File>
+			<File
+				RelativePath="..\..\src\client\Types.h">
 			</File>
 		</Filter>
 	</Files>

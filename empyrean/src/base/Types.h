@@ -1,3 +1,6 @@
+/**
+ * This file contains primitive sized types.
+ */
 #ifndef PYR_TYPES_H
 #define PYR_TYPES_H
 
@@ -19,17 +22,6 @@ namespace pyr {
     typedef Sint32 s32;
     typedef Sint64 s64;
 
-    union Color {
-        struct {
-            float r,g,b,a;
-        };
-
-        float c[4];
-
-        Color() : r(0),g(0),b(0),a(0) {}
-        Color(float R,float G,float B,float A)
-            : r(R),g(G),b(B),a(A) {}
-    };
 }
 
 

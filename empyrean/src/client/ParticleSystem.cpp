@@ -5,13 +5,19 @@
 #include "Texture.h"
 
 namespace pyr {
-    ParticleSystem::Particle::Particle(const gmtl::Vec2f& p,
-                       const gmtl::Vec2f& v,
-                       const gmtl::Vec2f& g,
-                       float l,
-                       const Color& c)
-                       : _pos(p), _vel(v), _gravity(g), _lifetime(l), _color(c) {
-        _fadeThing = (1.0f / _lifetime) * _color.a;
+    ParticleSystem::Particle::Particle(
+        const gmtl::Vec2f& pos,
+        const gmtl::Vec2f& vel,
+        const gmtl::Vec2f& gravity,
+        float lifetime,
+        const Color& color)
+        : _pos(pos)
+        , _vel(vel)
+        , _gravity(gravity)
+        , _lifetime(lifetime)
+        , _color(color)
+    {
+        _colorFade = (1.0f / _lifetime) * _color;
     }
 
     void ParticleSystem::Particle::update(float dt) {
@@ -19,11 +25,15 @@ namespace pyr {
 
         _pos += _vel * dt;
         _vel += _gravity * dt;
-        _color.a -= _fadeThing * dt;
+        _color -= _colorFade * dt;
     }
 
     ParticleSystem::ParticleSystem() 
-        : _gravity(0,1), _period(0.05f), _spawnCount(0), _particleTex(Texture::create("images/particle.png")) {
+        : _gravity(0, 1)
+        , _period(0.05f)
+        , _spawnCount(0)
+        , _particleTex(Texture::create("images/particle.png"))
+    {
     }
 
     void ParticleSystem::update(float dt) {
@@ -49,17 +59,15 @@ namespace pyr {
             _spawnCount -= _period;
         }
 
-        if (_fadeTime != 0)
-        {
+        if (_fadeTime != 0) {
             float f = (_fadeTime > dt) ? dt : _fadeTime;
-            for (int i=0; i<4; i++)
-                _curColor.c[i]+=_colorFade.c[i]*f;
-            _fadeTime-=f;
+            _curColor += _colorFade * f;
+            _fadeTime -= f;
         }
     }
 
     void ParticleSystem::draw() {
-        static const float particleSize=5;
+        static const float particleSize = 5;
 
         glEnable(GL_TEXTURE_2D);
         glEnable(GL_COLOR_MATERIAL);
@@ -68,15 +76,12 @@ namespace pyr {
 
         glBegin(GL_QUADS);
         for (ParticleList::iterator iter = _particles.begin(); iter != _particles.end(); iter++) {
-            float x1 = iter->_pos[0];
-            float y1 = iter->_pos[1];
-            float x2 = x1 + particleSize;
-            float y2 = y1 + particleSize;
+            const float x1 = iter->_pos[0] - particleSize;
+            const float y1 = iter->_pos[1] - particleSize;
+            const float x2 = x1 + particleSize;
+            const float y2 = y1 + particleSize;
 
-            x1 -= particleSize;
-            y1 -= particleSize;
-
-            glColor4fv(iter->_color.c);
+            glColor4fv(iter->_color.getData());
 
             glTexCoord2f(0, 0);  glVertex2f(x1, y1);
             glTexCoord2f(1, 0);  glVertex2f(x2, y1);
@@ -84,15 +89,15 @@ namespace pyr {
             glTexCoord2f(0, 1);  glVertex2f(x1, y2);
         }
         glEnd();
-        glColor3f(1,1,1);
+        glColor3f(1, 1, 1);
     }
 
     const gmtl::Vec2f& ParticleSystem::getGravity() const {
         return _gravity;
     }
 
-    void ParticleSystem::setGravity(const gmtl::Vec2f& v) {
-        _gravity = v;
+    void ParticleSystem::setGravity(const gmtl::Vec2f& gravity) {
+        _gravity = gravity;
     }
 
     const Color& ParticleSystem::getColor() const {
@@ -104,12 +109,9 @@ namespace pyr {
         _fadeTime = 0;
     }
 
-    void ParticleSystem::fadeToColor(const Color& c,float time) {
-        for (int i=0; i<4; i++) {
-            _colorFade.c[i] = (c.c[i] - _curColor.c[i]) / time;
-        }
-
-        _fadeTime=time;
+    void ParticleSystem::fadeToColor(const Color& c, float time) {
+        _colorFade = (c - _curColor) / time;
+        _fadeTime = time;
     }
 
     float ParticleSystem::getPeriod() const {
@@ -117,7 +119,8 @@ namespace pyr {
     }
 
     void ParticleSystem::setPeriod(float p) {
-        if (p > 0)
-            _period=p;
+        if (p > 0) {
+            _period = p;
+        }
     }
 }
