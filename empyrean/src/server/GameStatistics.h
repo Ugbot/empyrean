@@ -2,15 +2,15 @@
 #define PYR_GAME_STATISTICS_H
 
 #include <string>
+#include "ArmorPool.h"
 #include "RefCounted.h"
 #include "RefPtr.h"
 #include "Utility.h"
+#include "WeaponPool.h"
 
 namespace pyr {
 
-   class Weapon;
-   class Armor;
-   class StatisticsModifier;
+    class StatisticsModifier;
 
     class GameStatistics : public RefCounted {
     protected:
@@ -91,9 +91,9 @@ namespace pyr {
         Zeroed<float> _blockSkill;
 
         // Equipment
-        std::vector<Weapon*> _weapons;
+        std::vector<WeaponPtr> _weapons;
         Zeroed<int> _equippedWeapon;
-        std::vector<Armor*> _armors;
+        std::vector<ArmorPtr> _armors;
         Zeroed<int> _equippedArmor;
         //vector<Item*> _items;
         //vector<Accessories*> _accessories;

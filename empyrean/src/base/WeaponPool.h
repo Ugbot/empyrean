@@ -2,17 +2,33 @@
 #define WEAPON_POOL_H
 
 #include <map>
+#include "RefCounted.h"
+#include "RefPtr.h"
 #include "Singleton.h"
 
 namespace pyr {
 
-    class Weapon {
+    class Weapon : public RefCounted {
+    protected:
+        ~Weapon() { }
     public:
-        Weapon() {};
-        ~Weapon() {};
+        Weapon() {
+        }
 
-        void copy(Weapon& w);
-        void copy(Weapon* w) { copy(*w); }
+        Weapon(const Weapon& rhs) {
+            *this = rhs;
+        }
+
+        Weapon& operator=(const Weapon& rhs) {
+            // Can't call RefCounted::operator= because it's private.
+            _name       = rhs._name;
+            _modelName  = rhs._modelName;
+            _damageMin  = rhs._damageMin;
+            _damageMax  = rhs._damageMax;
+            _damageMult = rhs._damageMult;
+            _accuracy   = rhs._accuracy;
+            return *this;
+        }
 
         std::string _name;
         std::string _modelName;
@@ -21,20 +37,23 @@ namespace pyr {
         Zeroed<int> _damageMult;
         Zeroed<int> _accuracy;
     };
+    typedef RefPtr<Weapon> WeaponPtr;
 
     class WeaponPool {
         PYR_DECLARE_SINGLETON(WeaponPool);
 
-    public:
-        Weapon* getWeapon(std::string name);
-        void switchWeapon(Weapon* weapon, std::string name);
-        std::string getAllWeaponNames();
-        
-    private:
         WeaponPool();
-        ~WeaponPool() {};
 
-        std::map<std::string,Weapon> _weapons;
+    public:
+        WeaponPtr getWeapon(std::string name);
+        void switchWeapon(WeaponPtr weapon, std::string name);
+        std::string getAllWeaponNames();
+
+    private:
+        void addWeapon(const char* name, int minDmg, int maxDmg, int dmgMult, int acc, const char* file);
+
+        typedef std::map<std::string, WeaponPtr> WeaponMap;
+        WeaponMap _weapons;
     };
 
 }

@@ -9,23 +9,23 @@ namespace pyr {
 
     void GameStatistics::loadTestMonster() {
         _currEther = 0; 
-        _maxEther = 0; 
+        _maxEther = 0;
         _currVitality = 50; 
         _maxVitality = 50; 
-        Armor* armor = the<ArmorPool>().getArmor("Scales");
+        ArmorPtr armor = the<ArmorPool>().getArmor("Scales");
         _armors.push_back(armor);
-        Weapon* weapon = the<WeaponPool>().getWeapon("SmallClaws");
+        WeaponPtr weapon = the<WeaponPool>().getWeapon("SmallClaws");
         _weapons.push_back(weapon);
     }
 
     void GameStatistics::loadTestCharacter() {
-        _currEther = 50; 
-        _maxEther = 50; 
-        _currVitality = 100; 
-        _maxVitality = 100; 
-        Armor* armor = the<ArmorPool>().getArmor("Leather");
+        _currEther = 50;
+        _maxEther = 50;
+        _currVitality = 100;
+        _maxVitality = 100;
+        ArmorPtr armor = the<ArmorPool>().getArmor("Leather");
         _armors.push_back(armor);
-        Weapon* weapon = the<WeaponPool>().getWeapon("Short Sword");
+        WeaponPtr weapon = the<WeaponPool>().getWeapon("Short Sword");
         _weapons.push_back(weapon);
         weapon = the<WeaponPool>().getWeapon("Pistol");
         _weapons.push_back(weapon);

@@ -40,8 +40,8 @@ namespace pyr {
         virtual ~RefCounted() {
             PYR_ASSERT(_refCount == 0, "_refCount nonzero in destructor");
         }
-        
-    private:
+
+    private:  // Only RefPtr is allowed to do this.
         /**
          * Add a reference to the internal reference count.
          */
@@ -60,6 +60,12 @@ namespace pyr {
                 delete this;
             }
         }
+
+    private:
+        // Copying a RefCounted object must be done manually.  Otherwise
+        // the refCount gets copied too, and that's Bad.
+        RefCounted(const RefCounted& rhs);
+        RefCounted& operator=(const RefCounted& rhs);
         
     private:
         Zeroed<int> _refCount;
