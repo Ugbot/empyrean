@@ -67,6 +67,9 @@ std::string pyr::getStartDirectory(int /*argc*/, char* /*argv*/[]) {
 #include <string.h>
 #include <unistd.h>
 
+// Another way to implement this:
+// http://www.flipcode.org/cgi-bin/fcarticles.cgi?show=4&id=64160
+
 std::string pyr::getStartDirectory(int argc, char* argv[]) {
     if (argc < 1) {
         return "";

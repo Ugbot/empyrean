@@ -32,6 +32,7 @@ namespace pyr {
             PYR_LOG(_logger, WARN) << "Could not open music file: " << filename;
             throw std::runtime_error("Could not open music file: " + filename);
         }
+		_music->setRepeat(true);
         _music->play();
     }
 
