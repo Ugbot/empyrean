@@ -154,15 +154,25 @@ namespace pyr {
             }
         }
 
+        static u32 read32_le(u8* buf) {
+            return
+                (buf[3] << 24) +
+                (buf[2] << 16) +
+                (buf[1] << 8) +
+                buf[0];
+        }
+
         //! Temporary RAW texture loader.
         static u32 loadTexture(const string& fname) {
             ifstream file;
             file.open(fname.c_str(), std::ios::in | std::ios::binary);
 
-            int w, h, d;
-            file.read((char*)&w, 4);
-            file.read((char*)&h, 4);
-            file.read((char*)&d, 4);
+            u8 buf[12];
+            file.read((char*)buf, 12);
+
+            int w = (int)read32_le(buf);
+            int h = (int)read32_le(buf + 4);
+            int d = (int)read32_le(buf + 8);
 
             ScopedArray<u8> pixels(new u8[w * h * d]);
             u8* p=pixels.get() + (h - 1) * w * d;
