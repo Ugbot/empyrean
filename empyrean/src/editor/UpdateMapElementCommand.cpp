@@ -7,17 +7,19 @@ namespace pyr {
     UpdateMapElementCommand::UpdateMapElementCommand(MapElement* element, gmtl::Vec2f& newPos)
         : _element(element)
         , _newPos(newPos)
-    {}
-
-    void UpdateMapElementCommand::perform(CommandContext* context) {
-        _oldPos = _element->pos;
-        _element->pos = _newPos;
-        context->mapView->Refresh();
+    {
+        PYR_ASSERT(element, "UpdateMapElementCommand without an element");
     }
 
-    void UpdateMapElementCommand::undo(CommandContext* context) {
+    void UpdateMapElementCommand::perform(CommandContext& context) {
+        _oldPos = _element->pos;
+        _element->pos = _newPos;
+        context.mapView->Refresh();
+    }
+
+    void UpdateMapElementCommand::undo(CommandContext& context) {
         _element->pos = _oldPos;
-        context->mapView->Refresh();
+        context.mapView->Refresh();
     }
 
 }

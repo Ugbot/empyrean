@@ -93,11 +93,13 @@ namespace pyr {
     }
 
     void MainFrame::handleCommand(pyr::Command* cmd) {
+        PYR_ASSERT(cmd, "Can't handle null command");
+
         CommandContext context(_mapTree, _mapView, this, _map.get());
 
         clearList(_redoList);
         _undoList.push(cmd);
-        cmd->perform(&context);
+        cmd->perform(context);
     }
 
     void MainFrame::updateTree() {
@@ -292,7 +294,7 @@ namespace pyr {
             _undoList.pop();
             _redoList.push(c);
             CommandContext context(_mapTree, _mapView, this, _map.get());
-            c->undo(&context);
+            c->undo(context);
         }
     }
 
@@ -302,7 +304,7 @@ namespace pyr {
             _redoList.pop();
             _undoList.push(c);
             CommandContext context(_mapTree, _mapView, this, _map.get());
-            c->perform(&context);
+            c->perform(context);
         }
     }
 

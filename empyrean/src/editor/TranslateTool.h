@@ -46,16 +46,23 @@ namespace pyr {
             gmtl::Vec2f newPos = _oldElementPos - (_lastPos - event.pos);
 
             MapElement* e = getMainFrame()->getSelectedElement();
-            e->pos = _oldElementPos;    // need to restore this; permanently altering the map must be done with a Command
+            if (e) {
+                // need to restore this; permanently altering the map
+                // must be done with a Command
+                e->pos = _oldElementPos;
 
-            // if shift is held when the mouse button is released, no movement is done
-            if (!event.shift) {
-                event.cmd->handleCommand(new UpdateMapElementCommand(e, newPos));
+                // if shift is held when the mouse button is released, no
+                // movement is done
+                if (!event.shift) {
+                    event.cmd->handleCommand(new UpdateMapElementCommand(e, newPos));
+                }
+
+                getMainFrame()->updatePropertyGrid();
+
+                return true;
+            } else {
+                return false;
             }
-
-            getMainFrame()->updatePropertyGrid();
-
-            return true;
         }
 
     private:

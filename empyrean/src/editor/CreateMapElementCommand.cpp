@@ -8,14 +8,14 @@ namespace pyr {
         , _parentElement(parentElement)
     {}
 
-    void CreateMapElementCommand::perform(CommandContext* context) {
+    void CreateMapElementCommand::perform(CommandContext& context) {
         _parentElement->children.push_back(_element);
-        context->mapTree->update(context->map);
+        context.mapTree->update(context.map);
     }
 
-    void CreateMapElementCommand::undo(CommandContext* context) {
+    void CreateMapElementCommand::undo(CommandContext& context) {
         _parentElement->children.pop_back();
-        context->mapTree->update(context->map);
+        context.mapTree->update(context.map);
     }
 
 }

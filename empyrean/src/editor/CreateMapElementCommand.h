@@ -11,8 +11,8 @@ namespace pyr {
     public:
         CreateMapElementCommand(const RefPtr<MapElement>& element, const RefPtr<GroupElement>& parentElement);
 
-        virtual void perform(CommandContext* context);
-        virtual void undo(CommandContext* context);
+        virtual void perform(CommandContext& context);
+        virtual void undo(CommandContext& context);
 
     private:
         RefPtr<MapElement> _element;

@@ -13,8 +13,8 @@ namespace pyr {
 
         UpdateMapElementCommand(MapElement* element, gmtl::Vec2f& newPos);
 
-        virtual void perform(CommandContext* context);
-        virtual void undo(CommandContext* context);
+        virtual void perform(CommandContext& context);
+        virtual void undo(CommandContext& context);
 
     private:
         MapElement* _element;

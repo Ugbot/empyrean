@@ -11,7 +11,7 @@ namespace pyr {
         , _texture(texture)
     {}
 
-    void UpdateGeometryElementCommand::perform(CommandContext* context) {
+    void UpdateGeometryElementCommand::perform(CommandContext& context) {
         gmtl::Vec2f bleagh;
         std::string blarg;
 
@@ -23,7 +23,7 @@ namespace pyr {
         _texture = blarg;
     }
 
-    void UpdateGeometryElementCommand::undo(CommandContext* context) {
+    void UpdateGeometryElementCommand::undo(CommandContext& context) {
         // perform() does a swap, so we get to take a shortcut.
         perform(context);
     }

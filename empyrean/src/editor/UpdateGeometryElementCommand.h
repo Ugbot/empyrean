@@ -21,8 +21,8 @@ namespace pyr {
 
         UpdateGeometryElementCommand(GeometryElement* element, const gmtl::Vec2f& pos, const std::string& texture);
 
-        virtual void perform(CommandContext* context);
-        virtual void undo(CommandContext* context);
+        virtual void perform(CommandContext& context);
+        virtual void undo(CommandContext& context);
 
     private:
 

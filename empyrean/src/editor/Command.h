@@ -49,8 +49,8 @@ namespace pyr {
     public:
         virtual ~Command() {}
 
-        virtual void perform(CommandContext* context) = 0;
-        virtual void undo(CommandContext* context) = 0;
+        virtual void perform(CommandContext& context) = 0;
+        virtual void undo(CommandContext& context) = 0;
     };
 }
 
