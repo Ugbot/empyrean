@@ -142,6 +142,12 @@
 				RelativePath="..\..\src\client\Main.cpp">
 			</File>
 			<File
+				RelativePath="..\..\src\client\MenuState.cpp">
+			</File>
+			<File
+				RelativePath="..\..\src\client\MenuState.h">
+			</File>
+			<File
 				RelativePath="..\..\src\client\State.h">
 			</File>
 			<File
