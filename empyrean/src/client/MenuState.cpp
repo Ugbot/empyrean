@@ -10,7 +10,7 @@ namespace pyr {
         glEnable(GL_BLEND);
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     
-        _image = new Texture("game/images/menu.png");
+        _image = new Texture("images/menu.png");
     }
     
     void MenuState::draw(float fade) {

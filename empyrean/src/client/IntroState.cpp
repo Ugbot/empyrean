@@ -11,7 +11,7 @@ namespace pyr {
         glEnable(GL_BLEND);
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     
-        _image = new Texture("game/images/empyrean.png");
+        _image = new Texture("images/intro.png");
     }
 
     void IntroState::draw(float fade) {
