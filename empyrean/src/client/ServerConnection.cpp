@@ -60,6 +60,12 @@ namespace pyr {
         return (_connection && !_connection->isClosed());
     }
     
+    void ServerConnection::update() {
+        if (_connection) {
+            _connection->processIncomingPackets();
+        }
+    }
+    
     void ServerConnection::login(
         const std::string& user,
         const std::string& pass)

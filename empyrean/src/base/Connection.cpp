@@ -1,4 +1,3 @@
-#include <iostream>
 #include "ByteBuffer.h"
 #include "Connection.h"
 #include "Packet.h"
@@ -16,6 +15,8 @@ namespace pyr {
         _writer = new WriterThread(socket);
         _readerThread = new Thread(_reader);
         _writerThread = new Thread(_writer);
+        
+        _opaque = 0;
     }
     
     Connection::~Connection() {

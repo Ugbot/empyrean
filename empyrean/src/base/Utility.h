@@ -4,11 +4,14 @@
 
 #include <string>
 #include <vector>
+#include "Debug.h"
+
 
 namespace pyr {
 
     /**
-     * Loki's Type2Type.
+     * From Loki (Modern C++ Design).  Used to generate a unique type
+     * based on another.
      */
     template<typename T>
     struct Type2Type {
@@ -17,8 +20,9 @@ namespace pyr {
 
 
     /**
-     * This smart pointer is roughly analogous to boost's scoped_ptr.
-     * It has destructive copy, and thus, is not container-safe.
+     * This smart pointer is roughly analogous to boost's scoped_ptr
+     * and std::auto_ptr.  It has destructive copy, and thus, is not
+     * container-safe.
      */    
     template<typename T>
     class ScopedPtr {
@@ -36,9 +40,15 @@ namespace pyr {
         }
         
         T* operator->() const {
+            PYR_ASSERT(get() != 0, "Can't dereference null pointer");
             return get();
         }
     
+        T& operator*() {
+            PYR_ASSERT(get() != 0, "Can't dereference null pointer");
+            return *get();
+        }
+        
         operator bool() const {
             return (_ptr != 0);
         }

@@ -3,7 +3,9 @@
 
 
 #include <vector>
+#include "UIDGenerator.h"
 #include "Mutex.h"
+#include "Types.h"
 
 
 namespace pyr {
@@ -25,12 +27,22 @@ namespace pyr {
         void addConnection(Connection* connection);
         
     private:
+        struct ConnectionData {
+            bool loggedIn;
+            u16 entityID;
+        };
+    
+        void removeConnection(unsigned index);
+    
         void handleLogin(Connection* c, LoginPacket* p);
+        
     
         static World* _instance;
     
         std::vector<Connection*> _connections;
         Mutex _connectionsLock;
+        
+        UIDGenerator<u16> _uidGenerator;
     };
 
 }

@@ -20,7 +20,7 @@
 				Name="VCCLCompilerTool"
 				Optimization="0"
 				AdditionalIncludeDirectories="../../src/third-party/include,../../src/base"
-				PreprocessorDefinitions="WIN32;_DEBUG;_CONSOLE"
+				PreprocessorDefinitions="_CONSOLE;WIN32;_DEBUG;NOMINMAX"
 				MinimalRebuild="TRUE"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
@@ -68,7 +68,7 @@
 				InlineFunctionExpansion="1"
 				OmitFramePointers="TRUE"
 				AdditionalIncludeDirectories="../../src/third-party/include,../../src/base"
-				PreprocessorDefinitions="WIN32;NDEBUG;_CONSOLE"
+				PreprocessorDefinitions="_CONSOLE;WIN32;NDEBUG;NOMINMAX"
 				StringPooling="TRUE"
 				RuntimeLibrary="2"
 				EnableFunctionLevelLinking="TRUE"
@@ -118,6 +118,9 @@
 			</File>
 			<File
 				RelativePath="..\..\src\server\Main.cpp">
+			</File>
+			<File
+				RelativePath="..\..\src\server\UIDGenerator.h">
 			</File>
 			<File
 				RelativePath="..\..\src\server\World.cpp">

@@ -16,6 +16,8 @@
 namespace pyr {
 
     void runClient() {
+        std::cout << "Starting Empyrean..." << std::endl;
+    
         PYR_PROFILE_BLOCK("main");
 
         // initialize the random number generator in case we ever

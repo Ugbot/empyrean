@@ -46,6 +46,11 @@ namespace pyr {
     };
 
 
+    /**
+     * This class represents a packet channel between two computers.
+     * Packets can be sent, and incoming packets are sent to
+     * PacketHandlers.
+     */
     class Connection {
     public:
         Connection(Socket* socket);
@@ -80,6 +85,14 @@ namespace pyr {
         /// Returns true if the connection has been closed.
         bool isClosed();
         
+        void setOpaque(void* opaque) {
+            _opaque = opaque;
+        }
+        
+        void* getOpaque() const {
+            return _opaque;
+        }
+        
     private:
         typedef std::map<TypeInfo, PacketHandler*> HandlerMap;
         typedef HandlerMap::iterator HandlerMapItr;
@@ -93,6 +106,9 @@ namespace pyr {
         
         std::vector<Packet*> _unhandledPackets;
         HandlerMap _handlers;
+        
+        /// Used to store user-defined, connection-specific data.
+        void* _opaque;
     };
 
 }

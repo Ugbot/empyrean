@@ -29,6 +29,8 @@ namespace pyr {
         void disconnect();
         bool isConnected();
         
+        void update();
+        
         void login(const std::string& user, const std::string& pass);
         bool isLoggedIn() {
             return _loggedIn;

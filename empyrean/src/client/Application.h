@@ -59,7 +59,7 @@ namespace pyr {
 
         bool _showCPUInfo;
 
-        Font* _font;
+        ScopedPtr<Font> _font;
 
         FPSCounter _fps;
     };

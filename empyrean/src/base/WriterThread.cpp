@@ -32,8 +32,9 @@ namespace pyr {
                 break;
             }
             
-            // write a single packet
-            Packet* p = _outgoing.front();
+            // write a single packet (which we'll never use again,
+            // so we can delete it)
+            ScopedPtr<Packet> p(_outgoing.front());
             _outgoing.pop();
             
             ByteBuffer out;

@@ -2,6 +2,7 @@
 #define PYR_LOGIN_RESPONSE_PACKET_H
 
 
+#include "BufferParser.h"
 #include "Packet.h"
 
 

@@ -9,6 +9,8 @@
 
 namespace pyr {
 
+    class Font;
+
     class GameState : public State {
     public:
         GameState();
@@ -23,13 +25,14 @@ namespace pyr {
         
     private:
         InputManager _im;
-        Input* _inputX;
-        Input* _inputY;
         Input* _inputLeft;
         Input* _inputRight;
+        Input* _inputSpace;
         Input* _inputQuit;
         
         Scene _scene;
+        
+        ScopedPtr<Font> _font;
     };
 
 }
