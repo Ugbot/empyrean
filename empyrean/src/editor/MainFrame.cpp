@@ -159,7 +159,7 @@ namespace pyr {
             _splitter, -1, wxDefaultPosition, wxDefaultSize,
             wxSP_3D | wxSP_LIVE_UPDATE | wxCLIP_CHILDREN);
         
-        _mapTree = new MapTree(split2);
+        _mapTree = new MapTree(split2, this);
         wxTreeItemId root = _mapTree->AddRoot("Root");
         _mapTree->AppendItem(root, "Map");
         _mapTree->AppendItem(root, "Imports");

@@ -12,12 +12,12 @@ namespace pyr {
     }
 
     void MapTreeUpdater::visitGeometry(GeometryElement* e) {
-        _treeView->AppendItem(_parentId.top(), "Geometry Element");
+        _treeView->AppendItem(_parentId.top(), "Geometry Element", -1, -1, new TreeItemData(e));
     }
 
     void MapTreeUpdater::visitGroup(GroupElement* e) {
         _parentId.push(
-            _treeView->AppendItem(_parentId.top(), "Group Element")
+            _treeView->AppendItem(_parentId.top(), "Group Element", -1, -1, new TreeItemData(e))
             );
 
         for (unsigned i = 0; i < e->children.size(); i++) {

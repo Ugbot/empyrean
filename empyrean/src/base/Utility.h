@@ -115,8 +115,17 @@ namespace pyr {
         T* _array;
     };
     
+    template <typename T>
+        class RefPtr;
     
     class RefCounted {
+        template<typename T>
+            friend class RefPtr;
+    public:
+        RefCounted()
+            : _refCount (0)
+        {}
+
     protected:
         /**
          * Protected so users of refcounted classes don't use std::auto_ptr
@@ -127,7 +136,6 @@ namespace pyr {
          */
         virtual ~RefCounted() { }
 
-    public:
         /**
          * Add a reference to the internal reference count.
          */
@@ -140,6 +148,8 @@ namespace pyr {
          * reaches 0, the object is destroyed.
          */
         void unref() {
+            PYR_ASSERT(_refCount > 0, "RefCounted: _refCount is less than zero!");
+
             if (--_refCount == 0) {
                 delete this;
             }

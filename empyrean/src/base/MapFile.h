@@ -26,6 +26,7 @@ namespace pyr {
     private:
         // The root should always be a GroupElement
         // aegis - Why?  Does it matter?
+        // andy - It's rather convenient to be able to assume that the root has children. :)
         RefPtr<GroupElement> _root;
     };
 

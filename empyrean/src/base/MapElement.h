@@ -17,6 +17,7 @@ namespace pyr {
         virtual void handleVisitor(MapVisitor* v) = 0;
 
     protected:
+
         virtual ~MapElement() {}
     };
 
