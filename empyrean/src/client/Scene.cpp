@@ -66,13 +66,14 @@ namespace pyr {
 
         glEnable(GL_TEXTURE_2D);
 
-        glEnable(GL_LIGHTING);
+        (_lighting ? glEnable : glDisable)(GL_LIGHTING);
+
         glEnable(GL_LIGHT0);
         float pos0[] = {1, 1, 1, 0};
         glLightfv(GL_LIGHT0, GL_POSITION, pos0);
 
         if (_focus) {
-            float pos[4] = {focusX, focusY + 2, 1, 1};
+            float pos[4] = {focusX, focusY + 2, 5, 1};
             float diffuse[4] = {1,0,0,1};
             float specular[4] = {1,0,0,1};
             float ambient[4] = {1,1,1,1};
@@ -86,6 +87,8 @@ namespace pyr {
         }
 
         drawMap();
+
+        (_lighting ? glEnable : glDisable)(GL_LIGHTING);
 
         EntityMap::iterator itr = _entities.begin();
         for (; itr != _entities.end(); ++itr) {

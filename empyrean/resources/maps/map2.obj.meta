@@ -1,5 +1,5 @@
 <map-metadata>
-  <node name="Scene Root" position="0 0 0">
+  <node name="start" position="2 0 0">
   </node>
   <node name="Line01" position="1.97709 10.3293 0">
   </node>

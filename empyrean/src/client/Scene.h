@@ -37,6 +37,7 @@ namespace pyr {
         void toggleWireframe();
         void toggleNormals();
         void toggleCollision();
+        void toggleLighting() { _lighting = !_lighting; }
         
     private:
         void drawMap();
@@ -53,6 +54,7 @@ namespace pyr {
         Inited<bool, false> _wireframe;
         Inited<bool, false> _normals;
         Inited<bool, false> _collision;
+        Inited<bool, true>  _lighting;
     };
 
 }
