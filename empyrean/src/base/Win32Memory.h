@@ -2,12 +2,12 @@
 #define PYR_WIN32_MEMORY_H
 
 
-#include <windows.h>
-
-
 #ifndef WIN32
 #error Win32Memory.h requires Win32 API
 #endif
+
+
+#include <windows.h>
 
 
 namespace pyr {

@@ -32,7 +32,7 @@
             const char* line
         ) {
             std::ostringstream os;
-            os << "Label: " << label
+            os << "Assertion Failed\n\nLabel: " << label
                << "\nExpression: " << condition
                << "\nFile: " << file
                << "\nLine: " << line

@@ -10,6 +10,7 @@
 
 /// Nice utility function to stringize the expansion of the argument.
 #define PYR_STR(name) #name
+#define PYR_STR2(name) PYR_STR(name)
 
 
 #if defined(DEBUG) || defined(_DEBUG)
@@ -29,7 +30,7 @@
     
         #define PYR_ASSERT(condition, label)                                        \
             if (!(condition)) {                                                     \
-                showAssertMessage(#condition, label, __FILE__, PYR_STR(__LINE__));  \
+                showAssertMessage(#condition, label, __FILE__, PYR_STR2(__LINE__)); \
                 __asm int 3                                                         \
             } PYR_REQUIRE_SEMI
         
@@ -39,7 +40,7 @@
       
         #define PYR_ASSERT(condition, label)                                        \
             if (!(condition)) {                                                     \
-                showAssertMessage(#condition, label, __FILE__, PYR_STR(__LINE__));  \
+                showAssertMessage(#condition, label, __FILE__, PYR_STR2(__LINE__)); \
                 assert((condition) && (label));                                     \
             } PYR_REQUIRE_SEMI
     
