@@ -36,7 +36,6 @@ namespace pyr {
     public:
         // For compatibility with Boost.Python.
         typedef T element_type;
-        typedef ScopedDerivedSafe<T>* get_result;
 
         ScopedPtr(T* p = 0) {
             _ptr = p;
@@ -55,11 +54,6 @@ namespace pyr {
             return reinterpret_cast<ScopedDerivedSafe<T>*>(_ptr);
         }
 
-        /// If you really need the raw pointer...
-        T* raw_ptr() const {
-            return _ptr;
-        }
-        
         /**
          * Stupid hack so we can assign temporaries (using .ref()) to nonconst
          * references.

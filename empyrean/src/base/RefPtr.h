@@ -43,7 +43,6 @@ namespace pyr {
     public:
         // For compatibility with Boost.Python.
         typedef T element_type;
-        typedef RefDerivedSafe<T>* get_result;
 
         RefPtr(T* ptr = 0) {
             *this = ptr;
@@ -114,11 +113,6 @@ namespace pyr {
 
         RefDerivedSafe<T>* get() const {
             return reinterpret_cast<RefDerivedSafe<T>*>(_ptr.get());
-        }
-
-        /// If you really need the raw pointer...
-        T* raw_ptr() const {
-            return _ptr;
         }
 
     private:

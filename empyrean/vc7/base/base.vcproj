@@ -203,6 +203,9 @@
 				RelativePath="..\..\src\base\Image.h">
 			</File>
 			<File
+				RelativePath="..\..\src\base\IncludePython.h">
+			</File>
+			<File
 				RelativePath="..\..\src\base\Log.cpp">
 			</File>
 			<File

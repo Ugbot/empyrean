@@ -15,7 +15,7 @@ namespace pyr {
 
         template<typename T>
         void call(const std::string& name, const T& t) {
-            call(name, boost::python::object(ptr(t)));
+            call(name, boost::python::object(t));
         }
 
         // Add call() overloads for multiple parameters if necessary.
