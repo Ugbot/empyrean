@@ -132,7 +132,7 @@ namespace pyr {
         }
         
         // Move the entities 
-        moveEntities(dt,_map.get(),entityVector,_coldata);
+        //moveEntities(dt,_map.get(),entityVector,_coldata);
 
 #if 0
         if (_map.get()) {
