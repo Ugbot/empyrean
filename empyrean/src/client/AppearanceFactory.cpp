@@ -1,4 +1,5 @@
 #include "Appearance.h"
+#include "Cal3DAppearance.h"
 
 
 namespace pyr {
@@ -24,7 +25,11 @@ namespace pyr {
     };
 
     Appearance* instantiateAppearance(const std::string& name, const std::string& resource) {
-        return new EmptyAppearance(resource);
+        if (name == "cal3d") {
+            return new Cal3DAppearance(resource);
+        } else {
+            return new EmptyAppearance(resource);
+        }
     }
 
 }

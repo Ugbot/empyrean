@@ -157,17 +157,17 @@ namespace pyr {
             _lobbyMessages.push_back(message);
         }
     }
-    
+
     void ServerConnection::handleJoinGameResponse(Connection*, JoinGameResponsePacket* p) {
         _hasJoinGameResponse = true;
         _joinGameResponse = p->code();
     }
-    
+
     void ServerConnection::handleNewCharacterResponse(Connection*, NewCharacterResponsePacket* p) {
         _hasNewCharacterResponse = true;
         _newCharacterResponse = p->code();
     }
-    
+
     void ServerConnection::handleSetPlayer(Connection*, SetPlayerPacket* p) {
         the<Scene>().setFocus(p->id());
     }
@@ -176,9 +176,6 @@ namespace pyr {
         ClientEntity* entity = new ClientEntity(
             instantiateBehavior(p->behavior(), p->behaviorResource()),
             instantiateAppearance(p->appearance(), p->appearanceResource()));
-        //GameEntity* entity = new GameEntity(
-        //    new Model(p->appearanceResource()),
-        //    new DefaultRenderer());
         the<Scene>().addEntity(p->id(), entity);
     }
 

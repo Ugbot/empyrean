@@ -9,8 +9,6 @@
 
 namespace pyr {
 
-    class Model;
-    class Renderer;
     class InputManager;
     class Input;
     class Weapon;
@@ -38,7 +36,7 @@ namespace pyr {
             WALKING     
         };
 
-        GameEntity(Model* model, Renderer* renderer);
+        GameEntity();
         ~GameEntity();
 
         void draw();
@@ -53,7 +51,7 @@ namespace pyr {
         void incrVitality(int incr);
         void decrEther(int decr);
         void incrEther(int incr);
- 
+
         float& getHeight()                    { return _height; }
         const float& getHeight()     const    { return _height; }
 
@@ -90,10 +88,6 @@ namespace pyr {
         void startWalkState();
         void updateWalkState(float dt);
 
-        // These are aggregates.  We don't clean up.
-        Model* _model;
-        Renderer* _renderer;
-        
         /// Data from last collision detection test.  Used for debug drawing.
         CollisionData _lastCD;
 

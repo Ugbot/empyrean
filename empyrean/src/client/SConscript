@@ -3,6 +3,7 @@ Import('base_env TOOLS')
 SOURCES = Split("""
     AppearanceFactory.cpp
     Application.cpp
+    Cal3DAppearance.cpp
     Configuration.cpp
     CreditsState.cpp
     GameEntity.cpp

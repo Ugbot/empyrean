@@ -20,11 +20,9 @@ const int FALLING_SPEED = 0;
 
 namespace pyr {
 
-    GameEntity::GameEntity(Model* model, Renderer* renderer)
+    GameEntity::GameEntity()
         : ClientEntity(0, 0)
     {
-        _model = model;
-        _renderer = renderer;
         _direction = 90;
 
         // Initializing frenzy! // TEMP TESTING -> real values commented out
@@ -79,6 +77,7 @@ namespace pyr {
     }
 
     void GameEntity::draw() {
+        #if 0
         // Render player model.
         glPushMatrix();
         glEnable(GL_DEPTH_TEST);
@@ -88,7 +87,8 @@ namespace pyr {
         _renderer->draw(_model);
         glDisable(GL_DEPTH_TEST);
         glPopMatrix();
-        
+        #endif
+
 /*
         // Render player bounding box [debugging].
         float height = 1.9f;
@@ -149,7 +149,7 @@ namespace pyr {
         if (_state) {
             (this->*_state)(dt);
         }
-        _model->update(dt);
+        //_model->update(dt);
     }
 
     void GameEntity::collideWithOthers(EntityMap entities) {
@@ -189,7 +189,7 @@ namespace pyr {
 
     // Utitlity Animation functions
     void GameEntity::phaseOutAnimation(Animation name) {
-        _model->getModel().getMixer()->clearCycle((int) name, 0.1f);
+        //_model->getModel().getMixer()->clearCycle((int) name, 0.1f);
     }
 
     void GameEntity::correctDirection(float xvel) {
@@ -202,7 +202,7 @@ namespace pyr {
 
     // Attack state transition in
     void GameEntity::startAttackState() {
-        _model->getModel().getMixer()->executeAction(ATTACKING, 0.1f, 0.1f);
+        //_model->getModel().getMixer()->executeAction(ATTACKING, 0.1f, 0.1f);
         _attackingStartTime = 0;
         _origDirection = _direction;
         _state = &GameEntity::updateAttackState;
@@ -240,7 +240,7 @@ namespace pyr {
     
     // Jump state transition in
     void GameEntity::startJumpState() {
-        _model->getModel().getMixer()->blendCycle(JUMPING, 1.0f, 0.1f);
+        //_model->getModel().getMixer()->blendCycle(JUMPING, 1.0f, 0.1f);
         _jumpStart = false;
         _state = &GameEntity::updateJumpState;
     }
@@ -275,7 +275,7 @@ namespace pyr {
 
     // Jump start state transition in
     void GameEntity::startJumpStartState() {
-        _model->getModel().getMixer()->blendCycle(JUMPSTART, 1.0f, 0.1f);
+        //_model->getModel().getMixer()->blendCycle(JUMPSTART, 1.0f, 0.1f);
         _jumpStart = false;
         _state = &GameEntity::updateJumpStartState;
         _jumpStartTime = 0;
@@ -303,7 +303,7 @@ namespace pyr {
 
     // Stand state transition in
     void GameEntity::startStandState() {
-        _model->getModel().getMixer()->blendCycle(STANDING, 1.0f, 0.1f);
+        //_model->getModel().getMixer()->blendCycle(STANDING, 1.0f, 0.1f);
         _state = &GameEntity::updateStandState;
     }
     
@@ -331,7 +331,7 @@ namespace pyr {
 
     // Walk state transition in
     void GameEntity::startWalkState() {
-        _model->getModel().getMixer()->blendCycle(WALKING, 1.0f, 0.1f);
+        //_model->getModel().getMixer()->blendCycle(WALKING, 1.0f, 0.1f);
         _state = &GameEntity::updateWalkState;
     }
 
