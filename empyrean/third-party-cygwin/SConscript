@@ -1,2 +1,6 @@
 Import('*')
-env.Install('#/build', 'lib/nspr4.dll')
+dlls = [
+    env.WhereIs('SDL.dll'),
+    'lib/nspr4.dll']
+for dll in dlls:
+    env.Install('#/build', dll)
