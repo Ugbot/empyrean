@@ -163,6 +163,12 @@
 				RelativePath="..\..\src\client\Model.h">
 			</File>
 			<File
+				RelativePath="..\..\src\client\ParticleEmitter.cpp">
+			</File>
+			<File
+				RelativePath="..\..\src\client\ParticleEmitter.h">
+			</File>
+			<File
 				RelativePath="..\..\src\client\ParticleSystem.cpp">
 			</File>
 			<File

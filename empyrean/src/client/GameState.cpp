@@ -1,4 +1,5 @@
 #include <SDL_opengl.h>
+#include <gmtl/VecOps.h>
 
 #include "GameState.h"
 #include "Input.h"
@@ -10,6 +11,7 @@
 #include "Entity.h"
 #include "PlayerEntity.h"
 #include "ParticleSystem.h"
+#include "ParticleEmitter.h"
 #include "Texture.h"
 
 namespace pyr {
@@ -21,10 +23,9 @@ namespace pyr {
         _inputLeft  = &_im.getInput("MouseLeft");
         _inputRight = &_im.getInput("MouseRight");
         _inputQuit  = &_im.getInput("Escape");
-        _rotation = 0;
 
         _renderer = new CellShadeRenderer;
-        _renderer->useVertexArrays(false);
+        _renderer->useVertexArrays(true);
         _testModel = Model::create("models/paladin/paladin.cfg");
 
         _backdropTex = Texture::create("images/backdrop.jpg");
@@ -33,12 +34,16 @@ namespace pyr {
         player->setPos( gmtl::Vec2f(200,290) );
 
         _particles = new ParticleSystem;
-        _particles->setColor(Color(1,1,1,1));
-        _particles->setGravity(gmtl::Vec2f(0,10));
-        _particles->fadeToColor(Color(0,0,1,1),30);
+        _emitter = new ParticleEmitter(_particles);
+        _emitter->setAccel(gmtl::Vec2f(0, 5));
+        _emitter->setColor(Color(1, 1, 1, 1));
+        _emitter->fadeToColor(Color(0, 0, 1, 1),15);
+        _emitter->setPeriod(0.01f); // 100 particles/second
+        _count=15;
 
         _entities.push_back(player);
         _entities.push_back(_particles);
+        _entities.push_back(_emitter);
     }
 
     GameState::~GameState() {
@@ -70,7 +75,7 @@ namespace pyr {
         {
             float x = _inputX->getValue() * 400;
             float y = _inputY->getValue() * 300;
-            _particles->setPos(gmtl::Vec2f(x,y));
+            _emitter->setPos(gmtl::Vec2f(x,y));
         }
 
         for (unsigned i = 0; i < _entities.size(); ++i) {
@@ -84,9 +89,30 @@ namespace pyr {
     void GameState::update(float dt) {
         PYR_PROFILE_BLOCK("update");
         _im.update(dt);
-        _rotation += _inputLeft->getValue()  * dt * 50;
-        _rotation -= _inputRight->getValue() * dt * 50;
-        
+
+        if (_inputLeft->getValue()==0)
+            _emitter->setPeriod(0);
+        else
+            _emitter->setPeriod(0.01f);
+
+        _count-=dt;
+        if (_count < 0)
+        {
+            Color c;
+            int idx = rand() & 7;
+            switch (idx) {
+                case 0: c=Color(0,1,0,1);   break;
+                case 1: c=Color(1,0,0,1);   break;
+                case 2: c=Color(0,0,1,1);   break;
+                case 4: c=Color(1,1,0,1);   break;
+                case 5: c=Color(1,0,1,1);   break;
+                case 6: c=Color(0,1,1,1);   break;
+                case 7: c=Color(1,1,1,1);   break;
+            }
+            _count = 15;
+            _emitter->fadeToColor(c,15);
+        }
+
         if (_inputQuit->getValue() >= 0.50f) {
             invokeTransition<MenuState>();
         }

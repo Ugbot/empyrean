@@ -13,6 +13,7 @@ namespace pyr {
     class Model;
     class Entity;
     class ParticleSystem;
+    class ParticleEmitter;
     class Texture;
 
     class GameState : public State {
@@ -40,10 +41,11 @@ namespace pyr {
         Texture* _backdropTex;
 
         ParticleSystem* _particles;
+        ParticleEmitter* _emitter;
         
         std::vector<Entity*> _entities;
         
-        float _rotation;
+        float _count;
     };
 
 }
