@@ -82,8 +82,10 @@ namespace pyr {
         fastComboDefs.push_back(combo1);
         fastComboDefs.push_back(combo2);
         fastComboDefs.push_back(combo3);
-    
+
         the<ServerConnection>().sendPacket(new AllowUpdatesPacket());
+        
+        the<AudioSystem>().playMusic("music/forestMain.mp3");
     }
 
     GameState::~GameState() {
