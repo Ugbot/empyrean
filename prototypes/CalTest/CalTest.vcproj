@@ -20,7 +20,7 @@
 				Name="VCCLCompilerTool"
 				Optimization="0"
 				InlineFunctionExpansion="0"
-				AdditionalIncludeDirectories="c:\src\cal3d-0.8\src\cal3d;$(SDL)\include"
+				AdditionalIncludeDirectories="c:\src\cal3d-0.8\src\cal3d;$(SDL)\include;C:\src\Empyrean\empyrean\src\third-party\include;\Program Files\NVIDIA Corporation\Cg\include"
 				PreprocessorDefinitions="WIN32;_DEBUG;_CONSOLE"
 				MinimalRebuild="TRUE"
 				BasicRuntimeChecks="3"
@@ -33,10 +33,10 @@
 				Name="VCCustomBuildTool"/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="cal3d_d.lib SDL.lib SDLmain.lib opengl32.lib glu32.lib glaux.lib"
+				AdditionalDependencies="corona.lib cal3d.lib opengl32.lib glu32.lib sdl.lib sdlmain.lib cg.lib cggl.lib"
 				OutputFile="$(OutDir)/CalTest.exe"
 				LinkIncremental="2"
-				AdditionalLibraryDirectories="c:\src\cal3d-0.8\lib;$(SDL)\lib"
+				AdditionalLibraryDirectories="c:\src\cal3d-0.8\lib;$(SDL)\lib;C:\src\Empyrean\empyrean\src\third-party\lib;\Program Files\NVIDIA Corporation\Cg\lib"
 				GenerateDebugInformation="TRUE"
 				ProgramDatabaseFile="$(OutDir)/CalTest.pdb"
 				SubSystem="1"
@@ -71,7 +71,7 @@
 				OmitFramePointers="TRUE"
 				OptimizeForProcessor="0"
 				OptimizeForWindowsApplication="FALSE"
-				AdditionalIncludeDirectories="c:\src\cal3d-0.8\src\cal3d;$(SDL)\include"
+				AdditionalIncludeDirectories="c:\src\cal3d-0.8\src\cal3d;$(SDL)\include;C:\src\Empyrean\empyrean\src\third-party\include;\Program Files\NVIDIA Corporation\Cg\include"
 				PreprocessorDefinitions="WIN32;NDEBUG;_CONSOLE"
 				StringPooling="TRUE"
 				RuntimeLibrary="2"
@@ -84,10 +84,10 @@
 				Name="VCCustomBuildTool"/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="cal3d.lib SDL.lib SDLmain.lib opengl32.lib glu32.lib glaux.lib"
+				AdditionalDependencies="corona.lib cal3d.lib opengl32.lib glu32.lib sdl.lib sdlmain.lib cg.lib cggl.lib"
 				OutputFile="$(OutDir)/CalTest.exe"
 				LinkIncremental="1"
-				AdditionalLibraryDirectories="c:\src\cal3d-0.8\lib;$(SDL)\lib"
+				AdditionalLibraryDirectories="c:\src\cal3d-0.8\lib;$(SDL)\lib;C:\src\Empyrean\empyrean\src\third-party\lib;\Program Files\NVIDIA Corporation\Cg\lib"
 				GenerateDebugInformation="TRUE"
 				SubSystem="1"
 				OptimizeReferences="2"

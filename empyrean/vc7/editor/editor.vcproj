@@ -1,7 +1,7 @@
-<?xml version="1.0" encoding="Windows-1252"?>
+<?xml version="1.0" encoding = "Windows-1252"?>
 <VisualStudioProject
 	ProjectType="Visual C++"
-	Version="7.10"
+	Version="7.00"
 	Name="editor"
 	ProjectGUID="{C85FCCC5-1494-4AEE-9CE7-8808B322F33A}"
 	Keyword="Win32Proj">
@@ -34,7 +34,7 @@
 				Name="VCCustomBuildTool"/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="wxmswd.lib opengl32.lib comctl32.lib rpcrt4.lib ws2_32.lib"
+				AdditionalDependencies="wxmswd.lib opengl32.lib comctl32.lib rpcrt4.lib ws2_32.lib tiffd.lib pngd.lib zlibd.lib jpegd.lib ../base/Debug/base.lib "
 				OutputFile="../bin/$(OutDir)/editor.exe"
 				LinkIncremental="2"
 				GenerateDebugInformation="TRUE"
@@ -54,13 +54,7 @@
 			<Tool
 				Name="VCWebServiceProxyGeneratorTool"/>
 			<Tool
-				Name="VCXMLDataGeneratorTool"/>
-			<Tool
 				Name="VCWebDeploymentTool"/>
-			<Tool
-				Name="VCManagedWrapperGeneratorTool"/>
-			<Tool
-				Name="VCAuxiliaryManagedWrapperGeneratorTool"/>
 		</Configuration>
 		<Configuration
 			Name="Release|Win32"
@@ -109,17 +103,9 @@
 			<Tool
 				Name="VCWebServiceProxyGeneratorTool"/>
 			<Tool
-				Name="VCXMLDataGeneratorTool"/>
-			<Tool
 				Name="VCWebDeploymentTool"/>
-			<Tool
-				Name="VCManagedWrapperGeneratorTool"/>
-			<Tool
-				Name="VCAuxiliaryManagedWrapperGeneratorTool"/>
 		</Configuration>
 	</Configurations>
-	<References>
-	</References>
 	<Files>
 		<Filter
 			Name="files"
@@ -166,6 +152,19 @@
 			</File>
 			<File
 				RelativePath="resource.h">
+			</File>
+		</Filter>
+		<Filter
+			Name="commands"
+			Filter="">
+			<File
+				RelativePath="..\..\src\editor\AddImageCommand.cpp">
+			</File>
+			<File
+				RelativePath="..\..\src\editor\AddImageCommand.h">
+			</File>
+			<File
+				RelativePath="..\..\src\editor\Command.h">
 			</File>
 		</Filter>
 	</Files>

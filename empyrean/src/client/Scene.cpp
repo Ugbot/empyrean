@@ -4,13 +4,19 @@
 #include "Renderer.h"
 #include "Texture.h"
 
+#include "Scene.h"
+#include "Map.h"
+
 
 namespace pyr {
 
     PYR_DEFINE_SINGLETON(Scene)
 
-    Scene::Scene() {
-        _backdrop = Texture::create("images/stars.png");
+    Scene::Scene() 
+        : _backdrop(Texture::create("images/stars.png"))
+        , _map(new Map)
+    {
+        //_map->addRectangle(0, 220, 400, 300);
     }
     
     Scene::~Scene() {
@@ -18,6 +24,8 @@ namespace pyr {
         for (; itr != _entities.end(); ++itr) {
             delete itr->second;
         }
+
+        delete _map;
     }
     
     void Scene::draw() {
@@ -34,6 +42,8 @@ namespace pyr {
 
         glClear(GL_DEPTH_BUFFER_BIT);
         _backdrop->drawRectangle(0, 0, 400, 300);
+
+        _map->draw();
         
         glTranslatef(200, 150, 0);
 

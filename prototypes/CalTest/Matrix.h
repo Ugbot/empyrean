@@ -32,6 +32,27 @@ union Matrix
                 vec.x*v[0][2] + vec.y*v[1][2] + vec.z*v[2][2] + v[3][2]
                 );
     }
+
+    inline Matrix<T> operator * (const Matrix<T>& vec) const
+    {
+        Matrix<T> out;
+        std::fill(out.V, out.V + 16, 0);
+
+        for (int col = 0; col < 4; col++)
+        {
+            for (int row = 0; row < 4; row++)
+            {
+                // add col + row
+
+                for (int i = 0; i < 4; i++)
+                {
+                    out.v[col][row] += v[i][row] * vec.v[col][i];
+                }
+            }
+        }
+
+        return out;
+    }
 };
 
 #endif

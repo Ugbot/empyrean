@@ -4,11 +4,10 @@
 
 namespace pyr {
 
-    class Map;
-    
+    class CommandReciever;
 
     struct ToolEvent {
-        Map* map;
+        CommandReciever* cmd;
         float x;
         float y;
     };
@@ -20,6 +19,9 @@ namespace pyr {
         virtual bool onMouseMove(ToolEvent&) { return false; }
         virtual bool onLeftDown(ToolEvent&)  { return false; }
         virtual bool onLeftUp(ToolEvent&)    { return false; }
+
+    private:
+
     };
 
 }

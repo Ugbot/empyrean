@@ -53,6 +53,22 @@ union Vector
         T l=1/T(sqrt(x*x+y*y+z*z));
         x*=l;   y*=l;   z*=l;
     }
+
+    inline Vector<T>& operator *= (T c)
+    {
+        x *= c;
+        y *= c;
+        z *= c;
+        return *this;
+    }
+
+    inline Vector<T>& operator += (T c)
+    {
+        x += c;
+        y += c;
+        z += c;
+        return *this;
+    }
 };
 
 #endif

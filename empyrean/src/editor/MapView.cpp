@@ -23,6 +23,11 @@ namespace pyr {
     {
         _tool = defaultTool;
     }
+
+    MapView::~MapView() {
+        clearList(_undoList);
+        clearList(_redoList);
+    }
     
     
     Map& MapView::getMap() {
@@ -38,6 +43,38 @@ namespace pyr {
         return _tool.get();
     }
     
+    void MapView::handleCommand(Command* cmd) {
+        clearList(_redoList);
+        _undoList.push(cmd);
+        bool refresh = cmd->perform(&_map);
+        if (refresh) {
+            Refresh();
+        }
+    }
+    void MapView::undo() {
+        if (!_undoList.empty()) {
+            Command* c = _undoList.top();
+            _undoList.pop();
+            _redoList.push(c);
+            bool refresh = c->undo(&_map);
+            if (refresh) {
+                Refresh();
+            }
+        }
+    }
+
+    void MapView::redo() {
+        if (!_redoList.empty()) {
+            Command* c = _redoList.top();
+            _redoList.pop();
+            _undoList.push(c);
+            bool refresh = c->perform(&_map);
+            if (refresh) {
+                Refresh();
+            }
+        }
+    }
+
     
     void MapView::OnSize(wxSizeEvent& e) {
         wxGLCanvas::OnSize(e);
@@ -78,7 +115,7 @@ namespace pyr {
         }
     
         ToolEvent te;
-        te.map = &_map;
+        te.cmd = this;
         te.x = float(e.GetX()) / size.x *  2 - 1;
         te.y = float(e.GetY()) / size.y * -2 + 1;
     
@@ -146,4 +183,11 @@ namespace pyr {
         _map.draw();
     }
 
+    void MapView::clearList(std::stack<Command*>& list) {
+        while (!list.empty()) {
+            Command* c = list.top();
+            delete c;
+            list.pop();
+        }
+    }
 }

@@ -10,6 +10,7 @@ namespace pyr {
     class MapView;
 
 
+    // HACK THE MAINFRAME
     class MainFrame : public wxFrame {
     public:
         MainFrame();

@@ -1,4 +1,5 @@
 #include <cassert>
+#include "corona.h"
 
 #include "SDL_opengl.h"
 
@@ -7,17 +8,31 @@
 uint Texture::nInstances=0;
 std::map<std::string,uint> Texture::textures;
 
-uint Texture::Load(const std::string& fname)
+uint Texture::Load(const std::string& name)
 {
+    //*
     uint hTex;
-    hTex=textures[fname];
+    hTex=textures[name];
     if (hTex!=0)
         return hTex;
 
-    FILE* f=fopen(fname.c_str(),"rb");
+    corona::Image* i = corona::OpenImage(name.c_str(), corona::FF_AUTODETECT, corona::PF_R8G8B8);
+    int w = i->getWidth();
+    int h = i->getHeight();
+    void* p = i->getPixels();
+
+    glGenTextures(1, &hTex);
+    glBindTexture(GL_TEXTURE_2D, hTex);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, w, h, 0, GL_RGB, GL_UNSIGNED_BYTE, p);
+    glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_LINEAR);
+    delete i;
+
+    /*/
+    FILE* f=fopen(name.c_str(),"rb");
     if (!f)
     {
-        printf("Unable to load %s\r\n",fname.c_str());
+        printf("Unable to load %s\r\n", name.c_str());
         return 0;
     }
 
@@ -33,6 +48,7 @@ uint Texture::Load(const std::string& fname)
         p-=w*d;
     }
 
+    uint hTex;
     glPixelStorei(GL_UNPACK_ALIGNMENT,1);
     glGenTextures(1,&hTex);
     glBindTexture(GL_TEXTURE_2D,hTex);
@@ -42,7 +58,8 @@ uint Texture::Load(const std::string& fname)
 
     delete[] data;
     fclose(f);
+    //*/
 
-    textures[fname]=hTex;
+    textures[name]=hTex;
     return hTex;
 }

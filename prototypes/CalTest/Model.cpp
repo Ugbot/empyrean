@@ -28,7 +28,30 @@ void LoadTextures();
 
 bool Model::Load(const string& fname)
 {
-    
+    /*
+    coremodel.create("male");
+    coremodel.loadCoreSkeleton("male.csf");
+    coremodel.loadCoreAnimation("male.caf");
+    coremodel.loadCoreMesh("male_head.cmf");
+    coremodel.loadCoreMesh("male_knight_torso.cmf");
+    coremodel.loadCoreMesh("male_knight_legs.cmf");
+    coremodel.loadCoreMaterial("male_head.crf");
+    coremodel.loadCoreMaterial("male_knight_torso.crf");
+    coremodel.getCoreMaterial(0)->setMapUserData(0, (Cal::UserData)Texture::Load("texture_template_head.png"));
+    coremodel.getCoreMaterial(0)->setMapUserData(1, (Cal::UserData)Texture::Load("texture_male_knight_torso.png"));
+
+    coremodel.createCoreMaterialThread(0);
+    coremodel.setCoreMaterialId(0,0,0);
+    coremodel.createCoreMaterialThread(1);
+    coremodel.setCoreMaterialId(1,0,0);
+
+    model.create(&coremodel);
+    model.attachMesh(0);
+    model.attachMesh(1);
+    model.attachMesh(2);
+    model.getMesh(0)->setMaterialSet(0);
+    model.getMesh(1)->setMaterialSet(0);
+/*/
     char c[256];
 
     FILE* f=fopen(fname.c_str(),"r");
@@ -88,6 +111,12 @@ bool Model::Load(const string& fname)
         for (int t=0; t<m.getMapCount(); t++)
         {
             string texname=m.getMapFilename(t);
+            
+            int p = texname.find_last_of('.');
+            if (p != std::string::npos)
+                texname = texname.substr(0, p);
+            texname += ".png";
+
             cout << "Loading "<<texname<<endl;
             m.setMapUserData(t,(Cal::UserData)Texture::Load(texname));
         }
@@ -103,7 +132,7 @@ bool Model::Load(const string& fname)
     for (uint i=0; i<meshes.size(); i++)
         model.attachMesh(i);
     model.setMaterialSet(0);
-
+    //*/
     valid=true;
     return true;
 }
