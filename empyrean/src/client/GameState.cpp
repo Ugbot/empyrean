@@ -44,12 +44,11 @@ namespace pyr {
         PYR_PROFILE_BLOCK("GameState::draw");
         
         Scene& scene = the<Scene>();
-        Application& app = the<Application>();
-        
         scene.draw();
         
 /*
         if (Entity* entity = scene.getFocus()) {
+            Application& app = the<Application>();
             glEnable(GL_BLEND);
             setOrthoProjection(float(app.getWidth()), float(app.getHeight()));
             glTranslatef(app.getWidth() / 2.0f, 0, 0);

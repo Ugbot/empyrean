@@ -15,6 +15,7 @@ SOURCES = Split("""
     OBJLoader.cpp
     PacketFactory.cpp
     PacketTypes.cpp
+    PathHandler.cpp
     PlanarMap.cpp
     Platform.cpp
     ReaderThread.cpp

@@ -1,16 +1,16 @@
 #include <fstream>
-#include <string>
-#include <vector>
 #include <map>
 #include <sstream>
 #include <stdexcept>
+#include <string>
+#include <vector>
 
 #include <cal3d/cal3d.h>
 
 #include "Model.h"
 #include "Profiler.h"
 #include "ResourceManager.h"
-#include "Utility.h"
+#include "ScopedArray.h"
 #include "Types.h"
 #include "Log.h"
 

@@ -1,3 +1,5 @@
 #!/bin/sh
 
-cd build && ( ( ./client & ) ; ./server )
+build/server &
+build/client &
+wait
