@@ -15,9 +15,25 @@ Directories or something like that...)
 The other third-party dependencies are checked into CVS, so you do not
 need to worry about them.
 
+Before you can compile or run Empyrean, you must run the
+scripts/update-vc7.sh script.  This requires that you have Cygwin
+installed.  When installing Cygwin, make sure you select the Python,
+libpng, and jpeg packages.  (If we depend on more than that, let me
+know.)
 
-After downloading Empyrean from CVS, open empyrean.sln and build
-away.  Let me know if something doesn't work.
+Then you need to install SCons into Cygwin.  Go to www.scons.org,
+download and extract the latest source tarball into /usr/src, and run
+"python setup.py install".
+
+Finally (almost there!) you need to install Corona into Cygwin.  Go to
+http://corona.sf.net/, get the latest source tarball, put it in
+/usr/src (or /usr/local/src), extract it, and run "./configure && make
+&& make install".  Pay attention to the output of the configure
+script.  If it gives warnings about not supporting PNG or JPEG, you
+need to go back and select those packages in the Cygwin installer.
+
+Now you can open empyrean.sln and build away.  Let me know if
+something doesn't work.
 
 
 aegis@users.sourceforge.net
