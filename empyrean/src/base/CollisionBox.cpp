@@ -1,7 +1,7 @@
 #include "CollisionBox.h"
 #include "Constants.h"
 #include "Log.h"
-#include "VisDebug.h"
+//#include "VisDebug.h"
 
 namespace pyr {
  

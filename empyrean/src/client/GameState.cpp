@@ -18,7 +18,7 @@
 #include "ServerConnection.h"
 #include "Texture.h"
 #include "HUD.h"
-#include "VisDebug.h"
+//#include "VisDebug.h"
 
 namespace pyr {
 
@@ -102,6 +102,7 @@ namespace pyr {
         _scene.draw(_renderer);
         checkOpenGLErrors();
 
+#if 0
         // Draw any lines and points in the visDebug
         std::vector<DebugRay> debugRays = the<VisDebug>().getSegs();
         glLineWidth(2.0);
@@ -124,6 +125,7 @@ namespace pyr {
         glEnd();
         the<VisDebug>().clearPts();
         checkOpenGLErrors();
+#endif
 
         if (ClientEntityPtr entity = _scene.getFocus()) {
             _hud.draw(_renderer,entity);

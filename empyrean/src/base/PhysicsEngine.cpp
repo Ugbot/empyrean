@@ -5,7 +5,7 @@
 #include "PhysicsBehaviorSlot.h"
 #include "PhysicsEngine.h"
 #include "PlayerBehavior.h"
-#include "VisDebug.h"
+//#include "VisDebug.h"
 
 namespace pyr {
 

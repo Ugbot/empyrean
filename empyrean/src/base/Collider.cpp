@@ -93,7 +93,6 @@ namespace pyr {
         }
 
         // Check to see where the collision would be with the ground
-        float origdt = dt;
         CollisionData groundData = collideWithWorld(dt,ent,terrain);
 
         // Check to see where the collision would be with another entity  OPTIMIZE THIS!!!

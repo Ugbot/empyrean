@@ -12,7 +12,7 @@
 #include "ServerConnection.h"
 #include "State.h"
 #include "Texture.h"
-#include "VisDebug.h"
+//#include "VisDebug.h"
 
 namespace pyr {
 

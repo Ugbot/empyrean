@@ -1,3 +1,4 @@
+#include <stdexcept>
 #include "Debug.h"
 #include "GLUtility.h"
 
