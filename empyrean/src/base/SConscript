@@ -23,6 +23,7 @@ SOURCES = Split("""
     PathHandler.cpp
     PlanarMap.cpp
     Platform.cpp
+    PlayerBehavior.cpp
     ReaderThread.cpp
     ResourceManager.cpp
     ServerSocket.cpp

@@ -69,11 +69,7 @@ namespace pyr {
     }
 
     void GameEntity::update(float dt, const Map* terrain) {
-        // TEMP!!
-        //std::cout << "I have two weapons! They are : " << _meleeWeapon->_name;
-        //std::cout << " and " << _rangeWeapon->_name << std::endl;
-        //std::cout << "I am wearing armor that is : " << _armor->_name << std::endl;
-
+#if 0
         // Provide client-side estimation of server physics model.
         Vec2f origPos = getPos();
 
@@ -83,7 +79,6 @@ namespace pyr {
             getVel()[1] = -constants::TERMINAL_VELOCITY;
         }
 
-#if 0
         // For testing to see if jumping is done
         Vec2f precollideposition = getPos();
         Vec2f precollidevelocity = getVel();
@@ -101,7 +96,6 @@ namespace pyr {
         if (_state) {
             (this->*_state)(dt);
         }
-        //_model->update(dt);
     }
 
     void GameEntity::collideWithOthers(EntityMap entities) {
@@ -120,17 +114,6 @@ namespace pyr {
     }
 
 /*
-    // Action Functions
-    bool GameEntity::jump() {
-         if(getJumping() < 2) {
-            getJumping()++;
-            getVel()[1] = 8;
-            _jumpStart = true;
-            return true;
-        }
-        return false;
-    }
-        
     bool GameEntity::attack() {
         if(_attackStart) {
             return false; // already attacking can't attack right now

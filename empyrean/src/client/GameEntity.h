@@ -68,7 +68,6 @@ namespace pyr {
 
         // Character Information
         float _direction;
-        Zeroed<u16> _jumping;
     };
 
 }
