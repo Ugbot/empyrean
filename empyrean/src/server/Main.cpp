@@ -1,5 +1,6 @@
 #include <iostream>
 #include <stdexcept>
+#include "Configuration.h"
 #include "Error.h"
 #include "ListenerThread.h"
 #include "NSPRUtility.h"
@@ -10,15 +11,13 @@
 
 namespace pyr {
 
-    static int PORT = 8765;
-    
-
     void runServer() {
 	std::cout << "Starting Empyrean Server..." << std::endl;
 
         World world;
 
-        ListenerThread* listener = new ListenerThread(PORT);
+        int port = Configuration::instance().getServerPort();
+        ListenerThread* listener = new ListenerThread(port);
         ScopedPtr<Thread> thread(new Thread(listener));
         
         float last = getNow();

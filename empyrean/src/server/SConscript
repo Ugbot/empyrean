@@ -1,6 +1,7 @@
 Import('base_env TOOLS')
 
 SOURCES = [
+    'Configuration.cpp',
     'ListenerThread.cpp',
     'Main.cpp',
     'Server.cpp',

@@ -1,3 +1,4 @@
+#include "Server.h"
 #include "ServerFrame.h"
 
 
@@ -48,6 +49,7 @@ namespace pyr {
     }
     
     void ServerFrame::onStart() {
+        
         log("Starting...");
     }
     
