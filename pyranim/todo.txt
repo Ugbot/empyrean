@@ -95,14 +95,19 @@ The implementation schedule:
 - Rotation widget picking points correctly.
 - Rotation tool allows picking of joints.
 
---- WE ARE HERE ---
+1/11/03 (3784 LOC, 108398 bytes)
 
 - Rotation widget rotating.
+- Propagate rotations to model.
+
+--- WE ARE HERE ---
+
+- Fix "rotWidget init resets quaternion" bug (off by one?)
 - Joint drawing off by one?
 - Position widget?
-- Compute skeleton joint angles for current view.
 - Load animation.
 - Display animation.
+- Compute skeleton joint angles for current view.
 - Design animation panel user interface (after Infini-D's?).
 - Get interface working with stubs.
 - Edit animation.
@@ -111,14 +116,12 @@ The implementation schedule:
 
 
 
---- Other stuff ---
+--- Other stuff (would be nice later) ---
 
+- Fix occasional joint picking error?
 - Load mesh?
 - Display mesh?
-- Some sort of text for navigation prompts?
-- Add matrix-to-quaternion routine?
-- Test matrix-to-quat vs. quat-to-matrix?
-- Make an IQuat type?
+- More intuitive rotation widget interaction.
 
 - Set up auxilliary drawing context?
   - Initialization:

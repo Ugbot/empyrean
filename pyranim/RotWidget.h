@@ -15,7 +15,9 @@ public:
     virtual int getHeight() const = 0;
     virtual const Camera &getCamera() const = 0;
     virtual void redraw() = 0;
-    virtual void rotWidgetChanged(RotWidget *, const IPoint &quat) = 0;
+    virtual void rotWidgetChanged(RotWidget *widget,
+                                  const IQuat &quat,
+                                  bool final) = 0;
 };
 
 struct RWPoint {
@@ -44,8 +46,13 @@ public:
     bool mouseUp(int x, int y);
     
 protected:
+    IQuat m_baseQuat;
+    IQuat m_deltaQuat;
     IQuat m_quat;
     IPoint m_loc;
+    IVector m_outAxis;
+    int m_prevX;
+    int m_prevY;
     RotWidgetListener *m_listener;
     double m_radius;
     int m_selAxis;

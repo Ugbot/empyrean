@@ -50,7 +50,7 @@ public:
     int getHeight() const { return m_height; }
     const Camera &getCamera() const { return *m_camera; }
     void redraw();
-    void rotWidgetChanged(RotWidget *widget, const IPoint &quat);
+    void rotWidgetChanged(RotWidget *widget, const IQuat &quat, bool final);
 
     Model *getModel() { return m_model; }
 

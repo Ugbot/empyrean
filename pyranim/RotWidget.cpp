@@ -132,27 +132,61 @@ bool RotWidget::mouseDown(int x, int y) {
     if(ip.first == -1) return false;
     m_mouseDown = true;
     m_selAxis = ip.first;
+    m_baseQuat = m_quat;
+    m_deltaQuat = IQuat();
+    m_prevX = x;
+    m_prevY = y;
     if(m_listener) m_listener->redraw();
     return true;
 }
 
 bool RotWidget::mouseMove(int x, int y) {
-    //printf("RotWidget::mouseMove\n"); fflush(stdout);
-    return false;
+    if(!m_listener) return false;
+    if(!m_mouseDown) return false;
+    if(m_selAxis == -1) {
+    } else {
+        double deltaX = (double) (m_prevX - x) / m_listener->getWidth();
+        double angle = M_PI * 2.0 * deltaX;
+
+        if(m_selAxis == 3) {
+            m_deltaQuat = m_deltaQuat * IQuat(angle, -m_outAxis);
+            m_quat = m_baseQuat * m_deltaQuat;
+        } else {
+            IVector axis;
+            if(m_selAxis == 0) {
+                axis = IVector(1, 0, 0);
+            } else if(m_selAxis == 1) {
+                axis = IVector(0, 1, 0);
+            } else if(m_selAxis == 2) {
+                axis = IVector(0, 0, 1);
+            }
+            m_deltaQuat = IQuat(angle, axis) * m_deltaQuat;
+            m_quat = m_deltaQuat * m_baseQuat;
+        }
+    }
+    refreshRWPoints();
+    m_listener->redraw();
+    m_listener->rotWidgetChanged(this, m_quat, false);
+    m_prevX = x;
+    m_prevY = y;
+    return true;
 }
 
 bool RotWidget::mouseUp(int x, int y) {
     if(!m_mouseDown) return false;
+    if(!m_listener)  return false;
 
     m_mouseDown = false;
     m_selAxis = -1;
-    if(m_listener) m_listener->redraw();
+    m_listener->redraw();
+    m_listener->rotWidgetChanged(this, m_quat, true);
     return true;
 }
 
 void RotWidget::refreshRWPoints() {
     IMatrix m = quat_to_mat(m_quat);
 
+    // Find the direction from the viewer to the widget (fourth axis).
     IMatrix projMat = m_listener->getCamera().getWorldToFilm();
     IPoint eye = m_listener->getCamera().getEye();
     IVector dir = m_loc - eye;
@@ -174,6 +208,9 @@ void RotWidget::refreshRWPoints() {
         }
     }
     perpDir = normalize(perpDir);
+
+    // Set out axis.
+    m_outAxis = dir;
 
     IPoint centerPoint = projMat * m_loc;
     centerPoint.homogenize();

@@ -57,6 +57,7 @@ public:
     void getKeyInfo(KeyInfo &info);
     int getNumJoints();
     const JointInfo &getJointInfo(int index);
+    void setJointRotation(int index, const IQuat &quat);
     const char *getErrorString() const;
 
     void getGroundPlaneColor(IVector &color) const;
@@ -72,6 +73,7 @@ protected:
     ViewVector m_views;
 
     void recalcJoints();
+    void recalcJointParentQuats();
     void refreshViews();
 
 private:

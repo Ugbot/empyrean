@@ -453,8 +453,16 @@ void View::redraw() {
     notifyViewListeners();
 }
 
-void View::rotWidgetChanged(RotWidget *widget, const IPoint &quat) {
+void View::rotWidgetChanged(RotWidget *widget, const IQuat &quat, bool final) {
     assert(widget == m_rotWidget);
+    if(m_selectedJoint == -1) return;
+    const JointInfo &ji = m_model->getJointInfo(m_selectedJoint);
+    IQuat parentQuat = ji.m_parentQuat;
+    m_model->setJointRotation(m_selectedJoint, quat * conjugate(parentQuat));
+
+    // XXX - if final is set, commit undo stuff.
+    
+    redraw();
 }
 
 int View::getClickedJoint(int x, int y) {

@@ -142,6 +142,30 @@ const JointInfo &Model::getJointInfo(int index) {
     return m_joints[index];
 }
 
+void Model::setJointRotation(int index, const IQuat &quat) {
+    // XXX - Set joint info for now...
+    m_joints[index].m_quat = quat;
+    recalcJointParentQuats();
+}
+
+void Model::recalcJointParentQuats() {
+    const Skeleton &s = getSkeleton();
+    for(int i = 0; i < (int) m_joints.size(); i ++) {
+        const BoneInfo &bi = s.getBoneInfo(i); JointInfo &ji = m_joints[i];
+        IMatrix transMat = trans_mat(bi.m_trans - IPoint());
+        IMatrix rotMat   = quat_to_mat(ji.m_quat);
+        if(ji.m_parent == -1) {
+            ji.m_localToGlobalMat =             transMat * rotMat;
+            ji.m_parentQuat = IQuat();
+        } else {
+            IMatrix parentMat = m_joints[ji.m_parent].m_localToGlobalMat;
+            ji.m_localToGlobalMat = parentMat * transMat * rotMat;
+            ji.m_parentQuat = (m_joints[ji.m_parent].m_quat *
+                               m_joints[ji.m_parent].m_parentQuat);
+        }
+    }
+}
+
 void Model::recalcJoints() {
     const Skeleton &s = getSkeleton();
     int numBones = s.getNumBones();
