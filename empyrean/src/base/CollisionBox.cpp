@@ -78,9 +78,23 @@ namespace pyr {
         return invmat;
     }
 
+    bool goingTowards(Vec2f& vel, Vec2f& pos, Vec2f& secPos) {
+        Vec2f posVec = secPos - pos;
+        float dotprod = gmtl::dot(posVec, vel);
+        if(dotprod > 0) {
+            return true;
+        }
+        return false;
+    }
+
     void CollisionBox::collideWithDynamic(float dt, Vec2f& vel, Vec2f& vel2, CollisionBox& box2,
                                         std::vector<Vec2f>& points) {
        
+        // Test to see if they are going away from each other if they are.. stop
+        if(!goingTowards(vel,this->getCenter(),box2.getCenter()) && !goingTowards(vel,this->getCenter(),box2.getCenter())) {
+            return;
+        }
+
         // Get the segments box two
         std::vector<Segment> segs;
         box2.segment(segs);

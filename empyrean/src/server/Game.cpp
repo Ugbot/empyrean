@@ -41,6 +41,7 @@ namespace pyr {
                 float height = 1.9f;
                 entity->setBounds(BoundingRectangle(Vec2f(-width / 2, 0), Vec2f(width / 2, height)));
                 entity->setPos(elt->pos);
+                addEntity(entity);
             }
         }
     }

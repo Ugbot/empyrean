@@ -21,26 +21,30 @@ namespace pyr {
         pos += vel * dt;
         vel[1] += constants::GRAVITY * dt;                      // gravity
 
-        const float mu = 0.4;
+
+        const float mu = 0.8;
         const float acc = mu * constants::GRAVITY;
         
         if(_desiredVelocity != 0) {
             vel[0] = _desiredVelocity;
         }
 
-        if(vel[0] > 0) {
-            vel[0] += acc * dt;
-            if(vel[0] < 0) {
-                vel[0] = 0;
-            }
-        }
-        
-        if(vel[0] < 0) {
-            vel[0] -= acc * dt;
+        if(!_jumping) {
+            
             if(vel[0] > 0) {
-                vel[0] = 0;
+                vel[0] += acc * dt;
+                if(vel[0] < 0) {
+                    vel[0] = 0;
+                }
             }
-        }                        
+            
+            if(vel[0] < 0) {
+                vel[0] -= acc * dt;
+                if(vel[0] > 0) {
+                    vel[0] = 0;
+                }
+            }                        
+        }
 
         if (vel[1] < constants::TERMINAL_VELOCITY) { // terminal velocity
             vel[1] = constants::TERMINAL_VELOCITY;
@@ -78,6 +82,19 @@ namespace pyr {
         }
 
         if (event == "Reset Jumping") {
+            if(_jumping > 0) {
+                if(_desiredVelocity > 0) {
+                    sendAppearanceCommand(entity, "Face Left");
+                    beginAnimationCycle(entity, "walk");
+                }
+                else if(_desiredVelocity < 0) {
+                    sendAppearanceCommand(entity, "Face Right");
+                    beginAnimationCycle(entity, "walk");
+                }
+                else {
+                    beginAnimationCycle(entity, "idle");
+                }
+            }
             _jumping = 0;
         }
 

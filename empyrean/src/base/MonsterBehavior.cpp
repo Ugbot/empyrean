@@ -43,6 +43,24 @@ namespace pyr {
 
         pos += vel * dt;
         vel[1] += constants::GRAVITY * dt;           // gravity
+
+        const float mu = 0.8;
+        const float acc = mu * constants::GRAVITY;
+
+        if(vel[0] > 0) {
+            vel[0] += acc * dt;
+            if(vel[0] < 0) {
+                vel[0] = 0;
+            }
+        }
+        
+        if(vel[0] < 0) {
+            vel[0] -= acc * dt;
+            if(vel[0] > 0) {
+                vel[0] = 0;
+            }
+        }                        
+       
         if (vel[1] < constants::TERMINAL_VELOCITY) { // terminal velocity
             vel[1] = constants::TERMINAL_VELOCITY;
         }

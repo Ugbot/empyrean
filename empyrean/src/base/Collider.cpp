@@ -134,8 +134,8 @@ namespace pyr {
         CollisionData rv;
 
         entityBox.collideWithDynamic(0,ent1->getVel(),ent2->getVel(), otherBox, rv.points);
-        ent1->getPos() += entityBox.getDisplacement();
-        ent2->getPos() += otherBox.getDisplacement();
+        //ent1->getPos() += entityBox.getDisplacement();
+        //ent2->getPos() += otherBox.getDisplacement();
     };
 
     void resolveCollisions(float dt, Map* terrain, std::vector<Entity*>& ents) {
