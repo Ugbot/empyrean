@@ -37,7 +37,7 @@ class MonsterBehavior(pyr.Behavior):
     def findDirection(self,entity,dt,env):
         mPos = entity.pos
         pPos = self.getPlayerPos(env)
-        pPos[1] = pPos[1] + 1.8
+        #pPos[1] = pPos[1] + 1.8
         self.direction = self.normalize(pPos-mPos)
         self.stopPoint = mPos + self.direction*10
 
@@ -62,7 +62,8 @@ class MonsterBehavior(pyr.Behavior):
     def attacking(self, entity, dt, env):
         self.moveDirection(entity,dt)
         if self.distToPlayer(entity,env) < 2:
-            #attack!!!!!
+            action = Action()
+            entity.behavior.addAction(action)
             self.state = "running"
         elif self.distToPlayer(entity,env) > self.sightrange+1:
             self.state = "scanning"
