@@ -40,6 +40,8 @@ namespace pyr {
             }
 
             server.update(dt);
+            
+            // Maintain a server update rate of about 20 frames per second.
             PR_Sleep(secondsToInterval(0.050f));
         }
     }

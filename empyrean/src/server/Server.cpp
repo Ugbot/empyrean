@@ -56,21 +56,21 @@ namespace pyr {
 
     void Server::connectionRemoved(Connection* connection) {
         ConnectionData* cd = getData(connection);
-        
+
         if (cd->loggedIn) {
             announceLogout(connection);
         }
-        
+
         delete cd;
 
         connection->setOpaque(0);
         connection->clearHandlers();
-        
+
         if (connection->isClosed()) {
             PYR_SERVER_LOG() << italic(connection->getPeerAddress()) << " disconnected";
         }
     }
-    
+
     void Server::handleLogin(Connection* c, LoginPacket* p) {
         ConnectionData* cd = getData(c);
         if (cd->loggedIn) {
@@ -80,7 +80,6 @@ namespace pyr {
         }
 
         /// @todo  test for invalid username
-        /// @todo  test for already logged in
 
         for (size_t i = 0; i < getConnectionCount(); ++i) {
             ConnectionData* cdi = getData(getConnection(i));
@@ -90,15 +89,15 @@ namespace pyr {
                 return;
             }
         }
-        
-        Account* account = Database::instance().getAccount(p->username());
+
+        Account* account = the<Database>().getAccount(p->username());
         if (p->newAccount()) {
             if (account) {
                 c->sendPacket(new LoginResponsePacket(LR_ACCOUNT_TAKEN));
                 PYR_SERVER_LOG() << italic(p->username()) << ": account taken!";
             } else {
                 account = new Account(p->username(), p->password());
-                Database::instance().addAccount(account);
+                the<Database>().addAccount(account);
                 cd->account = account;
                 cd->loggedIn = true;
                 c->sendPacket(new LoginResponsePacket(LR_LOGGED_IN));
@@ -108,7 +107,7 @@ namespace pyr {
             }
             return;
         }
-        
+
         if (!account) {
             c->sendPacket(new LoginResponsePacket(LR_NO_ACCOUNT));
             PYR_SERVER_LOG() << italic(p->username()) << " doesn't exist";
@@ -118,7 +117,7 @@ namespace pyr {
                 cd->loggedIn = true;
                 c->sendPacket(new LoginResponsePacket(LR_LOGGED_IN));
                 PYR_SERVER_LOG() << italic(p->username()) << " logged in";
-                
+
                 announceLogin(c);
             } else {
                 c->sendPacket(new LoginResponsePacket(LR_INVALID_PASSWORD));
@@ -135,23 +134,23 @@ namespace pyr {
 
         PYR_SERVER_LOG() << italic(cd->account->getUsername()) << " says: " << p->text();
     }
-    
+
     void Server::handleJoinGame(Connection* c, JoinGamePacket* p) {
         ConnectionData* cd = getData(c);
-        
+
         if (!cd->account) {
             // ignore packet, must log in first
             return;
         }
-        
+
         std::string username = cd->account->getUsername();
-        
+
         if (p->name().empty()) {
             c->sendPacket(new JoinGameResponsePacket(JGR_INVALID_NAME));
             PYR_SERVER_LOG() << italic(username) << " tried to create/join game with no name";
             return;
         }
-        
+
         Game* game = getGame(p->name());
         if (p->newGame()) {
             if (game) {
@@ -164,7 +163,7 @@ namespace pyr {
                 _games.push_back(game);
                 c->sendPacket(new JoinGameResponsePacket(JGR_JOINED));
                 PYR_SERVER_LOG() << italic(username) << " created game " << italic(p->name());
-                
+
                 giveConnection(c, game);
             }
         } else {
@@ -180,34 +179,34 @@ namespace pyr {
                 // Success: game joined
                 c->sendPacket(new JoinGameResponsePacket(JGR_JOINED));
                 PYR_SERVER_LOG() << italic(username) << " joined game " << italic(p->name());
-                
+
                 giveConnection(c, game);
             }
         }
     }
-    
+
     void Server::handleNewCharacter(Connection* c, NewCharacterPacket* p) {
         ConnectionData* cd = getData(c);
-        
+
         if (!cd->account) {
             // ignore packet, must log in first
             return;
         }
-        
+
         std::string username = cd->account->getUsername();
-        
+
         if (p->name().empty()) {
             c->sendPacket(new NewCharacterResponsePacket(NCR_INVALID_NAME));
             PYR_SERVER_LOG() << italic(username) << " tried to create character with no name";
             return;
         }
-        
-        Character* character = Database::instance().getCharacter(p->name());
+
+        Character* character = the<Database>().getCharacter(p->name());
         if (character) {
             c->sendPacket(new NewCharacterResponsePacket(NCR_ALREADY_TAKEN));
             PYR_SERVER_LOG() << italic(username) << " tried to create character " << italic(p->name()) << ", but name was already taken";
         } else {
-            Database::instance().addCharacter(new Character(p->name()));
+            the<Database>().addCharacter(new Character(p->name()));
             c->sendPacket(new NewCharacterResponsePacket(NCR_SUCCESS));
             PYR_SERVER_LOG() << italic(username) << " created character " << italic(p->name());
         }
@@ -218,11 +217,11 @@ namespace pyr {
         sendAllBut(c, new LobbyPacket(cd->account->getUsername(),
                                       LOBBY_LOGIN, ""));
     }
-    
+
     void Server::announceLogout(Connection* c) {
         ConnectionData* cd = getData(c);
         sendAllBut(c, new LobbyPacket(cd->account->getUsername(),
                                       LOBBY_LOGOUT, ""));
     }
-    
+
 }

@@ -31,6 +31,7 @@ namespace pyr {
         }
 
         MapElementPtr findElementByName(const std::string& name) const;
+        void getAllElements(std::vector<MapElementPtr>& elts) const;
         
     private:
 

@@ -18,19 +18,19 @@ namespace pyr {
     public:
         Game(const std::string& name, const std::string& password);
         ~Game();
-        
-        const std::string& getName() const;
-        const std::string& getPassword() const;
-        
+
+        const std::string& getName() const     { return _name; }
+        const std::string& getPassword() const { return _password; }
+
         void update(float dt);
-        
+
     private:
         struct ConnectionData {
             ServerEntity* playerEntity;
         };
 
         static ConnectionData* getData(Connection* c);
-        
+
         void addEntity(ServerEntity* entity);
         void removeEntity(ServerEntity* entity);
 
@@ -39,13 +39,14 @@ namespace pyr {
 
         void handlePlayerEvent(Connection* c, PlayerEventPacket* p);
 
+    private:
         std::string _name;
         std::string _password;
-        
-        std::vector<ServerEntity*> _entities;
-    
+
         ScopedPtr<Map> _map;
         Vec2f _startPosition;
+
+        std::vector<ServerEntity*> _entities;
 
         UIDGenerator<u16> _idGenerator;
     };

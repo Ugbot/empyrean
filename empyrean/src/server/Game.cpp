@@ -10,32 +10,38 @@ namespace pyr {
     Game::Game(const std::string& name, const std::string& password) {
         _name = name;
         _password = password;
+
         _map = loadMap("maps/map1.obj");
         if (!_map) {
             throw std::runtime_error("Loading maps/map1.obj failed");
         }
 
+        // Find start position.
         MapElementPtr start = _map->findElementByName("start");
         if (start) {
             _startPosition = start->pos;
         }
+
+        // Find monsters.
+        std::vector<MapElementPtr> elements;
+        _map->getAllElements(elements);
+        for (size_t i = 0; i < elements.size(); ++i) {
+            MapElementPtr elt = elements[i];
+            if (elt->properties["enemy"] == "true") {
+                ServerEntity* entity = new ServerEntity(
+                    _idGenerator.reserve(),
+                    "models/Walk1/walk1.cfg");
+                // Add AI.
+                addEntity(entity);
+            }
+        }
     }
-    
+
     Game::~Game() {
         clearConnections();
-    
-        for (size_t i = 0; i < _entities.size(); ++i) {
-            delete _entities[i];
-        }
+
+        for_each(_entities.begin(), _entities.end(), delete_function<ServerEntity>);
         _entities.clear();
-    }
-    
-    const std::string& Game::getName() const {
-        return _name;
-    }
-    
-    const std::string& Game::getPassword() const {
-        return _password;
     }
 
     void Game::update(float dt) {
@@ -55,14 +61,11 @@ namespace pyr {
     Game::ConnectionData* Game::getData(Connection* c) {
         return static_cast<ConnectionData*>(c->getOpaque());
     }
-    
-    void Game::addEntity(ServerEntity* entity) {
-        // Not sure if this is the right place to do this.
-        entity->setPos(_startPosition);
 
+    void Game::addEntity(ServerEntity* entity) {
         _entities.push_back(entity);
     }
-    
+
     void Game::removeEntity(ServerEntity* entity) {
         for (size_t i = 0; i < _entities.size(); ++i) {
             if (_entities[i] == entity) {
@@ -71,13 +74,17 @@ namespace pyr {
             }
         }
     }
-    
+
     void Game::connectionAdded(Connection* connection) {
-        ServerEntity* entity = new ServerEntity(_idGenerator.reserve());
+        ServerEntity* entity = new ServerEntity(
+            _idGenerator.reserve(),
+            "models/paladin/paladin.cfg");
+        entity->setPos(_startPosition);
+
         sendAll(new EntityAddedPacket(
                     entity->getID(),
                     entity->getAppearance()));
-                    
+
         // set connection-specific data
         ConnectionData* cd = new ConnectionData;
         cd->playerEntity = entity;
@@ -85,9 +92,9 @@ namespace pyr {
 
         // add packet handlers
         connection->definePacketHandler(this, &Game::handlePlayerEvent);
-        
+
         addEntity(entity);
-        
+
         // send all existing entities to the new connection
         for (size_t i = 0; i < _entities.size(); ++i) {
             connection->sendPacket(new EntityAddedPacket(
@@ -97,7 +104,7 @@ namespace pyr {
 
         connection->sendPacket(new SetPlayerPacket(entity->getID()));
     }
-    
+
     void Game::connectionRemoved(Connection* connection) {
         ConnectionData* cd = getData(connection);
         PYR_ASSERT(cd, "connectionRemoved() called before connectionAdded()");
@@ -118,9 +125,9 @@ namespace pyr {
     void Game::handlePlayerEvent(Connection* c, PlayerEventPacket* p) {
         ConnectionData* cd = getData(c);
         ServerEntity* entity = cd->playerEntity;
-        
+
         const float speed = 2;
-    
+
         switch (p->code()) {
             case PE_BEGIN_RIGHT:
                 entity->getVel()[0] = speed;

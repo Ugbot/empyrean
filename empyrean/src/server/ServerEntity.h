@@ -13,8 +13,9 @@ namespace pyr {
 
     class ServerEntity {
     public:
-        ServerEntity(u16 id) {
+        ServerEntity(u16 id, const std::string& appearance) {
             _id = id;
+            _appearance = appearance;
         }
 
         u16 getID() const {
@@ -22,9 +23,9 @@ namespace pyr {
         }
 
         std::string getAppearance() const {
-            return "models/paladin/paladin.cfg";
+            return _appearance;
         }
-    
+
         void setPos(const gmtl::Vec2f& pos) { _pos = pos; }
         gmtl::Vec2f& getPos()               { return _pos; }
         const gmtl::Vec2f& getPos() const   { return _pos; }
@@ -32,11 +33,13 @@ namespace pyr {
         void setVel(const gmtl::Vec2f& vel) { _vel = vel; }
         gmtl::Vec2f& getVel()               { return _vel; }
         const gmtl::Vec2f& getVel() const   { return _vel; }
-    
+
         void update(float dt, Map* terrain);
-        
+
     private:
         u16 _id;
+        std::string _appearance;
+
         Vec2f _pos;
         Vec2f _vel;
         

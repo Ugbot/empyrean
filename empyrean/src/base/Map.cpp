@@ -4,49 +4,46 @@
 
 namespace pyr {
 
-    class MapSearcher : public MapVisitor {
+    class MapEnumerator : public MapVisitor {
     public:
-        MapSearcher(const std::string& name) {
-            _name = name;
+        MapEnumerator(std::vector<MapElementPtr>& elts) : _elts(elts) {
         }
 
-        // Ideally, these would halt the search once they've found something.
-
         void visitGeometry(GeometryElement* e) {
-            if (e->name == _name) {
-                result = e;
-            }
+            _elts.push_back(e);
         }
 
         void visitGroup(GroupElement* e) {
-            if (e->name == _name) {
-                result = e;
-            }
-
+            _elts.push_back(e);
             for (size_t i = 0; i < e->children.size(); ++i) {
                 e->children[i]->handleVisitor(*this);
             }
         }
 
         void visitDummy(DummyElement* e) {
-            if (e->name == _name) {
-                result = e;
-            }
-        }
+            _elts.push_back(e);
 
-        MapElementPtr getResult() {
-            return result;
         }
 
     private:
-        std::string _name;
-        MapElementPtr result;
+        std::vector<MapElementPtr>& _elts;
     };
 
+
     MapElementPtr Map::findElementByName(const std::string& name) const {
-        MapSearcher v(name);
-        handleVisitor(v);
-        return v.getResult();
+        std::vector<MapElementPtr> elts;
+        getAllElements(elts);
+        for (size_t i = 0; i < elts.size(); ++i) {
+            if (elts[i]->name == name) {
+                return elts[i];
+            }
+        }
+        return 0;
+    }
+
+    void Map::getAllElements(std::vector<MapElementPtr>& elts) const {
+        MapEnumerator v(elts);
+        _root->handleVisitor(v);
     }
 
 }
