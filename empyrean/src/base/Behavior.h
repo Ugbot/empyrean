@@ -17,6 +17,7 @@ namespace pyr {
     public:
         virtual ~Behavior() { }
         virtual const char* getName() = 0;
+        virtual const char* getResource() = 0;
         virtual void update(Entity* entity, float dt) = 0;
     };
 
@@ -26,7 +27,8 @@ namespace pyr {
      *
      * This function will not return a null pointer.
      */
-    Behavior* instantiateBehavior(const std::string& name);
+    Behavior* instantiateBehavior(const std::string& name,
+                                  const std::string& resource = "");
 
 }
 

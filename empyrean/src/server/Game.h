@@ -11,6 +11,7 @@
 
 namespace pyr {
 
+    class EntityAddedPacket;
     class PlayerEventPacket;
     class ServerEntity;
 
@@ -33,6 +34,7 @@ namespace pyr {
 
         void addEntity(ServerEntity* entity);
         void removeEntity(ServerEntity* entity);
+        static EntityAddedPacket* buildEntityAddedPacket(ServerEntity* entity);
 
         void connectionAdded(Connection* connection);
         void connectionRemoved(Connection* connection);

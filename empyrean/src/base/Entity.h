@@ -17,9 +17,19 @@ namespace pyr {
 
     class Entity {
     public:
+        Entity(Behavior* behavior, Appearance* appearance) {
+            PYR_ASSERT(behavior,   "Behavior cannot be null");
+            PYR_ASSERT(appearance, "Appearance cannot be null");
+            _behavior   = behavior;
+            _appearance = appearance;
+        }
+
         virtual ~Entity();
 
         void update(float dt, const Map* terrain);
+
+        Behavior*   getBehavior()   const { return _behavior.get();   }
+        Appearance* getAppearance() const { return _appearance.get(); }
 
         void setPos(const Vec2f& pos) { _pos = pos;  }
         Vec2f& getPos()               { return _pos; }
@@ -34,8 +44,8 @@ namespace pyr {
         const BoundingRectangle& getBounds() const  { return _bounds; }
 
     private:
-        ScopedPtr<Appearance> _appearance;
         ScopedPtr<Behavior> _behavior;
+        ScopedPtr<Appearance> _appearance;
 
         Vec2f _pos;
         Vec2f _vel;

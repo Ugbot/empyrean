@@ -18,6 +18,9 @@ namespace pyr {
     class DumbBehavior : public Behavior {
     public:
         PYR_BEHAVIOR_NAME("dumb");
+        
+        DumbBehavior(const std::string& /*resource*/) {
+        }
 
         void update(Entity* entity, float dt) {
             entity->getPos() += entity->getVel() * dt;
@@ -25,6 +28,10 @@ namespace pyr {
             entity->getVel()[0] += sin(angle) * dt / 2;
             entity->getVel()[1] += cos(angle) * dt / 2;
             angle += PI * dt / 2;
+        }
+
+        const char* getResource() {
+            return "";
         }
 
     private:
@@ -36,21 +43,28 @@ namespace pyr {
     public:
         PYR_BEHAVIOR_NAME("null");
 
+        NullBehavior(const std::string& /*resource*/) {
+        }
+
         void update(Entity* entity, float dt) {
             entity->getPos() += entity->getVel() * dt;
+        }
+
+        const char* getResource() {
+            return "";
         }
     };
 
 
-    Behavior* instantiateBehavior(const std::string& name) {
+    Behavior* instantiateBehavior(const std::string& name, const std::string& resource) {
 #define TRY_TYPE(type)                          \
         if (name == type::getClassName()) {     \
-            return new type;                    \
+            return new type(resource);          \
         }
 
         TRY_TYPE(DumbBehavior);
         TRY_TYPE(NullBehavior);
-        return new NullBehavior;
+        return new NullBehavior(resource);
     }
 
 }

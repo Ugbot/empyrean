@@ -1,6 +1,7 @@
 Import('base_env TOOLS')
 
 SOURCES = Split("""
+    AppearanceFactory.cpp
     Application.cpp
     Configuration.cpp
     CreditsState.cpp

@@ -3,6 +3,7 @@
 #include "Game.h"
 #include "MapLoader.h"
 #include "PacketTypes.h"
+#include "ServerAppearance.h"
 #include "ServerEntity.h"
 
 namespace pyr {
@@ -23,7 +24,6 @@ namespace pyr {
         }
 
         // Find monsters.
-#if 0
         std::vector<MapElementPtr> elements;
         _map->getAllElements(elements);
         for (size_t i = 0; i < elements.size(); ++i) {
@@ -31,13 +31,12 @@ namespace pyr {
             if (elt->properties["enemy"] == "true") {
                 ServerEntity* entity = new ServerEntity(
                     _idGenerator.reserve(),
-                    "models/Walk1/walk1.cfg",
-                    instantiateBehavior("dumb"));
+                    instantiateBehavior("dumb"),
+                    new ServerAppearance("cal3d", "models/Walk1/walk1.cfg"));
                 entity->setPos(elt->pos);
                 addEntity(entity);
             }
         }
-#endif
     }
 
     Game::~Game() {
@@ -81,19 +80,24 @@ namespace pyr {
             }
         }
     }
+    
+    EntityAddedPacket* Game::buildEntityAddedPacket(ServerEntity* entity) {
+        return new EntityAddedPacket(
+            entity->getID(),
+            entity->getBehavior()->getName(),
+            entity->getBehavior()->getResource(),
+            entity->getAppearance()->getName(),
+            entity->getAppearance()->getResource());
+    }
 
     void Game::connectionAdded(Connection* connection) {
         ServerEntity* entity = new ServerEntity(
             _idGenerator.reserve(),
-            "models/paladin/paladin.cfg");
+            instantiateBehavior("player"),
+            new ServerAppearance("cal3d", "models/paladin/paladin.cfg"));
         entity->setPos(_startPosition);
 
-        sendAll(new EntityAddedPacket(
-                    entity->getID(),
-                    "player",
-                    "",
-                    "cal3d",
-                    entity->getAppearance()));
+        sendAll(buildEntityAddedPacket(entity));
 
         // set connection-specific data
         ConnectionData* cd = new ConnectionData;
@@ -107,12 +111,7 @@ namespace pyr {
 
         // send all existing entities to the new connection
         for (size_t i = 0; i < _entities.size(); ++i) {
-            connection->sendPacket(new EntityAddedPacket(
-                _entities[i]->getID(),
-                "player",
-                "",
-                "cal3d",
-                _entities[i]->getAppearance()));
+            connection->sendPacket(buildEntityAddedPacket(_entities[i]));
         }
 
         connection->sendPacket(new SetPlayerPacket(entity->getID()));

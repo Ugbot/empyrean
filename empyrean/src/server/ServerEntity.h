@@ -3,7 +3,6 @@
 
 #include <algorithm>
 #include <string>
-#include "Behavior.h"
 #include "Entity.h"
 #include "ScopedPtr.h"
 #include "Types.h"
@@ -12,23 +11,20 @@
 
 namespace pyr {
 
+    class Appearance;
+    class Behavior;
     class Map;
-    class ServerEntity;
 
     class ServerEntity : public Entity {
     public:
-        ServerEntity(u16 id, const std::string& appearance, Behavior* behavior = 0) {
+        ServerEntity(u16 id, Behavior* behavior, Appearance* appearance)
+            : Entity(behavior, appearance)
+        {
             _id = id;
-            _appearance = appearance;
-            _behavior = behavior;
         }
 
         u16 getID() const {
             return _id;
-        }
-
-        std::string getAppearance() const {
-            return _appearance;
         }
 
         //void update(float dt, Map* terrain);
@@ -36,8 +32,6 @@ namespace pyr {
 
     private:
         u16 _id;
-        std::string _appearance;
-        ScopedPtr<Behavior> _behavior;
     };
     
 }
