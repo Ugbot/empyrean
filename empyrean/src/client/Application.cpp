@@ -19,18 +19,8 @@ namespace pyr {
     PYR_DEFINE_SINGLETON(Application)
     
     Application::Application() {
-        _width  = 0;
-        _height = 0;
-        _lastX = 0;
-        _lastY = 0;
-        _velX = 0;
-        _velY = 0;
         _currentState = new InitialState();
-        _showCPUInfo = false;
         
-        _totalFadeTime = 0;
-        _currentFadeTime = 0;
-
         gltext::FontPtr font = gltext::OpenFont("fonts/Vera.ttf", 24);
         _renderer = gltext::CreateRenderer(gltext::TEXTURE, font);
         if (!_renderer) {
@@ -121,13 +111,9 @@ namespace pyr {
             }
         }
 
-        if(_velX != 0) {
-            _lastX += _velX * dt;
-        }
+        _lastX += static_cast<int>(_velX * dt);
+        _lastY += static_cast<int>(_velY * dt);
 
-        if(_velY != 0) {
-            _lastY += _velY * dt;
-        }
         _fps.update(dt);
     }
 
@@ -162,7 +148,7 @@ namespace pyr {
         }
     }
 
-    void Application::onJoyMove(int axis, int value) {
+    void Application::onJoyMove(int axis, float value) {
         if (_currentState) {
             _currentState->onJoyMove(axis,value);
         }

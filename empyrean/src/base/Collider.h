@@ -14,7 +14,7 @@ namespace pyr {
         std::vector<Vec2f>   points;
     };
 
-    CollisionData collide(const double& dt, const Vec2f& origPos, Vec2f& newPos, Vec2f& vel,
+    CollisionData collide(float dt, const Vec2f& origPos, Vec2f& newPos, Vec2f& vel,
                           float width, float height, const Map* terrain);
 
 }

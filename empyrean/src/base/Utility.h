@@ -123,6 +123,44 @@ namespace pyr {
     };
     
 
+    /**
+     * Inited is short for Initialized.  This template class lets you
+     * initialize integer members in a class without using member
+     * initializers or assignments in the constructor.  It's much easier
+     * to remember to use this than those two.  ;)
+     */
+    template<typename T, T initVal = 0>
+    class Inited {
+    public:
+        Inited() : _value(initVal) { }
+        Inited(const T& t) : _value(t) { }
+
+        operator T&() { return _value; }
+        operator const T&() const { return _value; }
+
+    private:
+        T _value;
+    };
+
+
+    /**
+     * Same as Inited<T>, but can be used with floats or other types that
+     * can't be used as template parameters.
+     */
+    template<typename T>
+    class Zeroed {
+    public:
+        Zeroed() : _value(0) { }
+        Zeroed(const T& t) : _value(t) { }
+
+        operator T&() { return _value; }
+        operator const T&() const { return _value; }
+
+    private:
+        T _value;
+    };
+
+
     std::string itos(int i);
     
 

@@ -15,10 +15,133 @@
 
 namespace pyr {
 
-    void runClient(int argc, char* argv[]) {
-        // Why bother?
-        //PYR_PROFILE_BLOCK("main");
+    /*
+     * Notes for Jared's wireless gamepad.
+     *
+     * Axis 0 = X Axis left stick (Left = negative, Right = positive)
+     * Axis 1 = Y Axis left stick (Forward = negative, Back = positive)
+     * Axis 2 = Throttle (low = positive, high = negative)
+     * Axis 3 = X Axis right stick (Left = negative, Right = positive)
+     * Axis 4 = Y Axis right stick (Forward = negative, Back = positive)
+     *
+     * Button 0  = A
+     * Button 1  = B
+     * Button 2  = C
+     * Button 3  = X
+     * Button 4  = Y
+     * Button 5  = Z
+     * Button 6  = L1
+     * Button 7  = R1
+     * Button 8  = Start
+     * Button 9  = L2
+     * Button 10 = R2
+     */
 
+    /// @return true if application should quit.
+    bool handleSDLEvents() {
+        PYR_PROFILE_BLOCK("handleSDLEvents");
+
+        Application& app = the<Application>();
+
+        bool should_quit = false;
+
+        SDL_Event event;
+        int result = SDL_PollEvent(&event);
+        while (result == 1) {
+            switch (event.type) {
+                case SDL_VIDEORESIZE:
+                    PYR_ASSERT(0, "SDL_VIDEORESIZE should never occur.");
+                    app.resize(event.resize.w, event.resize.h);
+                    break;
+
+                case SDL_KEYDOWN:
+                case SDL_KEYUP:
+                    app.onKeyPress(
+                        event.key.keysym.sym,
+                        event.key.state == SDL_PRESSED);
+                    break;
+
+                case SDL_MOUSEBUTTONDOWN:
+                case SDL_MOUSEBUTTONUP:
+                    app.onMousePress(
+                        event.button.button,
+                        event.button.state == SDL_PRESSED,
+                        event.button.x,
+                        event.button.y);
+                    break;
+
+                case SDL_MOUSEMOTION:
+                    app.onMouseMove(event.motion.x, event.motion.y);
+                    break;
+
+                case SDL_JOYAXISMOTION:
+                    app.onJoyMove(event.jaxis.axis, normalizeAxisValue(event.jaxis.value));
+                    break;
+
+                case SDL_JOYHATMOTION:
+                    if(event.jhat.value & SDL_HAT_CENTERED) {
+                        // Doesn't work
+                    }
+
+                    if(event.jhat.value & SDL_HAT_RIGHT) {
+                        // Right
+                    }
+                    
+                    if(event.jhat.value & SDL_HAT_LEFT ) {
+                        // Left
+                    }
+
+                    break;
+
+                case SDL_JOYBUTTONDOWN:
+                case SDL_JOYBUTTONUP:
+                    app.onJoyPress(event.jbutton.button,
+                                   event.jbutton.state == SDL_PRESSED);
+                    break;
+
+                case SDL_QUIT:
+                    should_quit = true;
+                    break;
+            }
+
+            result = SDL_PollEvent(&event);
+        }
+
+        // error or SDL_QUIT message
+        return (result < 0 || should_quit);
+    }
+
+    void mainLoop() {
+        Application& app = the<Application>();
+
+        float last_time = getNow();
+        while (!app.shouldQuit()) {
+            float now = getNow();
+
+            bool should_quit = handleSDLEvents();
+            if (should_quit) {
+                break;
+            }
+
+            // Ignore the case where the timer wraps around.
+            if (now >= last_time) {
+                float dt = now - last_time;
+
+                app.update(dt);
+                app.draw();
+                {
+                    PYR_PROFILE_BLOCK("glSwapBuffers");
+                    SDL_GL_SwapBuffers();
+                }
+            }
+            
+            the<Profiler>().nextFrame();
+
+            last_time = now;
+        }
+    }
+
+    void runClient(int argc, char* argv[]) {
         try {
             the<Log>().open(getStartDirectory(argc, argv) + "/client.log");
         }
@@ -76,8 +199,8 @@ namespace pyr {
         SDL_WM_SetCaption("Empyrean", 0);
         SDL_ShowCursor(SDL_DISABLE);
 
-        SDL_Joystick *joystick=NULL;
-        if(SDL_NumJoysticks() > 0) {
+        SDL_Joystick* joystick = 0;
+        if (SDL_NumJoysticks() > 0) {
             
             SDL_JoystickEventState(SDL_ENABLE);
             joystick = SDL_JoystickOpen(0);
@@ -93,203 +216,7 @@ namespace pyr {
         // notify the app and the input manager of the window size
         app.resize(width, height);
 
-        float last_time = getNow();
-        while (!app.shouldQuit()) {
-            bool should_quit = false;
-
-            SDL_Event event;
-            int result = SDL_PollEvent(&event);
-            while (result == 1) {
-                switch (event.type) {
-                    case SDL_VIDEORESIZE:
-                        app.resize(event.resize.w, event.resize.h);
-                        break;
-
-                    case SDL_KEYDOWN:
-                    case SDL_KEYUP:
-                        app.onKeyPress(
-                            event.key.keysym.sym,
-                            event.key.state == SDL_PRESSED);
-                        break;
-
-                    case SDL_MOUSEBUTTONDOWN:
-                    case SDL_MOUSEBUTTONUP:
-                        app.onMousePress(
-                            event.button.button,
-                            event.button.state == SDL_PRESSED,
-                            event.button.x,
-                            event.button.y);
-                        break;
-
-                    case SDL_MOUSEMOTION:
-                        app.onMouseMove(event.motion.x, event.motion.y);
-                        break;
-
-                    case SDL_JOYAXISMOTION:
-                        switch(event.jaxis.axis) {
-                            case 0:
-                                // X Axis left stick (Left = negative, Right = positive)
-                                app.onJoyMove(0,event.jaxis.value);
-                                break;
-                            case 1:
-                                // Y Axis left stick (Forward = negative, Back = positive)
-                                app.onJoyMove(1,event.jaxis.value);
-                                break;
-                            case 2:
-                                // Throttle (low = positive, high = negative)
-                                break;
-                            case 3:
-                                // X Axis right stick (Left = negative, Right = positive)
-                                break;
-                            case 4:
-                                // Y Axis right stick (Forward = negative, Back = positive)
-                                break;
-                        }
-                        break;
-
-                    case SDL_JOYHATMOTION:
-                        if(event.jhat.value & SDL_HAT_CENTERED) {
-                            // Doesn't work
-                        }
-
-                        if(event.jhat.value & SDL_HAT_RIGHT) {
-                            // Right
-                        }
-                        
-                        if(event.jhat.value & SDL_HAT_LEFT ) {
-                            // Left
-                        }
-
-                        break;
-
-                    case SDL_JOYBUTTONDOWN:
-                        switch(event.jbutton.button) {
-                            case 0:
-                                // A
-                                app.onJoyPress(0,true);
-                                break;
-                            case 1:
-                                // B
-                                
-                                break;
-                            case 2:
-                                // C
-                                
-                                break;
-                            case 3:
-                                // X
-                                
-                                break;
-                            case 4:
-                                // Y
-                                
-                                break;
-                            case 5:
-                                // Z
-                                
-                                break;
-                            case 6:
-                                // L1
-                                
-                                break;
-                            case 7:
-                                // R1
-                                
-                                break;
-                            case 8:
-                                // Start
-                                app.onJoyPress(8,true);
-                                break;
-                            case 9:
-                                // L2
-                                
-                                break;
-                            case 10:
-                                // R2
-                                
-                                break;
-                        }
-                        break;
-
-                    case SDL_JOYBUTTONUP:
-                        switch(event.jbutton.button) {
-                            case 0:
-                                // A
-                                app.onJoyPress(0,false);
-                                break;
-                            case 1:
-                                // B
-                                
-                                break;
-                            case 2:
-                                // C
-                                
-                                break;
-                            case 3:
-                                // X
-                                
-                                break;
-                            case 4:
-                                // Y
-                                
-                                break;
-                            case 5:
-                                // Z
-                                
-                                break;
-                            case 6:
-                                // L1
-                                
-                                break;
-                            case 7:
-                                // R1
-                                
-                                break;
-                            case 8:
-                                // Start
-                                app.onJoyPress(8,false);
-                                break;
-                            case 9:
-                                // L2
-                                
-                                break;
-                            case 10:
-                                // R2
-                                
-                                break;
-                        }
-                        break;
-
-                    case SDL_QUIT:
-                        should_quit = true;
-                        break;
-                }
-
-                result = SDL_PollEvent(&event);
-            }
-
-            // error or SDL_QUIT message
-            if (result < 0 || should_quit) {
-                break;
-            }
-
-            float now = getNow();
-
-            // ignore wraparound
-            if (now >= last_time) {
-                float dt = now - last_time;
-
-                app.update(dt);
-                app.draw();
-                {
-                    PYR_PROFILE_BLOCK("glSwapBuffers");
-                    SDL_GL_SwapBuffers();
-                }
-            }
-            last_time = now;
-            
-            the<Profiler>().nextFrame();
-        }
+        mainLoop();
 
         try {
             // Perhaps this should be saved right after changes, in case

@@ -14,14 +14,19 @@ namespace pyr {
     }
     
     /**
-     * Initializes SDL (with initflags) and SDL_net.  Also registers
-     * atexit callbacks to shut down SDL and SDL_net.
+     * Initializes SDL (with initflags).  Also registers
+     * atexit callbacks to shut down SDL.
      *
      * @param initflags  flags normally passed to SDL_Init
      *
      * @throws  std::runtime_error if initialization fails
      */
     void initializeSDL(int initflags);
+
+    /**
+     * Normalizes a joystick axis value from the range [-32768, 32767] to [-1, 1].
+     */
+    float normalizeAxisValue(int axis);
 
 }
 

@@ -29,7 +29,7 @@ namespace pyr {
         }
     }
     
-    Vec2f CollisionBox::getDisplacement(const double& dt, Vec2f& vel, const std::vector<Segment>& segs,
+    Vec2f CollisionBox::getDisplacement(float dt, Vec2f& vel, const std::vector<Segment>& segs,
                                         std::vector<Vec2f>& points) {
         for(size_t i = 0; i<segs.size(); ++i) {
             if(segmentInside(segs[i])) {
@@ -78,8 +78,8 @@ namespace pyr {
                     return Vec2f(maxX-_verts[0][0],0);
                 }
             }
-            else if(maxY > (_verts[2][1] + _verts[0][1])/2.0) {
-                vel[1] = dt * -9.81; // To make the person start to fall down again.  
+            else if(maxY > (_verts[2][1] + _verts[0][1])/2.0f) {
+                vel[1] = dt * -9.81f; // To make the person start to fall down again.  
                 vel[0] = 0;
                 return Vec2f(0,minY-_verts[2][1]);
             }

@@ -22,8 +22,6 @@ namespace pyr {
     MenuState::MenuState() {
         createInterface();
         showPointer();
-        _joyVelX = 0;
-        _joyVelY = 0;
     }
 
     MenuState::~MenuState() {
@@ -112,26 +110,26 @@ namespace pyr {
         
     }
 
-    void MenuState::onJoyMove(int axis, int value) {
+    void MenuState::onJoyMove(int axis, float value) {
         if(axis == 0) {
-            if(value > 3200 || value < -3200) {
-                _joyVelX = (int)(value/50.0);
+            if(fabs(value) > 0.25f) {
+                _joyVelX = static_cast<int>(value / 0.001f);
             }
             else {
                 _joyVelX = 0;
             }
 
         } else if(axis == 1) {
-            if(value > 3200 || value < -3200) {
-                _joyVelY = (int)(value/50.0);
+            if(fabs(value) > 0.25f) {
+                _joyVelY = static_cast<int>(value / 0.001f);
             }
             else {
                 _joyVelY = 0;
             }
         }
 
-        Application::instance().setMouseVelX(_joyVelX);
-        Application::instance().setMouseVelY(_joyVelY);
+        the<Application>().setMouseVelX(_joyVelX);
+        the<Application>().setMouseVelY(_joyVelY);
     }
 
     void MenuState::onErrorOK() {

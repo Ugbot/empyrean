@@ -13,19 +13,13 @@
 namespace pyr {
 
     struct ProfileData {
-        ProfileData() {
-            runCount = 0;
-            timeInChildren = 0;
-            timePlusChildren = 0;
-        }
-
-        float time() {
+        float time() const {
             return timePlusChildren - timeInChildren;
         }
 
-        int runCount;            ///< Number of complete executions of this block.
-        float timeInChildren;    ///< Time spent only in children blocks.
-        float timePlusChildren;  ///< Time spent in this block including children blocks.
+        Zeroed<int>   runCount;          ///< Number of complete executions of this block.
+        Zeroed<float> timeInChildren;    ///< Time spent only in children blocks.
+        Zeroed<float> timePlusChildren;  ///< Time spent in this block including children blocks.
     };
 
 
@@ -37,7 +31,7 @@ namespace pyr {
             _name = name;
         }
 
-        const std::string& getName() {
+        const std::string& getName() const {
             return _name;
         }
 
@@ -68,7 +62,7 @@ namespace pyr {
         }
         
         /// Returns average time in this function over the last N frames.
-        float getAverageTime() {
+        float getAverageTime() const {
             float total = 0;
             for (int i = 0; i < REMEMBERED_FRAMES; ++i) {
                 total += lastFrames[i].time();
@@ -77,7 +71,7 @@ namespace pyr {
         }
 
         /// Returns average time in this function and children over the last N frames.
-        float getAverageTotalTime() {
+        float getAverageTotalTime() const {
             float total = 0;
             for (int i = 0; i < REMEMBERED_FRAMES; ++i) {
                 total += lastFrames[i].timePlusChildren;

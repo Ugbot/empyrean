@@ -10,10 +10,6 @@ namespace pyr {
 
     class State {
     public:
-        State() {
-            _pointerVisible = false;
-        }
-    
         virtual ~State() { }
         
         /**
@@ -29,9 +25,9 @@ namespace pyr {
         virtual void onMousePress(Uint8 button, bool down, int x, int y) { }
         virtual void onMouseMove(int x, int y) { }
         virtual void onJoyPress(Uint8 button, bool down) { }
-        virtual void onJoyMove(int axis, int value) { }
+        virtual void onJoyMove(int axis, float value) { }
 
-        bool isPointerVisible() {
+        bool isPointerVisible() const {
             return _pointerVisible;
         }
         
@@ -57,7 +53,7 @@ namespace pyr {
         void hidePointer() { _pointerVisible = false; }
                
     private:
-        bool _pointerVisible;
+        Inited<bool, false> _pointerVisible;
     };
 
 }

@@ -34,7 +34,8 @@ namespace pyr {
         void onMousePress(Uint8 button, bool down, int x, int y);
         void onMouseMove(int x, int y);
         
-        void onJoyMove(int axis, int value);
+        /// @param value  normalized axis value in range [-1, 1]
+        void onJoyMove(int axis, float value);
         void onJoyPress(Uint8 button, bool down);
 
         void invokeTransition(State* state);
@@ -52,25 +53,25 @@ namespace pyr {
         void renderCallTree(const CallNodeList& callTree);
 
         // dimensions of the window or screen
-        int _width;
-        int _height;
+        Zeroed<int> _width;
+        Zeroed<int> _height;
 
         // last position of the mouse (so we can notify new states of
         // the mouse's position)
-        int _lastX;
-        int _lastY;
+        Zeroed<int> _lastX;
+        Zeroed<int> _lastY;
 
         // Velocity of the mouse based on joystick input
-        int _velX;
-        int _velY;
+        Zeroed<int> _velX;
+        Zeroed<int> _velY;
 
         ScopedPtr<State> _currentState;
         ScopedPtr<State> _nextState;
         ScopedPtr<State> _fadingState;
-        float _totalFadeTime;
-        float _currentFadeTime;
+        Zeroed<float> _totalFadeTime;
+        Zeroed<float> _currentFadeTime;
 
-        bool _showCPUInfo;
+        Inited<bool, false> _showCPUInfo;
 
         gltext::FontRendererPtr _renderer;
         Texture* _pointer;

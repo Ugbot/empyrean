@@ -18,4 +18,12 @@ namespace pyr {
         atexit(quitSDL);
     }
 
+    float normalizeAxisValue(int axis) {
+        if (axis < 0) {
+            return axis / 32768.0f;
+        } else {
+            return axis / 32767.0f;
+        }
+    }
+
 }

@@ -31,7 +31,6 @@ namespace pyr {
         _inputJoyJump = &_im.getInput("JoyButtonA");
         _inputJoyStart = &_im.getInput("JoyStart");
         
-        _lastJoyX = 0;
         _inputJoyX->setValue(0);
 
         gltext::FontPtr font = gltext::OpenFont("fonts/Vera.ttf", 16);
@@ -152,7 +151,7 @@ namespace pyr {
         _im.onJoyPress(button,down);
     }
 
-    void GameState::onJoyMove(int axis, int value) {
+    void GameState::onJoyMove(int axis, float value) {
         _im.onJoyMove(axis,value);
     }
 

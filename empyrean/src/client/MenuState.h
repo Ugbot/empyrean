@@ -30,7 +30,7 @@ namespace pyr {
         void onMousePress(Uint8 button, bool down, int x, int y);
         void onMouseMove(int x, int y);
         void onJoyPress(Uint8 button, bool down);
-        void onJoyMove(int axis, int value);
+        void onJoyMove(int axis, float value);
         // screen callbacks below
         
         void onErrorOK();
@@ -92,8 +92,8 @@ namespace pyr {
         RefPtr<NewGameScreen>      _newGameScreen;
 
         // For controlling menu with joystick
-        int _joyVelX;
-        int _joyVelY;
+        Zeroed<int> _joyVelX;
+        Zeroed<int> _joyVelY;
     };
 
 }

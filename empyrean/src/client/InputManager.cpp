@@ -1,6 +1,7 @@
 #include "Application.h"
 #include "Input.h"
 #include "InputManager.h"
+#include "Log.h"
 
 
 namespace pyr {
@@ -168,19 +169,24 @@ namespace pyr {
         }
     }
     
-    void InputManager::onJoyMove(int axis, int value) {
-        if(axis == 0) {
+    void InputManager::onJoyMove(int axis, float value) {
+        if (axis == 0) {
             getInput("JoyX").setValue(value);
+        } else {
+            PYR_LOG() << "Warning: unknown joystick axis: " << axis;
         }
     }
     
     void InputManager::onJoyPress(Uint8 button, bool down) {
         switch(button) {
             case 0:
-                getInput("JoyButtonA").setValue(down ? 1.0f : 0.0f);    
+                getInput("JoyButtonA").setValue(down ? 1.0f : 0.0f);
                 break;
             case 8:
-                getInput("JoyStart").setValue(down ? 1.0f : 0.0f);    
+                getInput("JoyStart").setValue(down ? 1.0f : 0.0f);
+                break;
+            default:
+                PYR_LOG() << "Warning: unknown joystick button: " << button;
                 break;
         }
     }

@@ -49,7 +49,7 @@ namespace pyr {
         std::vector<Segment>& _segments;
     };
 
-    CollisionData collide(const double& dt, const Vec2f& origPos, Vec2f& newPos, Vec2f& vel,
+    CollisionData collide(float dt, const Vec2f& origPos, Vec2f& newPos, Vec2f& vel,
                           float width, float height, const Map* terrain) {
                           
         CollisionBox newBox(newPos - Vec2f(width / 2.0f, 0),

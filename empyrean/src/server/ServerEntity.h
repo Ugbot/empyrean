@@ -1,11 +1,11 @@
 #ifndef PYR_SERVER_ENTITY_H
 #define PYR_SERVER_ENTITY_H
 
-
 #include <algorithm>
 #include <string>
 #include "VecMath.h"
 #include "Types.h"
+#include "Utility.h"
 
 namespace pyr {
 
@@ -15,7 +15,6 @@ namespace pyr {
     public:
         ServerEntity(u16 id) {
             _id = id;
-            _jumping = 0;
         }
 
         u16 getID() const {
@@ -43,10 +42,9 @@ namespace pyr {
         u16 _id;
         Vec2f _pos;
         Vec2f _vel;
-        u16 _jumping;
+        Zeroed<u16> _jumping;
     };
     
 }
-
 
 #endif
