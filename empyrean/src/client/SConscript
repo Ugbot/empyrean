@@ -9,23 +9,20 @@ SOURCES = Split("""
     Main.cpp
     MenuState.cpp
     Model.cpp
-    MultiTextureImage.cpp
     OptionsState.cpp
     ParticleEmitter.cpp
     ParticleSystem.cpp
     PlayerEntity.cpp
     Profiler.cpp
     Renderer.cpp
-    ResourceManager.cpp
     Scene.cpp
     SDLUtility.cpp
     ServerConnection.cpp
     ServerConnectionThread.cpp
-    Texture.cpp
 """)
 
 env = base_env.Copy()
-for t in Split('PyrBase PHUI Cal3D Corona GLText NSPR OpenGL SDL'):
+for t in Split('PyrBase PHUI Cal3D Corona Expat GLText NSPR OpenGL SDL'):
     TOOLS[t](env)
 
 env.Program('#/build/client', SOURCES)

@@ -1,9 +1,9 @@
+#include <stdexcept>
 #include "OpenGL.h"
 #include "GLUtility.h"
-#include "Texture.h"
-
 #include "MapRenderer.h"
 #include "MapElement.h"
+#include "Texture.h"
 
 namespace pyr {
 
@@ -24,7 +24,7 @@ namespace pyr {
         try {
             tex = Texture::create(e->texture); // I hope this isn't as slow as it looks
             tex->bind();
-        } catch (std::runtime_error err) {
+        } catch (const std::runtime_error& err) {
             Texture::unbind();
         }
 

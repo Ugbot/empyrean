@@ -3,6 +3,7 @@ Import('base_env TOOLS')
 SOURCES = [
     'Configuration.cpp',
     'Database.cpp',
+    'Game.cpp',
     'ListenerThread.cpp',
     'Log.cpp',
     'LogEvent.cpp',
