@@ -16,10 +16,11 @@ platform = DefaultEnvironment()['PLATFORM']
 cachefile = 'options.%s.cache' % platform
 opts = Options(cachefile)
 opts.AddOptions(
-    BoolOption('dbg',    'Build with debugging enabled', 0),
-    BoolOption('opt',    'Build with optimizations', 0),
-    BoolOption('distcc', 'Enable compiling with distcc', 0),
-    BoolOption('nowarn', 'Disable all warnings', 0),
+    BoolOption('dbg',     'Build with debugging enabled', 0),
+    BoolOption('opt',     'Build with optimizations', 0),
+    BoolOption('profile', 'Build with profiling information', 0),
+    BoolOption('distcc',  'Enable compiling with distcc', 0),
+    BoolOption('nowarn',  'Disable all warnings', 0),
     BoolOption('warningsAsErrors', 'Treat warnings as errors', 0),
     BoolOption('saveTemps', 'Save temporary files, such as preprocessor output', 0),
     PathOption('boostIncludes', 'Directory containing boost header files', '/usr/local/include/boost-1_31'),
@@ -67,9 +68,11 @@ if env['CXX'][:3] == 'g++' and env.WhereIs('objcopy'):
 
 # Process build options.
 if env.get('dbg'):
-    env.Append(CCFLAGS = ['-g'], CPPDEFINES=['DEBUG'])
+    env.Append(CCFLAGS=['-g'], CPPDEFINES=['DEBUG'])
 if env.get('opt'):
-    env.Append(CCFLAGS = ['-O2'], LINKFLAGS = ['-s'], CPPDEFINES=['NDEBUG'])
+    env.Append(CCFLAGS=['-O2'], LINKFLAGS=['-s'], CPPDEFINES=['NDEBUG'])
+if env.get('profile'):
+    env.Append(CCFLAGS=['-pg'], LINKFLAGS=['-pg'])
 if env.get('distcc'):
     env['CC']  = ['$(', 'distcc', '$)', env['CC']]
     env['CXX'] = ['$(', 'distcc', '$)', env['CXX']]
