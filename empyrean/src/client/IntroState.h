@@ -13,7 +13,7 @@ namespace pyr {
     public:
         IntroState();
         
-        void draw(float fade);
+        void draw();
         
         void onKeyPress(SDLKey key, bool down);
         void onMousePress(Uint8 button, bool down, int x, int y);

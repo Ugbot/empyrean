@@ -22,7 +22,7 @@ namespace pyr {
         typedef Packet* (*Factory)(int size, const void* buffer);
     
         template<typename T>
-        void registerType(Type2Type<T> = Type2Type<T>()) {
+        void registerType() {
             PYR_ASSERT(_factoryMap.count(T::ID) == 0, "Packet can't be registered twice");
             _factoryMap[T::ID] = T::create;
         }

@@ -15,7 +15,7 @@ namespace pyr {
         CutSceneState();
 
         void update(float dt);
-        void draw(float fade);
+        void draw();
 
         void onKeyPress(SDLKey key, bool down);
         void onMousePress(Uint8 button, bool down, int x, int y);

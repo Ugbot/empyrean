@@ -18,7 +18,7 @@ namespace pyr {
         _fade = std::min(1.0f, _fade + dt);
     }
 
-    void CutSceneState::draw(float fade) {
+    void CutSceneState::draw() {
         setOrthoProjection(1, 1);
 
         glDisable(GL_DEPTH_TEST);

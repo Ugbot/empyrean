@@ -20,30 +20,34 @@ namespace pyr {
 
     /**
      * From Loki (Modern C++ Design).  Used to generate an empty,
-     * unique type based on another.
+     * unique type based on another.  This can be used as a lightweight
+     * type representing another type.
      *
      * Since this is a pretty confusing type, here is why it is
      * useful: Two functions cannot have the same signature.  The
      * signature does not include the return type, so if there is ...
      *
-     * template<typename T>
-     * T* foo() { ... }
+     * char foo() { ... }
+     * int  foo() { ... }
      *
-     * ... foo<int> and foo<char> have the same signature.  The
+     * ... (int)foo and (char)foo have the same signature.  The
      * solution is to add an empty parameter that has no name and has
      * a default value (and so doesn't have to be specified by the
      * user).
      *
-     * template<typename T>
-     * T* foo(Type2Type<T> = Type2Type<T>()) {
-     * }
+     * char foo(Type2Type<char> = Type2Type<char>()) { }
+     * int  foo(Type2Type<int>  = Type2Type<int>())  { }
      *
-     * Now foo<int> and foo<char> have different signatures.
+     * Now foo<int> and foo<char> have different signatures.  The
+     * PYR_UNIQUE_SIGNATURE(T) macro makes this usage a little bit
+     * easier to swallow.
      */
     template<typename T>
     struct Type2Type {
         typedef T OriginalType;
     };
+    
+    #define PYR_UNIQUE_SIGNATURE(T) Type2Type<T> = Type2Type<T>()
     
     
     // Lets you delete the contents of a container with std::for_each.

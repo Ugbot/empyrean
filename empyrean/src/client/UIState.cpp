@@ -13,7 +13,7 @@ namespace pyr {
         _root->update(dt);
     }
     
-    void UIState::draw(float /*fade*/) {
+    void UIState::draw() {
         PYR_PROFILE_BLOCK("UIState::draw");
 
         // New renderer is needed!

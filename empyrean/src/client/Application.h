@@ -39,9 +39,9 @@ namespace pyr {
         void onJoyMove(int axis, float value);
         void onJoyPress(Uint8 button, bool down);
 
+        void quit();
+        bool shouldQuit() const;
         void invokeTransition(State* state);
-        void invokeTimedTransition(State* state, float seconds);
-        bool shouldQuit();
         
         // Mouse hijacking
         void setMouseVelX(int X);
@@ -69,11 +69,9 @@ namespace pyr {
         Zeroed<int> _velX;
         Zeroed<int> _velY;
 
+        Inited<bool, false> _shouldQuit;
         ScopedPtr<State> _currentState;
         ScopedPtr<State> _nextState;
-        ScopedPtr<State> _fadingState;
-        Zeroed<float> _totalFadeTime;
-        Zeroed<float> _currentFadeTime;
 
         /// 0 = show nothing, 1 = show FPS, 2 = show profiler
         Zeroed<int> _showCPUInfo;

@@ -53,7 +53,7 @@ namespace pyr {
      * delmoi: 'the' is the worst name for a function in the history of the world
      */
     template<typename T>
-    T& the(Type2Type<T> = Type2Type<T>()) {
+    T& the() {
         return T::instance();
     }
 

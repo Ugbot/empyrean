@@ -46,7 +46,7 @@ namespace pyr {
         PYR_PROFILE_BLOCK("Application::draw");
 
         if (_currentState) {
-            _currentState->draw(0);
+            _currentState->draw();
 
             if (_currentState->isPointerVisible()) {
                 beginPass(OrthoProjection(_width, _height));
@@ -55,9 +55,6 @@ namespace pyr {
                     _pointer);
                 endPass();
             }
-        }
-        if (_fadingState && _totalFadeTime != 0) {
-            _fadingState->draw(_currentFadeTime / _totalFadeTime);
         }
 
         if (_showCPUInfo) {
@@ -85,14 +82,6 @@ namespace pyr {
         if (_nextState) {
             _currentState = _nextState;
             _currentState->onMouseMove(_lastX, _lastY);
-        }
-        if (_fadingState) {
-            _currentFadeTime += dt;
-            if (_currentFadeTime > _totalFadeTime) {
-                _fadingState = 0;
-                _totalFadeTime = 0;
-                _currentFadeTime = 0;
-            }
         }
 
         _lastX += static_cast<int>(_velX * dt);
@@ -139,18 +128,16 @@ namespace pyr {
     }
 
     void Application::invokeTransition(State* state) {
-        invokeTimedTransition(state, 0);
-    }
-
-    void Application::invokeTimedTransition(State* state, float seconds) {
+        PYR_ASSERT(state, "Can't transition to null state");
         _nextState = state;
-        _fadingState = _currentState;
-        _totalFadeTime = seconds;
-        _currentFadeTime = 0;
+    }
+    
+    void Application::quit() {
+        _shouldQuit = true;
     }
 
-    bool Application::shouldQuit() {
-        return (_currentState == 0);
+    bool Application::shouldQuit() const {
+        return _shouldQuit;
     }
 
     int Application::renderCallTree(

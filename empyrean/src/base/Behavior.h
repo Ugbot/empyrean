@@ -63,7 +63,7 @@ namespace pyr {
         virtual void update(Entity* entity, float dt, const Environment& env) = 0;
 
         template<typename SlotT>
-        SlotT* getSlot(Type2Type<SlotT> = Type2Type<SlotT>()) const {
+        SlotT* getSlot() const {
             SlotMap::const_iterator i = _slots.find(typeid(SlotT));
             return (i == _slots.end() ? 0 : checked_cast<SlotT*>(i->second));
         }

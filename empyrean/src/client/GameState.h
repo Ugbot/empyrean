@@ -26,8 +26,8 @@ namespace pyr {
         GameState();
         ~GameState();
         
-        void draw(float fade);
         void update(float dt);
+        void draw();
         
         void onKeyPress(SDLKey key, bool down);
         void onMousePress(Uint8 button, bool down, int x, int y);

@@ -92,29 +92,6 @@ namespace pyr {
         the<ServerConnection>().removeReceiver(this);
     }
 
-    void GameState::draw(float fade) {
-        PYR_PROFILE_BLOCK("GameState::draw");
-        
-        _scene.draw(_renderer);
-
-        if (ClientEntityPtr entity = _scene.getFocus()) {
-            _hud.draw(_renderer,entity);
-
-            if (_showPlayerData) {
-                Application& app = the<Application>();
-                glEnable(GL_BLEND);
-                setOrthoProjection(float(app.getWidth()), float(app.getHeight()));
-                glPushMatrix();
-                glTranslatef(app.getWidth() / 2.0f, 0, 0);
-                glColor3f(1, 1, 1);
-                GLTEXT_STREAM(_renderer)
-                    << "Position: " << entity->getPos() << "\n"
-                    << "Velocity: " << entity->getVel();
-                glPopMatrix();
-            }
-        }
-    }
-
     void GameState::update(float dt) {
         PYR_PROFILE_BLOCK("GameState::update");
         
@@ -208,6 +185,29 @@ namespace pyr {
         _im.update(dt);
     }
     
+    void GameState::draw() {
+        PYR_PROFILE_BLOCK("GameState::draw");
+        
+        _scene.draw(_renderer);
+
+        if (ClientEntityPtr entity = _scene.getFocus()) {
+            _hud.draw(_renderer,entity);
+
+            if (_showPlayerData) {
+                Application& app = the<Application>();
+                glEnable(GL_BLEND);
+                setOrthoProjection(float(app.getWidth()), float(app.getHeight()));
+                glPushMatrix();
+                glTranslatef(app.getWidth() / 2.0f, 0, 0);
+                glColor3f(1, 1, 1);
+                GLTEXT_STREAM(_renderer)
+                    << "Position: " << entity->getPos() << "\n"
+                    << "Velocity: " << entity->getVel();
+                glPopMatrix();
+            }
+        }
+    }
+
     void GameState::handleSetPlayer(Connection*, SetPlayerPacket* p) {
         _scene.setFocus(p->id());
     }
