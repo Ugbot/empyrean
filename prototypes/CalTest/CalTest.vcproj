@@ -110,6 +110,12 @@
 			Name="Source Files"
 			Filter="cpp;c;cxx;def;odl;idl;hpj;bat;asm">
 			<File
+				RelativePath="Model.cpp">
+			</File>
+			<File
+				RelativePath="Texture.cpp">
+			</File>
+			<File
 				RelativePath="main.cpp">
 			</File>
 		</Filter>
@@ -120,7 +126,19 @@
 				RelativePath="Matrix.h">
 			</File>
 			<File
+				RelativePath="Model.h">
+			</File>
+			<File
+				RelativePath="StringLib.h">
+			</File>
+			<File
+				RelativePath="Texture.h">
+			</File>
+			<File
 				RelativePath="Vector.h">
+			</File>
+			<File
+				RelativePath="types.h">
 			</File>
 		</Filter>
 		<Filter

@@ -17,6 +17,13 @@ union Matrix
     }
 
     template <class U>
+        Matrix(const Matrix<U>& m)
+    {
+        for (int i=0; i<16; i++)
+            V[i]=m.v[i];
+    }
+
+    template <class U>
     inline Vector<U> operator * (const Vector<U>& vec) const
     {
         return Vector<U>(

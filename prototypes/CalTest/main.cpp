@@ -16,12 +16,12 @@
 // 1st party :)
 #include "Vector.h"
 #include "Matrix.h"
+#include "Model.h"
 
 // data
 SDL_Surface* screen;
 const int xres=640,yres=480;
-CalCoreModel coremodel;
-CalModel model;
+Model model;
 GLuint shadetex;
 bool cellshade=true;
 bool outline=true;
@@ -71,13 +71,10 @@ int main(int argc,char* args[])
         | SDL_INIT_NOPARACHUTE
 #endif
         );
-
-    char* c=(char*)glGetString(GL_EXTENSIONS);
+    atexit(SDL_Quit);
 
     chdir("data");
     lightvec.Normalize();
-
-    atexit(SDL_Quit);
 
     screen=SDL_SetVideoMode(xres,yres,32,SDL_OPENGL);
 
@@ -92,7 +89,7 @@ int main(int argc,char* args[])
     glEnable(GL_DEPTH_TEST);
     glHint(GL_PERSPECTIVE_CORRECTION_HINT,GL_NICEST);
     glHint(GL_LINE_SMOOTH_HINT,GL_NICEST);
-    //glHint(GL_POLYGON_SMOOTH_HINT,GL_NICEST);
+    glHint(GL_POLYGON_SMOOTH_HINT,GL_NICEST);
     glEnable(GL_LINE_SMOOTH);    
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
@@ -101,7 +98,6 @@ int main(int argc,char* args[])
 
     float ambient[]=  { 0.5f, 0.5f, 0.5f, 1.0f };
     float diffuse[]=  { 1,1,1,1 };
-    float lightpos[]= { 0,0,20,1 };
 
     glLightfv(GL_LIGHT1,GL_AMBIENT,ambient);
     glLightfv(GL_LIGHT1,GL_DIFFUSE,diffuse);
@@ -117,8 +113,8 @@ int main(int argc,char* args[])
 
     unsigned int pixels[32];
     int i=0;
-    while (i<1) pixels[i++]=0xFF202020;
-    while (i<11) pixels[i++]=0xFF888888;
+    while (i<1) pixels[i++]=0xFF404040;
+    while (i<13) pixels[i++]=0xFF808080;
     while (i<32) pixels[i++]=0xFFFFFFFF;
 
     glGenTextures(1,&shadetex);
@@ -187,13 +183,13 @@ int main(int argc,char* args[])
                 case SDLK_RIGHTBRACKET:
                     lodlevel+=0.05f;
                     if (lodlevel>1) lodlevel=1;
-                    model.setLodLevel(lodlevel);
+                    model.GetModel().setLodLevel(lodlevel);
                     break;
 
                 case SDLK_LEFTBRACKET:
                     lodlevel-=0.05f;
                     if (lodlevel<0) lodlevel=0;
-                    model.setLodLevel(lodlevel);
+                    model.GetModel().setLodLevel(lodlevel);
                     break;
                 }
                 break;
@@ -229,115 +225,10 @@ int main(int argc,char* args[])
 
 void Init()
 {
-    const char* materials[] =
-    {
-        "paladin_cape.crf",
-        "paladin_head.crf",
-        "paladin_chest.crf",
-        "paladin_gird.crf",
-        "paladin_arm_left.crf",
-        "paladin_arm_right.crf",
-        "paladin_flesh.crf",
-        "paladin_edge.crf",
-        "paladin_stripe.crf",
-        "paladin_loin_upper.crf",
-        "paladin_loin_lower.crf",
-        "paladin_legplate_right.crf",
-        "paladin_legplate_left.crf",
-        "paladin_leg_right.crf",
-        "paladin_leg_left.crf",
-        "paladin_legguard_right.crf",
-        "paladin_legguard_left.crf",
-        "paladin_shoe.crf",
-        "paladin_ponytail.crf"
-    };
-
-    int result;
-    int anidx;
-    int meshidx;
-
-    result=coremodel.create("TestModel");
-    result=coremodel.loadCoreSkeleton("paladin.csf");
-    anidx=coremodel.loadCoreAnimation("paladin_walk.caf");
-    meshidx=coremodel.loadCoreMesh("paladin_body.cmf");
-
-    for (int i=0; i<19; i++)
-        coremodel.loadCoreMaterial(materials[i]);
-
+    model.Load("paladin.cfg");
+    model.GetModel().getMixer()->blendCycle(0,1,0.3f);
     camera.x=camera.y=0; camera.z=-200;
     camera.rx=camera.ry=camera.rz=0;
-    LoadTextures();
-
-    result=model.create(&coremodel);
-
-    model.attachMesh(meshidx);
-    model.setMaterialSet(0);    
-    model.getMixer()->blendCycle(anidx,1,0.3f);
-    model.update(1);
-}
-
-GLuint LoadTexture(const std::string& fname)
-{
-    GLuint hTex;
-    FILE* f=fopen(fname.c_str(),"rb");
-    if (!f)
-    {
-        printf("Unable to load %s\r\n",fname.c_str());
-        return 0;
-    }
-
-    int w,h,d;
-    fread(&w,4,1,f);    fread(&h,4,1,f);    fread(&d,1,4,f);
-    char* data=new char[w*h*d];
-    char* data2=new char[w*h*d];
-    fread(data2,w*h*d,1,f);
-    for (int y=0; y<h; y++)
-    {
-        memcpy(data+(y*w*d),data2+((h-y-1)*w*d),w*d);
-    }
-
-    delete[] data2;
-
-    glPixelStorei(GL_UNPACK_ALIGNMENT,1);
-    glGenTextures(1,&hTex);
-    glBindTexture(GL_TEXTURE_2D,hTex);
-    glTexImage2D(GL_TEXTURE_2D,0,d==3?GL_RGB:GL_RGBA,w,h,0,d==3?GL_RGB:GL_RGBA,GL_UNSIGNED_BYTE,data);
-    glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_LINEAR);
-    glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_LINEAR);
-
-    delete[] data;
-    fclose(f);
-
-    return hTex;
-}
-
-void LoadTextures()
-{
-    for (int j=0; j<coremodel.getCoreMaterialCount(); j++)
-    {
-        CalCoreMaterial* m=coremodel.getCoreMaterial(j);
-
-        int nMaps=m->getMapCount();
-        GLuint hTex;
-        for (int i=0; i<nMaps; i++)
-        {
-            std::string texname=m->getMapFilename(i);
-            hTex=textures[texname];
-            if (!hTex)
-            {
-                hTex=LoadTexture(texname);
-                textures[texname]=hTex;
-            }
-
-            m->setMapUserData(i,(Cal::UserData)hTex);
-        }
-    }
-
-    for (int i=0; i<coremodel.getCoreMaterialCount(); i++)
-    {
-        coremodel.createCoreMaterialThread(i);
-        coremodel.setCoreMaterialId(i,0,i);
-    }
 }
 
 void Tick(int time)
@@ -415,7 +306,7 @@ struct NoShade
 template <class T>
 void RenderMesh(T drawvert)
 {
-    CalRenderer* r=model.getRenderer();
+    CalRenderer* r=model.GetModel().getRenderer();
     r->beginRendering();
 
     int nMeshes=r->getMeshCount();

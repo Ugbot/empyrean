@@ -25,11 +25,12 @@ union Vector
         v[2]=V[2];
     }
 
-    Vector(const Vector& V)
+    template <class U>
+        Vector(const Vector<U>& V)
     {
         v[0]=V.v[0];
         v[1]=V.v[1];
-        v[2]=V.v[2];
+        v[3]=V.v[2];
     }
 
     inline T& operator [] (int i)
