@@ -3,13 +3,12 @@
 
 
 #include "Behavior.h"
+#include "PhysicsBehaviorSlot.h"
 #include "Utility.h"
 #include "UnownedPtr.h"
 
 
 namespace pyr {
-
-    class PhysicsBehaviorSlot;
 
     class PlayerBehavior : public Behavior {
     public:
@@ -28,7 +27,7 @@ namespace pyr {
         bool facingRight() const;
         
     private:
-        UnownedPtr<PhysicsBehaviorSlot> _physics;
+        PhysicsBehaviorSlotPtr _physics;
     };
 
 }

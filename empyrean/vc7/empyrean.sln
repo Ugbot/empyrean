@@ -60,6 +60,7 @@ Global
 		{1789384E-A080-4BC0-81CF-B9CE81D2354D}.Release.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionItems) = postSolution
+		..\doc\boost-python-notes.txt = ..\doc\boost-python-notes.txt
 		..\doc\build-cygwin.txt = ..\doc\build-cygwin.txt
 		..\doc\build-msvc.txt = ..\doc\build-msvc.txt
 		..\doc\ChangeLog = ..\doc\ChangeLog

@@ -190,6 +190,10 @@ namespace pyr {
 
     /** Get the sign of the number */
     int sgn(float num);
+    
+    inline std::string str(const std::string& s) {
+        return s;
+    }
 }
 
 #endif

@@ -20,7 +20,7 @@
 				Name="VCCLCompilerTool"
 				Optimization="0"
 				AdditionalIncludeDirectories="../../third-party-vc7/include,../../src/base"
-				PreprocessorDefinitions="_CONSOLE;WIN32;WIN32_LEAN_AND_MEAN;_DEBUG;NOMINMAX;BOOST_PYTHON_STATIC_LIB;BOOST_PYTHON_STATIC_MODULE"
+				PreprocessorDefinitions="_CONSOLE;WIN32;WIN32_LEAN_AND_MEAN;_DEBUG;NOMINMAX;BOOST_PYTHON_STATIC_LIB;BOOST_PYTHON_STATIC_MODULE;_CRTDBG_MAP_ALLOC"
 				GeneratePreprocessedFile="0"
 				MinimalRebuild="TRUE"
 				BasicRuntimeChecks="3"
@@ -40,7 +40,7 @@
 				LinkIncremental="2"
 				AdditionalLibraryDirectories="../../third-party-vc7/lib"
 				GenerateDebugInformation="TRUE"
-				ProgramDatabaseFile="$(OutDir)/server.pdb"
+				ProgramDatabaseFile="../bin/$(OutDir)/$(ProjectName).pdb"
 				SubSystem="2"
 				TargetMachine="1"/>
 			<Tool
@@ -96,6 +96,7 @@
 				LinkIncremental="1"
 				AdditionalLibraryDirectories="../../third-party-vc7/lib"
 				GenerateDebugInformation="TRUE"
+				ProgramDatabaseFile="../bin/$(OutDir)/$(ProjectName).pdb"
 				SubSystem="2"
 				OptimizeReferences="2"
 				EnableCOMDATFolding="2"

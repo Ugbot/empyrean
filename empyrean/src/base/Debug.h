@@ -38,4 +38,11 @@
 #endif
 
 
+namespace pyr {
+
+    void registerLeakChecker();
+
+}
+
+
 #endif

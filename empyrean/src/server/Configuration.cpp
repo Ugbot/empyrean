@@ -45,13 +45,11 @@ namespace pyr {
         }
         catch (const XMLParseError& e) {
             throw ConfigurationError(
-                "Error reading server configuration: " + std::string(e.what()));
+                "Error reading server configuration: " + str(e.what()));
         }
     }
     
-    std::string str(const std::string& s) {
-        return s;
-    }
+    // Maybe move these into Utility.h.
     std::string str(int i) {
         return itos(i);
     }

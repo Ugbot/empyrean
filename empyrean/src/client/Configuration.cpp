@@ -47,9 +47,7 @@ namespace pyr {
         }
     }
     
-    std::string str(const std::string& s) {
-        return s;
-    }
+    // Maybe move these into Utility.h.
     std::string str(int i) {
         return itos(i);
     }

@@ -15,6 +15,7 @@
 #include "SDLUtility.h"
 #include "NSPRUtility.h"
 
+
 namespace pyr {
 
     /*
@@ -253,13 +254,18 @@ namespace pyr {
 
 /// main() needs to be defined with argc and argv so SDL works right.
 int main(int argc, char* argv[]) {
+    int result = EXIT_FAILURE;
+
+    pyr::registerLeakChecker();
+
     PYR_BEGIN_EXCEPTION_TRAP()
 
         pyr::runClient(argc, argv);
-        return EXIT_SUCCESS;
+        result = EXIT_SUCCESS;
 
     PYR_END_EXCEPTION_TRAP()
-    return EXIT_FAILURE;
+    
+    return result;
 }
 
 

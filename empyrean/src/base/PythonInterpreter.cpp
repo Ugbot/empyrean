@@ -69,21 +69,19 @@ namespace pyr {
 
     object PythonInterpreter::createModule(const std::string& contents,
                                            const std::string& filename) {
-        PYR_BEGIN_PYTHON_CODE()
+        PYR_PYTHON_CODE({
+            handle<> code( Py_CompileString(
+                const_cast<char*>(contents.c_str()),
+                const_cast<char*>(filename.c_str()),
+                Py_file_input) );
 
-        handle<> code( Py_CompileString(
-            const_cast<char*>(contents.c_str()),
-            const_cast<char*>(filename.c_str()),
-            Py_file_input) );
+            std::string name = va("EmpyreanScript%d", _moduleCount++);
+            handle<> module( PyImport_ExecCodeModule(
+                const_cast<char*>(name.c_str()),
+                code.get()) );
 
-        std::string name = va("EmpyreanScript%d", _moduleCount++);
-        handle<> module( PyImport_ExecCodeModule(
-            const_cast<char*>(name.c_str()),
-            code.get()) );
-
-        return object(module);
-
-        PYR_END_PYTHON_CODE()
+            return object(module);
+        })
     }
 
 }

@@ -1,0 +1,5 @@
+If you're exporting class T with HeldType as RefPtr<T>, Boost.Python checks to
+see if T has a public destructor, and fails if it doesn't.  This sucks (and is
+an overzealous check in this case).  However, you can work around this by
+using no_init in the class_ constructor and specifying the constructors you
+want manually.

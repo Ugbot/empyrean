@@ -20,7 +20,7 @@
 				Name="VCCLCompilerTool"
 				Optimization="0"
 				AdditionalIncludeDirectories="../../third-party-vc7/include"
-				PreprocessorDefinitions="WIN32;WIN32_LEAN_AND_MEAN;_DEBUG;_LIB;NOMINMAX;BOOST_PYTHON_STATIC_LIB;BOOST_PYTHON_STATIC_MODULE;GLEW_STATIC"
+				PreprocessorDefinitions="WIN32;WIN32_LEAN_AND_MEAN;_DEBUG;_LIB;NOMINMAX;BOOST_PYTHON_STATIC_LIB;BOOST_PYTHON_STATIC_MODULE;GLEW_STATIC;_CRTDBG_MAP_ALLOC"
 				GeneratePreprocessedFile="0"
 				MinimalRebuild="TRUE"
 				BasicRuntimeChecks="3"
@@ -110,6 +110,12 @@
 			Name="base"
 			Filter="cpp;c;cxx;def;odl;idl;hpj;bat;asm">
 			<File
+				RelativePath="..\..\src\base\CallStack.cpp">
+			</File>
+			<File
+				RelativePath="..\..\src\base\CallStack.h">
+			</File>
+			<File
 				RelativePath="..\..\src\base\Constants.h">
 			</File>
 			<File
@@ -123,6 +129,12 @@
 			</File>
 			<File
 				RelativePath="..\..\src\base\Error.h">
+			</File>
+			<File
+				RelativePath="..\..\src\base\IncludeNSPR.h">
+			</File>
+			<File
+				RelativePath="..\..\src\base\IncludePython.h">
 			</File>
 			<File
 				RelativePath="..\..\src\base\Log.cpp">
@@ -192,6 +204,9 @@
 			</File>
 			<File
 				RelativePath="..\..\src\base\VecMath.h">
+			</File>
+			<File
+				RelativePath="..\..\src\base\Win32Memory.h">
 			</File>
 			<File
 				RelativePath="..\..\src\base\wx.h">
@@ -452,6 +467,12 @@
 			<File
 				RelativePath="..\..\src\base\TextureImage.h">
 			</File>
+			<File
+				RelativePath="..\..\src\base\UnownedPtr.h">
+			</File>
+			<File
+				RelativePath="..\..\src\base\Utility.cpp">
+			</File>
 			<Filter
 				Name="glew"
 				Filter="">
@@ -480,6 +501,9 @@
 			</File>
 			<File
 				RelativePath="..\..\src\base\CollisionBox.h">
+			</File>
+			<File
+				RelativePath="..\..\src\base\PhysicsBehaviorSlot.h">
 			</File>
 			<File
 				RelativePath="..\..\src\base\PhysicsEngine.cpp">

@@ -22,7 +22,7 @@ namespace pyr {
 
     private:
         std::string _resource;
-        boost::python::object _module;
+        boost::python::object _behavior;
     };
 
 

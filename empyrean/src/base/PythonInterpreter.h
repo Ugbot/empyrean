@@ -32,16 +32,16 @@ namespace pyr {
 
     #define PYR_NO_UNUSED_WARNING(x) ((void)&(x))
 
-    #define PYR_BEGIN_PYTHON_CODE()                          \
-        try {                                                \
-            PythonCodeErrorSentry sentry__;                  \
-            PYR_NO_UNUSED_WARNING(sentry__);  // silly gcc
-
-    #define PYR_END_PYTHON_CODE()                            \
-        }                                                    \
-        catch (const boost::python::error_already_set&) {    \
-            requirePythonError();                            \
-            throw PythonError(getPythonErrorString());       \
+    /// Wraps a block of code with Python error safety.
+    #define PYR_PYTHON_CODE(block)                              \
+        try {                                                   \
+            PythonCodeErrorSentry sentry__;                     \
+            PYR_NO_UNUSED_WARNING(sentry__);  /* silly gcc */   \
+            block                                               \
+        }                                                       \
+        catch (const boost::python::error_already_set&) {       \
+            requirePythonError();                               \
+            throw PythonError(getPythonErrorString());          \
         }
 
     class PythonInterpreter {

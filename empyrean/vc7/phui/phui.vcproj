@@ -20,7 +20,7 @@
 				Name="VCCLCompilerTool"
 				Optimization="0"
 				AdditionalIncludeDirectories="../../third-party-vc7/include;../../src/base"
-				PreprocessorDefinitions="NOMINMAX;WIN32_LEAN_AND_MEAN;WIN32;_DEBUG;_LIB"
+				PreprocessorDefinitions="NOMINMAX;WIN32_LEAN_AND_MEAN;WIN32;_DEBUG;_LIB;_CRTDBG_MAP_ALLOC"
 				GeneratePreprocessedFile="0"
 				MinimalRebuild="TRUE"
 				BasicRuntimeChecks="3"

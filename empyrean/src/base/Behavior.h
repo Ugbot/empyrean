@@ -44,10 +44,15 @@ namespace pyr {
      * on both the client and the server.  It may be the case that it will
      * have to be sent along with entity update information.
      */
-    class BehaviorSlot {
-    public:
+    class BehaviorSlot : public RefCounted {
+    protected:
         virtual ~BehaviorSlot() { }
     };
+    typedef RefPtr<BehaviorSlot> BehaviorSlotPtr;
+
+
+    class Behavior;
+    typedef RefPtr<Behavior> BehaviorPtr;
 
 
     /**
@@ -55,7 +60,7 @@ namespace pyr {
      */
     class Behavior : public RefCounted {
     protected:
-        virtual ~Behavior();
+        virtual ~Behavior() { }
 
     public:
         virtual std::string getName() = 0;
@@ -65,13 +70,8 @@ namespace pyr {
         template<typename SlotT>
         SlotT* getSlot() const {
             SlotMap::const_iterator i = _slots.find(typeid(SlotT));
-            return (i == _slots.end() ? 0 : checked_cast<SlotT*>(i->second));
+            return (i == _slots.end() ? 0 : checked_cast<SlotT*>(i->second.get()));
         }
-
-    protected:
-        void sendAppearanceCommand(Entity* entity, const std::string& command);
-        void beginAnimationCycle(Entity* entity, const std::string& animation);
-        void beginAnimation(Entity* entity, const std::string& animation);
 
         /**
          * Adds a slot, indexed by its type, to the slots map.  There can be
@@ -82,18 +82,25 @@ namespace pyr {
          */
         void setSlot(BehaviorSlot* slot) {
             if (slot) {
-                delete _slots[typeid(*slot)];
                 _slots[typeid(*slot)] = slot;
             }
+        }
+
+    protected:
+        void sendAppearanceCommand(Entity* entity, const std::string& command);
+        void beginAnimationCycle(Entity* entity, const std::string& animation);
+        void beginAnimation(Entity* entity, const std::string& animation);
+
+        void copySlots(const BehaviorPtr& other) {
+            _slots = other->_slots;
         }
 
     private:
         static Appearance* getAppearance(Entity* entity);
 
-        typedef std::map<TypeInfo, BehaviorSlot*> SlotMap;
+        typedef std::map<TypeInfo, BehaviorSlotPtr> SlotMap;
         SlotMap _slots;
     };
-    typedef RefPtr<Behavior> BehaviorPtr;
 
     /**
      * Instantiates a behavior from the type 'name'.  Returns a default (naive)

@@ -8,6 +8,9 @@
 namespace pyr {
 
     class PhysicsBehaviorSlot : public BehaviorSlot {
+    protected:
+        ~PhysicsBehaviorSlot() { }
+
     public:
         // Yay for public fields.  ;)  Put these behind mutators and
         // accessors if need be.
@@ -17,6 +20,7 @@ namespace pyr {
         Inited<bool, true> facingRight;
         Zeroed<float> desiredGroundSpeed;
     };
+    typedef RefPtr<PhysicsBehaviorSlot> PhysicsBehaviorSlotPtr;
 
 }
 

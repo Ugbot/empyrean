@@ -30,21 +30,21 @@ namespace pyr {
             contents += line + "\n";
         }
 
-        PYR_BEGIN_PYTHON_CODE()
+        PYR_PYTHON_CODE({
             _module = the<PythonInterpreter>().createModule(contents, filename);
-        PYR_END_PYTHON_CODE()
+        })
     }
 
     object PythonScript::call(const std::string& name) {
-        PYR_BEGIN_PYTHON_CODE()
+        PYR_PYTHON_CODE({
             return _module.attr(name.c_str())();
-        PYR_END_PYTHON_CODE()
+        })
     }
 
     object PythonScript::call(const std::string& name, object o) {
-        PYR_BEGIN_PYTHON_CODE()
+        PYR_PYTHON_CODE({
             return _module.attr(name.c_str())(o);
-        PYR_END_PYTHON_CODE()
+        })
     }
 
 }

@@ -10,7 +10,7 @@ namespace pyr {
 
     PlayerBehavior::PlayerBehavior(const std::string& /*resource*/) {
         _physics = new PhysicsBehaviorSlot;
-        setSlot(_physics);
+        setSlot(_physics.get());
 
         // We would like to be able to start in some sort of animation.
         //beginAnimationCycle("idle");

@@ -13,9 +13,7 @@ namespace pyr {
 
     class CutScene : public RefCounted {
     protected:
-        // Objects exposed to boost.python have to be destructible for
-        // some reason.  :(
-        //~CutScene() { }
+        ~CutScene() { }
 
     public:
         void addImage(const std::string& filename);
