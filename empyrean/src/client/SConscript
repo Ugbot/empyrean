@@ -6,6 +6,7 @@ SOURCES = Split("""
     CreditsState.cpp
     GameEntity.cpp
     GameState.cpp
+    HUD.cpp
     InputManager.cpp
     IntroState.cpp
     Main.cpp
