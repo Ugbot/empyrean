@@ -34,7 +34,6 @@ namespace pyr {
         glClearColor(0, 0, 0, 0);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-        
         glPushMatrix();
             float x = _inputX->getValue() * 4;
             float y = _inputY->getValue() * 3;
@@ -51,7 +50,6 @@ namespace pyr {
             glColor3f(0, 0, 1); glVertex2f( 0.5f,  0.5f);
             glColor3f(1, 0, 1); glVertex2f( 0.5f, -0.5f);
             glEnd();
-
         glPopMatrix();
         
         for (unsigned i = 0; i < _entities.size(); ++i) {
@@ -64,8 +62,9 @@ namespace pyr {
         Renderer::begin3D();
         glPushMatrix();
             glTranslatef(200, 200, 0);
-            glRotatef(_rotation, 0, -1, 0);
+            glRotatef(_rotation-90, 0, 1, 0);
             glRotatef(90, 1, 0, 0);
+            glColor4f(1,1,1,1);
             _renderer->draw(_testModel);
         glPopMatrix();
         Renderer::end3D();

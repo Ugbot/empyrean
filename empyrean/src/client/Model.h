@@ -5,6 +5,8 @@ class CalCoreModel;
 class CalModel;
 
 namespace pyr {
+    class CoreModel;
+
     /** Encapsulates a 3D model.
      *
      * This doesn't represent a single model file; that's what CalCoreModel is for.
@@ -25,7 +27,7 @@ namespace pyr {
          * that you have to include it yourself in any source file that uses
          * these classes, so maybe it's not worth it.  Time will tell.
          */
-        CalCoreModel* _coreModel;
+        CoreModel* _coreModel;
         CalModel* _model;
         // We'll probably want to store information on how this particular model
         // is skinned, and so on.

@@ -6,6 +6,7 @@
 #include "Entity.h"
 #include "InputManager.h"
 #include "State.h"
+#include "Utility.h"
 
 namespace pyr {
 

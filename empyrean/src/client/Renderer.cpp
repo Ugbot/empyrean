@@ -19,6 +19,7 @@ namespace {
     using namespace pyr;
 
     PFNGLACTIVETEXTUREARBPROC glActiveTextureARB=0;
+    PFNGLCLIENTACTIVETEXTUREARBPROC glClientActiveTextureARB=0;
     PFNGLMULTITEXCOORD1FARBPROC glMultiTexCoord1fARB=0;
 
     /*
@@ -26,24 +27,22 @@ namespace {
      * Sadly, it's also quite a bit slower than the other method.
      * It's still here for reference, basically.
      */
-    void renderMesh(Model& model) {
+    void renderMesh(Model& model,bool cellshade=false,u32 shadetex=0) {
 
         glEnableClientState(GL_VERTEX_ARRAY);
         glEnableClientState(GL_NORMAL_ARRAY);
-        glDisable(GL_TEXTURE_2D);
-        glDisable(GL_BLEND);
-        glColor3f(1, 1, 1);
+        glEnable(GL_TEXTURE_2D);
 
         CalRenderer* r=model.getModel().getRenderer();
         r->beginRendering();
 
         static float ambient[]=  { 0.5f, 0.5f, 0.5f, 1.0f };
         static float diffuse[]=  { 1, 1, 1, 1 };
-        static float light[]= { 0, 20, 10 };
+        static gmtl::Vec3f lightvec(0, 0, 1);
 
         glLightfv(GL_LIGHT1, GL_AMBIENT, ambient);
         glLightfv(GL_LIGHT1, GL_DIFFUSE, diffuse);
-        glLightfv(GL_LIGHT1, GL_POSITION, light);
+        glLightfv(GL_LIGHT1, GL_POSITION, lightvec.getData());
         glEnable(GL_LIGHT1);        glEnable(GL_LIGHTING);
 
         int nMeshes=r->getMeshCount();
@@ -61,8 +60,32 @@ namespace {
 
                 static float normals[30000][3];
                 int nNormals=r->getNormals(&normals[0][0]);
-                glEnableClientState(GL_NORMAL_ARRAY);
-                glNormalPointer(GL_FLOAT, 0, &normals[0][0]);
+
+                if (cellshade) {
+                    gmtl::Matrix44f mat;
+                    glGetFloatv(GL_MODELVIEW_MATRIX,const_cast<float*>(mat.getData())); // evil
+
+                    static float texcoords2[30000];
+                    for (int i = 0; i < nNormals; i++) {
+                        gmtl::Vec3f v(mat * gmtl::Vec3f(normals[i][0], normals[i][1], normals[i][2]));
+                        float light=gmtl::dot(v,lightvec);
+                        if (light<0)
+                            light=0;
+
+                        texcoords2[i]=light;
+                    }
+
+                    glActiveTextureARB(GL_TEXTURE1_ARB);
+                    glClientActiveTextureARB(GL_TEXTURE1_ARB);
+                    glBindTexture(GL_TEXTURE_1D,shadetex);
+                    glEnable(GL_TEXTURE_1D);
+                    glTexCoordPointer(1,GL_FLOAT,0,texcoords2);
+                    glActiveTextureARB(GL_TEXTURE0_ARB);
+                    glClientActiveTextureARB(GL_TEXTURE0_ARB);
+                } else {
+                    glEnableClientState(GL_NORMAL_ARRAY);
+                    glNormalPointer(GL_FLOAT, 0, &normals[0][0]);
+                }
 
                 if (r->getMapCount()) {
                     static float texcoords[30000][2];
@@ -97,7 +120,7 @@ namespace {
      * void begin() -- called before rendering the mesh begins
      * void end()   -- called when the mesh is completely rendered
      * void drawVert(float* verts,float* normals,float* texcoords) -- called to render a single vertex
-     * void setTexture(Texture* tex) -- sets the texture to be used henceforth
+     * void setTexture(u32 tex) -- sets the texture to be used henceforth
      */
     template <class Shader>
     void renderMesh(Model& model,Shader shader) {
@@ -164,8 +187,6 @@ namespace {
             glLightfv(GL_LIGHT1,GL_POSITION,light);
             glEnable(GL_LIGHT1);
 
-            glScalef(scale,scale,scale);
-
             glEnable(GL_LIGHTING);
             glEnable(GL_TEXTURE_2D);
         }
@@ -173,8 +194,6 @@ namespace {
         inline void end() {
             glDisable(GL_LIGHTING);
             glDisable(GL_TEXTURE_2D);
-
-            glScalef(1/scale,1/scale,1/scale);
         }
 
         inline void drawVert(float* verts,float* normals,float* texcoords) {
@@ -185,11 +204,10 @@ namespace {
 
         inline void setTex(u32 tex)
         {
+            //PYR_ASSERT(tex,"DefaultShade::tex must not be 0!");
             glBindTexture(GL_TEXTURE_2D,tex);
         }
     };
-
-    const float DefaultShade::scale=1.0f;
 
     /** Cell shading algorithm outlined at http://nehe.gamedev.net/tutorials/lesson37.jpg
      *
@@ -198,6 +216,9 @@ namespace {
      * I think it might be faster in the long run if we have GL_TEXTURE_2D always on
      * for unit 0, and turn it off when it's not needed, as opposed to turning it on
      * when we do need it. (as is almost always the case)
+     *
+     * Note that, since GL_LIGHTING is turned off, vertices can be coloured.  I intentionally
+     * left this open, as it allows the engine to tint models with a single glColor call.
      */
     struct CellShade {
 
@@ -221,7 +242,6 @@ namespace {
             glEnable(GL_TEXTURE_1D);
             glActiveTextureARB(GL_TEXTURE0_ARB);
             glEnable(GL_TEXTURE_2D);
-            glColor3f(1,1,1);
         }
 
         inline void end() {
@@ -246,13 +266,12 @@ namespace {
 
         inline void setTex(u32 tex)
         {
-            PYR_ASSERT(tex,"CellShade::tex must not be 0!");
+            //PYR_ASSERT(tex,"CellShade::tex must not be 0!");
             glBindTexture(GL_TEXTURE_2D,tex);
         }
     };
 
     // there is no way I'm copy/pasting out those insane goddamn typedef names
-
     template <class T>
     void assign(T& d,void* s) {
         d=(T)s;
@@ -260,7 +279,9 @@ namespace {
 
     void initExtensions() {
         assign(glActiveTextureARB,SDL_GL_GetProcAddress("glActiveTextureARB"));
+        assign(glClientActiveTextureARB,SDL_GL_GetProcAddress("glClientActiveTextureARB"));
         assign(glMultiTexCoord1fARB,SDL_GL_GetProcAddress("glMultiTexCoord1fARB"));
+
     }
 
 };
@@ -281,7 +302,8 @@ namespace pyr {
     void Renderer::end2D() {
         glMatrixMode(GL_PROJECTION);
         glLoadIdentity();
-        glOrtho(0,400,300,0,-100,100);
+        float w=500;
+        glOrtho(0,w,w*3/4,0,-100,100);
 
         glMatrixMode(GL_MODELVIEW);
         glLoadIdentity();
@@ -322,5 +344,6 @@ namespace pyr {
 
     void CellShadeRenderer::draw(Model* m) {
         renderMesh(*m,CellShade(_shadeTex.handle));
+        //renderMesh(*m,true,_shadeTex.handle);
     }
 };

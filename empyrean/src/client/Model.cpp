@@ -1,6 +1,7 @@
 #include <fstream>
 #include <string>
 #include <vector>
+#include <map>
 #include <sstream>
 
 #include <cal3d/cal3d.h>
@@ -16,20 +17,43 @@ namespace pyr {
     using std::string;
     using std::vector;
 
-    //! A quick and dirty adapter for CalCoreModel.
+    /** A quick and dirty adapter for CalCoreModel.
+     *
+     * Since CalCoreModel must be destroy()ed before any CalModels using it,
+     * I was forced to refcount them without using the existing ResourceManager
+     * codebase.  Regardless, it's encapsulated, and not too convoluted.  addRef()
+     * right after you create() one, and decRef when you're through with it.
+     *
+     * I'm not entirely sure how sound it is from a design standpoint, but
+     * CoreModel also does the parsing of the config files, in addition to
+     * a RAW texture loader. (which only needs to exist while I'm using models
+     * included in the cal3d test demo)
+     * 
+     */
     class CoreModel {
-    public:
-        // If you even know this class exists, then you have the right to use it as you see fit.
+        static std::map<std::string,CoreModel*> _instances;
+
         CalCoreModel _coreModel;
+        int _refCount;
 
         CoreModel(const std::string& id) {
             _coreModel.create(id);
+            loadConfigFile(id, _coreModel);
+            _refCount = 0;
         }
 
         ~CoreModel() {
-            // deallocate all the textures
+            // gaaaaay.  But I can find no way to search a std::map for a certain value.
+            for (std::map<std::string,CoreModel*>::iterator i = _instances.begin(); i != _instances.end(); i++)
+                if (i->second == this)
+                {
+                    _instances.erase(i);
+                    break;
+                }
+
+            // deallocate textures
             for (int i = 0; i < _coreModel.getCoreMaterialCount(); i++) {
-                CalCoreMaterial& material=*_coreModel.getCoreMaterial(i);
+                CalCoreMaterial& material = *_coreModel.getCoreMaterial(i);
 
                 for (int j = 0; j < material.getMapCount(); j++) {                    
                     pyr::u32 tex = (pyr::u32)material.getMapUserData(j);
@@ -37,25 +61,10 @@ namespace pyr {
                 }
             }
 
+            // deallocate the model
             _coreModel.destroy();
         }
-    };
 
-    template<>
-    class CachePolicy<CoreModel*> {
-    public:
-        static CoreModel* create(const string& id) {
-            CoreModel* m=new CoreModel(id);
-            loadConfigFile(id, m->_coreModel);
-            return m;
-        }
-
-    private:
-        /** Loads things into a CalCoreModel from a data file.
-         * 
-         * @ param fname Name of the data file to use.
-         * @ param model the CalCoreModel to load things into.
-         */
         static void loadConfigFile(const string& fname, CalCoreModel& model) {
             string path;
             int p=fname.rfind('/');
@@ -156,7 +165,38 @@ namespace pyr {
 
             return tex;
         }
+
+    public:
+        //! "constructor"
+        static CoreModel* create(const std::string& id) {
+            CoreModel* m=_instances[id];
+
+            if (!m) {
+                m=new CoreModel(id);
+                _instances[id]=m;
+            }
+
+            return m;
+        }
+
+        CalCoreModel* get() {
+            return &_coreModel;
+        }
+
+        void addRef() {
+            _refCount++;
+        }
+
+        void decRef() {
+            _refCount--;
+
+            if (_refCount == 0)
+                delete this;
+        }
+
     };
+
+    std::map<std::string,CoreModel*> CoreModel::_instances;
 
     template<>
     class CachePolicy<pyr::Model*> {
@@ -171,28 +211,31 @@ namespace pyr {
     }
 
     Model::Model(const string& fname) {
-        CoreModel* coremodel=ResourceManager::instance().get<CoreModel*>(fname);
-        _coreModel=&coremodel->_coreModel;
+        _coreModel=CoreModel::create(fname);
+        _coreModel->addRef();
 
         _model=new CalModel();
+        _model->create(_coreModel->get());
 
-        _model->create(_coreModel);
-        for (int i=0; i<_coreModel->getCoreMeshCount(); i++)
+        for (int i=0; i<_coreModel->get()->getCoreMeshCount(); i++)
             _model->attachMesh(i);
+        
         _model->setMaterialSet(0);
 
         _model->getMixer()->blendCycle(0,1,4.0f);
+        _model->setLodLevel(0.5f);
     }
 
     Model::~Model()
     {
-        //ResourceManager::instance().unRef<CalCoreModel*>(_coreModel); // or whatever, if/when it becomes necessary.
         _model->destroy();
         delete _model;
+
+        _coreModel->decRef();
     }
 
     CalCoreModel& Model::getCoreModel() {
-        return *_coreModel;
+        return *_coreModel->get();
     }
 
     CalModel& Model::getModel() {
