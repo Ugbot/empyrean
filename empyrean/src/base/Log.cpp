@@ -190,7 +190,7 @@ namespace pyr {
             else if (level == "ERROR")   logger.setLevel(ERROR);
             else if (level == "FATAL")   logger.setLevel(FATAL);
             else if (level == "OFF")     logger.setLevel(OFF);
-            else PYR_LOG(_logLogger, ERROR) << "Invalid logger level: " << level;
+            else PYR_LOG(_logLogger, ERROR, "Invalid logger level: " << level);
         }
 
         LogWriterPtr getWriter(
