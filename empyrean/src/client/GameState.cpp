@@ -3,11 +3,13 @@
 #include "Input.h"
 #include "InputManager.h"
 #include "MenuState.h"
+#include "Profiler.h"
 
 
 namespace pyr {
 
     GameState::GameState() {
+        PYR_PROFILE_BLOCK("Init");
         _inputX     = &_im.getInput("MouseX");
         _inputY     = &_im.getInput("MouseY");
         _inputLeft  = &_im.getInput("MouseLeft");
@@ -17,6 +19,7 @@ namespace pyr {
     }
     
     void GameState::draw(float fade) {
+        PYR_PROFILE_BLOCK("Render");
         glDisable(GL_TEXTURE_2D);
         glDisable(GL_BLEND);
         

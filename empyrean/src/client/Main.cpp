@@ -9,6 +9,7 @@
 #include "Application.h"
 #include "FPSCounter.h"
 #include "InputManager.h"
+#include "Profiler.h"
 
 
 void throwSDLError(const std::string& prefix) {
@@ -28,6 +29,8 @@ void run() {
     if (SDL_Init(init_flags) < 0) {
         throwSDLError("SDL initialization failed");
     }
+
+    pyr::Profiler p("etc");
     
     atexit(quitSDL);
 
@@ -131,10 +134,12 @@ void error(const std::string& message);
 int main() {
     try {
         run();
+        pyr::Profiler::dump();
         return EXIT_SUCCESS;
     }
     catch (const std::exception& e) {
         error(e.what());
+        pyr::Profiler::dump();
         return EXIT_FAILURE;
     }
 }
@@ -153,7 +158,7 @@ int main() {
         char* backslash = strrchr(filename, '\\');
         if (backslash) {
             *backslash = 0;
-            SetCurrentDirectory(filename);
+            //SetCurrentDirectory(filename);
         }
         
         return main();
