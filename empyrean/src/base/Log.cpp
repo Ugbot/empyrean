@@ -176,7 +176,7 @@ namespace pyr {
                 _logger.log(_level, "}");
             }
         }
-        catch (const std::exception& e) {
+        catch (const std::exception&) {
         }
         PYR_CATCH_ALL()
     }

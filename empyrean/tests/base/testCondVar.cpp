@@ -49,12 +49,19 @@ struct Consumer : public Runnable {
 };
 
 
-int main(int argc, char** argv) {
-    setStartDirectory(argv[0]);
-    initializeLog("testCondVar.log", "testCondVar.log.config");
-
+int run() {
     ScopedPtr<Thread> c(new Thread("Consumer", new Consumer));
     ScopedPtr<Thread> p(new Thread("Producer", new Producer));
     c->join();
     p->join();
+    return 0;
+}
+
+
+int main(int argc, char** argv) {
+    PYR_EXCEPTION_TRAP({
+        setStartDirectory(argv[0]);
+        initializeLog("testCondVar.log", "testCondVar.log.config");
+        return run();
+    })
 }

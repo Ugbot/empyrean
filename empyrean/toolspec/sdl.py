@@ -6,6 +6,8 @@ def generate(env):
                    CPPDEFINES = ['main=SDL_main', 'WIN32'],
                    CCFLAGS = ['-mwindows'],
                    LIBS = ['SDL', 'SDLmain'])
+    elif env['PLATFORM'] == 'win32':
+        env.Append(LIBS=['SDL', 'SDLmain'])
     else:
         ParseConfig(env, 'sdl-config', ['--cflags', '--libs'])
 

@@ -12,7 +12,9 @@ SConsignFile()
 
 Default(['build', 'tests'])
 
-opts = Options('options.cache')
+platform = DefaultEnvironment()['PLATFORM']
+cachefile = 'options.%s.cache' % platform
+opts = Options(cachefile)
 opts.AddOptions(
     BoolOption('dbg',    'Build with debugging enabled', 0),
     BoolOption('opt',    'Build with optimizations', 0),
@@ -24,14 +26,24 @@ opts.AddOptions(
     BoolOption('withCallStack', 'Enable CallStack support', 1))
 
 # Create base environment.
-env = Environment(ENV=os.environ, options=opts)
+env = Environment(options=opts)
 
 Help(opts.GenerateHelpText(env))
-opts.Save('options.cache', env)
+opts.Save(cachefile, env)
 
 # Process platforms.
+
+win32_defines = ['WIN32', '_WIN32', 'WIN32_LEAN_AND_MEAN', 'STRICT', 'NOMINMAX']
+
+if env['PLATFORM'] == 'win32':
+    env.Append(CXXFLAGS=['/GR', '/GX'],
+               CPPDEFINES=win32_defines,
+               CPPPATH=Dir('#/third-party-vc7/include'),
+               LIBPATH=Dir('#/third-party-vc7/lib'),
+               LIBS=['user32'])
+
 if env['PLATFORM'] == 'cygwin':
-    env.Append(CPPDEFINES = ['WIN32', '_WIN32', 'NOMINMAX'],
+    env.Append(CPPDEFINES = win32_defines,
                CPPPATH = ['#/third-party-cygwin/include'],
                LIBPATH = ['#/third-party-cygwin/lib'])
 
@@ -40,6 +52,12 @@ if env['PLATFORM'] == 'irix':
         CPPPATH = string.split(os.environ['CPLUS_INCLUDE_PATH'], ':'),
         LIBPATH = string.split(os.environ['LIBRARY_PATH'], ':'),
         LIBS = ['m'])
+
+if env.subst('$CXX') == 'cl':
+    if env['dbg']:
+        env.Append(CXXFLAGS=['/MDd'])
+    else:
+        env.Append(CXXFLAGS=['/MD'])
 
 # Process build options.
 if env.get('dbg'):

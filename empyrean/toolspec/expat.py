@@ -1,5 +1,8 @@
 def generate(env):
-    env.Append(LIBS = ['expat'])
+    if env['PLATFORM'] == 'win32':
+        env.Append(LIBS=['libexpat'])
+    else:
+        env.Append(LIBS=['expat'])
 
 def exists(env):
     return 1

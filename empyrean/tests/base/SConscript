@@ -5,6 +5,7 @@ env = env.Copy(tools=['pyr_base', 'nspr', 'expat'],
 tests = ['testCallStack.cpp',
          'testCondVar.cpp',
          'testLog.cpp',
+         'testThreads.cpp',
          'packetClient.cpp',
          'packetServer.cpp']
 
