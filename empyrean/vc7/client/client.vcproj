@@ -92,7 +92,7 @@
 				Name="VCCustomBuildTool"/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="../base/Debug/base.lib ../phui/Release/phui.lib SDL.lib SDLmain.lib nspr4.lib gltext.lib corona.lib cal3d.lib opengl32.lib glu32.lib"
+				AdditionalDependencies="../base/Release/base.lib ../phui/Release/phui.lib SDL.lib SDLmain.lib nspr4.lib gltext.lib corona.lib cal3d.lib opengl32.lib glu32.lib"
 				OutputFile="../bin/$(OutDir)/client.exe"
 				LinkIncremental="1"
 				AdditionalLibraryDirectories="../../third-party-vc7/lib"

@@ -12,7 +12,7 @@ namespace pyr {
     PYR_DEFINE_SINGLETON(Scene)
 
     Scene::Scene() 
-        : _backdrop(Texture::create("images/stars.png"))
+        : _backdrop(Texture::create("images/stars.tga"))
     {
         //_map = new MapFile;
         //_map->_terrain.images.push_back(MapFile::Image(0, 220, 400, 80));

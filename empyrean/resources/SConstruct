@@ -1,32 +1,27 @@
 from os.path import join
 from glob import glob
+from types import ListType
 
 TARGET = ARGUMENTS.get('TARGET', '.')
 Default(TARGET)
 
-DIRS = Split("""
-    editorrc
-    fonts
-    images
-    images/title
-    images/ui
-    models
-    models/paladin
-    models/Walk1
-""")
-
-WILD = Split("""
-    *.png
-    *.jpg
-    *.jpeg
-    *.raw
-    *.caf *.cfg *.cmf *.crf *.csf
-    *.ttf
-""")
-
 env = Environment()
+env['BUILDERS']['ConvertImage'] = Builder(action='corconvert $SOURCE $TARGET')
 
-for d in DIRS:
-    for w in WILD:
-        files = glob("%s/%s" % (d, w))
-        env.Install(join(TARGET, d), files)
+def Root():
+    return Dir('#')
+
+def Here():
+    return str(Dir('.').get_path(Root()))
+
+def Install(files):
+    if type(files) is not ListType:
+        files = [files]
+    for f in files:
+        env.Install(join(TARGET, Here()), f)
+
+def ConvertImage(target, source):
+    env.ConvertImage(join(TARGET, Here(), target), source)
+
+Export('Install ConvertImage')
+SConscript(dirs = ['editorrc', 'fonts', 'images', 'models'])

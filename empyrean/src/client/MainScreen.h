@@ -23,7 +23,7 @@ namespace pyr {
         void createMainScreen() {
             using namespace phui;
     
-            PicturePtr background = new Picture("images/title/title_composite.png");
+            PicturePtr background = new Picture("images/title/title_composite.tga");
             background->setPositionAndSize(0, 0, 1024, 768);
             
             WindowPtr buttons = new Window(

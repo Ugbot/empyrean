@@ -1,0 +1,12 @@
+Import('Install ConvertImage')
+Install(Split("""
+    backdrop.jpg
+    menu.png
+    notyet.png
+    particle.png
+    pointer.png
+"""))
+
+ConvertImage('intro.tga', 'intro.png')
+ConvertImage('stars.tga', 'stars.png')
+ConvertImage('title/title_composite.tga', 'title/title_composite.png')

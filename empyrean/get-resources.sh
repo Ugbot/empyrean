@@ -5,17 +5,17 @@ die() {
     exit 1
 }
 
-INSTALL_FROM=`pwd`
+ROOT=`pwd`
 
 cd resources || die
 
 # install them into the UNIX SCons build directory
-scons TARGET=$INSTALL_FROM/build || die
+scons TARGET=$ROOT/build $1 || die
 
 case `uname` in
     *cygwin*|*CYGWIN*)
         # install them into the VC7 build directories
-        scons TARGET="$INSTALL_FROM/vc7/bin/Debug" || die
-        scons TARGET="$INSTALL_FROM/vc7/bin/Release" || die
+        scons TARGET="$ROOT/vc7/bin/Debug"   $1 || die
+        scons TARGET="$ROOT/vc7/bin/Release" $1 || die
         ;;
 esac

@@ -24,7 +24,7 @@ namespace pyr {
 
     void PlayerEntity::draw() {
         glEnable(GL_DEPTH_TEST);
-        glRotatef(_direction, 0, 1, 0);
+        glRotatef(_direction + 180, 0, 1, 0);
         glRotatef(90, 1, 0, 0);
         _renderer->draw(_model);
         glDisable(GL_DEPTH_TEST);
@@ -68,10 +68,10 @@ namespace pyr {
     void PlayerEntity::updateWalkState(float dt) {
         if (_inputLeft->getValue() != 0) {
             setVel(gmtl::Vec2f(-vel, 0));
-            _direction = 90;
+            _direction = -90;
         } else if (_inputRight->getValue() != 0) {
             setVel(gmtl::Vec2f(vel, 0));
-            _direction = -90;
+            _direction = 90;
         } else {
             startStandState();
             return;

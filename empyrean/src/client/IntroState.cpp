@@ -7,7 +7,7 @@
 namespace pyr {
 
     IntroState::IntroState() 
-        : _image(Texture::create("images/intro.png"))
+        : _image(Texture::create("images/intro.tga"))
     {
     }
 
