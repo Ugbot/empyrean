@@ -37,8 +37,8 @@ namespace pyr {
     
 
     /**
-     * More efficient than using PYR_LOG(), because PYR_LOG() instantiates a
-     * std::ostringstream for every log request.
+     * Maybe more efficient than using PYR_LOG(), because PYR_LOG()
+     * instantiates a std::ostringstream for every log request.
      */ 
     inline void writeLog(const std::string& message) {
         the<Log>().write(message);

@@ -5,6 +5,8 @@
 #include <map>
 #include <queue>
 #include "LokiTypeInfo.h"
+#include "RefCounted.h"
+#include "RefPtr.h"
 #include "Thread.h"
 #include "Utility.h"
 
@@ -19,15 +21,21 @@ namespace pyr {
     class WriterThread;
     
     
-    class PacketHandler {
-    public:
+    class PacketHandler : public RefCounted {
+    protected:
         virtual ~PacketHandler() { }
+
+    public:
         virtual void processPacket(Connection* c, Packet* p) = 0;
     };
+    typedef RefPtr<PacketHandler> PacketHandlerPtr;
     
     
     template<typename PacketT, typename ClassT>
     class MethodPacketHandler : public PacketHandler {
+    protected:
+        virtual ~MethodPacketHandler() { }
+
     public:
         typedef void (ClassT::*MethodPointer)(Connection*, PacketT*);
     
@@ -68,7 +76,6 @@ namespace pyr {
             typedef MethodPacketHandler<PacketT, ClassT> HandlerT;
         
             TypeInfo ti(typeid(PacketT));
-            delete _handlers[ti];
             _handlers[ti] = new HandlerT(handler, method);
         }
         
@@ -99,7 +106,7 @@ namespace pyr {
         void* getOpaque() const      { return _opaque;    }
         
     private:
-        typedef std::map<TypeInfo, PacketHandler*> HandlerMap;
+        typedef std::map<TypeInfo, PacketHandlerPtr> HandlerMap;
         typedef HandlerMap::iterator HandlerMapItr;
     
         ScopedPtr<Socket> _tcpSocket;

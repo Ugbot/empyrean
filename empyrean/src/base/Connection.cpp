@@ -22,12 +22,8 @@ namespace pyr {
     }
     
     Connection::~Connection() {
-        for (size_t i = 0; i < _unhandledPackets.size(); ++i) {
-            delete _unhandledPackets[i];
-        }
-        for (HandlerMapItr i = _handlers.begin(); i != _handlers.end(); ++i) {
-            delete i->second;
-        }
+        for_each(_unhandledPackets.begin(), _unhandledPackets.end(),
+                 delete_function<Packet>);
     }
     
     void Connection::clearHandlers() {
@@ -41,7 +37,7 @@ namespace pyr {
             packets.pop();
 
             TypeInfo ti(typeid(*p));
-            PacketHandler* handler = _handlers[ti];
+            PacketHandlerPtr handler = _handlers[ti];
             if (handler) {
                 handler->processPacket(this, p);
                 delete p;

@@ -41,7 +41,7 @@ namespace pyr {
 
             string line;
             while (getline(file, line)) {
-                stringstream ss(line);
+                istringstream ss(line);
 
                 string command;
                 if (ss >> command) {
@@ -201,7 +201,7 @@ namespace pyr {
 
         string line;
         while (getline(file, line)) {
-            stringstream ss(line);
+            istringstream ss(line);
 
             string command;
             if (ss >> command) {

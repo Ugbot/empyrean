@@ -17,7 +17,7 @@ namespace pyr {
             _barBufferX = 10;
             _barBufferY = 10;
             _barBuffer = 3;
-            _barPathLength = _barShortStraight+3.14159*_barRadius+_barLongStraight;
+            _barPathLength = _barShortStraight+3.14159f*_barRadius+_barLongStraight;
  
             calcBar();
             PYR_ASSERT(_vertsRight.size() == _vertsLeft.size(),
@@ -50,7 +50,7 @@ namespace pyr {
         // Show the vitality number
         glPushMatrix();
         glTranslatef(_vitCenter[0]-8,_vitCenter[1]-10,0);
-        glScalef(0.4,0.4,0.4);
+        glScalef(0.4f,0.4f,0.4f);
         GLTEXT_STREAM(rend) << "VIT";
         glScalef(1.5,1.5,1.5);
         glTranslatef(-6,15,0);
@@ -73,9 +73,9 @@ namespace pyr {
         // Show the ether number
         glPushMatrix();
         glTranslatef(_ethCenter[0]-4,_ethCenter[1]-10,0);
-        glScalef(0.4,0.4,0.4);
+        glScalef(0.4f,0.4f,0.4f);
         GLTEXT_STREAM(rend) << "ETH";
-        glScalef(1.5,1.5,1.5);
+        glScalef(1.5f,1.5f,1.5f);
         glTranslatef(-5,15,0);
         if (ether < 100) {
             GLTEXT_STREAM(rend) << " " << ether;
@@ -105,13 +105,13 @@ namespace pyr {
 
     void HUD::drawVitalityBar(float vitPerc) {
         //Pick the color
-        glColor4f(1.0-vitPerc*0.4,0.0,0.0,1.0);
+        glColor4f(1-vitPerc*0.4f,0,0,1);
         drawBar(vitPerc);
     }
     
     void HUD::drawEtherBar(float ethPerc) {
         //Pick the color
-        glColor4f(0.0,0.65-ethPerc*0.2,0.75-ethPerc*0.2,1.0);
+        glColor4f(0,0.65f-ethPerc*0.2f,0.75f-ethPerc*0.2f,1);
         drawBar(ethPerc);
     }
 
@@ -134,14 +134,14 @@ namespace pyr {
         }
         else {
             // Check to see if the value is inside the curved part
-            if (perc <= (_barShortStraight+3.14159*_barRadius)/_barPathLength) {
+            if (perc <= (_barShortStraight+PI*_barRadius)/_barPathLength) {
                 barLen = (perc-_barShortStraight/_barPathLength)/
-                         (3.14159*_barRadius/_barPathLength);
+                         (3.14159f*_barRadius/_barPathLength);
                 vertsToDraw += (int)(barLen*_numSegsInCurves);
             }
             // The value is in the long straight
             else {
-                vertsToDraw = _vertsRight.size()-2;
+                vertsToDraw = static_cast<int>(_vertsRight.size()-2);
             }
             
             // Draw the curve
@@ -153,8 +153,8 @@ namespace pyr {
             }
 
             // Now draw the portion of the long straight if needs be.
-            if (perc > (_barShortStraight+3.14159*_barRadius)/_barPathLength) {
-                barLen = (perc-(_barShortStraight+3.14159*_barRadius)/_barPathLength)/
+            if (perc > (_barShortStraight+PI*_barRadius)/_barPathLength) {
+                barLen = (perc-(_barShortStraight+PI*_barRadius)/_barPathLength)/
                          (_barLongStraight/_barPathLength);
                 glVertex2f(_vertsRight[vertsToDraw][0],_vertsRight[vertsToDraw][1]);
                 glVertex2f(_vertsLeft[vertsToDraw][0],_vertsLeft[vertsToDraw][1]);
@@ -167,7 +167,7 @@ namespace pyr {
 
         // Draw the missing part of the bar in black
         if (perc < 1) {
-            glColor4f(0.0,0.0,0.0,1.0);
+            glColor4f(0,0,0,1);
             if (perc <= _barShortStraight/_barPathLength) {
                 glVertex2f(_vertsRight[0][0] - barLen*(_vertsRight[0][0]-_vertsRight[1][0]),
                             _vertsRight[1][1]);
@@ -185,7 +185,7 @@ namespace pyr {
                     glVertex2f(_vertsLeft[vertsToDraw+1][0],_vertsLeft[vertsToDraw+1][1]);
             }
             else {
-                for (int i=vertsToDraw; i<_vertsRight.size()-1; i++) {
+                for (int i=vertsToDraw; i<int(_vertsRight.size())-1; i++) {
                     glVertex2f(_vertsRight[i][0],_vertsRight[i][1]);
                     glVertex2f(_vertsLeft[i][0],_vertsLeft[i][1]);
                     glVertex2f(_vertsRight[i+1][0],_vertsRight[i+1][1]);
@@ -197,55 +197,55 @@ namespace pyr {
         glEnd();
 
         // Draw the outline
-        glColor4f(1.0,1.0,1.0,1.0);
-        glLineWidth(0.5);
+        glColor4f(1,1,1,1);
+        glLineWidth(0.5f);
         glBegin(GL_LINE_LOOP);
-        for (int i=0; i<_vertsRight.size(); ++i) {
+        for (size_t i=0; i<_vertsRight.size(); ++i) {
             glVertex2f(_vertsRight[i][0],_vertsRight[i][1]);
         }
-        for (int i=_vertsLeft.size()-1; i>-1; --i) {
+        for (int i=int(_vertsLeft.size())-1; i>-1; --i) {
             glVertex2f(_vertsLeft[i][0],_vertsLeft[i][1]);
         }
         glEnd();
-        glLineWidth(1.0);
+        glLineWidth(1);
     }
 
     void HUD::calcBar() {
-        int centerX = _barBufferX + _barRadius + _barHeight/2.0f;
-        int centerY = _barBufferY + _barRadius + _barHeight/2.0f;
+        float centerX = _barBufferX + _barRadius + _barHeight/2.0f;
+        float centerY = _barBufferY + _barRadius + _barHeight/2.0f;
         _vitCenter.set(centerX,centerY);
         _ethCenter.set(_vitCenter[0]+_barLongStraight,_vitCenter[1]+_barHeight+_barBuffer);
 
         // RIGHT SIDE
         // Calc the small straight
         _vertsRight.push_back( Vec2f(centerX + _barShortStraight, centerY + _barRadius - _barHeight/2.0f) );
-        _vertsRight.push_back( Vec2f(centerX , centerY + _barRadius - _barHeight/2.0f) );
+        _vertsRight.push_back( Vec2f(centerX,                     centerY + _barRadius - _barHeight/2.0f) );
        
         // Calc the right arc
-        float angle = -1.57080;  //-PI/2
-        for (int i=0; i<_numSegsInCurves; ++i, angle += 3.14159/(float)_numSegsInCurves) {
+        float angle = -PI_OVER_2;
+        for (int i=0; i<_numSegsInCurves; ++i, angle += PI/(float)_numSegsInCurves) {
             _vertsRight.push_back( Vec2f(centerX - (_barRadius - _barHeight/2.0f)*cos(angle), 
-                                            centerY - (_barRadius - _barHeight/2.0f)*sin(angle)) );
+                                         centerY - (_barRadius - _barHeight/2.0f)*sin(angle)) );
         }
  
         // Calc the straight portion 
-        _vertsRight.push_back(Vec2f(centerX, _barHeight + _barBufferY));
+        _vertsRight.push_back(Vec2f(centerX,                    _barHeight + _barBufferY));
         _vertsRight.push_back(Vec2f(centerX + _barLongStraight, _barHeight + _barBufferY));
         
         // LEFT SIDE
         // Calc the small straight
         _vertsLeft.push_back( Vec2f(centerX + _barShortStraight, centerY + _barRadius + _barHeight/2.0f) );
-        _vertsLeft.push_back( Vec2f(centerX, centerY + _barRadius + _barHeight/2.0f) );
+        _vertsLeft.push_back( Vec2f(centerX,                     centerY + _barRadius + _barHeight/2.0f) );
         
         // Draw the left arc
-        angle = -1.57080;
-        for (int i=0; i<_numSegsInCurves; ++i, angle += 3.14159/(float)_numSegsInCurves) {
+        angle = -PI_OVER_2;
+        for (int i=0; i<_numSegsInCurves; ++i, angle += PI/(float)_numSegsInCurves) {
             _vertsLeft.push_back( Vec2f(centerX - (_barRadius + _barHeight/2.0f)*cos(angle), 
-                                           centerY - (_barRadius + _barHeight/2.0f)*sin(angle)) );
+                                        centerY - (_barRadius + _barHeight/2.0f)*sin(angle)) );
         }
 
         // Calc the straight portion 
-        _vertsLeft.push_back(Vec2f(centerX, _barBufferY));
-        _vertsLeft.push_back(Vec2f(centerX + _barLongStraight, _barBufferY));
+        _vertsLeft.push_back(Vec2f(centerX,                    float(_barBufferY)));
+        _vertsLeft.push_back(Vec2f(centerX + _barLongStraight, float(_barBufferY)));
      }
 };

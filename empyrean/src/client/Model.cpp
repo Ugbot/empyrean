@@ -105,7 +105,7 @@ namespace pyr {
                     materials.push_back(line[1]);
                 } else {
                     PYR_LOG() << "UNKNOWN " << line[0];
-                    std::stringstream ss;
+                    std::ostringstream ss;
                     ss << "Unkown token \"" << line[0] << "\" on line " << curline << " in " << fname;
                     throw std::runtime_error(ss.str().c_str());
                 }
@@ -140,7 +140,7 @@ namespace pyr {
                 }
             }
             catch (const CalException&) {
-                std::stringstream ss;
+                std::ostringstream ss;
                 ss << "CoreModel::loadConfigFile " << fname << "(" << curline << "): " << CalError::getLastErrorText() << std::endl;
                 throw std::runtime_error(ss.str().c_str());
             }

@@ -72,7 +72,7 @@ public:
 
         TSTR data;
         node->GetUserPropBuffer(data);
-        std::stringstream parser(data.data() ? data.data() : "");
+        std::istringstream parser(data.data() ? data.data() : "");
         std::string line;
         while (getline(parser, line)) {
             std::string::size_type eq = line.find('=');

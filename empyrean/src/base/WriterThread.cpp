@@ -15,6 +15,7 @@ namespace pyr {
     }
     
     WriterThread::~WriterThread() {
+        // delete outgoing packets?
         delete _packetsAvailable;
         delete _outgoingLock;
     }
@@ -25,12 +26,9 @@ namespace pyr {
             while (_outgoing.empty()) {
                 _packetsAvailable->wait(0.5f);
                 if (thread->shouldQuit()) {
-                    break;
+                    _outgoingLock->unlock();
+                    return;
                 }
-            }
-            if (thread->shouldQuit()) {
-                _outgoingLock->unlock();
-                break;
             }
 
             // write a single packet (which we'll never use again,

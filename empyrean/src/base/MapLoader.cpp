@@ -39,7 +39,7 @@ namespace pyr {
                     elt->name = nodeName;
 
                     // Only set position for elements that aren't already in the map.
-                    std::stringstream ss(sceneNode->getAttr("position"));
+                    std::istringstream ss(sceneNode->getAttr("position"));
                     float x, y, z;
                     if (ss >> x >> y >> z) {
                         // 3ds max to Empyrean coordinate change.
