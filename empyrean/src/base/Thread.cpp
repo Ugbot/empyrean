@@ -1,7 +1,9 @@
 #include <iostream>
 #include <pratom.h>
+#include "CondVar.h"
 #include "Debug.h"
 #include "Error.h"
+#include "Mutex.h"
 #include "Thread.h"
 
 
@@ -11,7 +13,9 @@ namespace pyr {
         PR_AtomicSet(&_shouldQuit, 0);
         _started = false;
         _stopped = 0;
-        _mutex.lock();
+        
+        _mutex = new Mutex;
+        _threadStarted = new CondVar(_mutex);
 
         _thread = PR_CreateThread(
             PR_USER_THREAD,
@@ -23,21 +27,27 @@ namespace pyr {
             0);
 
         if (!_thread) {
+            delete _threadStarted;
+            delete _mutex;
             throwNSPRError("PR_CreateThread() failed");
         }
     }
     
     Thread::~Thread() {
+        delete _threadStarted;
+        delete _mutex;
         PYR_ASSERT(
-            _stopped,
+            !_started || _stopped,
             "Thread must be stopped before ~Thread() is called.\n"
             "Put a call to stop() in your thread's destructor.");
     }
     
     void Thread::start() {
         if (!_started) {
+            _mutex->lock();
             _started = true;
-            _mutex.unlock();
+            _threadStarted->notify();
+            _mutex->unlock();
         }
     }
 
@@ -70,6 +80,12 @@ namespace pyr {
     void PR_CALLBACK Thread::threadRoutine(void* self) {
         Thread* This = static_cast<Thread*>(self);
         try {
+            This->_mutex->lock();
+            while (!This->_started) {
+                This->_threadStarted->wait();
+            }
+            This->_mutex->unlock();
+            
             This->run();
         }
         catch (const std::exception& e) {

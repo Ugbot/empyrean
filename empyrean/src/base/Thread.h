@@ -3,10 +3,12 @@
 
 
 #include <prthread.h>
-#include "Mutex.h"
 
 
 namespace pyr {
+
+    class CondVar;
+    class Mutex;
 
     /**
      * Thread-derived classes should not be allocated on the stack.
@@ -62,7 +64,15 @@ namespace pyr {
         PRThread* _thread;
         bool      _started;  ///< has the thread been started yet?
         PRInt32   _stopped;  ///< has the thread been stopped?
-        Mutex     _mutex;    ///< used to implement start()
+        
+        /// used to implement start()
+        /// @{
+        Mutex*   _m_threadStarting;
+        CondVar* _threadStarting;
+        Mutex*   _m_threadStarted;
+        CondVar* _threadStarted;
+        /// @}
+        
         PRInt32   _shouldQuit;
     };
 
