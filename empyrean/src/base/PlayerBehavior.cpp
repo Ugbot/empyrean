@@ -38,8 +38,8 @@ namespace pyr {
     }
 
     void PlayerBehavior::handleEvent(Entity* entity, const std::string& event) {
-        const float jumpForce = 160;
-        const float accel = 9;
+        const float jumpForce = 80;
+        const float accel = 14;
 
         if (event == "Begin Right") {
             _physics->desiredAccel[0] = accel;

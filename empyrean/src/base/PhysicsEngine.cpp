@@ -23,8 +23,8 @@ namespace pyr {
         // If on the ground ..
         if (!p->inAir) {
             // TEMP!!!!!  locally define mu - eventually get this from the MAP!
-            const float muk = 0.3f;
-            const float mus = 0.2f;
+            const float muk = 0.8f;
+            const float mus = 0.8f;
 
             // Get the angle between the ground and the velocity
             Vec2f vel = ent->getNextVel();
