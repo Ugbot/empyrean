@@ -20,7 +20,7 @@ namespace pyr {
     Log::Log() {
         _stream = 0;
     }
-    
+
     Log::~Log() {
         close();
     }
@@ -41,7 +41,7 @@ namespace pyr {
         if (!_file.is_open()) {
             throw LogFileOpenFailure("Error opening file: " + filename);
         }
-        
+
         _stream = &_file;
     }
 
@@ -56,7 +56,20 @@ namespace pyr {
                 _stream = &std::cerr;
             }
         }
-        
+
+        doWrite(std::string(_indent * 2, ' ') + message);
+    }
+
+    void Log::beginBlock() {
+        ++_indent;
+    }
+
+    void Log::endBlock() {
+        --_indent;
+        PYR_ASSERT(_indent >= 0, "endBlock() called too many times");
+    }
+
+    void Log::doWrite(const std::string& message) {
         PYR_ASSERT(_stream, "_stream pointer was never set");
         (*_stream) << message << std::endl;
 

@@ -60,11 +60,13 @@ namespace pyr {
         packets[0] = packet;
         addPackets(packets);
     }
-    
+
     void WriterThread::addPackets(const std::vector<Packet*>& packets) {
         _outgoingLock->lock();
-        
-        for (unsigned i = 0; i < packets.size(); ++i) {
+
+        for (size_t i = 0; i < packets.size(); ++i) {
+            PYR_LOG() << "Queueing packet for writing:";
+            packets[i]->log();
             _outgoing.push(packets[i]);
         }
         

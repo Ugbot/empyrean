@@ -3,8 +3,8 @@
 
 
 #include <string>
-#include <gmtl/Vec.h>
 #include "Packet.h"
+#include "VecMath.h"
 
 
 namespace pyr {
@@ -125,8 +125,8 @@ namespace pyr {
     #define PYR_ENTITY_UPDATED_PACKET_NAME EntityUpdatedPacket
     #define PYR_ENTITY_UPDATED_PACKET(_) \
         _(field)(u16, id)                \
-        _(field)(gmtl::Vec2f, pos)       \
-        _(field)(gmtl::Vec2f, vel)
+        _(field)(Vec2f, pos)             \
+        _(field)(Vec2f, vel)
 
 
     // PACKET LIST

@@ -90,10 +90,10 @@ namespace pyr {
 
         sendAll(new EntityAddedPacket(
                     entity->getID(),
-                    "cal3d",
-                    entity->getAppearance(),
                     "player",
-                    ""));
+                    "",
+                    "cal3d",
+                    entity->getAppearance()));
 
         // set connection-specific data
         ConnectionData* cd = new ConnectionData;
@@ -109,10 +109,10 @@ namespace pyr {
         for (size_t i = 0; i < _entities.size(); ++i) {
             connection->sendPacket(new EntityAddedPacket(
                 _entities[i]->getID(),
-                "cal3d",
-                _entities[i]->getAppearance(),
                 "player",
-                ""));
+                "",
+                "cal3d",
+                _entities[i]->getAppearance()));
         }
 
         connection->sendPacket(new SetPlayerPacket(entity->getID()));

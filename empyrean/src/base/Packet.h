@@ -4,6 +4,7 @@
 
 #include "BufferParser.h"
 #include "ByteBuffer.h"
+#include "Log.h"
 #include "Types.h"
 
 
@@ -21,29 +22,30 @@ namespace pyr {
             _id = 0;
             _size = 0;
         }
-        
+
         virtual ~Packet() { }
-        
+
         u16 getID()   const { return _id;   }
         u16 getSize() const { return _size; }
 
         virtual void serialize(ByteBuffer& out) const = 0;
         virtual Packet* clone() const = 0;
-        
+        virtual void log() const = 0;
+
     protected:
         void setID(u16 id)     { _id   = id;   }
         void setSize(u16 size) { _size = size; }
-        
+
     private:
         u16 _id;
         u16 _size;
     };
-    
-    
+
+
     // For an explanation of the magic below, see
     // http://aegisknight.org/struct.txt
-    
-    
+
+
     #define PYR_CTOR_ARGS_string(size, name)    const std::string& name,
     #define PYR_CTOR_INIT_string(size, name)    m_ ## name = name;
     #define PYR_SIZE_string(size, name)         size +
@@ -53,7 +55,8 @@ namespace pyr {
     #define PYR_CREATE_string(size, name)       name,
     #define PYR_CLONE_string(size, name)        name(),
     #define PYR_CONTENTS_string(size, name)     std::string m_ ## name;
-    
+    #define PYR_LOG_string(size, name)          PYR_LOG() << (#name) << ": " << name();
+
     #define PYR_CTOR_ARGS_field(type, name)     const type& name,
     #define PYR_CTOR_INIT_field(type, name)     m_ ## name = name;
     #define PYR_SIZE_field(type, name)          sizeof(type) +
@@ -63,7 +66,7 @@ namespace pyr {
     #define PYR_CREATE_field(type, name)        name,
     #define PYR_CLONE_field(type, name)         name(),
     #define PYR_CONTENTS_field(type, name)      type m_ ## name;
-    
+    #define PYR_LOG_field(type, name)           PYR_LOG() << (#name) << ": " << promoteForOutput(name());
 
     #define PYR_CTOR_ARGS(_) PYR_CTOR_ARGS_ ## _
     #define PYR_CTOR_INIT(_) PYR_CTOR_INIT_ ## _
@@ -74,8 +77,11 @@ namespace pyr {
     #define PYR_CREATE(_)    PYR_CREATE_    ## _
     #define PYR_CLONE(_)     PYR_CLONE_     ## _
     #define PYR_CONTENTS(_)  PYR_CONTENTS_  ## _
-    
-        
+    #define PYR_WRITE_LOG(_) PYR_LOG_       ## _
+
+    /// Nice utility function to stringize the expansion of the argument.
+    #define PYR_STR(name) #name
+
     #define PYR_DECLARE_PACKET(name, id, body)                          \
         class name : public Packet {                                    \
         public:                                                         \
@@ -90,12 +96,13 @@ namespace pyr {
             void serialize(ByteBuffer& out) const;                      \
             static Packet* create(int size, const void* bytes);         \
             Packet* clone() const;                                      \
+            void log() const;                                           \
                                                                         \
         private:                                                        \
             body(PYR_CONTENTS)                                          \
         };
-        
-    
+
+
     #define PYR_DEFINE_PACKET(name, id, body)                           \
         name::name(body(PYR_CTOR_ARGS) EndOfList) {                     \
             body(PYR_CTOR_INIT)                                         \
@@ -121,6 +128,11 @@ namespace pyr {
             return new name(                                            \
                 body(PYR_CLONE)                                         \
                 EndOfList());                                           \
+        }                                                               \
+                                                                        \
+        void name::log() const {                                        \
+            PYR_LOG_BLOCK(PYR_STR(name))                                \
+            body(PYR_WRITE_LOG);                                        \
         }
 
 }

@@ -9,9 +9,15 @@
 
 namespace pyr {
 
+    /**
+     * @file
+     * @todo The log really needs to be stored in thread-local storage,
+     * stored in a separate file or some such.
+     */
+
     PYR_DEFINE_RUNTIME_ERROR(LogFileOpenFailure);
-    
-    
+
+
     /**
      * Singleton logging system.  Logs messages to the file specified in
      * the call to the file specified in open, otherwise default.log,
@@ -19,32 +25,36 @@ namespace pyr {
      */
     class Log {
         PYR_DECLARE_SINGLETON(Log)
-	
+
         Log();
         ~Log();
 
     public:
         void open(const std::string& filename);
         void write(const std::string& message);
+        
+        void beginBlock();
+        void endBlock();
 
     private:
-        // private until somebody needs it.
-        void close();
+        void doWrite(const std::string& message);
+        void close();  ///< private until somebody needs it.
 
         std::ostream* _stream;
         std::ofstream _file;
+        Zeroed<int> _indent;
     };
-    
+
 
     /**
      * Maybe more efficient than using PYR_LOG(), because PYR_LOG()
      * instantiates a std::ostringstream for every log request.
-     */ 
+     */
     inline void writeLog(const std::string& message) {
         the<Log>().write(message);
     }
-    
-    
+
+
     /**
      * Provides an iostream-like interface to the log.  Use PYR_LOG
      * instead.
@@ -74,6 +84,24 @@ namespace pyr {
     };
     
     
+    class LogBlock {
+    public:
+        LogBlock(const std::string& name) {
+            _name = name;
+            the<Log>().write("+" + _name);
+            the<Log>().beginBlock();
+        }
+
+        ~LogBlock() {
+            the<Log>().endBlock();
+            the<Log>().write("-" + _name);
+        }
+
+    private:
+        std::string _name;
+    };
+
+
     /**
      * A convenience macro around pyr::LogStream().  Used as follows:
      * PYR_LOG() << blah blah blah;
@@ -82,8 +110,10 @@ namespace pyr {
      * log.
      */
     #define PYR_LOG() ::pyr::LogStream().get()
-    
-    
+
+    #define PYR_LOG_BLOCK(name) ::pyr::LogBlock block_obj__(name);
+
+
 };
 
 #endif

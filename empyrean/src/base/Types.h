@@ -20,6 +20,25 @@ namespace pyr {
     typedef PRInt32 s32;
     typedef PRInt64 s64;
 
+
+    /**
+     * Without these, logging a u8 outputs a char.  You can instead log
+     * promoteForOutput(t);
+     */
+
+    template<typename T>
+    inline T& promoteForOutput(T& t) {
+        return t;
+    }
+
+    inline u16 promoteForOutput(u8 t) {
+        return t;
+    }
+
+    inline s16 promoteForOutput(s8 t) {
+        return t;
+    }
+
 }
 
 #endif
