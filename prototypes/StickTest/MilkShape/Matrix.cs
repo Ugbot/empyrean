@@ -54,7 +54,7 @@ namespace StickTest.MilkShape
             Copy(m.v);
         }
 
-        public Matrix Transpose()
+        public void Transpose()
         {
             for (int y=0; y<height; y++)
                 for (int x=y+1; x<width; x++)
@@ -63,21 +63,19 @@ namespace StickTest.MilkShape
                     this[y,x]=this[x,y];
                     this[x,y]=d;
                 }
-
-            return this;
         }
 
-        public double this[int row,int col]
+        public double this[int x, int y]
         {
             get
             {   
-                if (row<0 || col<0 || row>=width || col>=height)    throw new Exception("You're fucking up the matrix shit, yo"); 
-                return v[row*height+col];
+                if (x<0 || y<0 || x>=width || y>=height)    throw new Exception("You're fucking up the matrix shit, yo"); 
+                return v[x*height+y];
             }
             set
             {   
-                if (row<0 || col<0 || row>=width || col>=height)    throw new Exception("You're fucking up the matrix shit, yo");
-                v[row*height+col]=value;
+                if (x<0 || y<0 || x>=width || y>=height)    throw new Exception("You're fucking up the matrix shit, yo");
+                v[x*height+y]=value;
             }
         }
 
@@ -119,21 +117,20 @@ namespace StickTest.MilkShape
         {
             Matrix m=new Matrix();
             
-            //*
             // ignoring row 3 cause I'm lazy.
-            for (int i=0; i<height; i++)
+            /*for (int i=0; i<height; i++)
             {
                 m[i,0] =  l[i,0]*r[0,0] + l[i,1]*r[1,0] + l[i,2]*r[2,0] + l[i,3]*r[3,0];
                 m[i,1] =  l[i,0]*r[0,1] + l[i,1]*r[1,1] + l[i,2]*r[2,1] + l[i,3]*r[3,1];
                 m[i,2] =  l[i,0]*r[0,2] + l[i,1]*r[1,2] + l[i,2]*r[2,2] + l[i,3]*r[3,2];
+
             }            
-            /*/
+            */
             for (int i=0; i<16; i++)    m.v[i]=0;
             for (int i=0; i<height; i++)
                 for (int j=0; j<width; j++)
                     for (int k=0; k<width; k++)
-                        m[i,j]+=l[i,k]*r[k,j];
-            //*/
+                        m[i,j]+=l[k,j]*r[i,k];
             return m;
         }
 
@@ -179,30 +176,21 @@ namespace StickTest.MilkShape
             return TranslationMatrix(v.x,v.y,v.z);
         }
 
-        /// TODO: Make an InverseRotationMatrix method.
 
+        /// <summary>
+        /// JL deborked this.  Rockon. :D
+        /// </summary>
         public static Matrix RotationMatrix(double theta,double phi,double rho)
         {
-            double c1=Math.Cos(phi);
-            double c2=Math.Cos(theta);
-            double c3=Math.Cos(rho);
-            double s1=Math.Sin(phi);
-            double s2=Math.Sin(theta);
-            double s3=Math.Sin(rho);
-
-            // whew
-            return new Matrix(
-                c1*c3 + s1*s2*s3,       c2*s3,                  -c3*s1 + c1*s2*s3,      0,
-                -c1*s3 + c3*s1*s2,      c2*c3,                  s1*s3 + c1*c3*s2,       0,
-                c2*s1,                  -s2,                    c1*c2,                  0
-                );
-
-            // meheheh
-            //return new Matrix(Math.Cos(phi)*Math.Cos(rho)+Math.Sin(phi)*Math.Sin(theta)*Math.Sin(rho),-Math.Cos(phi)*Math.Sin(rho)+Math.Cos(rho)*Math.Sin(phi)*Math.Sin(theta),Math.Cos(theta)*Math.Sin(phi),0,Math.Cos(theta)*Math.Sin(rho),Math.Cos(theta)*Math.Cos(rho),-Math.Sin(theta),0,-Math.Cos(rho)*Math.Sin(phi)+Math.Cos(phi)*Math.Sin(theta)*Math.Sin(rho),Math.Sin(phi)*Math.Sin(rho)+Math.Cos(phi)*Math.Cos(rho)*Math.Sin(theta),Math.Cos(phi)*Math.Cos(theta),0);
+            Vector v0 = new Vector(0, 0, 0);
+            Matrix mx = Matrix.RotationMatrix(v0, new Vector(1, 0, 0), theta);
+            Matrix my = Matrix.RotationMatrix(v0, new Vector(0, 1, 0), phi);
+            Matrix mz = Matrix.RotationMatrix(v0, new Vector(0, 0, 1), rho);
+            return mz * my * mx;
         }
 
         /// <summary>
-        /// Kudos to JL for this.
+        /// Kudos to JL for this as well.
         /// </summary>
         /// <param name="p">Point to rotate around.</param>
         /// <param name="v">Axis to rotate around.</param>
@@ -255,10 +243,13 @@ namespace StickTest.MilkShape
             // Multiply in translation matrices
 
             Matrix quatRot=new Matrix(
-                a, b, c, 0.0,
-                d, e, f, 0.0,
-                g, h, i, 0.0,
+                a, d, g, 0.0,
+                b, e, h, 0.0,
+                c, f, i, 0.0,
                 0.0, 0.0, 0.0, 1.0);
+                //a, b, c, 0.0,
+                //d, e, f, 0.0,
+                //g, h, i, 0.0,
 
             Matrix transMat=Matrix.TranslationMatrix(p);
             Matrix invTransMat=Matrix.TranslationMatrix(-p.x, -p.y, -p.z);
@@ -285,10 +276,10 @@ namespace StickTest.MilkShape
         {
             string s="";
 
-            for (int row=0; row<height; row++)
+            for (int y=0; y<height; y++)
             {
-                for (int col=0; col<width; col++)
-                    s+=String.Format("{0}\t",this[row,col]);
+                for (int x=0; x<width; x++)
+                    s+=String.Format("{0}\t",this[x,y]);
                 s+='\n';
             }
 

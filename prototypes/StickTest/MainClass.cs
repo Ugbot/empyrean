@@ -81,7 +81,6 @@ namespace StickTest
             InitGL();
 
             model=Ms3dAscii.Load(s);
-            SetupJoint(model.rootbone,Matrix.identity);
 
             transformedvertices=new Vector[model.meshes.Length][];
             for (int i=0; i<transformedvertices.Length; i++)
@@ -93,32 +92,7 @@ namespace StickTest
 
                     transformedvertices[i][j]=new Vector(v.x,v.y,v.z);
                 }
-
-        }
-
-        void SetupJoint(Joint joint,Matrix parentm)
-        {
-            Matrix m=
-                parentm *
-                Matrix.TranslationMatrix(-joint.Position.Base.x,-joint.Position.Base.y,-joint.Position.Base.z) *
-                Matrix.RotationMatrix(joint.Direction.Base.x,joint.Direction.Base.y,joint.Direction.Base.z).Transpose();
-                
-            foreach (Mesh mesh in model.meshes)
-            {
-                foreach (Vertex vert in mesh.vertices)
-                {
-                    if (vert.joint==joint)
-                    {
-                        Vector v=m * new Vector(vert.x,vert.y,vert.z);
-                        vert.x=v.x;
-                        vert.y=v.y;
-                        vert.z=v.z;
-                    }
-                }
-            }
-
-            foreach (Joint j in joint.children)
-                SetupJoint(j,m);
+            UndeformJoint(model.rootbone, Matrix.identity);
         }
 
         void Draw(Mesh m,int idx)
@@ -138,7 +112,7 @@ namespace StickTest
                 for (int i=0; i<3; i++)
                 {
                     Normal n=m.normals[tri.n[i]];
-                    Vector v=transformedvertices[idx][tri.i[i]];//m.vertices[tri.i[i]];
+                    Vector v=transformedvertices[idx][tri.i[i]];
 
                     GL.glNormal3d(n.x,n.y,n.z);
                     GL.glVertex3d(v.x,v.y,v.z);
@@ -147,6 +121,38 @@ namespace StickTest
             GL.glEnd();
         }
 
+        void UndeformJoint(Joint j, Matrix parentm) {
+            if (j==null)
+                return;
+
+            Matrix invTrans = Matrix.TranslationMatrix(-j.Position.Base.x,-j.Position.Base.y,-j.Position.Base.z);
+            Matrix invRot = Matrix.RotationMatrix(j.Direction.Base.x,j.Direction.Base.y,j.Direction.Base.z);
+            invRot.Transpose();
+            Matrix m = invRot * invTrans * parentm;
+                //Matrix.identity;
+
+            for (int i=0; i<model.meshes.Length; i++)
+            {
+                Mesh mesh=model.meshes[i];
+
+                for (int k=0; k<mesh.vertices.Length; k++)
+                {
+                    if (mesh.vertices[k].joint==j)
+                    {
+                        Vertex v=mesh.vertices[k];
+                        Vector vec = m*new Vector(v.x,v.y,v.z);
+                        v.x=vec.x;
+                        v.y=vec.y;
+                        v.z=vec.z;
+                    }
+                }
+            }
+
+            foreach (Joint k in j.children)
+            {
+                UndeformJoint(k,m);
+            }
+        }
 
         void DeformJoint(Joint j,Matrix parentm)
         {
@@ -154,11 +160,12 @@ namespace StickTest
                 return;
 
             Matrix m=
-                Matrix.RotationMatrix(j.Direction.Base.x,j.Direction.Base.y,j.Direction.Base.z) *
+                parentm *
                 Matrix.TranslationMatrix(j.Position.Base.x,j.Position.Base.y,j.Position.Base.z) *
-                Matrix.RotationMatrix(j.Direction.Current.x, j.Direction.Current.y, j.Direction.Current.z) *
+                Matrix.RotationMatrix(j.Direction.Base.x,j.Direction.Base.y,j.Direction.Base.z) *
                 Matrix.TranslationMatrix(j.Position.Current.x, j.Position.Current.y, j.Position.Current.z) *
-                parentm;
+                Matrix.RotationMatrix(j.Direction.Current.x, j.Direction.Current.y, j.Direction.Current.z);
+
 
             for (int i=0; i<model.meshes.Length; i++)
             {
@@ -198,17 +205,11 @@ namespace StickTest
 
         void Execute()
         {
-            const double inc=0.03;
+            const double inc=0.3;
 
             while (!kill)
             {
                 time+=inc;
-                if (Math.Abs(time-15)<inc)
-                {
-                    Console.WriteLine("---");
-                    foreach (Joint j in model.joints)
-                        Console.WriteLine(j.Direction);
-                }
                 while (time>30) time-=30;
                 model.Animate(inc);
                 DeformJoint(model.rootbone,Matrix.identity);
@@ -284,7 +285,20 @@ namespace StickTest
                 return;
             }*/
 
-            string s=args.Length>0?args[0]:"head1.txt";
+            /*Matrix m1 = Matrix.RotationMatrix(1.5, 0, 0);
+            Matrix m2 = Matrix.RotationMatrix(0, 1.5, 0);
+            Vector v1 = new Vector(1, 0, 0);
+            Vector v2 = (m1 * m2) * v1;
+            Vector v3 = m1 * (m2 * v1);
+            
+            Console.WriteLine(m1);
+            Console.WriteLine(m2);
+            Console.WriteLine(v1);
+            Console.WriteLine(v2);
+            Console.WriteLine(v3);*/
+            //Console.WriteLine(m4);
+
+            string s=args.Length>0?args[0]:"head1.ms3d.txt";
             new MainClass(s).Execute();
         }
     }
