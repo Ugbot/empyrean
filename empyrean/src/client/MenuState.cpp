@@ -1,6 +1,8 @@
+#include <iostream>
 #include <phui/SDLBridge.h>
 #include "Configuration.h"
 #include "GameState.h"
+#include "MenuScreen.h"
 #include "MenuState.h"
 #include "OptionsState.h"
 #include "ServerConnection.h"
@@ -11,24 +13,6 @@ using namespace phui;
 
 namespace pyr {
 
-    class MenuScreen : public RootWidget {
-    public:
-        MenuScreen(MenuState* state)
-            : RootWidget(Application::instance().getWidth(),
-                         Application::instance().getHeight())
-        {
-            _state = state;
-        }
-        
-    protected:
-        MenuState* getState() {
-            return _state;
-        }
-        
-    private:
-        MenuState* _state;
-    };
-    
     class ErrorScreen : public MenuScreen {
     public:
         ErrorScreen(MenuState* state, const std::string& error)
@@ -275,6 +259,31 @@ namespace pyr {
             getState()->onLoggingInCancel();
         }
     };
+    
+    class ChatScreen : public MenuScreen {
+    public:
+        ChatScreen(MenuState* state)
+            : MenuScreen(state)
+        {
+            _text = new TextField();
+            _text->setPositionAndSize(0, 668, 824, 100);
+        
+            ButtonPtr say = new Button("Say");
+            say->addListener(this, &ChatScreen::onSay);
+            say->setPositionAndSize(824, 668, 200, 100);
+            
+            add(_text);
+            add(say);
+        }
+    
+    private:
+        void onSay(const ActionEvent&) {
+            getState()->onSay(_text->getText());
+            _text->setText("");
+        }
+        
+        TextFieldPtr _text;
+    };
 
 
     MenuState::MenuState() {
@@ -388,7 +397,7 @@ namespace pyr {
     }
     
     void MenuState::onLoggingInLoggedIn() {
-        invokeTransition<GameState>();
+        _screen = _chatScreen;
     }
     
     void MenuState::onLoggingInCancel() {
@@ -400,12 +409,17 @@ namespace pyr {
         _screen = new ErrorScreen(this, "Error logging in: " + error);
     }
     
+    void MenuState::onSay(const std::string& text) {
+        std::cout << "Saying: " << text << std::endl;
+    }
+    
     void MenuState::createInterface() {
         _mainScreen       = new MainScreen(this);
         _connectScreen    = new ConnectScreen(this);
         _connectingScreen = new ConnectingScreen(this);
         _loginScreen      = new LoginScreen(this);
         _loggingInScreen  = new LoggingInScreen(this);
+        _chatScreen       = new ChatScreen(this);
         
         _screen = _mainScreen;
     }

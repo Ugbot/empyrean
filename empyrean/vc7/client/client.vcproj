@@ -284,6 +284,13 @@
 				RelativePath="..\..\src\client\State.h">
 			</File>
 		</Filter>
+		<Filter
+			Name="menu screens"
+			Filter="">
+			<File
+				RelativePath="..\..\src\client\MenuScreen.h">
+			</File>
+		</Filter>
 	</Files>
 	<Globals>
 	</Globals>

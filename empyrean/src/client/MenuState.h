@@ -42,6 +42,8 @@ namespace pyr {
         void onLoggingInLoggedIn();
         void onLoggingInCancel();
         void onLoggingInError(const std::string& error);
+        
+        void onSay(const std::string& text);
 
     private:
         void createInterface();
@@ -56,6 +58,7 @@ namespace pyr {
         phui::RootWidgetPtr _connectingScreen;
         phui::RootWidgetPtr _loginScreen;
         phui::RootWidgetPtr _loggingInScreen;
+        phui::RootWidgetPtr _chatScreen;
     };
 
 }
