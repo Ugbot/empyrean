@@ -7,6 +7,7 @@ SOURCES = Split("""
     ClientEntity.cpp
     Configuration.cpp
     CreditsState.cpp
+    CutSceneState.cpp
     GameState.cpp
     HUD.cpp
     InputManager.cpp

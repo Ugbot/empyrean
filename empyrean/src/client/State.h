@@ -11,16 +11,16 @@ namespace pyr {
     class State {
     public:
         virtual ~State() { }
-        
+
+        /// @param dt  elapsed time in seconds
+        virtual void update(float dt) { }
+
         /**
          * @param fade  normalized value [0,1] representing how
          *              much fade has happened
          */
         virtual void draw(float fade) { }
-        
-        /// @param dt  elapsed time in seconds
-        virtual void update(float dt) { }
-        
+
         virtual void onKeyPress(SDLKey key, bool down) { }
         virtual void onMousePress(Uint8 button, bool down, int x, int y) { }
         virtual void onMouseMove(int x, int y) { }

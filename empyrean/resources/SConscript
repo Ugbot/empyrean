@@ -35,4 +35,4 @@ for t in map(Dir, tdirs):
     Default(t)
     env = base_env.Copy(DEST=t)
     Export('env')
-    SConscript(dirs=['editorrc', 'fonts', 'images', 'maps', 'models'])
+    SConscript(dirs=['cutscene', 'editorrc', 'fonts', 'images', 'maps', 'models'])

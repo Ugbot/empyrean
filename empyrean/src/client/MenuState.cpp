@@ -1,8 +1,8 @@
 #include <phui/SDLBridge.h>
 #include "CreditsState.h"
 #include "ConnectingScreen.h"
+#include "CutSceneState.h"
 #include "ErrorScreen.h"
-#include "GameState.h"
 #include "GLUtility.h"
 #include "JoinGameScreen.h"
 #include "JoiningGameScreen.h"
@@ -225,7 +225,7 @@ namespace pyr {
     }
     
     void MenuState::onJoiningGameJoined() {
-        invokeTransition<GameState>();
+        invokeTransition<CutSceneState>();
     }
     
     void MenuState::onJoiningGameCancel() {

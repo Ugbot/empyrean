@@ -147,7 +147,8 @@ opts = Options('options.cache')
 opts.AddOptions(
     BoolOption('dbg',    'Build with debugging enabled', 0),
     BoolOption('opt',    'Build with optimizations', 0),
-    BoolOption('distcc', 'Enable compiling with distcc', 0))
+    BoolOption('distcc', 'Enable compiling with distcc', 0),
+    BoolOption('nowarn', 'Disable all warnings', 0))
 
 # Create base environment.
 env = Environment(ENV = os.environ, options=opts)
@@ -173,11 +174,6 @@ if env['PLATFORM'] == 'irix':
         LIBPATH = string.split(os.environ['LIBRARY_PATH'], ':'),
         LIBS = ['m'])
 
-if env['CC'] == 'gcc':
-    env.Append(CCFLAGS=['-Wall'])
-if env['CXX'] == 'g++':
-    env.Append(CXXFLAGS=['-Wall', '-Wno-non-virtual-dtor'])
-
 # Process build options.
 if env.get('dbg'):
     env.Append(CCFLAGS = ['-g'], CPPDEFINES=['DEBUG'])
@@ -186,6 +182,13 @@ if env.get('opt'):
 if env.get('distcc'):
     env['CC']  = ['$(', 'distcc', '$)', env['CC']]
     env['CXX'] = ['$(', 'distcc', '$)', env['CXX']]
+if env.get('nowarn'):
+    env.Append(CCFLAGS=['-w'])
+else:
+    if env['CC'] == 'gcc':
+        env.Append(CCFLAGS=['-Wall'])
+    if env['CXX'] == 'g++':
+        env.Append(CXXFLAGS=['-Wall', '-Wno-non-virtual-dtor'])
 
 Export('env')
 

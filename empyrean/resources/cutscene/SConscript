@@ -1,0 +1,10 @@
+Import('*')
+
+Install(env, Split("""
+    ANOTHERGUESTSTRIPBYANDY.jpg
+    comic12.jpg
+    comic18.jpg
+    comic7.jpg
+    comic8.jpg
+    GUESTSTRIPBYTHRASHER.jpg
+"""))
