@@ -21,6 +21,7 @@
 #include <wx/image.h>
 #include <wx/splitter.h>
 #include <wx/treectrl.h>
+#include <wx/wxhtml.h>
 
 
 #endif

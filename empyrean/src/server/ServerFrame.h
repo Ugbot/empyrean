@@ -14,6 +14,12 @@ namespace pyr {
     private:
         void createMenu();
         void createContents();
+        void createStatusBar();
+        
+        void onStart();
+        void onStop();
+        
+        wxHtmlWindow* _contents;
     
         DECLARE_EVENT_TABLE()
     };

@@ -15,4 +15,7 @@ namespace pyr {
 }
 
 
+DECLARE_APP(pyr::Server)
+
+
 #endif
