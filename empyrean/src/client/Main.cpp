@@ -11,6 +11,7 @@
 #include "Configuration.h"
 #include "Error.h"
 #include "InputManager.h"
+#include "Platform.h"
 #include "Profiler.h"
 #include "SDLUtility.h"
 #include "NSPRUtility.h"
@@ -142,35 +143,9 @@ namespace pyr {
 }
 
 
-#if defined(WIN32)
-
-    #include <windows.h>
-
-    inline void setStartDirectory() {
-        // set the current path to where the executable resides
-        char filename[MAX_PATH];
-        GetModuleFileName(GetModuleHandle(0), filename, MAX_PATH);
-
-        // remove the basename
-        char* backslash = strrchr(filename, '\\');
-        if (backslash) {
-            *backslash = 0;
-            SetCurrentDirectory(filename);
-        }
-    }
-    
-#else
-
-    inline void setStartDirectory() {
-    }
-    
-#endif
-
-
 /// main() needs to be defined with argc and argv so SDL works right.
-int main(int /*argc*/, char* /*argv*/[]) {
-
-    setStartDirectory();
+int main(int argc, char* argv[]) {
+    pyr::setStartDirectory(argc, argv);
 
     PYR_BEGIN_EXCEPTION_TRAP()
 

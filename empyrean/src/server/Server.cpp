@@ -3,34 +3,10 @@
 #include "Error.h"
 #include "Log.h"
 #include "LogEvent.h"
+#include "Platform.h"
 #include "Server.h"
 #include "ServerFrame.h"
 #include "ServerThread.h"
-
-
-#if defined(WIN32)
-
-    #include <windows.h>
-
-    inline void setStartDirectory() {
-        // set the current path to where the executable resides
-        char filename[MAX_PATH];
-        GetModuleFileName(GetModuleHandle(0), filename, MAX_PATH);
-
-        // remove the basename
-        char* backslash = strrchr(filename, '\\');
-        if (backslash) {
-            *backslash = 0;
-            SetCurrentDirectory(filename);
-        }
-    }
-    
-#else
-
-    inline void setStartDirectory() {
-    }
-    
-#endif
 
 
 namespace pyr {
@@ -47,7 +23,7 @@ namespace pyr {
     bool Server::OnInit() {
         PYR_BEGIN_EXCEPTION_TRAP()
         
-            setStartDirectory();
+            setStartDirectory(argc, argv);
             try {
                 the<Configuration>().load();
             }
@@ -81,7 +57,7 @@ namespace pyr {
     
     int Server::OnExit() {
         PYR_BEGIN_EXCEPTION_TRAP()
-            setStartDirectory();
+            setStartDirectory(argc, argv);
             _frame = 0;
             the<Database>().save(getDatabaseFilename());
             the<Configuration>().save();

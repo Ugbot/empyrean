@@ -11,6 +11,7 @@ SOURCES = Split("""
     NSPRUtility.cpp
     PacketFactory.cpp
     PacketTypes.cpp
+    Platform.cpp
     ReaderThread.cpp
     ResourceManager.cpp
     ServerSocket.cpp
