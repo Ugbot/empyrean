@@ -1,3 +1,16 @@
+To Do List
+
+The following task list is a general enumeration of things that need
+to be worked on at some point.  If you want to help, but don't know
+where to start, pick some an easy one and go at it.  :)  If you need
+help getting going, send an e-mail to aegis AT users DOT sourceforge
+DOT net.
+
+- Chad
+
+--
+
+
 map format defined
 skills to be worked out (but Bryan's in charge of that)
 models to be made
@@ -11,7 +24,7 @@ music and sound effects made
 cal3d profiling
 better empyrean profiling code...
 monsters sketched out and modeled and animated...
-AI
+NPC/monster AI
 and a way to attach things to cal3d models, like weapons and stuff
 fix phui focus model
 HUD for gamestate
