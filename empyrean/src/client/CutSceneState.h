@@ -2,6 +2,7 @@
 #define PYR_CUT_SCENE_STATE_H
 
 
+#include "CutScene.h"
 #include "State.h"
 
 
@@ -23,7 +24,7 @@ namespace pyr {
     private:
         void next();
 
-        std::vector<Texture*> _images;
+        CutScenePtr _cutScene;
         Zeroed<size_t> _current;
         Zeroed<float> _fade;
     };

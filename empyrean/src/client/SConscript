@@ -9,6 +9,7 @@ SOURCES = Split("""
     ConnectWindow.cpp
     ConnectingWindow.cpp
     CreditsState.cpp
+    CutScene.cpp
     CutSceneState.cpp
     GameState.cpp
     HUD.cpp
@@ -28,6 +29,7 @@ SOURCES = Split("""
     ParticleEmitter.cpp
     ParticleSystem.cpp
     Player.cpp
+    PythonInterpreter.cpp
     Renderer.cpp
     Scene.cpp
     SDLUtility.cpp
@@ -37,7 +39,7 @@ SOURCES = Split("""
 """)
 
 env = env.Copy()
-for t in Split('PyrBase PHUI Cal3D Audiere Corona Expat GLText NSPR OpenGL SDL'):
+for t in Split('PyrBase Python PHUI Cal3D Audiere Corona Expat GLText NSPR OpenGL SDL'):
     TOOLS[t](env)
 
 client = env.Program('#/build/client', SOURCES)

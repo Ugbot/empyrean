@@ -15,9 +15,10 @@ namespace pyr {
             "levelOneColor.jpg",
         };
 
+        _cutScene = new CutScene;
+        
         for (size_t i = 0; i < sizeof(images) / sizeof(*images); ++i) {
-            Texture* texture = Texture::create("cutscene/" + images[i]);
-            _images.push_back(texture);
+            _cutScene->addImage("cutscene/" + images[i]);
         }
 
     }
@@ -34,15 +35,15 @@ namespace pyr {
         glEnable(GL_BLEND);
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-        if (_current <= _images.size()) {
+        if (_current <= _cutScene->getImageCount()) {
             glColor4f(1, 1, 1, 1);
             if (_current > 0) {
-                _images[_current - 1]->drawRectangle(0, 0, 1, 1);
+                _cutScene->getImage(_current - 1)->drawRectangle(0, 0, 1, 1);
             } else {
                 glClear(GL_COLOR_BUFFER_BIT);
             }
             glColor4f(1, 1, 1, _fade);
-            _images[_current]->drawRectangle(0, 0, 1, 1);
+            _cutScene->getImage(_current)->drawRectangle(0, 0, 1, 1);
         }
     }
 
@@ -70,7 +71,7 @@ namespace pyr {
 
     void CutSceneState::next() {
         _fade = 0;
-        if (++_current >= _images.size()) {
+        if (++_current >= _cutScene->getImageCount()) {
             invokeTransition<GameState>();
         }
     }

@@ -22,6 +22,8 @@ EXTENSIONS = Split("""
     crf
     csf
     raw
+
+    py
 """)
 
 

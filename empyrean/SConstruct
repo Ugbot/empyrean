@@ -99,6 +99,12 @@ def SetupPyrBase(env):
                LIBPATH = ['#/src/base'],
                LIBS = ['base'])
 
+def SetupPython(env):
+    pybase = 'python%s' % sys.version[0:3]
+    env.Append(CPPPATH=[os.path.join(sys.prefix, 'include', pybase)],
+               LIBPATH=[os.path.join(sys.prefix, 'lib', pybase, 'config')],
+               LIBS=['lib%s' % pybase])
+
 def SetupNSPR(env):
     try:
         # Try using nspr-config first.
@@ -146,6 +152,7 @@ TOOLS = {
     'OpenGL'    : SetupOpenGL,
     'PHUI'      : SetupPHUI,
     'PyrBase'   : SetupPyrBase,
+    'Python'    : SetupPython,
     'NSPR'      : SetupNSPR,
     'SDL'       : SetupSDL,
     'wxWindows' : SetupWxWindows }
@@ -161,7 +168,7 @@ opts.AddOptions(
     BoolOption('warningsAsErrors', 'Treat warnings as errors', 0))
 
 # Create base environment.
-env = Environment(ENV = os.environ, options=opts)
+env = Environment(ENV=os.environ, options=opts)
 
 Help(opts.GenerateHelpText(env))
 opts.Save('options.cache', env)
