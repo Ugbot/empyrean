@@ -3,6 +3,7 @@
 
 
 #include <string>
+#include "Types.h"
 
 
 namespace pyr {
@@ -11,12 +12,12 @@ namespace pyr {
     public:
         virtual ~Appearance() { }
 
-        virtual std::string getName() = 0;
-        virtual std::string getResource() = 0;
+        virtual string getName() = 0;
+        virtual string getResource() = 0;
 
-        virtual void sendCommand(const std::string& command) = 0;
-        virtual void beginAnimation(const std::string& animation) = 0;
-        virtual void beginAnimationCycle(const std::string& animation) = 0;
+        virtual void sendCommand(const string& command) = 0;
+        virtual void beginAnimation(const string& animation) = 0;
+        virtual void beginAnimationCycle(const string& animation) = 0;
     };
     
 }

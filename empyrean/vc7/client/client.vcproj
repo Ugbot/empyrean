@@ -206,6 +206,12 @@
 				RelativePath="..\..\src\client\ModelRenderer.h">
 			</File>
 			<File
+				RelativePath="..\..\src\client\OBJAppearance.cpp">
+			</File>
+			<File
+				RelativePath="..\..\src\client\OBJAppearance.h">
+			</File>
+			<File
 				RelativePath="..\..\src\client\ParticleEmitter.cpp">
 			</File>
 			<File

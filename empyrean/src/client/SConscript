@@ -26,6 +26,7 @@ SOURCES = Split("""
     Model.cpp
     ModelRenderer.cpp
     NewGameWindow.cpp
+    OBJAppearance.cpp
     ParticleEmitter.cpp
     ParticleSystem.cpp
     Player.cpp

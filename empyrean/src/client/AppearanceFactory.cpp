@@ -1,5 +1,6 @@
 #include "Cal3DAppearance.h"
 #include "ClientAppearance.h"
+#include "OBJAppearance.h"
 
 
 namespace pyr {
@@ -36,6 +37,8 @@ namespace pyr {
     ClientAppearance* instantiateAppearance(const std::string& name, const std::string& resource) {
         if (name == "cal3d") {
             return new Cal3DAppearance(resource);
+        } else if (name == "obj") {
+            return new OBJAppearance(resource);
         } else {
             return new EmptyAppearance(resource);
         }

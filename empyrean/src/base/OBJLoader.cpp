@@ -276,12 +276,25 @@ namespace pyr {
                         vertexArray->texCoords.push_back(Vec2f(u, 1 - v));
                     }
                 } else if (command == "f") {
-                    string si, sj, sk;
-                    if (ss >> si >> sj >> sk) {
-                        GeometryElement::Triangle tri;
-                        parseFace(si, sj, sk, tri);
-                        if (isValidTriangle(tri, vertexArray)) {
-                            currentGeometry->triangles.push_back(tri);
+                    vector<string> vertices;
+                    string s;
+                    while (ss >> s) {
+                        vertices.push_back(s);
+                    }
+                    
+                    if (vertices.size() >= 3) {
+                        string first = vertices[0];
+                        string last  = vertices[1];
+                        for (size_t i = 2; i < vertices.size(); ++i) {
+                            string current = vertices[i];
+                            
+                            GeometryElement::Triangle tri;
+                            parseFace(first, last, current, tri);
+                            if (isValidTriangle(tri, vertexArray)) {
+                                currentGeometry->triangles.push_back(tri);
+                            }
+                            
+                            last = current;
                         }
                     }
                 }

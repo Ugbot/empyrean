@@ -1,15 +1,15 @@
-/**
- * This file contains primitive sized types.
- */
 #ifndef PYR_TYPES_H
 #define PYR_TYPES_H
 
 
+#include <string>
 #include "IncludeNSPR.h"
 
 
 namespace pyr {
 
+    // Sized integers.
+    
     typedef PRUint8  u8;
     typedef PRUint16 u16;
     typedef PRUint32 u32;
@@ -19,11 +19,12 @@ namespace pyr {
     typedef PRInt16 s16;
     typedef PRInt32 s32;
     typedef PRInt64 s64;
-
-
+    
+    
     /**
      * Without these, logging a u8 outputs a char.  You can instead log
      * promoteForOutput(t);
+     * @{
      */
 
     template<typename T>
@@ -38,6 +39,15 @@ namespace pyr {
     inline s16 promoteForOutput(s8 t) {
         return t;
     }
+    
+    /// @}
+
+
+    // Strings.
+    using std::string;
+
+    // Cygwin gcc is configured poorly.
+    //using std::wstring;
 
 }
 
