@@ -4,6 +4,7 @@
 
 #include <gmtl/Vec.h>
 #include "Types.h"
+#include "Utility.h"
 
 namespace pyr {
 
@@ -25,9 +26,15 @@ namespace pyr {
         const gmtl::Vec2f& getVel() const   { return _vel; }
         void setVel(const gmtl::Vec2f& vel) { _vel = vel;  }
         
+        u16& getJumping()                    { return _jumping; }
+        const u16& getJumping()     const    { return _jumping; }
+
+        virtual bool jump()                 { return false; }
+
     private:
         gmtl::Vec2f _pos;
         gmtl::Vec2f _vel;
+        Zeroed<u16> _jumping;
     };
 
 }

@@ -17,7 +17,6 @@ namespace pyr {
         float width = 0.3f;
 
         collide(dt, origPos, _pos, _vel, width, height, terrain);
-
-    }
+   }
 
 }

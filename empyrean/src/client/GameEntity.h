@@ -26,16 +26,34 @@ namespace pyr {
      */
     class GameEntity : public Entity {
     public:
+
+        enum State {
+            WALKING,
+            STANDING,
+            JUMPSTART,
+            JUMPING,
+            ATTACKING
+        };
+
         GameEntity(Model* model, Renderer* renderer);
 
         void draw();
         void update(float dt, const Map* terrain);
+
+        bool jump();
+        
+        void startJumpAction();
 
     private:
         typedef void (GameEntity::*StateHandler)(float dt);
         StateHandler _state;
 
         void changeState(StateHandler* newstate);
+
+        void phaseOutState(State name);
+
+        void startJumpState();
+        void updateJumpState(float dt);
 
         void startStandState();
         void updateStandState(float dt);
@@ -51,6 +69,8 @@ namespace pyr {
         CollisionData _lastCD;
 
         float _direction;
+        bool _jumpStart;
+        State _currentState;
     };
 
 }

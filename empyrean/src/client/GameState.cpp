@@ -2,6 +2,7 @@
 #include <gmtl/gmtl.h>
 
 #include "Entity.h"
+#include "GameEntity.h"
 #include "GameState.h"
 #include "GLUtility.h"
 #include "Input.h"
@@ -28,9 +29,9 @@ namespace pyr {
         _inputAttack = &_im.getInput("RCtrl");
         _inputQuit   = &_im.getInput("Escape");
         _inputJoyX   = &_im.getInput("JoyX");
-        _inputJoyJump = &_im.getInput("JoyButtonA");
+        _inputJoyJump = &_im.getInput("JoyJump");
         _inputJoyStart = &_im.getInput("JoyStart");
-        
+        _inputJoyAttack = &_im.getInput("JoyAttack");
         _inputJoyX->setValue(0);
 
         gltext::FontPtr font = gltext::OpenFont("fonts/Vera.ttf", 16);
@@ -47,7 +48,7 @@ namespace pyr {
         scene.draw();
         
         if (_showPlayerData) {
-            if (Entity* entity = scene.getFocus()) {
+            if (GameEntity* entity = (GameEntity*) scene.getFocus()) {
                 Application& app = the<Application>();
                 glEnable(GL_BLEND);
                 setOrthoProjection(float(app.getWidth()), float(app.getHeight()));
@@ -55,7 +56,8 @@ namespace pyr {
                 glColor3f(1, 1, 1);
                 GLTEXT_STREAM(_renderer)
                     << "Position: " << entity->getPos() << "\n"
-                    << "Velocity: " << entity->getVel();
+                    << "Velocity: " << entity->getVel() << "\n"
+                    << "Jumping: " << entity->getJumping();
             }
         }
     }
@@ -84,7 +86,13 @@ namespace pyr {
         
         // jump!
         if (_inputJump->getDelta() > gmtl::GMTL_EPSILON) {
-            sc.sendEvent(PE_JUMP);
+           Entity* entity = the<Scene>().getFocus();
+
+            if(entity) {
+                if(entity->jump()) {
+                    sc.sendEvent(PE_JUMP);
+                }
+            }
         }
         
         // attack!
@@ -92,44 +100,56 @@ namespace pyr {
             sc.sendEvent(PE_ATTACK);
         }
 
-        
-        if(_inputJoyX->getValue() > 3200 && _lastJoyX == 0) {
+        // Input with Joystick
+        if(_inputJoyX->getValue() > 0.5 && _lastJoyX == 0) {
             sc.sendEvent(PE_BEGIN_RIGHT);
-            _lastJoyX = 3201;
+            _lastJoyX = 1;
         }
-        else if(_inputJoyX->getValue() > -3200 && _inputJoyX->getValue() < 3200 && _lastJoyX > 3200) {
+        else if(fabs(_inputJoyX->getValue()) < 0.5 && _lastJoyX > 0.5) {
             sc.sendEvent(PE_END_RIGHT);
             _lastJoyX = 0;
         }
-        else if(_inputJoyX->getValue() > -3200 && _inputJoyX->getValue() < 3200 && _lastJoyX < -3200) {
+        else if(fabs(_inputJoyX->getValue()) < 0.5 && _lastJoyX < -0.5) {
             sc.sendEvent(PE_END_LEFT);
             _lastJoyX = 0;
         }
-        else if(_inputJoyX->getValue() < -3200 && _lastJoyX == 0) {
+        else if(_inputJoyX->getValue() < -0.5 && _lastJoyX == 0) {
             sc.sendEvent(PE_BEGIN_LEFT);
-            _lastJoyX = -3201;
+            _lastJoyX = -1;
         }
-        else if(_inputJoyX->getValue() < -3200 && _lastJoyX > 3200) {
+        else if(_inputJoyX->getValue() < -0.5 && _lastJoyX > 0.5) {
             sc.sendEvent(PE_END_RIGHT);
             sc.sendEvent(PE_BEGIN_LEFT);
-            _lastJoyX = -3201;
+            _lastJoyX = -1;
         }
-        else if(_inputJoyX->getValue() > 3200 && _lastJoyX < -3200) {
+        else if(_inputJoyX->getValue() > 0.5 && _lastJoyX < -0.5) {
             sc.sendEvent(PE_END_LEFT);
             sc.sendEvent(PE_BEGIN_RIGHT);
-            _lastJoyX = 3201;
+            _lastJoyX = 1;
         }
        
         // jump!
         if (_inputJoyJump->getDelta() > gmtl::GMTL_EPSILON) {
-            sc.sendEvent(PE_JUMP);
+            Entity* entity = the<Scene>().getFocus();
+            if(entity) {
+                if(entity->jump()) {
+                    sc.sendEvent(PE_JUMP);
+                }
+            }
         }
         
+        // attack!
+        if (_inputJoyAttack->getDelta() > gmtl::GMTL_EPSILON) {
+            sc.sendEvent(PE_ATTACK);
+        }
+
+        // Start
         if(_inputJoyStart->getDelta() > gmtl::GMTL_EPSILON) {
             sc.disconnect();
             invokeTransition<MenuState>();
         }
 
+        // Quit
         if (_inputQuit->getValue() >= 0.50f) {
             sc.disconnect();
             invokeTransition<MenuState>();

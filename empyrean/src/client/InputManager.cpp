@@ -180,7 +180,10 @@ namespace pyr {
     void InputManager::onJoyPress(Uint8 button, bool down) {
         switch(button) {
             case 0:
-                getInput("JoyButtonA").setValue(down ? 1.0f : 0.0f);
+                getInput("JoyJump").setValue(down ? 1.0f : 0.0f);
+                break;
+            case 1:
+                getInput("JoyAttack").setValue(down ? 1.0f : 0.0f);
                 break;
             case 8:
                 getInput("JoyStart").setValue(down ? 1.0f : 0.0f);

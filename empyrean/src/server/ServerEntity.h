@@ -33,16 +33,13 @@ namespace pyr {
         gmtl::Vec2f& getVel()               { return _vel; }
         const gmtl::Vec2f& getVel() const   { return _vel; }
     
-        u16& jumping() { return _jumping; }
-        const u16& jumping() const { return _jumping; }
-
         void update(float dt, Map* terrain);
         
     private:
         u16 _id;
         Vec2f _pos;
         Vec2f _vel;
-        Zeroed<u16> _jumping;
+        
     };
     
 }

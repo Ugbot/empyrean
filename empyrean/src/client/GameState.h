@@ -31,6 +31,7 @@ namespace pyr {
         Input* _inputJoyX;
         Input* _inputJoyJump;
         Input* _inputJoyStart;
+        Input* _inputJoyAttack;
 
         Zeroed<int> _lastJoyX;
         Inited<bool, false> _showPlayerData;

@@ -15,11 +15,12 @@
 #include "Log.h"
 
 namespace pyr {
+
     GameEntity::GameEntity(Model* model, Renderer* renderer) {
         _model = model;
         _renderer = renderer;
         _direction = 90;
-
+        _jumpStart = false;
         startStandState();
     }
 
@@ -75,7 +76,16 @@ namespace pyr {
         float height = 1.9f;
         float width = 0.3f;
 
+        // For testing to see if jumping is done
+        Vec2f precollide = getPos();
+
         _lastCD = collide(dt, origPos, getPos(), getVel(), width, height, terrain);
+
+        // If you are higher than you once were so you were forced up.  This generally means that you
+        // hit a surface below you so therefore reset jumping
+        if((precollide[1]-getPos()[1]) < 0 && getVel()[1] == 0) {
+             getJumping() = 0;
+        }
 
         if (_state) {
             (this->*_state)(dt);
@@ -83,32 +93,84 @@ namespace pyr {
         _model->update(dt);
     }
 
-    void GameEntity::startStandState() {
-        _model->getModel().getMixer()->clearCycle(0, 0.0f);
-        if(!_model->getModel().getMixer()->blendCycle(1, 1.0f, 10.0f)) {
-            PYR_LOG() << "ERROR CHANGING BACK TO STAND STATE";
+    bool GameEntity::jump() {
+         if(getJumping() < 2) {
+            getJumping()++;
+            getVel()[1] = 8;
+            startJumpAction();
+            return true;
         }
+        return false;
+    }
+    
+    void GameEntity::startJumpAction() {
+        _jumpStart = true;   
+    }
+
+    // Utitlity phase out state function
+    void GameEntity::phaseOutState(State name) {
+        _model->getModel().getMixer()->clearCycle((int) name, 0.0f);
+    }
+
+    // Stand state transition in
+    void GameEntity::startStandState() {
+        _model->getModel().getMixer()->blendCycle(STANDING, 1.0f, 10.0f);
         _state = &GameEntity::updateStandState;
     }
     
+    // Stand state
     void GameEntity::updateStandState(float dt) {
         float xvel = getVel()[0];
-        if (gmtl::Math::abs(xvel) > gmtl::GMTL_EPSILON) {
+        if (_jumpStart) {
+            phaseOutState(STANDING);
+            startJumpState();
+        }
+        else if (gmtl::Math::abs(xvel) > gmtl::GMTL_EPSILON) {
+            phaseOutState(STANDING);
             startWalkState();
         }
     }
 
-    void GameEntity::startWalkState() {
-        if(!_model->getModel().getMixer()->clearCycle(1, 0.0f)) {
-            PYR_LOG() << "ERROR CHANGING BACK TO ACTION STATE";
+    // Jump state transition in
+    void GameEntity::startJumpState() {
+        _model->getModel().getMixer()->blendCycle(JUMPSTART, 1.0f, 10.0f);
+        _jumpStart = false;
+        _state = &GameEntity::updateJumpState;
+    }
+
+    // Jump state
+    void GameEntity::updateJumpState(float dt) {
+        float xvel = getVel()[0];
+        if(getJumping() == 0) {
+            phaseOutState(JUMPSTART);
+            if (gmtl::Math::abs(xvel) > gmtl::GMTL_EPSILON) {
+                startWalkState();
+            }
+            else {            
+                startStandState();
+            }
         }
-        _model->getModel().getMixer()->blendCycle(0, 1.0f, 5.0f);
+        else if (xvel > 0) {
+            _direction = 90;
+        } else if (xvel < 0) {
+            _direction = -90;
+        }
+    }
+
+    // Walk state transition in
+    void GameEntity::startWalkState() {
+        _model->getModel().getMixer()->blendCycle(WALKING, 1.0f, 5.0f);
         _state = &GameEntity::updateWalkState;
     }
 
+    // Walk state
     void GameEntity::updateWalkState(float dt) {
         float xvel = getVel()[0];
-        if (gmtl::Math::abs(xvel) < gmtl::GMTL_EPSILON) {
+        if (_jumpStart) {
+            phaseOutState(WALKING);
+            startJumpState();
+        } else if (gmtl::Math::abs(xvel) < gmtl::GMTL_EPSILON) {
+            phaseOutState(WALKING);
             startStandState();
         } else if (xvel > 0) {
             _direction = 90;

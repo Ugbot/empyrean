@@ -222,6 +222,9 @@ namespace pyr {
 
         mainLoop();
 
+        // Close the joystick
+        SDL_JoystickClose(joystick);
+
         try {
             // Perhaps this should be saved right after changes, in case
             // the program crashes.
