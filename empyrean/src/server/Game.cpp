@@ -260,7 +260,7 @@ namespace pyr {
 
     void Game::handlePlayerAttack(Connection* c, PlayerAttackPacket* p) {
         GameConnectionData* cd = getData(c);
-        ServerEntity* attacker = cd->playerEntity;
+        ServerEntityPtr attacker = cd->playerEntity;
         PYR_ASSERT(attacker, "GameConnectionData does not have an associated entity");
         PlayerBehavior* attackerBehavior = cd->behavior;
         PYR_ASSERT(attackerBehavior, "GameConnectionData does not have an associated entity");
@@ -369,14 +369,14 @@ namespace pyr {
     void Game::handlePlayerEvent(Connection* c, PlayerEventPacket* p) {
         GameConnectionData* cd = getData(c);
         PlayerBehavior* behavior = cd->behavior;
-        Entity* entity = cd->playerEntity;
+        Entity* entity = cd->playerEntity.get();
         behavior->handleEvent(entity, p->event());
     }
 
     void Game::handleHUDUpdate(Connection* c, TempHUDPacket* p) {
         // Update the character
         GameConnectionData* cd = getData(c);
-        ServerEntity* entity = dynamic_cast<ServerEntity*>(cd->playerEntity);
+        ServerEntity* entity = dynamic_cast<ServerEntity*>(cd->playerEntity.get());
         entity->getGameStats()->changeVitality(p->addVit() == 0 ? -p->decVit() : p->addVit());
         entity->getGameStats()->changeEther(p->addEth() == 0 ? -p->decEth() : p->addEth());
 

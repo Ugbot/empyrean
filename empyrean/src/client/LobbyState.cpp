@@ -6,7 +6,7 @@
 
 namespace pyr {
 
-    class GameState;
+    class CutSceneState;
     class MenuState;
 
     LobbyState::LobbyState() {
@@ -84,7 +84,7 @@ namespace pyr {
 
     void LobbyState::onEndModal(phui::Widget* widget, int result) {
         if (result) {
-            invokeTransition<GameState>();
+            invokeTransition<CutSceneState>();
         }
     }
 

@@ -20,17 +20,19 @@ namespace pyr {
     class PlayerAttackPacket;
     class CollisionBox;
 
+    struct ClientAspect {
+        std::vector<ServerEntityPtr> entities;
+    };
+
     /// While in a game, extra data is needed.
     struct GameConnectionData : public ServerConnectionData {
         GameConnectionData() {
-            playerEntity = 0;
             behavior = 0;
         }
 
         GameConnectionData(const ServerConnectionData& rhs)
             : ServerConnectionData(rhs)
         {
-            playerEntity = 0;
             behavior = 0;
         }
 
@@ -42,8 +44,10 @@ namespace pyr {
         }
 
         // Can't use Zeroed<> because delete doesn't work.
-        ServerEntity* playerEntity;
+        ServerEntityPtr playerEntity;
         PlayerBehavior* behavior;
+        Inited<bool, false> acceptingUpdates;
+        ClientAspect lastAcknowledged;
     };
 
     class Game : public ConnectionHolder, public PacketReceiver {
