@@ -104,7 +104,16 @@
 				RelativePath="..\..\src\base\Error.h">
 			</File>
 			<File
+				RelativePath="..\..\src\base\LoginPacket.h">
+			</File>
+			<File
+				RelativePath="..\..\src\base\LokiTypeInfo.h">
+			</File>
+			<File
 				RelativePath="..\..\src\base\Mutex.h">
+			</File>
+			<File
+				RelativePath="..\..\src\base\Packet.h">
 			</File>
 			<File
 				RelativePath="..\..\src\base\SDLUtility.cpp">

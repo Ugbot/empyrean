@@ -21,6 +21,7 @@ namespace pyr {
         
         void run();
         
+        void addPacket(Packet* packet);
         void addPackets(const std::vector<Packet*>& packets);
         
     private:

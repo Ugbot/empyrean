@@ -30,6 +30,12 @@ namespace pyr {
         }
     }
     
+    void WriterThread::addPacket(Packet* packet) {
+        std::vector<Packet*> packets(1);
+        packets[0] = packet;
+        addPackets(packets);
+    }
+    
     void WriterThread::addPackets(const std::vector<Packet*>& packets) {
         _outgoingLock->lock();
         _packetsAvailable->wait();

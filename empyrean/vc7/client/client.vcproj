@@ -121,9 +121,6 @@
 				RelativePath="..\..\src\client\Color.h">
 			</File>
 			<File
-				RelativePath="..\..\src\client\Debug.h">
-			</File>
-			<File
 				RelativePath="..\..\src\client\Entity.h">
 			</File>
 			<File
@@ -149,9 +146,6 @@
 			</File>
 			<File
 				RelativePath="..\..\src\client\IntroState.h">
-			</File>
-			<File
-				RelativePath="..\..\src\client\LokiTypeInfo.h">
 			</File>
 			<File
 				RelativePath="..\..\src\client\Main.cpp">

@@ -1,5 +1,6 @@
 #include <iostream>
 #include "Connection.h"
+#include "LoginPacket.h"
 #include "ScopedLock.h"
 #include "World.h"
 
@@ -42,9 +43,17 @@ namespace pyr {
     
     void World::addConnection(Connection* connection) {
         std::cout << "Connection!" << std::endl;
+        
+        connection->definePacketHandler<LoginPacket, World>(this, &World::handleLogin);
     
         ScopedLock lock(_connectionsLock);
         _connections.push_back(connection);
+    }
+    
+    void World::handleLogin(Connection* c, LoginPacket* p) {
+        std::cout << "Login: "
+                  << p->getUsername() << " | " << p->getPassword()
+                  << std::endl;
     }
 
 }

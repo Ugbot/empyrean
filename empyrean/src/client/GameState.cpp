@@ -88,14 +88,12 @@ namespace pyr {
         _rotation -= _inputRight->getValue() * dt * 50;
         
         if (_inputQuit->getValue() >= 0.50f) {
-            invokeTimedTransition<MenuState>(1);
+            invokeTransition<MenuState>();
         }
 
         for (unsigned int i = 0; i < _entities.size(); i++) {
             _entities[i]->update(dt);
         }
-
-        //_testModel->update(dt);
     }
     
     void GameState::onKeyPress(SDLKey key, bool down) {

@@ -9,6 +9,7 @@
 namespace pyr {
 
     class Connection;
+    class LoginPacket;
 
     class World {
     public:
@@ -24,6 +25,8 @@ namespace pyr {
         void addConnection(Connection* connection);
         
     private:
+        void handleLogin(Connection* c, LoginPacket* p);
+    
         static World* _instance;
     
         std::vector<Connection*> _connections;
