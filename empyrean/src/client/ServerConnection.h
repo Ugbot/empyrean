@@ -9,6 +9,7 @@
 namespace pyr {
 
     class Connection;
+    class UpdatePacket;
 
     class ServerConnection {
     public:
@@ -21,9 +22,11 @@ namespace pyr {
         void connectToServer(const std::string& server);
         bool isConnected();
     
-    private:        
-        static ServerConnection* _instance;
+    private:
+        void handleUpdate(Connection* c, UpdatePacket* p);
     
+        static ServerConnection* _instance;
+            
         ScopedPtr<Connection> _connection;
     };
 

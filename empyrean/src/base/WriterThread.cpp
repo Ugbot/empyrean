@@ -40,7 +40,7 @@ namespace pyr {
             p->serialize(out);
             
             u16 id = PR_htons(p->getID());
-            u16 size = PR_htons(out.getSize());
+            u16 size = PR_htons(u16(out.getSize()));
             
             if (_socket->write(&id, sizeof(id)) != sizeof(id) ||
                 _socket->write(&size, sizeof(size)) != sizeof(size) ||

@@ -12,15 +12,15 @@ namespace pyr {
     public:
         virtual ~Packet() { }
         
-        virtual u32 getID() = 0;
+        virtual u16 getID() const = 0;
         
-        virtual u16 getSize() {
+        virtual u16 getSize() const {
             ByteBuffer bb;
             serialize(bb);
             return (u16)bb.getSize();
         }
         
-        virtual void serialize(ByteBuffer& out) = 0;
+        virtual void serialize(ByteBuffer& out) const = 0;
     };
 
 }

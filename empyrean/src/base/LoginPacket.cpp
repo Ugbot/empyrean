@@ -11,7 +11,7 @@ namespace pyr {
         _password = password;
     }
     
-    void LoginPacket::serialize(ByteBuffer& out) {
+    void LoginPacket::serialize(ByteBuffer& out) const {
         out.add_u16(_username.length());
         out.add_u16(_password.length());
         out.add(_username.c_str(), _username.length());

@@ -2,6 +2,7 @@
 #include "LoginPacket.h"
 #include "ServerConnection.h"
 #include "Socket.h"
+#include "UpdatePacket.h"
 
 
 namespace pyr {
@@ -24,11 +25,16 @@ namespace pyr {
     void ServerConnection::connectToServer(const std::string& server) {
         Socket* socket = new Socket(server, 8765);
         _connection = new Connection(socket);
+        _connection->definePacketHandler(this, &ServerConnection::handleUpdate);
         _connection->sendPacket(new LoginPacket("aegis", "kazaa"));
     }
     
     bool ServerConnection::isConnected() {
         return (_connection && !_connection->isClosed());
+    }
+    
+    void ServerConnection::handleUpdate(Connection* c, UpdatePacket* p) {
+        // do stuff with p
     }
 
 }

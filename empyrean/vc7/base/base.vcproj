@@ -92,6 +92,9 @@
 			Name="files"
 			Filter="cpp;c;cxx;def;odl;idl;hpj;bat;asm">
 			<File
+				RelativePath="..\..\src\base\BufferParser.h">
+			</File>
+			<File
 				RelativePath="..\..\src\base\ByteBuffer.cpp">
 			</File>
 			<File
@@ -165,9 +168,6 @@
 			</File>
 			<File
 				RelativePath="..\..\src\base\Thread.h">
-			</File>
-			<File
-				RelativePath="..\..\src\base\TimeUtility.h">
 			</File>
 			<File
 				RelativePath="..\..\src\base\Types.h">

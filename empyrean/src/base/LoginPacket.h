@@ -23,11 +23,11 @@ namespace pyr {
             return _password;
         }
         
-        u32 getID() {
+        u16 getID() const {
             return ID;
         }
         
-        void serialize(ByteBuffer& out);
+        void serialize(ByteBuffer& out) const;
         static Packet* create(int size, const void* bytes);
                     
     private:

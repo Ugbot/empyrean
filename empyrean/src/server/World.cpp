@@ -40,14 +40,15 @@ namespace pyr {
                 continue;
             }
             _connections[i]->processIncomingPackets();
-            _connections[i]->sendPacket(new UpdatePacket());
+            _connections[i]->sendPacket(
+                new UpdatePacket(0, "", gmtl::Vec2f(), gmtl::Vec2f()));
         }
     }
     
     void World::addConnection(Connection* connection) {
         std::cout << "Connection!" << std::endl;
         
-        connection->definePacketHandler<LoginPacket, World>(this, &World::handleLogin);
+        connection->definePacketHandler(this, &World::handleLogin);
     
         ScopedLock lock(_connectionsLock);
         _connections.push_back(connection);
