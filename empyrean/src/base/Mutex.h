@@ -4,6 +4,7 @@
 
 #include <stdexcept>
 #include <prlock.h>
+#include "NSPRUtility.h"
 
 
 namespace pyr {
@@ -13,7 +14,7 @@ namespace pyr {
         Mutex() {
             _lock = PR_NewLock();
             if (!_lock) {
-                throw std::runtime_error("PR_NewLock() failed");
+                throwNSPRError("PR_NewLock() failed");
             }
         }
         

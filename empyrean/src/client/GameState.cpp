@@ -1,23 +1,25 @@
 #include <SDL_opengl.h>
 #include <gmtl/VecOps.h>
 
+#include "Entity.h"
 #include "GameState.h"
 #include "Input.h"
 #include "InputManager.h"
 #include "MenuState.h"
-#include "Profiler.h"
 #include "Model.h"
 #include "Renderer.h"
-#include "Entity.h"
-#include "PlayerEntity.h"
 #include "ParticleSystem.h"
 #include "ParticleEmitter.h"
+#include "Profiler.h"
+#include "PlayerEntity.h"
+#include "ServerConnection.h"
 #include "Texture.h"
 
 namespace pyr {
 
     GameState::GameState() {
         PYR_PROFILE_BLOCK("Init");
+        
         _inputX     = &_im.getInput("MouseX");
         _inputY     = &_im.getInput("MouseY");
         _inputLeft  = &_im.getInput("MouseLeft");
@@ -44,6 +46,8 @@ namespace pyr {
         _entities.push_back(player);
         _entities.push_back(_particles);
         _entities.push_back(_emitter);
+        
+        ServerConnection::instance().connectToServer("localhost");
     }
 
     GameState::~GameState() {
@@ -53,7 +57,6 @@ namespace pyr {
             delete ent;
         }
     }
-            
     
     void GameState::draw(float fade) {
         PYR_PROFILE_BLOCK("Render");

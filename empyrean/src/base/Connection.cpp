@@ -34,7 +34,7 @@ namespace pyr {
             Packet* p = packets.front();
             packets.pop();
             
-            TypeInfo ti(typeid(p));
+            TypeInfo ti(typeid(*p));
             PacketHandler* handler = _handlers[ti];
             if (handler) {
                 handler->processPacket(this, p);

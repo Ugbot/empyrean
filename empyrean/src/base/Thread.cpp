@@ -22,7 +22,7 @@ namespace pyr {
             0);
 
         if (!_thread) {
-            throw std::runtime_error("PR_CreateThread() failed");
+            throwNSPRError("PR_CreateThread() failed");
         }
     }
     
@@ -51,7 +51,7 @@ namespace pyr {
     void Thread::join() {
         PRStatus status = PR_JoinThread(_thread);
         if (status != PR_SUCCESS) {
-            throw std::runtime_error("PR_JoinThread failed");
+            throwNSPRError("PR_JoinThread failed");
         }
     }
     

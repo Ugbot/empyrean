@@ -4,6 +4,7 @@
 
 #include <queue>
 #include "Mutex.h"
+#include "PacketFactory.h"
 #include "Thread.h"
 
 
@@ -28,6 +29,8 @@ namespace pyr {
         
         Mutex _incomingLock;
         std::queue<Packet*> _incoming;
+        
+        PacketFactory _factory;
     };
 
 }

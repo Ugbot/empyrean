@@ -12,12 +12,12 @@
 #include "InputManager.h"
 #include "Profiler.h"
 #include "SDLUtility.h"
-#include "TimeUtility.h"
+#include "NSPRUtility.h"
 
 namespace pyr {
 
     void runClient() {
-        pyr::Profiler("main");
+        PYR_PROFILE_BLOCK("main");
 
         // initialize the random number generator in case we ever
         // decide to use rand()

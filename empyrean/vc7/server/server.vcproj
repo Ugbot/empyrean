@@ -120,22 +120,10 @@
 				RelativePath="..\..\src\server\Main.cpp">
 			</File>
 			<File
-				RelativePath="..\..\src\server\ReaderThread.cpp">
-			</File>
-			<File
-				RelativePath="..\..\src\server\ReaderThread.h">
-			</File>
-			<File
 				RelativePath="..\..\src\server\World.cpp">
 			</File>
 			<File
 				RelativePath="..\..\src\server\World.h">
-			</File>
-			<File
-				RelativePath="..\..\src\server\WriterThread.cpp">
-			</File>
-			<File
-				RelativePath="..\..\src\server\WriterThread.h">
 			</File>
 		</Filter>
 	</Files>

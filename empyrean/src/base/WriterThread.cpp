@@ -1,4 +1,8 @@
+#include <prnetdb.h>
+#include "ByteBuffer.h"
 #include "CondVar.h"
+#include "Packet.h"
+#include "Socket.h"
 #include "WriterThread.h"
 
 
@@ -22,10 +26,20 @@ namespace pyr {
                 _packetsAvailable->wait();
             }
             
-            // write all packets packet
+            // write a single packet
+            Packet* p = _outgoing.front();
             _outgoing.pop();
             
-            _packetsAvailable->notify();
+            ByteBuffer out;
+            p->serialize(out);
+            
+            u16 id = PR_htons(p->getID());
+            u16 size = PR_htons(out.getSize());
+            
+            _socket->write(&id, sizeof(id));
+            _socket->write(&size, sizeof(size));
+            _socket->write(out.getBuffer(), out.getSize());
+            
             _outgoingLock->unlock();
         }
     }
@@ -38,7 +52,6 @@ namespace pyr {
     
     void WriterThread::addPackets(const std::vector<Packet*>& packets) {
         _outgoingLock->lock();
-        _packetsAvailable->wait();
         
         for (unsigned i = 0; i < packets.size(); ++i) {
             _outgoing.push(packets[i]);

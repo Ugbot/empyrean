@@ -2,7 +2,7 @@
 #include <stdexcept>
 #include "Error.h"
 #include "ListenerThread.h"
-#include "TimeUtility.h"
+#include "NSPRUtility.h"
 #include "Utility.h"
 #include "World.h"
 
@@ -31,7 +31,6 @@ namespace pyr {
 }
 
 
-// main must be defined this way for SDL to work
 int main() {
     try {
         pyr::runServer();

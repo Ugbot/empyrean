@@ -92,6 +92,9 @@
 			Name="files"
 			Filter="cpp;c;cxx;def;odl;idl;hpj;bat;asm">
 			<File
+				RelativePath="..\..\src\base\ByteBuffer.cpp">
+			</File>
+			<File
 				RelativePath="..\..\src\base\ByteBuffer.h">
 			</File>
 			<File
@@ -110,6 +113,9 @@
 				RelativePath="..\..\src\base\Error.h">
 			</File>
 			<File
+				RelativePath="..\..\src\base\LoginPacket.cpp">
+			</File>
+			<File
 				RelativePath="..\..\src\base\LoginPacket.h">
 			</File>
 			<File
@@ -119,7 +125,25 @@
 				RelativePath="..\..\src\base\Mutex.h">
 			</File>
 			<File
+				RelativePath="..\..\src\base\NSPRUtility.cpp">
+			</File>
+			<File
+				RelativePath="..\..\src\base\NSPRUtility.h">
+			</File>
+			<File
 				RelativePath="..\..\src\base\Packet.h">
+			</File>
+			<File
+				RelativePath="..\..\src\base\PacketFactory.cpp">
+			</File>
+			<File
+				RelativePath="..\..\src\base\PacketFactory.h">
+			</File>
+			<File
+				RelativePath="..\..\src\base\ReaderThread.cpp">
+			</File>
+			<File
+				RelativePath="..\..\src\base\ReaderThread.h">
 			</File>
 			<File
 				RelativePath="..\..\src\base\SDLUtility.cpp">
@@ -159,6 +183,12 @@
 			</File>
 			<File
 				RelativePath="..\..\src\base\Utility.h">
+			</File>
+			<File
+				RelativePath="..\..\src\base\WriterThread.cpp">
+			</File>
+			<File
+				RelativePath="..\..\src\base\WriterThread.h">
 			</File>
 		</Filter>
 	</Files>

@@ -199,6 +199,12 @@
 				RelativePath="..\..\src\client\ResourceManager.h">
 			</File>
 			<File
+				RelativePath="..\..\src\client\ServerConnection.cpp">
+			</File>
+			<File
+				RelativePath="..\..\src\client\ServerConnection.h">
+			</File>
+			<File
 				RelativePath="..\..\src\client\State.h">
 			</File>
 			<File
@@ -206,9 +212,6 @@
 			</File>
 			<File
 				RelativePath="..\..\src\client\Texture.h">
-			</File>
-			<File
-				RelativePath="..\..\src\client\Types.h">
 			</File>
 		</Filter>
 	</Files>

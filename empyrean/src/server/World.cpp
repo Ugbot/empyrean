@@ -38,6 +38,7 @@ namespace pyr {
                 std::cout << "Disconnected" << std::endl;
                 continue;
             }
+            _connections[i]->processIncomingPackets();
         }
     }
     

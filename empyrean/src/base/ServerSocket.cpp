@@ -1,4 +1,5 @@
 #include <prnetdb.h>
+#include "NSPRUtility.h"
 #include "ServerSocket.h"
 #include "Socket.h"
 
@@ -8,30 +9,30 @@ namespace pyr {
     ServerSocket::ServerSocket(int port) {
         _socket = PR_NewTCPSocket();
         if (!_socket) {
-            throw std::runtime_error("PR_NewTCPSocket() failed");
+            throwNSPRError("PR_NewTCPSocket() failed");
         }
 
         PRNetAddr addr;
         PRStatus status = PR_InitializeNetAddr(PR_IpAddrAny, port, &addr);
         if (status != PR_SUCCESS) {
-            throw std::runtime_error("PR_InitializeNetAddr() failed");
+            throwNSPRError("PR_InitializeNetAddr() failed");
         }
       
         status = PR_Bind(_socket, &addr);
         if (status != PR_SUCCESS) {
-            throw std::runtime_error("PR_Bind() failed");
+            throwNSPRError("PR_Bind() failed");
         }
 
         status = PR_Listen(_socket, 16);
         if (status != PR_SUCCESS) {
-            throw std::runtime_error("PR_Listen() failed");
+            throwNSPRError("PR_Listen() failed");
         }
     }
     
     ServerSocket::~ServerSocket() {
         PRStatus status = PR_Close(_socket);
         if (status != PR_SUCCESS) {
-            throw std::runtime_error("PR_Close() failed");
+            throwNSPRError("PR_Close() failed");
         }
     }
     

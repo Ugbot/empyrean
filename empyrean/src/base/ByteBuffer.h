@@ -3,7 +3,7 @@
 
 
 #include <stdlib.h>
-#include <string.h>
+#include <prnetdb.h>
 #include "Types.h"
 
 
@@ -12,20 +12,24 @@ namespace pyr {
     class ByteBuffer {
     public:
         ByteBuffer() {
-            _buffer = 0;
+            _capacity = 1024;
+            _buffer = (u8*)malloc(_capacity);
             _size = 0;
         }
         
         ~ByteBuffer() {
-            _buffer = realloc(_buffer, 0);
+            _buffer = (u8*)realloc(_buffer, 0);
             _size = 0;
+            _capacity = 0;
         }
         
-        void add(const void* buffer, int size) {
-            _buffer = realloc(_buffer, _size + size);
-            memcpy((u8*)_buffer + _size, buffer, size);
-            _size += size;
+        void add_u16(u16 value) {
+            value = PR_htons(value);
+            add((const u8*)&value, sizeof(value));
         }
+        
+        /// Add bytes to the end of the buffer.
+        void add(const void* buffer, int size);
         
         void* getBuffer() {
             return _buffer;
@@ -39,9 +43,13 @@ namespace pyr {
             return _size;
         }
         
+        /// Removes a chunk of the buffer from the front.
+        void consumeFront(int amount);
+        
     private:
-        void* _buffer;
-        int   _size;
+        u8* _buffer;
+        int _size;
+        int _capacity;
     };
 
 }
