@@ -4,6 +4,7 @@
 #include "InputManager.h"
 #include "MenuState.h"
 #include "Profiler.h"
+#include "Model.h"
 
 
 namespace pyr {
@@ -16,6 +17,7 @@ namespace pyr {
         _inputRight = &_im.getInput("MouseRight");
         _inputQuit  = &_im.getInput("Escape");
         _rotation = 0;
+
     }
     
     void GameState::draw(float fade) {

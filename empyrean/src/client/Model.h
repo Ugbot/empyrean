@@ -32,6 +32,8 @@ namespace pyr {
 
     public:
 
+        static Model* create(const std::string& id);
+
         Model(const std::string& fname);
         ~Model();
 

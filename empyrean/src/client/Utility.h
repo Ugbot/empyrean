@@ -1,12 +1,17 @@
 #ifndef PYR_UTILITY_H
 #define PYR_UTILITY_H
 
+#include <string>
+#include <vector>
 
 #include <gmtl/Vec.h>
 #include <SDL_opengl.h>
 
 
 namespace pyr {
+
+    using std::string;
+    using std::vector;
 
     inline void glTranslate(const gmtl::Vec2f& vec) {
         glTranslatef(vec[0], vec[1], 0);
@@ -100,6 +105,15 @@ namespace pyr {
         T* _array;
     };
 
+    //! Returns the string, stripped of leading and trailing whitespace
+    string trimString(const string& s);
+
+    /** Splits the string based on the passed delimiters, and returns the substrings as an array.
+     *
+     * @param s          The string to split.
+     * @param delimiters A list of characters to use as token delimiters.
+     */
+    vector<string> splitString(const string& s, const string& delimiters=" \n\r\t");
 }
 
 #endif

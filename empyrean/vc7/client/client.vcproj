@@ -195,6 +195,9 @@
 				RelativePath="..\..\src\client\Types.h">
 			</File>
 			<File
+				RelativePath="..\..\src\client\Utility.cpp">
+			</File>
+			<File
 				RelativePath="..\..\src\client\Utility.h">
 			</File>
 		</Filter>

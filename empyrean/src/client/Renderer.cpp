@@ -13,6 +13,7 @@
 #include "Texture.h"
 #include "Types.h"
 #include "Debug.h"
+#include "Profiler.h"
 
 namespace {
     using namespace pyr;
@@ -34,6 +35,8 @@ namespace {
      */
     template <class Shader>
     void renderMesh(Model& model,Shader shader) {
+        PYR_PROFILE_BLOCK("renderMesh");
+
         CalRenderer& r=*model.getModel().getRenderer();
         
         r.beginRendering();
