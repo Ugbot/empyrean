@@ -1,3 +1,3 @@
 #!/bin/sh
 cd `dirname "$0"`/..
-find src -name "*.cpp" -o -name "*.h" -o -name "*.c" | grep -v glew | xargs wc -l
+find src -name "*.cpp" -o -name "*.h" -o -name "*.c" | grep -v glew | grep -v glxew | xargs wc -l
