@@ -45,7 +45,7 @@ def ParseConfig(env, command, options):
                 env.Append(LIBPATH = [arg[2:]])
             elif option == 'l':
                 env.Append(LIBS = [arg[2:]])
-            elif arg[0:11] == '-Wl,-rpath,':
+            elif arg[0:4] == '-Wl,':
                 env.Append(LINKFLAGS = [arg])
             else:
                 env.Append(CCFLAGS = [arg])
