@@ -79,20 +79,15 @@
 ***********************************************************************/
 #if defined(WIN32)
 
-#if defined(__GNUC__)
-#undef _declspec
-#define _declspec(x) __declspec(x)
-#endif
+#define PR_EXPORT(__type) extern __declspec(dllexport) __type
+#define PR_EXPORT_DATA(__type) extern __declspec(dllexport) __type
+#define PR_IMPORT(__type) __declspec(dllimport) __type
+#define PR_IMPORT_DATA(__type) __declspec(dllimport) __type
 
-#define PR_EXPORT(__type) extern _declspec(dllexport) __type
-#define PR_EXPORT_DATA(__type) extern _declspec(dllexport) __type
-#define PR_IMPORT(__type) _declspec(dllimport) __type
-#define PR_IMPORT_DATA(__type) _declspec(dllimport) __type
-
-#define PR_EXTERN(__type) extern _declspec(dllexport) __type
-#define PR_IMPLEMENT(__type) _declspec(dllexport) __type
-#define PR_EXTERN_DATA(__type) extern _declspec(dllexport) __type
-#define PR_IMPLEMENT_DATA(__type) _declspec(dllexport) __type
+#define PR_EXTERN(__type) extern __declspec(dllexport) __type
+#define PR_IMPLEMENT(__type) __declspec(dllexport) __type
+#define PR_EXTERN_DATA(__type) extern __declspec(dllexport) __type
+#define PR_IMPLEMENT_DATA(__type) __declspec(dllexport) __type
 
 #define PR_CALLBACK
 #define PR_CALLBACK_DECL
@@ -280,6 +275,18 @@ typedef signed char PRInt8;
 #endif
 
 /************************************************************************
+ * MACROS:      PR_INT8_MAX
+ *              PR_INT8_MIN
+ *              PR_UINT8_MAX
+ * DESCRIPTION:
+ *  The maximum and minimum values of a PRInt8 or PRUint8.
+************************************************************************/
+
+#define PR_INT8_MAX 127
+#define PR_INT8_MIN (-128)
+#define PR_UINT8_MAX 255U
+
+/************************************************************************
 ** TYPES:       PRUint16
 **              PRInt16
 ** DESCRIPTION:
@@ -291,6 +298,18 @@ typedef short PRInt16;
 #else
 #error No suitable type for PRInt16/PRUint16
 #endif
+
+/************************************************************************
+ * MACROS:      PR_INT16_MAX
+ *              PR_INT16_MIN
+ *              PR_UINT16_MAX
+ * DESCRIPTION:
+ *  The maximum and minimum values of a PRInt16 or PRUint16.
+************************************************************************/
+
+#define PR_INT16_MAX 32767
+#define PR_INT16_MIN (-32768)
+#define PR_UINT16_MAX 65535U
 
 /************************************************************************
 ** TYPES:       PRUint32
@@ -311,6 +330,18 @@ typedef long PRInt32;
 #else
 #error No suitable type for PRInt32/PRUint32
 #endif
+
+/************************************************************************
+ * MACROS:      PR_INT32_MAX
+ *              PR_INT32_MIN
+ *              PR_UINT32_MAX
+ * DESCRIPTION:
+ *  The maximum and minimum values of a PRInt32 or PRUint32.
+************************************************************************/
+
+#define PR_INT32_MAX PR_INT32(2147483647)
+#define PR_INT32_MIN (-PR_INT32_MAX - 1)
+#define PR_UINT32_MAX PR_UINT32(4294967295)
 
 /************************************************************************
 ** TYPES:       PRUint64
@@ -427,6 +458,20 @@ typedef PRUint8 PRPackedBool;
 ** special status return.
 */
 typedef enum { PR_FAILURE = -1, PR_SUCCESS = 0 } PRStatus;
+
+#ifdef MOZ_UNICODE
+/*
+ * EXPERIMENTAL: This type may be removed in a future release.
+ */
+#ifndef __PRUNICHAR__
+#define __PRUNICHAR__
+#if defined(WIN32) || defined(XP_MAC)
+typedef wchar_t PRUnichar;
+#else
+typedef PRUint16 PRUnichar;
+#endif
+#endif
+#endif /* MOZ_UNICODE */
 
 /*
 ** WARNING: The undocumented data types PRWord and PRUword are
