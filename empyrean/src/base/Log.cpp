@@ -75,7 +75,7 @@ namespace pyr {
             std::ostringstream os;
             os << '[' << pad(16, Thread::getCurrentThreadName()) << "] "
                << spaces << message;
-            
+
             Logger* p = this;
             // Maybe an 'additivity' flag a la log4j would be nice.
             while (p /*&& p->_additivity*/) {
@@ -103,7 +103,7 @@ namespace pyr {
     }
 
     void Logger::clearAllWriters() {
-	_writers.clear();
+        _writers.clear();
     }
 
     void Logger::addWriter(const LogWriterPtr& writer) {
@@ -167,26 +167,31 @@ namespace pyr {
     }
 
     LogScope::~LogScope() {
-        _logger.unindent();
-        _logger.log(_level, "}");
+        try {
+            _logger.unindent();
+            _logger.log(_level, "}");
+        }
+        catch (const std::exception& e) {
+        }
+        PYR_CATCH_ALL()
     }
 
 
 
     namespace {
-	Logger& _logLogger = Logger::get("pyr.Log");
-	typedef std::map<string, LogWriterPtr> WriterMap;
+        Logger& _logLogger = Logger::get("pyr.Log");
+        typedef std::map<string, LogWriterPtr> WriterMap;
 
-	void setLoggerLevel(Logger& logger, const string& level) {
-	    if (level == "ALL")          logger.setLevel(ALL);
-	    else if (level == "VERBOSE") logger.setLevel(VERBOSE);
-	    else if (level == "INFO")    logger.setLevel(INFO);
-	    else if (level == "WARN")    logger.setLevel(WARN);
-	    else if (level == "ERROR")   logger.setLevel(ERROR);
-	    else if (level == "FATAL")   logger.setLevel(FATAL);
-	    else if (level == "OFF")     logger.setLevel(OFF);
-	    else PYR_LOG(_logLogger, ERROR, "Invalid logger level: " << level);
-	}
+        void setLoggerLevel(Logger& logger, const string& level) {
+            if (level == "ALL")          logger.setLevel(ALL);
+            else if (level == "VERBOSE") logger.setLevel(VERBOSE);
+            else if (level == "INFO")    logger.setLevel(INFO);
+            else if (level == "WARN")    logger.setLevel(WARN);
+            else if (level == "ERROR")   logger.setLevel(ERROR);
+            else if (level == "FATAL")   logger.setLevel(FATAL);
+            else if (level == "OFF")     logger.setLevel(OFF);
+            else PYR_LOG(_logLogger, ERROR) << "Invalid logger level: " << level;
+        }
 
         LogWriterPtr getWriter(
             const WriterMap& writerMap,
@@ -200,11 +205,11 @@ namespace pyr {
             }
         }
 
-	void setLoggerWriters(
+        void setLoggerWriters(
             Logger& logger,
             const WriterMap& map,
             const string& writers
-	) {
+        ) {
             std::vector<string> writerNames = splitString(writers, " ,\t");
             std::vector<LogWriterPtr> writerList;
 
@@ -224,7 +229,7 @@ namespace pyr {
             for (size_t i = 0; i < writerList.size(); ++i) {
                 logger.addWriter(writerList[i]);
             }
-	}
+        }
     }
 
     void initializeDefaults(const string& logFile) {
@@ -247,7 +252,7 @@ namespace pyr {
         WriterMap writerMap;
         ScopedPtr<XMLNode> root;
 
-	try {
+        try {
             root = parseXMLFile(configFile);
             if (!root) {
                 return initializeDefaults(logFile);
@@ -294,7 +299,7 @@ namespace pyr {
                     _logLogger.log(ERROR, "Logger node has no name attribute.");
                 }
             }
-	}
+        }
     }
 
 }
