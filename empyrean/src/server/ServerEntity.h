@@ -9,6 +9,7 @@
 #include "Types.h"
 #include "Utility.h"
 #include "VecMath.h"
+#include "GameStatistics.h"
 
 namespace pyr {
 
@@ -18,11 +19,11 @@ namespace pyr {
 
     class ServerEntity : public Entity {
     public:
-        ServerEntity(u16 id, Behavior* behavior, ServerAppearance* appearance, CharacterPtr character)
+        ServerEntity(u16 id, Behavior* behavior, ServerAppearance* appearance, GameStatisticsPtr gameStats)
             : Entity(behavior, appearance)
         {
             _id = id;
-            _character = character;
+            _gameStats = gameStats;
         }
 
         u16 getID() const {
@@ -35,13 +36,13 @@ namespace pyr {
             return static_cast<ServerAppearance*>(getAppearance());
         }
 
-        CharacterPtr getCharacter() const {
-            return _character;
+        GameStatisticsPtr getGameStats() const {
+            return _gameStats;
         }
 
     private:
         u16 _id;
-        CharacterPtr _character;
+        GameStatisticsPtr _gameStats;
     };
     
 }

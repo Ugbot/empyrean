@@ -17,6 +17,8 @@ namespace pyr {
     class PlayerEventPacket;
     class TempHUDPacket;
     class ServerEntity;
+    class PlayerAttackPacket;
+    class CollisionBox;
 
     /// While in a game, extra data is needed.
     struct GameConnectionData : public ServerConnectionData {
@@ -66,8 +68,11 @@ namespace pyr {
 
         void handlePlayerEvent(Connection* c, PlayerEventPacket* p);
         void handleHUDUpdate(Connection* c, TempHUDPacket* p);
+        void handlePlayerAttack(Connection* c, PlayerAttackPacket* p);
 
     private:
+        int getHitModifier(CollisionBox& box, const std::string& attackType, std::vector<Vec2f>& points);
+
         std::string _name;
         std::string _password;
 
