@@ -81,7 +81,10 @@ namespace StickTest
             InitGL();
 
             model=Ms3dAscii.Load(s);
+        }
 
+        void SetupJoints()
+        {
             for (int i=0; i<model.meshes.Length; i++)
             {
                 Mesh mesh=model.meshes[i];
@@ -92,6 +95,9 @@ namespace StickTest
                     {
                         Vector r=v.joint.Direction.Base;
 
+                        // AHA.  Revelation.
+                        // I need to inverse multiply these vertices by the parent joints' matrices too!
+                        // TODO: find some time to actually do it. -_-
                         Vector vec=new Vector(
                             v.x-v.joint.Position.Base.x,
                             v.y-v.joint.Position.Base.y,
@@ -212,7 +218,7 @@ namespace StickTest
                         Console.WriteLine(j.Direction);
                 }
                 while (time>30) time-=30;
-                model.Animate(inc);
+                //model.Animate(inc);
                 DeformJoint(model.rootbone,Matrix.identity);
 
                 Render();
@@ -286,7 +292,7 @@ namespace StickTest
                 return;
             }*/
 
-            string s=args.Length>0?args[0]:"head1.ms3d.txt";
+            string s=args.Length>0?args[0]:"head1.txt";
             new MainClass(s).Execute();
         }
     }
