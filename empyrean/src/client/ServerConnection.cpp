@@ -116,9 +116,17 @@ namespace pyr {
             _error = getLRMessage(p->response());
         }
     }
-
+    
     void ServerConnection::handleLobby(Connection*, LobbyPacket* p) {
-        _lobbyMessages.push_back(p->username() + ": " + p->text());
+        std::string message;
+        switch (p->action()) {
+            case LOBBY_LOGIN:  message = p->username() + " logged in"; break;
+            case LOBBY_LOGOUT: message = p->username() + " logged out"; break;
+            case LOBBY_SAY:    message = p->username() + ": " + p->text(); break;
+        }
+        if (!message.empty()) {
+            _lobbyMessages.push_back(message);
+        }
     }
 
 }

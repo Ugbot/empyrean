@@ -294,6 +294,9 @@
 				RelativePath="..\..\src\client\ConnectScreen.h">
 			</File>
 			<File
+				RelativePath="..\..\src\client\JoinGameScreen.h">
+			</File>
+			<File
 				RelativePath="..\..\src\client\LobbyScreen.h">
 			</File>
 			<File

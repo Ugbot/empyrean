@@ -83,7 +83,19 @@ namespace pyr {
         return sent;
     }
     
-    std::string Socket::getAddress() {
+    std::string Socket::getHostAddress() {
+        PRNetAddr addr;
+        if (PR_GetSockName(_socket, &addr) == PR_SUCCESS) {
+            char str[80];
+            u8* ip = (u8*)&addr.inet.ip;
+            sprintf(str, "%d.%d.%d.%d", ip[0], ip[1], ip[2], ip[3]);
+            return str;
+        } else {
+            return "";
+        }
+    }
+    
+    std::string Socket::getPeerAddress() {
         PRNetAddr addr;
         if (PR_GetPeerName(_socket, &addr) == PR_SUCCESS) {
             char str[80];

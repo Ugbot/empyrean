@@ -82,11 +82,14 @@ namespace pyr {
         /// Adds a packet to the outgoing queue, taking ownership of it.
         void sendPacket(Packet* packet);
 
+        /// Begins disconnecting.
+        void close();
+        
         /// Returns true if the connection has been closed.
         bool isClosed();
         
         /// Returns the address of the connection.
-        std::string getAddress();
+        std::string getPeerAddress();
         
         
         void setOpaque(void* opaque) { _opaque = opaque;  }
@@ -105,6 +108,8 @@ namespace pyr {
         
         std::vector<Packet*> _unhandledPackets;
         HandlerMap _handlers;
+        
+        bool _closing;  // has close() been called?
         
         /// Used to store user-defined, connection-specific data.
         void* _opaque;

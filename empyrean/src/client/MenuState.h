@@ -12,6 +12,7 @@ namespace pyr {
     class MainScreen;
     class ConnectScreen;
     class ConnectingScreen;
+    class JoinGameScreen;
     class LoginScreen;
     class LoggingInScreen;
     class LobbyScreen;
@@ -53,10 +54,14 @@ namespace pyr {
         void onLoggingInCancel();
         void onLoggingInError(const std::string& error);
         
+        void onLobbyJoinGame();
         void onLobbyNewGame();
         void onLobbyNewChar();
         void onLobbyQuit();
         void onLobbySay(const std::string& text);
+        
+        void onJoinGameJoin(const std::string& name, const std::string& password);
+        void onJoinGameCancel();
 
         void onNewGameCreate(const std::string& name, const std::string& password);
         void onNewGameCancel();
@@ -75,6 +80,7 @@ namespace pyr {
         phui::RefPtr<LoginScreen>      _loginScreen;
         phui::RefPtr<LoggingInScreen>  _loggingInScreen;
         phui::RefPtr<LobbyScreen>      _lobbyScreen;
+        phui::RefPtr<JoinGameScreen>   _joinGameScreen;
         phui::RefPtr<NewGameScreen>    _newGameScreen;
     };
 

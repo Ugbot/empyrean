@@ -16,6 +16,12 @@ namespace pyr {
     #define PYR_SAY_PACKET_NAME SayPacket
     #define PYR_SAY_PACKET(_) \
         _(string)(512, text)
+        
+    enum {
+        LOBBY_LOGIN,
+        LOBBY_LOGOUT,
+        LOBBY_SAY,
+    };
 
     #define PYR_LOBBY_PACKET_NAME LobbyPacket
     #define PYR_LOBBY_PACKET(_) \
@@ -40,7 +46,6 @@ namespace pyr {
         _(string)(12, password)             \
         _(field)(u8, newAccount)
         
-
     // Login Response codes    
     enum {
         LR_LOGGED_IN,  // success
@@ -55,7 +60,6 @@ namespace pyr {
     #define PYR_LOGIN_RESPONSE_PACKET_NAME LoginResponsePacket
     #define PYR_LOGIN_RESPONSE_PACKET(_)    \
         _(field)(u16, response)
-        
         
     #define PYR_PING_PACKET_NAME PingPacket
     #define PYR_PING_PACKET(_)

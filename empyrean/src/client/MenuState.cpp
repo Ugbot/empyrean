@@ -3,6 +3,7 @@
 #include "ConnectingScreen.h"
 #include "ErrorScreen.h"
 #include "GameState.h"
+#include "JoinGameScreen.h"
 #include "LobbyScreen.h"
 #include "LoggingInScreen.h"
 #include "LoginScreen.h"
@@ -144,6 +145,10 @@ namespace pyr {
         ServerConnection::instance().disconnect();
         _screen = new ErrorScreen(this, "Error logging in: " + error);
     }
+    
+    void MenuState::onLobbyJoinGame() {
+        _screen = _joinGameScreen;
+    }
 
     void MenuState::onLobbyNewGame() {
         _screen = _newGameScreen;
@@ -160,6 +165,14 @@ namespace pyr {
     void MenuState::onLobbySay(const std::string& text) {
         ServerConnection::instance().say(text);
     }
+    
+    void MenuState::onJoinGameJoin(const std::string& name, const std::string& password) {
+        invokeTransition<GameState>();
+    }
+    
+    void MenuState::onJoinGameCancel() {
+        _screen = _lobbyScreen;
+    }
 
     void MenuState::onNewGameCreate(const std::string& name, const std::string& password) {
         invokeTransition<GameState>();
@@ -173,6 +186,7 @@ namespace pyr {
         _mainScreen       = new MainScreen(this);
         _connectScreen    = new ConnectScreen(this);
         _connectingScreen = new ConnectingScreen(this);
+        _joinGameScreen   = new JoinGameScreen(this);
         _loginScreen      = new LoginScreen(this);
         _loggingInScreen  = new LoggingInScreen(this);
         _lobbyScreen      = new LobbyScreen(this);

@@ -16,6 +16,8 @@ namespace pyr {
         _readerThread = new Thread(_reader, PR_PRIORITY_HIGH);
         _writerThread = new Thread(_writer, PR_PRIORITY_HIGH);
         
+        _closing = false;
+        
         _opaque = 0;
     }
     
@@ -52,12 +54,16 @@ namespace pyr {
         _writer->addPacket(p);
     }
     
-    bool Connection::isClosed() {
-        return (!_readerThread->isRunning() && !_writerThread->isRunning());
+    void Connection::close() {
+        _closing = true;
     }
     
-    std::string Connection::getAddress() {
-        return _tcpSocket->getAddress();
+    bool Connection::isClosed() {
+        return _closing || (!_readerThread->isRunning() || !_writerThread->isRunning());
+    }
+    
+    std::string Connection::getPeerAddress() {
+        return _tcpSocket->getPeerAddress();
     }
 
 }

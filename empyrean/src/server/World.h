@@ -34,6 +34,9 @@ namespace pyr {
         void handleLogin(Connection* c, LoginPacket* p);
         void handleSay(Connection* c, SayPacket* p);
         
+        void announceLogin(Connection* c);
+        void announceLogout(Connection* d);
+        
     private:
         std::vector<Connection*> _connections;
     };

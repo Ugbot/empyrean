@@ -30,7 +30,7 @@ namespace pyr {
     }
     
     void World::addConnection(Connection* connection) {
-        logMessage("Connection from address " + connection->getAddress());
+        logMessage("Connection from address " + connection->getPeerAddress());
 
         ConnectionData* cd = new ConnectionData;
         cd->loggedIn = false;
@@ -53,6 +53,11 @@ namespace pyr {
         Connection* connection = _connections[index];
         
         ConnectionData* cd = (ConnectionData*)connection->getOpaque();
+        
+        if (cd->loggedIn) {
+            announceLogout(connection);
+        }
+        
         delete cd;
         
         _connections.erase(_connections.begin() + index);
@@ -93,6 +98,8 @@ namespace pyr {
                 cd->loggedIn = true;
                 c->sendPacket(new LoginResponsePacket(LR_LOGGED_IN));
                 logMessage(p->username() + " new account, logged in");
+
+                announceLogin(c);
             }
             return;
         }
@@ -106,6 +113,8 @@ namespace pyr {
                 cd->loggedIn = true;
                 c->sendPacket(new LoginResponsePacket(LR_LOGGED_IN));
                 logMessage(p->username() + " logged in");
+                
+                announceLogin(c);
             } else {
                 c->sendPacket(new LoginResponsePacket(LR_INVALID_PASSWORD));
                 logMessage(p->username() + " invalid password");
@@ -118,11 +127,35 @@ namespace pyr {
         for (size_t i = 0; i < _connections.size(); ++i) {
             _connections[i]->sendPacket(new LobbyPacket(
                 cd->account->getUsername(),
-                0,
+                LOBBY_SAY,
                 p->text()));
         }
 
         logMessage(cd->account->getUsername() + " says: " + p->text());
     }
-
+    
+    void World::announceLogin(Connection* c) {
+        ConnectionData* cd = getData(c);
+        for (size_t i = 0; i < _connections.size(); ++i) {
+            if (_connections[i] != c) {
+                _connections[i]->sendPacket(new LobbyPacket(
+                    cd->account->getUsername(),
+                    LOBBY_LOGIN,
+                    ""));
+            }
+        }
+    }
+    
+    void World::announceLogout(Connection* c) {
+        ConnectionData* cd = getData(c);
+        for (size_t i = 0; i < _connections.size(); ++i) {
+            if (_connections[i] != c) {
+                _connections[i]->sendPacket(new LobbyPacket(
+                    cd->account->getUsername(),
+                    LOBBY_LOGOUT,
+                    ""));
+            }
+        }
+    }
+    
 }

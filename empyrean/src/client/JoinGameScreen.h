@@ -1,5 +1,5 @@
-#ifndef PYR_NEW_GAME_SCREEN_H
-#define PYR_NEW_GAME_SCREEN_H
+#ifndef PYR_JOIN_GAME_SCREEN_H
+#define PYR_JOIN_GAME_SCREEN_H
 
 
 #include "MenuScreen.h"
@@ -8,9 +8,9 @@
 
 namespace pyr {
 
-    class NewGameScreen : public MenuScreen {
+    class JoinGameScreen : public MenuScreen {
     public:
-        NewGameScreen(MenuState* state)
+        JoinGameScreen(MenuState* state)
             : MenuScreen(state) 
         {
             _name = new phui::TextField("game");
@@ -19,28 +19,28 @@ namespace pyr {
             _password = new phui::TextField();
             _password->setPositionAndSize(0, 256, 1024, 256);
             
-            phui::ButtonPtr create = new phui::Button("Create");
-            create->addListener(this, &NewGameScreen::onCreate);
-            create->setPositionAndSize(0, 512, 512, 256);
+            phui::ButtonPtr join = new phui::Button("Join");
+            join->addListener(this, &JoinGameScreen::onJoin);
+            join->setPositionAndSize(0, 512, 512, 256);
 
             phui::ButtonPtr cancel = new phui::Button("Cancel");
-            cancel->addListener(this, &NewGameScreen::onCancel);
+            cancel->addListener(this, &JoinGameScreen::onCancel);
             cancel->setPositionAndSize(512, 512, 512, 256);
 
             add(_name);
             add(_password);
-            add(create);
+            add(join);
             add(cancel);
         }
 
     private:
-        void onCreate(const phui::ActionEvent&) {
-            getState()->onNewGameCreate(
+        void onJoin(const phui::ActionEvent&) {
+            getState()->onJoinGameJoin(
                 _name->getText(), _password->getText());
         }
 
         void onCancel(const phui::ActionEvent&) {
-            getState()->onNewGameCancel();
+            getState()->onJoinGameCancel();
         }
 
         phui::TextFieldPtr _name;

@@ -20,7 +20,8 @@ namespace pyr {
         /// if this returns 0, the socket has been disconnected
         int write(const void* buffer, int size);
         
-        std::string getAddress();
+        std::string getHostAddress();
+        std::string getPeerAddress();
         
     private:
         PRFileDesc* _socket;

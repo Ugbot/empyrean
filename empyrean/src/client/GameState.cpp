@@ -77,6 +77,7 @@ namespace pyr {
         _player->setVel(gmtl::Vec2f(dx * 50, dy * 10));
 
         if (_inputQuit->getValue() >= 0.50f) {
+            ServerConnection::instance().disconnect();
             invokeTransition<MenuState>();
         }
     }
