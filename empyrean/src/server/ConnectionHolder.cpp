@@ -65,14 +65,14 @@ namespace pyr {
     
     void ConnectionHolder::sendAll(PacketPtr p) {
         for (size_t i = 0; i < _connections.size(); ++i) {
-            _connections[i]->sendPacket(p);
+            _connections[i]->sendPacket(p.get());
         }
     }
     
     void ConnectionHolder::sendAllBut(Connection* c, PacketPtr p) {
         for (size_t i = 0; i < _connections.size(); ++i) {
             if (_connections[i] != c) {
-                _connections[i]->sendPacket(p);
+                _connections[i]->sendPacket(p.get());
             }
         }
     }

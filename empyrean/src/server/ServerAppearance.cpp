@@ -5,7 +5,7 @@
 
 namespace pyr {
 
-    void ServerAppearance::sendAppearanceChanges(u16 id, std::vector<PacketPtr>& packets) {
+    void ServerAppearance::sendAppearanceChanges(u16 id, std::vector<Packet*>& packets) {
         for (size_t i = 0; i < _commands.size(); ++i) {
             packets.push_back(new AppearancePacket(
                 id, AP_COMMAND, _commands[i]));

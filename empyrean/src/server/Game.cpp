@@ -260,7 +260,7 @@ namespace pyr {
         for (size_t i = 0; i < _entities.size(); ++i) {
             // Send all appearance updates to all of the clients.
             ServerAppearance* appearance = _entities[i]->getServerAppearance();
-            std::vector<PacketPtr> packets;
+            std::vector<Packet*> packets;
             appearance->sendAppearanceChanges(_entities[i]->getID(), packets);
             c->sendPackets(packets);
         }
