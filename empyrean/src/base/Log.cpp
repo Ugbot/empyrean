@@ -8,7 +8,7 @@
 
 namespace pyr {
 
-    const LogLevel DefaultLevel = WARN;
+    const LogLevel DefaultLevel = ALL;
 
     // Store the current indentation per-thread.  Otherwise threads mess with each other.
     const size_t INDENT_SIZE = 2;

@@ -52,7 +52,9 @@ namespace pyr {
 
                 string command;
                 if (ss >> command) {
-                    if (command == "newmtl") {
+                    if (command.c_str()[0] == '#') {
+                        // comment!  we use c_str() because it's guaranteed to be null-terminated.
+                    } else if (command == "newmtl") {
                         if (!current.name.empty()) {
                             _materials.push_back(current);
                             current = OBJMaterial();
@@ -87,14 +89,14 @@ namespace pyr {
                         string arg;
                         while (ss >> arg) {
                             if (arg == "-o") {
-                                float ox, oy, oz;
-                                if (ss >> ox >> oy >> oz) {
-                                    current.texture_offset = Vec2f(ox, oy/*, oz*/);
+                                float ox, oy;
+                                if (ss >> ox >> oy) {
+                                    current.texture_offset = Vec2f(ox, oy);
                                 }
                             } else if (arg == "-s") {
-                                float sx, sy, sz;
-                                if (ss >> sx >> sy >> sz) {
-                                    current.texture_scale = Vec2f(sx, sy/*, sz*/);
+                                float sx, sy;
+                                if (ss >> sx >> sy) {
+                                    current.texture_scale = Vec2f(sx, sy);
                                 }
                             } else {
                                 PYR_LOG(_logger, INFO, "Material referencing texture: " << arg);
@@ -102,6 +104,8 @@ namespace pyr {
                             }
                         }
 
+                    } else {
+                        PYR_LOG(_logger, WARN, "Unknown command in MTL: " << line);
                     }
                 }
             }
@@ -227,12 +231,12 @@ namespace pyr {
             return 0;
         }
 
+        GroupElementPtr result = new GroupElement;
         MaterialLibrary mtllib;
 
         MaterialPtr currentMaterial;
         VertexArrayPtr vertexArray = new VertexArray;
 
-        GroupElementPtr result = new GroupElement;
 
         GeometryElementPtr currentGeometry = new GeometryElement;
 
@@ -252,6 +256,13 @@ namespace pyr {
                         mtllib.loadFrom(found);
                     }
                 } else if (command == "usemtl") {
+                    if (!currentGeometry->triangles.empty()) {
+                        currentGeometry->material = currentMaterial;
+                        currentGeometry->vertexArray = vertexArray;
+                        result->addChild(currentGeometry);
+                    }
+                    currentGeometry = new GeometryElement;
+
                     string material;
                     if (ss >> material) {
                         currentMaterial = mtllib.buildMaterial(ph, material);
@@ -290,7 +301,7 @@ namespace pyr {
                     float u, v;
                     if (ss >> u >> v) {
                         // notice: convert from max coordinates to empyrean coordinates here
-                        vertexArray->texCoords.push_back(Vec2f(u, 1 - v));
+                        vertexArray->texCoords.push_back(Vec2f(u, v));
                     }
                 } else if (command == "f") {
                     vector<string> vertices;

@@ -79,7 +79,8 @@ namespace pyr {
             recurseDepth = 0;
             physics = ents[i]->getBehavior()->getSlot<PhysicsBehaviorSlot>();
             //physics->inAir = true;
-            collideEntity(dt,ents[i],terrain,ents,recurseDepth);
+            std::vector<Entity*> noEntityCollision;
+            collideEntity(dt,ents[i],terrain,noEntityCollision,recurseDepth);
         }
     }
 
