@@ -39,8 +39,12 @@ namespace pyr {
             Packet* p = packets.front();
             packets.pop();
 
+            // The set of receivers can easily be changed by the handlers.
+            // Thus, make a local copy first.
+            ReceiverSet r = _receivers;
+            
             bool handled = false;
-            for (ReceiverSetIter i = _receivers.begin(); i != _receivers.end(); ++i) {
+            for (ReceiverSetIter i = r.begin(); i != r.end(); ++i) {
                 handled |= (*i)->receivePacket(this, p);
             }
             
