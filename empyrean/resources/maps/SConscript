@@ -2,4 +2,5 @@ Import('*')
 Install(Split("""
     map1.obj
     map1.mtl
+    CLOUD2.JPG
 """))
