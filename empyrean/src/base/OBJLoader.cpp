@@ -26,6 +26,8 @@ namespace pyr {
         float alpha;
         float shininess;
         string texture;
+        Vec2f texture_offset;
+        Vec2f texture_scale;
     };
 
     class MaterialLibrary {
@@ -77,11 +79,24 @@ namespace pyr {
                             current.shininess = k;
                         }
                     } else if (command == "map_Kd") {
-                        string texture;
-                        if (ss >> texture) {
-                            PYR_LOG() << "Material referencing texture: " << texture;
-                            current.texture = texture;
+                        string arg;
+                        while (ss >> arg) {
+                            if (arg == "-o") {
+                                float ox, oy, oz;
+                                if (ss >> ox >> oy >> oz) {
+                                    current.texture_offset = Vec2f(ox, oy/*, oz*/);
+                                }
+                            } else if (arg == "-s") {
+                                float sx, sy, sz;
+                                if (ss >> sy >> sy >> sz) {
+                                    current.texture_scale = Vec2f(sx, sy/*, sz*/);
+                                }
+                            } else {
+                                PYR_LOG() << "Material referencing texture: " << arg;
+                                current.texture = arg;
+                            }
                         }
+
                     }
                 }
             }
@@ -113,6 +128,8 @@ namespace pyr {
             m->diffuse = om->diffuse;
             if (!om->texture.empty()) {
                 m->texture = ph.findFile(om->texture);
+                m->texture_offset = om->texture_offset;
+                m->texture_scale  = om->texture_scale;
                 PYR_LOG() << "Texture found at: " << m->texture;
             }
             return m;
@@ -254,7 +271,8 @@ namespace pyr {
                 } else if (command == "vt") {
                     float u, v;
                     if (ss >> u >> v) {
-                        vertexArray->texCoords.push_back(Vec2f(u, v));
+                        // notice: convert from max coordinates to empyrean coordinates here
+                        vertexArray->texCoords.push_back(Vec2f(u, 1 - v));
                     }
                 } else if (command == "f") {
                     string si, sj, sk;

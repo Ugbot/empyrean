@@ -17,6 +17,10 @@ namespace pyr {
 
         glPopMatrix();
     }
+    
+    Vec2f mult(const Vec2f& a, const Vec2f& b) {
+        return Vec2f(a[0] * b[0], a[1] * b[1]);
+    }
 
     void MapRenderer::visitGeometry(GeometryElement* e) {
         glPushMatrix();
@@ -41,9 +45,9 @@ namespace pyr {
             texture->bind();
             glBegin(GL_TRIANGLES);
             for (size_t i = 0; i < tris.size(); ++i) {
-                glTexCoord(tc[tris[i].tc[0]]); glVertex(v[tris[i].pos[0]]);
-                glTexCoord(tc[tris[i].tc[1]]); glVertex(v[tris[i].pos[1]]);
-                glTexCoord(tc[tris[i].tc[2]]); glVertex(v[tris[i].pos[2]]);
+                glTexCoord(mult(tc[tris[i].tc[0]], mtl->texture_scale) + mtl->texture_offset); glVertex(v[tris[i].pos[0]]);
+                glTexCoord(mult(tc[tris[i].tc[1]], mtl->texture_scale) + mtl->texture_offset); glVertex(v[tris[i].pos[1]]);
+                glTexCoord(mult(tc[tris[i].tc[2]], mtl->texture_scale) + mtl->texture_offset); glVertex(v[tris[i].pos[2]]);
             }
             glEnd();
             glDisable(GL_TEXTURE_2D);

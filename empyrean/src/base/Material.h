@@ -11,15 +11,19 @@ namespace pyr {
 
     class Material : public RefCounted {
     protected:
-        ~Material() { }
+        ~Material() {
+        }
 
     public:
         Material() {
             diffuse = Vec3f(1, 1, 1);
+            texture_scale = Vec2f(1, 1);
         }
 
         Vec3f diffuse;
         std::string texture;
+        Vec2f texture_offset;
+        Vec2f texture_scale;
     };
     typedef RefPtr<Material> MaterialPtr;
 
