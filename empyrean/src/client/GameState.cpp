@@ -36,7 +36,8 @@ namespace pyr {
 
         _player = new PlayerEntity(
             new Model("models/paladin/paladin.cfg"),
-            new DefaultRenderer());
+            new DefaultRenderer(),
+            &_im);
         Scene::instance().addEntity(0, _player);
         
         // assume already logged in
@@ -65,14 +66,15 @@ namespace pyr {
         PYR_PROFILE_BLOCK("GameState::update");
         
         _im.update(dt);
+        
         Scene::instance().update(dt);
 
         ServerConnection& sc = ServerConnection::instance();
         sc.update();
 
-        float dx = _inputRight->getValue() - _inputLeft->getValue();
-        float dy = 1 - _inputSpace->getValue() * 2;
-        _player->setVel(gmtl::Vec2f(dx * 50, dy * 10));
+        //float dx = _inputRight->getValue() - _inputLeft->getValue();
+        //float dy = 1 - _inputSpace->getValue() * 2;
+        //_player->setVel(gmtl::Vec2f(dx * 50, dy * 10));
 
         if (_inputQuit->getValue() >= 0.50f) {
             ServerConnection::instance().disconnect();

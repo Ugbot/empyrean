@@ -26,27 +26,31 @@ namespace pyr {
      */
     class PlayerEntity : public Entity {
     public:
-        PlayerEntity(Model* model, Renderer* renderer);
+        PlayerEntity(Model* model, Renderer* renderer, InputManager* im);
 
         void draw();
         void update(float dt);
 
     private:
-        typedef void (PlayerEntity::*StateHandler)(double dt);
+        typedef void (PlayerEntity::*StateHandler)(float dt);
         StateHandler _state;
 
         void changeState(StateHandler* newstate);
+
+        void startStandState();
+        void updateStandState(float dt);
+
+        void startWalkState();
+        void updateWalkState(float dt);
 
         // These are aggregates.  We don't clean up.
         Model* _model;
         Renderer* _renderer;
 
         float _direction;
-
-        void startWalkState();
-        void updateWalkState(double dt);
-
-        void startStandState();
+        
+        Input* _inputLeft;
+        Input* _inputRight;
     };
 
 }

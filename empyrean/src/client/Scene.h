@@ -3,9 +3,9 @@
 
 
 #include <map>
-#include <memory>
 #include "Singleton.h"
 #include "Types.h"
+#include "Utility.h"
 
 
 namespace pyr {
@@ -24,6 +24,8 @@ namespace pyr {
         void draw();
         void update(float dt);
         
+        /** The scene takes ownership of entities that are given to it,
+         *  unless they are removed. */
         void addEntity(u16 id, Entity* entity);
         void removeEntity(u16 id);
         Entity* getEntity(u16 id);
@@ -33,7 +35,7 @@ namespace pyr {
         
         Texture* _backdrop;
         EntityMap _entities;
-        std::auto_ptr<Map> _map;
+        ScopedPtr<Map> _map;
     };
 
 }
