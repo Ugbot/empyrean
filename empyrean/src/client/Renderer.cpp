@@ -331,6 +331,10 @@ namespace pyr {
     }
 
     CellShadeRenderer::CellShadeRenderer() {
+        if (!extgl_Extensions.ARB_multitexture) {
+            throw std::runtime_error("Multitexturing required for cell shading");
+        }
+        
         _useVertexArrays=false;
     }
 
