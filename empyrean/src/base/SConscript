@@ -2,6 +2,7 @@ Import('base_env SetupNSPR SetupSDL')
 
 SOURCES = [
     'ByteBuffer.cpp',
+    'Canvas.cpp',
     'Error.cpp',
     'NSPRUtility.cpp',
     'ReaderThread.cpp',

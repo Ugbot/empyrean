@@ -52,7 +52,7 @@ namespace pyr {
         void resize(int x,int y);
         
         const Rect& getClipRect() { return _cliprect; }
-        void setClipRect(Rect& r);
+        void setClipRect(const Rect& r);
     };
 
 }

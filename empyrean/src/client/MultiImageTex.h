@@ -14,7 +14,7 @@ namespace pyr {
     public:
         // Copy safe.
         class SubImage : public Image {
-            friend MultiImageTex;
+            friend class MultiImageTex;
         protected:
             SubImage(MultiImageTex* parent, int x, int y, int w, int h);
 

@@ -1,18 +1,8 @@
 #include <algorithm>
-#include <cassert>
-#include "corona.h"
+#include <stdexcept>
+#include <corona.h>
 #include "Canvas.h"
-
-using std::swap;
-template <class T>
-T& max(T a, T b) {
-    return a > b ? a : b;
-}
-
-template <class T>
-T& min(T a, T b) {
-    return a < b ? a : b;
-}
+#include "Debug.h"
 
 namespace pyr {
 
@@ -77,7 +67,7 @@ namespace pyr {
 
     void Canvas::save(const std::string& fname) {
         corona::Image* img = corona::CreateImage(_width, _height, corona::PF_R8G8B8A8);
-        assert(img);
+        PYR_ASSERT(img, "CreateImage() failed");
 
         RGBA* pDest = (RGBA*)img->getPixels();
         std::copy(_pixels, _pixels + _width * _height, pDest);
@@ -207,14 +197,14 @@ namespace pyr {
         setClipRect(Rect(0, 0, _width, _height));
     }
 
-    void Canvas::setClipRect(Rect& r) {
-        _cliprect.left=max(0, r.left);
-        _cliprect.top=max(0, r.top);
-        _cliprect.right=min(_width, r.right);
-        _cliprect.bottom=min(_height, r.bottom);
+    void Canvas::setClipRect(const Rect& r) {
+        _cliprect.left   = std::max(0, r.left);
+        _cliprect.top    = std::max(0, r.top);
+        _cliprect.right  = std::min(_width, r.right);
+        _cliprect.bottom = std::min(_height, r.bottom);
 
-        if (r.Width() < 0)    swap(r.left, r.right);
-        if (r.Height() < 0)   swap(r.top, r.bottom);
+        if (r.Width() < 0)  std::swap(_cliprect.left, _cliprect.right);
+        if (r.Height() < 0) std::swap(_cliprect.top,  _cliprect.bottom);
     }
 
 }

@@ -10,6 +10,8 @@ SOURCES = [
     'Main.cpp',
     'MenuState.cpp',
     'Model.cpp',
+    'MultiImageTex.cpp',
+    'MultiTextureImage.cpp',
     'ParticleEmitter.cpp',
     'ParticleSystem.cpp',
     'PlayerEntity.cpp',
