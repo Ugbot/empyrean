@@ -175,12 +175,6 @@
 				RelativePath="..\..\src\client\Model.h">
 			</File>
 			<File
-				RelativePath="..\..\src\client\MultiImageTex.cpp">
-			</File>
-			<File
-				RelativePath="..\..\src\client\MultiImageTex.h">
-			</File>
-			<File
 				RelativePath="..\..\src\client\MultiTextureImage.cpp">
 			</File>
 			<File

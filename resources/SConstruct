@@ -8,6 +8,7 @@ DIRS = Split("""
    fonts
    images
    images/title
+   images/ui
    models
    models/paladin
    models/Walk1

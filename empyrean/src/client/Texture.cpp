@@ -95,6 +95,14 @@ namespace pyr {
         return _height;
     }
 
+    int Texture::texWidth() const {
+        return _texWidth;
+    }
+
+    int Texture::texHeight() const {
+        return _texHeight;
+    }
+
     void Texture::createTexture(int width,int height,u32* pixeldata) {
         _width = width;
         _height = height;
@@ -107,10 +115,10 @@ namespace pyr {
 
         // allocate power of two buffer to store actual texture memory
         // and zero it
-        int tex_width  = getNextPowerOf2(real_width);
-        int tex_height = getNextPowerOf2(real_height);
-        ScopedArray<u32> buffer(new u32[tex_width * tex_height]);
-        memset(buffer.get(), 0, tex_width * tex_height * sizeof(u32));
+        int _texWidth  = getNextPowerOf2(real_width);
+        int _texHeight = getNextPowerOf2(real_height);
+        ScopedArray<u32> buffer(new u32[_texWidth * _texHeight]);
+        memset(buffer.get(), 0, _texWidth * _texHeight * sizeof(u32));
 
         /// @todo  make sure we don't try to create a texture that
         ///        larger than what the video card can handle...
@@ -118,18 +126,18 @@ namespace pyr {
 
         // copy our image pixels into the texture buffer
         for (int row = 0; row < real_height; ++row) {
-            memcpy(buffer.get() + tex_width * row,
+            memcpy(buffer.get() + _texWidth * row,
                    real_pixels + real_width * row,
                    real_width * sizeof(u32));
         }
 
-        _realWidth  = float(real_width)  / tex_width;
-        _realHeight = float(real_height) / tex_height;
+        _realWidth  = float(real_width)  / _texWidth;
+        _realHeight = float(real_height) / _texHeight;
 
         glGenTextures(1, &_texture);
         glBindTexture(GL_TEXTURE_2D, _texture);
         glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8,
-                     tex_width, tex_height,
+                     _texWidth, _texHeight,
                      0, GL_RGBA, GL_UNSIGNED_BYTE, buffer.get());
 
         glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);

@@ -27,6 +27,8 @@ namespace pyr {
 
         int width() const;
         int height() const;
+        int texWidth() const;
+        int texHeight() const;
 
     private:
         GLuint _texture;
@@ -34,6 +36,8 @@ namespace pyr {
         float _realHeight;
         int _width;
         int _height;
+        int _texWidth;
+        int _texHeight;
 
         void createTexture(int width,int height,u32* pixeldata);
     };

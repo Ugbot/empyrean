@@ -10,13 +10,10 @@ namespace pyr {
         , bg1 ("images/title/title_bg1.png")
         , bg2 ("images/title/title_bg2.png")
         , sky ("images/title/title_sky.png")
-        //, buttons("images/menu_items.png")
-        //, _connect(buttons.getImage(1, 87, 233, 43))
+        , connectbutton("images/ui/multiplayer_up.png")
+        , optionsbutton("images/ui/options_up.png")
+        , exitbutton("images/ui/quit_up.png")
     {
-/*        _tex1 = Texture::create("images/title/title_main.png");
-        _tex2 = Texture::create("images/title/title_bg1.png");
-        _tex3 = Texture::create("images/title/title_bg2.png");
-        _tex4 = Texture::create("images/title/title_sky.png");*/
     }
     
     void MenuState::draw(float fade) {
@@ -37,7 +34,9 @@ namespace pyr {
         bg2.draw(0, 0);
         bg1.draw(679, 314);
         main.draw(0, 0);
-        //_connect->draw(100,100);
+        connectbutton.draw(396,332);
+        optionsbutton.draw(396,396);
+        exitbutton.draw(396,460);
     }
     
     void MenuState::onMousePress(Uint8 button, bool down, int x, int y) {
