@@ -271,20 +271,20 @@ namespace pyr {
                 } else if (command == "v") {
                     float x, y, z;
                     if (ss >> x >> y >> z) {
-                        vertexArray->positions.push_back(Vec3f(x, y, z));
+                        //vertexArray->positions.push_back(Vec3f(x, y, z));
                         // notice: convert from maya coordinates to empyrean coordinates
                         //vertexArray->positions.push_back(Vec3f(-z, y, x));
                         // notice: convert from max coordinates to empyrean coordinates here
-                        //vertexArray->positions.push_back(Vec3f(x, z, -y));
+                        vertexArray->positions.push_back(Vec3f(x, z, -y));
                     }
                 } else if (command == "vn") {
                     float x, y, z;
                     if (ss >> x >> y >> z) {
-                        vertexArray->normals.push_back(Vec3f(x, y, z));
+                        //vertexArray->normals.push_back(Vec3f(x, y, z));
                         // notice: convert from maya coordinates to empyrean coordinates
                         //vertexArray->normals.push_back(Vec3f(-z, y, x));
                         // notice: convert from max coordinates to empyrean coordinates here
-                        //vertexArray->normals.push_back(Vec3f(x, z, -y));
+                        vertexArray->normals.push_back(Vec3f(x, z, -y));
                     }
                 } else if (command == "vt") {
                     float u, v;

@@ -33,7 +33,7 @@ namespace pyr {
          * Updates the entity's behavior.  If you need to update something else,
          * override this.
          */
-        virtual void update(float dt, const Environment& env);
+        virtual ActionQueue update(float dt, const Environment& env);
 
         Behavior*   getBehavior()   const { return _behavior.get();   }
         Appearance* getAppearance() const { return _appearance.get(); }
@@ -52,7 +52,7 @@ namespace pyr {
 
         float getAngleWithGround() { return _angleWithGround; }
         void setAngleWithGround(float val) { _angleWithGround = val; }
-        
+
     private:
         BehaviorPtr _behavior;
         ScopedPtr<Appearance> _appearance;

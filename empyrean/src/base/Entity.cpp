@@ -4,8 +4,11 @@
 
 namespace pyr {
 
-    void Entity::update(float dt, const Environment& env) {
+    ActionQueue Entity::update(float dt, const Environment& env) {
         _behavior->update(this, dt, env);
+        ActionQueue aq;
+        _behavior->getActions(aq);  // This clears.
+        return aq;
     }
 
 }

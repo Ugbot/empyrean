@@ -65,6 +65,10 @@ namespace pyr {
         class_<BehaviorSlot, BehaviorSlotPtr, noncopyable>("BehaviorSlot", no_init)
             .def(init<>())
             ;
+            
+        class_<Action, ActionPtr, noncopyable>("Action", no_init)
+            .def(init<>())
+            ;
 
         class_<PhysicsBehaviorSlot, bases<BehaviorSlot>,
                PhysicsBehaviorSlotPtr, noncopyable>("PhysicsBehaviorSlot", no_init)
@@ -74,6 +78,7 @@ namespace pyr {
         class_<Behavior, RefPtr<BehaviorWrap>, noncopyable>("Behavior", no_init)
             .def(init<>())
             .def("setSlot", &Behavior::setSlot)
+            .def("addAction", &Behavior::addAction)
             ;
 
         class_<Map>("Map")

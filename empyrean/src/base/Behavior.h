@@ -2,6 +2,7 @@
 #define PYR_BEHAVIOR_H
 
 
+#include <queue>
 #include <map>
 #include <string>
 #include <vector>
@@ -36,7 +37,7 @@ namespace pyr {
         std::vector<const Entity*> entities;
     };
 
-    
+
     /**
      * A chunk of "behavior" that can be added.  For example, Physics.
      * This data is not synchronized.  It is currently hoped that we can
@@ -49,6 +50,17 @@ namespace pyr {
         virtual ~BehaviorSlot() { }
     };
     typedef RefPtr<BehaviorSlot> BehaviorSlotPtr;
+
+
+    struct Action : public RefCounted {
+    protected:
+        virtual ~Action() { }
+
+        // This is always an attack action.
+    };
+    PYR_REF_PTR(Action);
+
+    typedef std::queue<ActionPtr> ActionQueue;
 
 
     /**
@@ -82,6 +94,18 @@ namespace pyr {
             }
         }
 
+        void addAction(ActionPtr action) {
+            _actions.push(action);
+        }
+        
+        void getActions(ActionQueue& actions) {
+            actions = _actions;
+            // queue has no clear()!
+            while (!_actions.empty()) {
+                _actions.pop();
+            }
+        }
+
     protected:
         void sendAppearanceCommand(Entity* entity, const std::string& command);
         void beginAnimationCycle(Entity* entity, const std::string& animation);
@@ -95,7 +119,9 @@ namespace pyr {
         static Appearance* getAppearance(Entity* entity);
 
         typedef std::map<TypeInfo, BehaviorSlotPtr> SlotMap;
+
         SlotMap _slots;
+        ActionQueue _actions;
     };
     PYR_REF_PTR(Behavior);
 

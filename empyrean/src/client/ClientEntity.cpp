@@ -5,8 +5,8 @@
 
 namespace pyr {
 
-    void ClientEntity::update(float dt, const Environment& env) {
-        Entity::update(dt, env);
+    ActionQueue ClientEntity::update(float dt, const Environment& env) {
+        ActionQueue aq = Entity::update(dt, env);
         getClientAppearance()->update(dt);
 
         // Reduce the display time for the numbers
@@ -22,6 +22,8 @@ namespace pyr {
                 _timeToShowEthChange = 0;
             }
         }
+        
+        return aq;
     }
 
     void ClientEntity::draw(gltext::FontRendererPtr rend) const {

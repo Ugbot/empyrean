@@ -18,7 +18,7 @@ namespace pyr {
         }
 
         /// Override update() so we can update the appearance.
-        void update(float dt, const Environment& env);
+        ActionQueue update(float dt, const Environment& env);
         void draw(gltext::FontRendererPtr rend) const;
 
         void getVitalityUpdate(int& current, int& max);
