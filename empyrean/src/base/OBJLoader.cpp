@@ -148,12 +148,18 @@ namespace pyr {
     vector<string> splitVertexString(const string& s) {
         /// @todo These asserts should be run-time checks.
 
+        vector<string> rv;
+
         string::size_type d1 = s.find('/');
+        if (d1 == string::npos) {
+            rv.push_back(s);
+            rv.push_back("");
+            rv.push_back("");
+        }
         PYR_ASSERT(d1 != string::npos, "Syntax error in face specification");
         string::size_type d2 = s.find('/', d1 + 1);
         //PYR_ASSERT(d2 != string::npos, "Syntax error in face specification");
 
-        vector<string> rv;
         if (d2 != string::npos) {
             rv.push_back(s.substr(0, d1));
             rv.push_back(s.substr(d1 + 1, d2 - d1 - 1));
@@ -265,14 +271,20 @@ namespace pyr {
                 } else if (command == "v") {
                     float x, y, z;
                     if (ss >> x >> y >> z) {
+                        vertexArray->positions.push_back(Vec3f(x, y, z));
+                        // notice: convert from maya coordinates to empyrean coordinates
+                        //vertexArray->positions.push_back(Vec3f(-z, y, x));
                         // notice: convert from max coordinates to empyrean coordinates here
-                        vertexArray->positions.push_back(Vec3f(x, z, -y));
+                        //vertexArray->positions.push_back(Vec3f(x, z, -y));
                     }
                 } else if (command == "vn") {
                     float x, y, z;
                     if (ss >> x >> y >> z) {
+                        vertexArray->normals.push_back(Vec3f(x, y, z));
+                        // notice: convert from maya coordinates to empyrean coordinates
+                        //vertexArray->normals.push_back(Vec3f(-z, y, x));
                         // notice: convert from max coordinates to empyrean coordinates here
-                        vertexArray->normals.push_back(Vec3f(x, z, y));
+                        //vertexArray->normals.push_back(Vec3f(x, z, -y));
                     }
                 } else if (command == "vt") {
                     float u, v;
