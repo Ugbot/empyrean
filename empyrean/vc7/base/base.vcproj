@@ -237,6 +237,9 @@
 			<File
 				RelativePath="..\..\src\base\WriterThread.h">
 			</File>
+			<File
+				RelativePath="..\..\src\base\wx.h">
+			</File>
 		</Filter>
 	</Files>
 	<Globals>

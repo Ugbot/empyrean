@@ -3,6 +3,7 @@
 #include "Error.h"
 #include "ListenerThread.h"
 #include "NSPRUtility.h"
+#include "Server.h"
 #include "Utility.h"
 #include "World.h"
 
@@ -39,6 +40,7 @@ namespace pyr {
 }
 
 
+/*
 int main() {
     try {
         pyr::runServer();
@@ -53,3 +55,7 @@ int main() {
     
     return EXIT_FAILURE;
 }
+*/
+
+
+IMPLEMENT_APP(pyr::Server)

@@ -153,9 +153,6 @@
 			<File
 				RelativePath="..\..\src\editor\TranslateTool.h">
 			</File>
-			<File
-				RelativePath="..\..\src\editor\wx.h">
-			</File>
 		</Filter>
 		<Filter
 			Name="resources"

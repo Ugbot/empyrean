@@ -33,13 +33,13 @@
 				Name="VCCustomBuildTool"/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="../base/Debug/base.lib nspr4.lib"
+				AdditionalDependencies="../base/Debug/base.lib nspr4.lib wxmswd.lib comctl32.lib rpcrt4.lib ws2_32.lib"
 				OutputFile="../bin/$(OutDir)/server.exe"
 				LinkIncremental="2"
 				AdditionalLibraryDirectories="../../third-party-vc7/lib"
 				GenerateDebugInformation="TRUE"
 				ProgramDatabaseFile="$(OutDir)/server.pdb"
-				SubSystem="1"
+				SubSystem="2"
 				TargetMachine="1"/>
 			<Tool
 				Name="VCMIDLTool"/>
@@ -87,12 +87,12 @@
 				Name="VCCustomBuildTool"/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="../base/Release/base.lib nspr4.lib"
+				AdditionalDependencies="../base/Release/base.lib nspr4.lib wxmsw.lib comctl32.lib rpcrt4.lib ws2_32.lib"
 				OutputFile="../bin/$(OutDir)/server.exe"
 				LinkIncremental="1"
 				AdditionalLibraryDirectories="../../third-party-vc7/lib"
 				GenerateDebugInformation="TRUE"
-				SubSystem="1"
+				SubSystem="2"
 				OptimizeReferences="2"
 				EnableCOMDATFolding="2"
 				TargetMachine="1"/>
@@ -134,7 +134,19 @@
 				RelativePath="..\..\src\server\Main.cpp">
 			</File>
 			<File
+				RelativePath="..\..\src\server\Server.cpp">
+			</File>
+			<File
+				RelativePath="..\..\src\server\Server.h">
+			</File>
+			<File
 				RelativePath="..\..\src\server\ServerEntity.h">
+			</File>
+			<File
+				RelativePath="..\..\src\server\ServerFrame.cpp">
+			</File>
+			<File
+				RelativePath="..\..\src\server\ServerFrame.h">
 			</File>
 			<File
 				RelativePath="..\..\src\server\UIDGenerator.h">
