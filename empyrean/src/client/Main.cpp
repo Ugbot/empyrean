@@ -119,7 +119,33 @@ namespace pyr {
 }
 
 
-int main() {
+#ifdef WIN32
+
+    inline void setStartDirectory() {
+        // set the current path to where the executable resides
+        char filename[MAX_PATH];
+        GetModuleFileName(GetModuleHandle(0), filename, MAX_PATH);
+
+        // remove the basename
+        char* backslash = strrchr(filename, '\\');
+        if (backslash) {
+            *backslash = 0;
+            SetCurrentDirectory(filename);
+        }
+    }
+    
+#endif
+
+
+/**
+ * main() needs to be defined like this so SDL works right.
+ */
+int main(int /*argc*/, char* /*argv*/[]) {
+
+#ifdef WIN32
+    setStartDirectory();
+#endif
+
     try {
         pyr::runClient();
         pyr::Profiler::dump();
@@ -138,23 +164,12 @@ int main() {
 }
 
 
-#ifdef WIN32
+#if defined(WIN32) && !defined(_CONSOLE)
 
     #include <windows.h>
 
     int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
-        // set the current path to where the executable resides
-        char filename[MAX_PATH];
-        GetModuleFileName(GetModuleHandle(0), filename, MAX_PATH);
-
-        // remove the basename
-        char* backslash = strrchr(filename, '\\');
-        if (backslash) {
-            *backslash = 0;
-            SetCurrentDirectory(filename);
-        }
-        
-        return main();
+        return main(__argc, __argv);
     }
     
 #endif
