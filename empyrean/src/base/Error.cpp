@@ -9,6 +9,7 @@
 
 namespace {
 
+#if 0    
     /**
      * In MSVC, catch(...) can catch win32 exceptions such as division by
      * zero and null pointer accesses.  Disable that behavior so we can
@@ -19,6 +20,7 @@ namespace {
     }
 
     _se_translator_function oldHandler = _set_se_translator(disableCatchAll);
+#endif
 
 }
 

@@ -24,11 +24,15 @@
 }
 
 
+#if 0  // In Windows, catch (...) catches far too much.
 #define PYR_CATCH_ALL()                             \
     catch (...) {                                   \
         pyr::error("Unknown exception");            \
     }
-    
+#else
+#define PYR_CATCH_ALL()
+#endif
+
 
 /// Defines an exception class that derives from std::runtime_error.
 #define PYR_DEFINE_RUNTIME_ERROR(name)  \
