@@ -7,7 +7,7 @@
 #include "ConnectionHolder.h"
 #include "Types.h"
 #include "UIDGenerator.h"
-
+#include "Map.h"
 
 namespace pyr {
 
@@ -43,6 +43,8 @@ namespace pyr {
         std::string _password;
         
         std::vector<ServerEntity*> _entities;
+    
+        std::auto_ptr<Map> _map;
 
         UIDGenerator<u16> _idGenerator;
     };

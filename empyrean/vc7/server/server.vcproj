@@ -174,6 +174,9 @@
 				RelativePath="..\..\src\server\Server.h">
 			</File>
 			<File
+				RelativePath="..\..\src\server\ServerEntity.cpp">
+			</File>
+			<File
 				RelativePath="..\..\src\server\ServerEntity.h">
 			</File>
 			<File

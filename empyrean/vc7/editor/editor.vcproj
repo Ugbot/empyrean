@@ -184,10 +184,10 @@
 			Name="resources"
 			Filter="">
 			<File
-				RelativePath="editor.rc">
+				RelativePath="..\..\src\editor\editor.rc">
 			</File>
 			<File
-				RelativePath="resource.h">
+				RelativePath="..\..\src\editor\resource.h">
 			</File>
 		</Filter>
 		<Filter

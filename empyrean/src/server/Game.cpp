@@ -2,13 +2,17 @@
 #include "Game.h"
 #include "PacketTypes.h"
 #include "ServerEntity.h"
-
+#include "OBJLoader.h"
 
 namespace pyr {
 
     Game::Game(const std::string& name, const std::string& password) {
         _name = name;
         _password = password;
+        _map.reset(loadOBJFile("maps/map1.obj"));
+        if (!_map.get()) {
+            throw std::runtime_error("Loading maps/map1.obj failed");
+        }
     }
     
     Game::~Game() {
@@ -32,7 +36,7 @@ namespace pyr {
         ConnectionHolder::update();
 
         for (size_t i = 0; i < _entities.size(); ++i) {
-            _entities[i]->update(dt);
+            _entities[i]->update(dt, _map.get());
         }
 
         for (size_t i = 0; i < _entities.size(); ++i) {

@@ -3,12 +3,13 @@
 
 
 #include <algorithm>
-#include <gmtl/Vec.h>
-#include <gmtl/VecOps.h>
+#include <string>
+#include "VecMath.h"
 #include "Types.h"
 
-
 namespace pyr {
+
+    class Map;
 
     class ServerEntity {
     public:
@@ -32,16 +33,12 @@ namespace pyr {
         gmtl::Vec2f& getVel()               { return _vel; }
         const gmtl::Vec2f& getVel() const   { return _vel; }
     
-        void update(float dt) {
-            _pos += _vel * dt;
-            _pos[1] = std::max(0.0f, _pos[1]);
-            _vel[1] -= 9.81f * dt;
-        }
+        void update(float dt, Map* terrain);
         
     private:
         u16 _id;
-        gmtl::Vec2f _pos;
-        gmtl::Vec2f _vel;
+        Vec2f _pos;
+        Vec2f _vel;        
     };
     
 }
