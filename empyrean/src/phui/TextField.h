@@ -24,8 +24,8 @@
  *
  * -----------------------------------------------------------------
  * File:          $RCSfile: TextField.h,v $
- * Date modified: $Date: 2003-07-22 03:24:31 $
- * Version:       $Revision: 1.1 $
+ * Date modified: $Date: 2003-08-05 06:17:06 $
+ * Version:       $Revision: 1.2 $
  * -----------------------------------------------------------------
  *
  ************************************************************** phui-cpr-end */
@@ -55,11 +55,6 @@ namespace phui
        */
       TextField(const std::string& text);
 
-      /**
-       * Destroys this button.
-       */
-      virtual ~TextField();
-      
       /**
        * Draws this button with its text.
        */

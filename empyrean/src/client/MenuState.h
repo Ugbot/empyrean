@@ -4,7 +4,6 @@
 
 #include <phui/phui.h>
 #include "State.h"
-#include "MultiTextureImage.h"
 
 
 namespace pyr {
@@ -14,24 +13,31 @@ namespace pyr {
         MenuState();
         
         void draw(float fade);
+        void update(float dt);
         void onKeyPress(SDLKey key, bool down);
         void onMousePress(Uint8 button, bool down, int x, int y);
         void onMouseMove(int x, int y);
 
     private:
         void createInterface();
+        void createMainScreen();
+        void createLoginScreen();
+        
         void onButtonPressed(const phui::ActionEvent& e);
+        
     
         phui::RootWidgetPtr _root;
+        
+        phui::RootWidgetPtr _mainRoot;
         phui::ButtonPtr _connect;
         phui::ButtonPtr _options;
         phui::ButtonPtr _quit;
-    
-        //MultiTextureImage _connect;
-        //MultiTextureImage _options;
-        //MultiTextureImage _exit;        
-
-        //MultiTextureImage main, bg1, bg2, sky;
+        
+        phui::RootWidgetPtr _loginRoot;
+        phui::TextFieldPtr _name;
+        phui::TextFieldPtr _password;
+        phui::ButtonPtr    _login;
+        phui::ButtonPtr    _cancel;
     };
 
 }

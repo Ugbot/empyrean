@@ -24,8 +24,8 @@
  *
  * -----------------------------------------------------------------
  * File:          $RCSfile: RefPtr.h,v $
- * Date modified: $Date: 2003-07-22 03:24:31 $
- * Version:       $Revision: 1.1 $
+ * Date modified: $Date: 2003-08-05 06:17:06 $
+ * Version:       $Revision: 1.2 $
  * -----------------------------------------------------------------
  *
  ************************************************************** phui-cpr-end */
@@ -71,6 +71,20 @@ namespace phui
        */
       RefPtr(const RefPtr<ValueType>& ptr)
          : mPtr(ptr.mPtr)
+      {
+         if (mPtr)
+         {
+            mPtr->ref();
+         }
+      }
+      
+      /**
+       * This templated constructor allows you to do automatic conversions
+       * to smart pointers of base classes.
+       */
+      template<typename T>
+      RefPtr(const RefPtr<T>& ptr)
+         : mPtr(ptr.get())
       {
          if (mPtr)
          {
@@ -145,15 +159,7 @@ namespace phui
       /**
        * Gets a pointer to the object being pointed to by this ref pointer.
        */
-      ValueType* get()
-      {
-         return mPtr;
-      }
-
-      /**
-       * A safer method of getting the actual pointer than a cast.
-       */
-      const ValueType* get() const
+      ValueType* get() const
       {
          return mPtr;
       }

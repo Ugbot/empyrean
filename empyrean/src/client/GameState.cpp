@@ -11,6 +11,7 @@
 #include "ParticleSystem.h"
 #include "ParticleEmitter.h"
 #include "Profiler.h"
+#include "Scene.h"
 #include "ServerConnection.h"
 #include "Texture.h"
 
@@ -35,7 +36,7 @@ namespace pyr {
         _player = new PlayerEntity(
             new Model("models/paladin/paladin.cfg"),
             new DefaultRenderer());
-        _scene.addEntity(0, _player);
+        Scene::instance().addEntity(0, _player);
 
 //        ServerConnection& sc = ServerConnection::instance();
 //        sc.connect("localhost", 8765, &_scene);
@@ -48,7 +49,7 @@ namespace pyr {
 
     void GameState::draw(float fade) {
         PYR_PROFILE_BLOCK("GameState::draw");
-        _scene.draw();
+        Scene::instance().draw();
         
         glMatrixMode(GL_PROJECTION);
         glLoadIdentity();
@@ -70,7 +71,7 @@ namespace pyr {
         PYR_PROFILE_BLOCK("GameState::update");
         
         _im.update(dt);
-        _scene.update(dt);
+        Scene::instance().update(dt);
 
 //        ServerConnection& sc = ServerConnection::instance();
 //        sc.update();

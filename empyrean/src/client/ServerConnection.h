@@ -13,7 +13,6 @@ namespace pyr {
     class EntityRemovedPacket;
     class LoginResponsePacket;
     class Packet;
-    class Scene;
     class UpdatePacket;
     
     class ServerConnection {
@@ -26,13 +25,13 @@ namespace pyr {
         ServerConnection();
         
     public:
-        void connect(const std::string& server, int port, Scene* scene);
+        void connect(const std::string& server, int port);
         void disconnect();
         bool isConnected();
         
         void update();
         
-        void login(const std::string& user, const std::string& pass);
+        bool login(const std::string& user, const std::string& pass);
         bool isLoggedIn() {
             return _loggedIn;
         }
@@ -56,7 +55,6 @@ namespace pyr {
         static ServerConnection* _instance;
             
         ScopedPtr<Connection> _connection;
-        Scene* _scene;
         
         bool _loggedIn;
         int _entityID;

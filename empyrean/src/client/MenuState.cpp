@@ -2,22 +2,15 @@
 #include "GameState.h"
 #include "MenuState.h"
 #include "OptionsState.h"
+#include "ServerConnection.h"
 #include "Texture.h"
+
+using namespace phui;
 
 
 namespace pyr {
 
-    MenuState::MenuState() 
-        /*
-        : main("images/title/title_main.png")
-        , bg1 ("images/title/title_bg1.png")
-        , bg2 ("images/title/title_bg2.png")
-        , sky ("images/title/title_sky.png")
-        , _connect("images/ui/multiplayer_up.png")
-        , _options("images/ui/options_up.png")
-        , _exit("images/ui/quit_up.png")
-        */        
-    {
+    MenuState::MenuState() {
         createInterface();
         showPointer();
     }
@@ -43,70 +36,111 @@ namespace pyr {
         glVertex2f(1, 0);
         glEnd();
         
-        //sky.draw(0, 0);
-        //bg2.draw(0, 0);
-        //bg1.draw(679, 314);
-        //main.draw(0, 0);
-        //_connect.draw(396,332);
-        //_options.draw(396,396);
-        //_exit.draw(396,460);
-        
         glDisable(GL_TEXTURE_2D);
         _root->draw();
         
         glEnable(GL_TEXTURE_2D);
     }
     
+    void MenuState::update(float dt) {
+        ServerConnection::instance().update();
+    }
+    
     void MenuState::onKeyPress(SDLKey key, bool down) {
         if (down) {
-            _root->onKeyDown(phui::SDLToPhuiKey(key));
+            _root->onKeyDown(SDLToPhuiKey(key));
         } else {
-            _root->onKeyUp(phui::SDLToPhuiKey(key));
+            _root->onKeyUp(SDLToPhuiKey(key));
         }
     }
     
     void MenuState::onMousePress(Uint8 button, bool down, int x, int y) {
-        const phui::Point p(x, y);
+        const Point p(x, y);
         if (down) {
-            _root->onMouseDown(phui::SDLToPhuiButton(button), p);
+            _root->onMouseDown(SDLToPhuiButton(button), p);
         } else {
-            _root->onMouseUp(phui::SDLToPhuiButton(button), p);
+            _root->onMouseUp(SDLToPhuiButton(button), p);
         }
     }
     
     void MenuState::onMouseMove(int x, int y) {
-        _root->onMouseMove(phui::Point(x, y));
+        _root->onMouseMove(Point(x, y));
     }
     
     void MenuState::createInterface() {
-        _connect = new phui::Button("Connect to Server");
+        createMainScreen();
+        createLoginScreen();
+        _root = _mainRoot;
+    }
+    
+    void MenuState::createMainScreen() {
+        _connect = new Button("Connect to Server");
         _connect->setPositionAndSize(0, 0, 1024, 256);
         _connect->addMethodListener(this, &MenuState::onButtonPressed);
         
-        _options = new phui::Button("Options");
+        _options = new Button("Options");
         _options->setPositionAndSize(0, 256, 1024, 256);
         _options->addMethodListener(this, &MenuState::onButtonPressed);
         
-        _quit = new phui::Button("Quit");
+        _quit = new Button("Quit");
         _quit->setPositionAndSize(0, 512, 1024, 256);
         _quit->addMethodListener(this, &MenuState::onButtonPressed);
 
-        _root = new phui::RootWidget(
+        _mainRoot = new RootWidget(
             Application::instance().getWidth(),
             Application::instance().getHeight());
-        _root->add(_connect.get());
-        _root->add(_options.get());
-        _root->add(_quit.get());
+        _mainRoot->add(_connect);
+        _mainRoot->add(_options);
+        _mainRoot->add(_quit);
     }
     
-    void MenuState::onButtonPressed(const phui::ActionEvent& e) {
+    void MenuState::createLoginScreen() {
+        LabelPtr nameLabel = new Label("Name");
+        nameLabel->setPositionAndSize(0, 0, 512, 256);
+        
+        _name = new TextField();
+        _name->setPositionAndSize(512, 0, 512, 256);
+        
+        LabelPtr passwordLabel = new Label("Password");
+        passwordLabel->setPositionAndSize(0, 256, 512, 256);
+        
+        _password = new TextField();
+        _password->setPositionAndSize(512, 256, 512, 256);
+        
+        _login = new Button("Login");
+        _login->addMethodListener(this, &MenuState::onButtonPressed);
+        _login->setPositionAndSize(0, 512, 512, 256);
+        
+        _cancel = new Button("Cancel");
+        _cancel->addMethodListener(this, &MenuState::onButtonPressed);
+        _cancel->setPositionAndSize(512, 512, 512, 256);
+        
+        _loginRoot = new RootWidget(
+            Application::instance().getWidth(),
+            Application::instance().getHeight());
+        _loginRoot->add(nameLabel);
+        _loginRoot->add(_name);
+        _loginRoot->add(passwordLabel);
+        _loginRoot->add(_password);
+        _loginRoot->add(_login);
+        _loginRoot->add(_cancel);
+    }
+    
+    void MenuState::onButtonPressed(const ActionEvent& e) {
         if (e.getSource() == _connect) {
+            _root = _loginRoot;
             //invokeTransition<ConnectToServerState>();
-            invokeTimedTransition<GameState>(1);
+            //invokeTimedTransition<GameState>(1);
         } else if (e.getSource() == _options) {
             invokeTransition<OptionsState>();
         } else if (e.getSource() == _quit) {
             quit();
+        } else if (e.getSource() == _login) {
+            ServerConnection::instance().connect("localhost", 8765);
+            ServerConnection::instance().login(_name->getText(), _password->getText());
+            invokeTransition<GameState>();
+        } else if (e.getSource() == _cancel) {
+            _root = _mainRoot;
         }
     }
 

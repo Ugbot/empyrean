@@ -13,9 +13,15 @@ namespace pyr {
 
     class Scene {
     public:
+        static Scene& instance();
+        
+    private:
+        static void destroy();
+    
         Scene();
         ~Scene();
         
+    public:
         void draw();
         void update(float dt);
         
@@ -25,6 +31,8 @@ namespace pyr {
         
     private:
         typedef std::map<u16, Entity*> EntityMap;
+        
+        static Scene* _instance;
     
         Texture* _backdrop;
         EntityMap _entities;

@@ -24,8 +24,8 @@
  *
  * -----------------------------------------------------------------
  * File:          $RCSfile: TextField.cpp,v $
- * Date modified: $Date: 2003-07-22 03:24:31 $
- * Version:       $Revision: 1.1 $
+ * Date modified: $Date: 2003-08-05 06:17:06 $
+ * Version:       $Revision: 1.2 $
  * -----------------------------------------------------------------
  *
  ************************************************************** phui-cpr-end */
@@ -41,9 +41,6 @@ namespace phui
 
    TextField::TextField(const std::string& text)
       : mText(text), mCursorScreenPosition(0), mCursorCharacterPosition(0)
-   {}
-
-   TextField::~TextField()
    {}
 
    void TextField::draw()
@@ -66,37 +63,44 @@ namespace phui
       // draw text
       glColor(getForegroundColor());
 
- /*     FontRenderer* renderer = FontRendererCache::getFontRenderer(getFont());
+      gltext::FontRendererPtr renderer = getFontRenderer();
 
       const Insets& i = getInsets();
-//      int w = width  - i.getLeft() - i.getRight();
-//      int h = height - i.getTop()  - i.getBottom();
-      unsigned int fontHeight = renderer->getHeight();
-//      unsigned int fontWidth = renderer.getWidth(mText);
-      unsigned int fontAscent = fontHeight - renderer->getDescent();
+      int w = width  - i.getLeft() - i.getRight();
+      int h = height - i.getTop()  - i.getBottom();
+      unsigned int fontHeight = renderer->getHeight(mText.c_str());
+      unsigned int fontWidth = renderer->getWidth(mText.c_str());
+      unsigned int fontAscent = fontHeight - renderer->getFont()->getDescent();
 
       int textRectX = i.getLeft();
       int textRectY = i.getTop();
-//      int textRectW = width  - (i.getRight()  + textRectX);
-//      int textRectH = height - (i.getBottom() + textRectY);
+      int textRectW = width  - (i.getRight()  + textRectX);
+      int textRectH = height - (i.getBottom() + textRectY);
 
       int fontX = textRectX;
       int fontY = textRectY + fontAscent;
 
-      if(hasFocus()) {
+      if(hasFocus())
+      {
          std::string cursor = "|";
-         renderer->draw(cursor, fontX+mCursorScreenPosition, fontY);
+         glPushMatrix();
+         glTranslatef(float(fontX + mCursorScreenPosition), float(fontY), 0);
+         renderer->render(cursor.c_str());
+         glPopMatrix();
       }
-      renderer->draw(mText, fontX, fontY);*/
+      
+      glPushMatrix();
+      glTranslatef(float(fontX), float(fontY), 0);
+      renderer->render(mText.c_str());
+      glPopMatrix();
    }
 
    void TextField::setText(const std::string& text)
    {
-/*      FontRenderer* renderer = FontRendererCache::getFontRenderer(getFont());
-      mCursorScreenPosition=renderer->getWidth(text);
-      mCursorCharacterPosition=text.length();
+      mCursorScreenPosition = getFontRenderer()->getWidth(text.c_str());
+      mCursorCharacterPosition = text.length();
 
-      mText = text;*/
+      mText = text;
    }
 
    const std::string& TextField::getText() const
@@ -106,22 +110,22 @@ namespace phui
 
    void TextField::onKeyDown(InputKey key)
    {
-/*      FontRenderer* renderer = FontRendererCache::getFontRenderer(getFont());
+      gltext::FontRendererPtr renderer = getFontRenderer();
       std::string toAdd; // if we are to add anything, put it here
       if(key == KEY_RIGHT) {
          if(mCursorCharacterPosition < mText.length()) {
-            mCursorScreenPosition+=renderer->getWidth(mText.substr(mCursorCharacterPosition,1));
+            mCursorScreenPosition+=renderer->getWidth(mText.substr(mCursorCharacterPosition,1).c_str());
             mCursorCharacterPosition++;
          }
       } else if(key == KEY_LEFT) {
          if(mCursorCharacterPosition > 0) {
             mCursorCharacterPosition--;
-            mCursorScreenPosition-=renderer->getWidth(mText.substr(mCursorCharacterPosition,1));
+            mCursorScreenPosition-=renderer->getWidth(mText.substr(mCursorCharacterPosition,1).c_str());
          }
       } else if(key == KEY_BACKSPACE) {
          if(mCursorCharacterPosition > 0) {
             mCursorCharacterPosition--;
-            mCursorScreenPosition-=renderer->getWidth(mText.substr(mCursorCharacterPosition,1));
+            mCursorScreenPosition-=renderer->getWidth(mText.substr(mCursorCharacterPosition,1).c_str());
             mText.erase(mCursorCharacterPosition,1);
          }
       } else if(key == KEY_DELETE) {
@@ -140,8 +144,8 @@ namespace phui
 
       if(!toAdd.empty()) {
          mText.insert(mCursorCharacterPosition, toAdd);
-         mCursorScreenPosition+=renderer->getWidth(toAdd);
+         mCursorScreenPosition+=renderer->getWidth(toAdd.c_str());
          mCursorCharacterPosition++;
-      }*/
+      }
    }
 }
