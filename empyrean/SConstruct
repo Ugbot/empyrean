@@ -54,7 +54,7 @@ def ParseConfig(env, command, options):
 
 
 def SetupCal3D(env):
-    env.Append(LIBS = ['cal3d', 'm'])
+    env.Append(CXXFLAGS=['-DCAL3D_API='], LIBS=['cal3d', 'm'])
 
 def SetupCorona(env):
     try:
