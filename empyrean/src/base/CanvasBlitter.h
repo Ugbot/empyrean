@@ -1,6 +1,8 @@
 #ifndef PYR_CANVAS_BLITTER_H
 #define PYR_CANVAS_BLITTER_H
 
+#include <algorithm>
+
 // This is pretty cool stuff.  Basically, I'm using C++ templates to
 // inline the pixel blending functions.  Not a lot of code doing a
 // whole lot of work. :)
@@ -64,7 +66,7 @@ namespace pyr {
                     mov        al, a
                     sub        bx, cx           // bx=(s&255-d&255)
                     mul        bx               // eax = bx*ax (where bx is set above, and ax is equal to the alpha)
-                    
+
                     shr        ax, 8            // ax= a*(s&255-d&255)/256
                     add        ax, cx           // al= a*(s&255-d&255)/256+d&255
                     and        eax, 255
@@ -103,7 +105,7 @@ namespace pyr {
                     
                     and        ebx, 255         // ebx = s&255
                     and        ecx, 255         // ecx = d&255
-                    
+
                     xor        ax, ax
                     mov        al, a
                     sub        bx, cx           // bl=(s&255-d&255)
@@ -130,7 +132,7 @@ namespace pyr {
         The template argument is the blending method you want to use.
     */
     template <typename Blender>
-    class CanvasBlitter : public Blender
+    class CanvasBlitter
     {
         static inline void DoClipping(int& x, int& y, int& xstart, int& xlen, int& ystart, int& ylen, const Rect& rClip)
         {
@@ -169,10 +171,10 @@ namespace pyr {
             int ystart = r.top;
             int xlen = r.Width();
             int ylen = r.Height();
-            
+
             DoClipping(x, y, xstart, xlen, ystart, ylen, dest.getClipRect());
             if (xlen < 1 || ylen < 1)    return;                         // offscreen
-            
+
             RGBA* pSrc  = src.getPixels() + (ystart * src.getWidth()) + xstart;
             RGBA* pDest = dest.getPixels() + (y * dest.getWidth()) + x;
             int  srcinc = src.getWidth() - xlen;
@@ -183,7 +185,7 @@ namespace pyr {
                 int x = xlen;
                 while (x--)
                 {
-                    *pDest = Blend(*pSrc, *pDest);
+                    *pDest = Blender::Blend(*pSrc, *pDest);
                     pDest++;
                     pSrc++;
                 }
@@ -211,17 +213,17 @@ namespace pyr {
 
             const Rect& srcclip = src.getClipRect();
             
-            xinc=((srcclip.getWidth())<<16)/w;
+            xinc=((srcclip.Width())<<16)/w;
             yinc=((srcclip.Height())<<16)/h;
-            
+
             xstart = srcclip.left;
             ystart = srcclip.top;
             xlen = w;
             ylen = h;
-            
+
             DoClipping(x, y, xstart, xlen, ystart, ylen, dest.getClipRect());
             if (xlen<1 || ylen<1)    return;    // image is entirely offscreen
-            
+
             int xs = xinc*xstart;
             int ys = yinc*ystart;
             
@@ -238,7 +240,7 @@ namespace pyr {
             {
                 while (x<xlen)
                 {
-                    pDest[x]=Blend(pDest[x], pSrc[ix>>16]);
+                    pDest[x]=Blender::Blend(pDest[x], pSrc[ix>>16]);
                     ix+=xinc;
                     ++x;
                 }
@@ -262,7 +264,7 @@ namespace pyr {
         {
             RGBA* p = img.getPixels()+(y*img.getWidth() + x);
 
-            *p = Blend(colour, *p);
+            *p = Blender::Blend(colour, *p);
         }
 
         //! Draws a horizontal line on the image.
@@ -274,45 +276,45 @@ namespace pyr {
                 return;
 
             if (x1>x2)
-                swap(x1, x2);      
+                std::swap(x1, x2);
 
             keepinrange(x1, r.left, r.right-1);
             keepinrange(x2, r.left, r.right-1);
-            
+
             RGBA* p = img.getPixels()+(y*img.getWidth())+x1;
-            
+
             int xlen = x2-x1;
-            
+
             while (xlen--)
             {
-                *p = Blend(colour, *p);
+                *p = Blender::Blend(colour, *p);
                 p++;
             }
-            
+
         }
 
         //! Draws a vertical line on the image.
         static inline void VLine(Canvas& img, int x, int y1, int y2, RGBA colour)
         {
             const Rect& r = img.getClipRect();
-            
+
             if (x<r.left || x>=r.right) return;
-            
+
             if (y1>y2)
-                swap(y1, y2);
-            
+                std::swap(y1, y2);
+
             keepinrange(y1, r.top, r.bottom-1);
             keepinrange(y2, r.top, r.bottom-1);
-            
+
             RGBA* p = img.getPixels()+(y1*img.getWidth())+x;
-            
+
             int yinc = img.getWidth();
-            
+
             int ylen = y2-y1;
-            
+
             while (ylen--)
             {
-                *p = Blend(colour, *p);
+                *p = Blender::Blend(colour, *p);
                 p+=yinc;
             }
         }
@@ -338,7 +340,7 @@ namespace pyr {
                     HLine(img, x1, x2, y1, colour);
                     return;
                 }
-                
+
                 if (abs(x1-x2)>1)
                 {
                     HLine(img, x1, x2, y1, colour);
@@ -352,7 +354,7 @@ namespace pyr {
             }
         }
 
-        /*! 
+        /*!
             Draws an arbitrary line on the image.
             Kudos to zeromus for the algorithm.
         */
