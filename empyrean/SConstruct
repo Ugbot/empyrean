@@ -138,6 +138,10 @@ if ARGUMENTS.get('opt'):
     base_env.Append(CCFLAGS = ['-O2'],
                     LINKFLAGS = ['-s'])
 
+if ARGUMENTS.get('distcc'):
+    base_env['CC']  = ['distcc', base_env['CC']]
+    base_env['CXX'] = ['distcc', base_env['CXX']]
+
 Export('base_env')
 
 
