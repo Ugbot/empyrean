@@ -107,65 +107,8 @@
 	</References>
 	<Files>
 		<Filter
-			Name="files"
+			Name="base"
 			Filter="cpp;c;cxx;def;odl;idl;hpj;bat;asm">
-			<File
-				RelativePath="..\..\src\base\Appearance.h">
-			</File>
-			<File
-				RelativePath="..\..\src\base\ArmorPool.cpp">
-			</File>
-			<File
-				RelativePath="..\..\src\base\ArmorPool.h">
-			</File>
-			<File
-				RelativePath="..\..\src\base\Behavior.cpp">
-			</File>
-			<File
-				RelativePath="..\..\src\base\Behavior.h">
-			</File>
-			<File
-				RelativePath="..\..\src\base\BoundingRectangle.h">
-			</File>
-			<File
-				RelativePath="..\..\src\base\BufferParser.h">
-			</File>
-			<File
-				RelativePath="..\..\src\base\ByteBuffer.cpp">
-			</File>
-			<File
-				RelativePath="..\..\src\base\ByteBuffer.h">
-			</File>
-			<File
-				RelativePath="..\..\src\base\Canvas.cpp">
-			</File>
-			<File
-				RelativePath="..\..\src\base\Canvas.h">
-			</File>
-			<File
-				RelativePath="..\..\src\base\CanvasBlitter.h">
-			</File>
-			<File
-				RelativePath="..\..\src\base\Collider.cpp">
-			</File>
-			<File
-				RelativePath="..\..\src\base\Collider.h">
-			</File>
-			<File
-				RelativePath="..\..\src\base\CollisionBox.cpp">
-			</File>
-			<File
-				RelativePath="..\..\src\base\CollisionBox.h">
-			</File>
-			<File
-				RelativePath="..\..\src\base\CondVar.h">
-			</File>
-			<File
-				RelativePath="..\..\src\base\Connection.cpp">
-			</File>
-			<File
-				RelativePath="..\..\src\base\Connection.h">
-			</File>
 			<File
 				RelativePath="..\..\src\base\Constants.h">
 			</File>
@@ -176,28 +119,10 @@
 				RelativePath="..\..\src\base\Debug.h">
 			</File>
 			<File
-				RelativePath="..\..\src\base\Entity.cpp">
-			</File>
-			<File
-				RelativePath="..\..\src\base\Entity.h">
-			</File>
-			<File
 				RelativePath="..\..\src\base\Error.cpp">
 			</File>
 			<File
 				RelativePath="..\..\src\base\Error.h">
-			</File>
-			<File
-				RelativePath="..\..\src\base\GLUtility.cpp">
-			</File>
-			<File
-				RelativePath="..\..\src\base\GLUtility.h">
-			</File>
-			<File
-				RelativePath="..\..\src\base\Image.h">
-			</File>
-			<File
-				RelativePath="..\..\src\base\IncludePython.h">
 			</File>
 			<File
 				RelativePath="..\..\src\base\Log.cpp">
@@ -209,64 +134,92 @@
 				RelativePath="..\..\src\base\LokiTypeInfo.h">
 			</File>
 			<File
-				RelativePath="..\..\src\base\Map.cpp">
-			</File>
-			<File
-				RelativePath="..\..\src\base\Map.h">
-			</File>
-			<File
-				RelativePath="..\..\src\base\MapElement.cpp">
-			</File>
-			<File
-				RelativePath="..\..\src\base\MapElement.h">
-			</File>
-			<File
-				RelativePath="..\..\src\base\MapLoader.cpp">
-			</File>
-			<File
-				RelativePath="..\..\src\base\MapLoader.h">
-			</File>
-			<File
-				RelativePath="..\..\src\base\MapRenderer.cpp">
-			</File>
-			<File
-				RelativePath="..\..\src\base\MapRenderer.h">
-			</File>
-			<File
-				RelativePath="..\..\src\base\MapVisitor.h">
-			</File>
-			<File
-				RelativePath="..\..\src\base\Material.h">
-			</File>
-			<File
-				RelativePath="..\..\src\base\MonsterBehavior.cpp">
-			</File>
-			<File
-				RelativePath="..\..\src\base\MonsterBehavior.h">
-			</File>
-			<File
-				RelativePath="..\..\src\base\MultiTextureImage.cpp">
-			</File>
-			<File
-				RelativePath="..\..\src\base\MultiTextureImage.h">
-			</File>
-			<File
-				RelativePath="..\..\src\base\Mutex.h">
-			</File>
-			<File
 				RelativePath="..\..\src\base\NSPRUtility.cpp">
 			</File>
 			<File
 				RelativePath="..\..\src\base\NSPRUtility.h">
 			</File>
 			<File
-				RelativePath="..\..\src\base\OBJLoader.cpp">
+				RelativePath="..\..\src\base\PathHandler.cpp">
 			</File>
 			<File
-				RelativePath="..\..\src\base\OBJLoader.h">
+				RelativePath="..\..\src\base\PathHandler.h">
 			</File>
 			<File
-				RelativePath="..\..\src\base\OpenGL.h">
+				RelativePath="..\..\src\base\Platform.cpp">
+			</File>
+			<File
+				RelativePath="..\..\src\base\Platform.h">
+			</File>
+			<File
+				RelativePath="..\..\src\base\Profiler.cpp">
+			</File>
+			<File
+				RelativePath="..\..\src\base\Profiler.h">
+			</File>
+			<File
+				RelativePath="..\..\src\base\RefCounted.h">
+			</File>
+			<File
+				RelativePath="..\..\src\base\RefPtr.h">
+			</File>
+			<File
+				RelativePath="..\..\src\base\ResourceManager.cpp">
+			</File>
+			<File
+				RelativePath="..\..\src\base\ResourceManager.h">
+			</File>
+			<File
+				RelativePath="..\..\src\base\ScopedArray.h">
+			</File>
+			<File
+				RelativePath="..\..\src\base\ScopedLock.h">
+			</File>
+			<File
+				RelativePath="..\..\src\base\ScopedPtr.h">
+			</File>
+			<File
+				RelativePath="..\..\src\base\Singleton.h">
+			</File>
+			<File
+				RelativePath="..\..\src\base\Types.h">
+			</File>
+			<File
+				RelativePath="..\..\src\base\Utility.cpp">
+			</File>
+			<File
+				RelativePath="..\..\src\base\Utility.h">
+			</File>
+			<File
+				RelativePath="..\..\src\base\VecMath.h">
+			</File>
+			<File
+				RelativePath="..\..\src\base\wx.h">
+			</File>
+			<File
+				RelativePath="..\..\src\base\XMLParser.cpp">
+			</File>
+			<File
+				RelativePath="..\..\src\base\XMLParser.h">
+			</File>
+		</Filter>
+		<Filter
+			Name="net"
+			Filter="">
+			<File
+				RelativePath="..\..\src\base\BufferParser.h">
+			</File>
+			<File
+				RelativePath="..\..\src\base\ByteBuffer.cpp">
+			</File>
+			<File
+				RelativePath="..\..\src\base\ByteBuffer.h">
+			</File>
+			<File
+				RelativePath="..\..\src\base\Connection.cpp">
+			</File>
+			<File
+				RelativePath="..\..\src\base\Connection.h">
 			</File>
 			<File
 				RelativePath="..\..\src\base\Packet.h">
@@ -284,43 +237,35 @@
 				RelativePath="..\..\src\base\PacketTypes.h">
 			</File>
 			<File
-				RelativePath="..\..\src\base\PathHandler.cpp">
+				RelativePath="..\..\src\base\ReaderThread.cpp">
 			</File>
 			<File
-				RelativePath="..\..\src\base\PathHandler.h">
+				RelativePath="..\..\src\base\ReaderThread.h">
 			</File>
 			<File
-				RelativePath="..\..\src\base\PhysicsBehavior.h">
+				RelativePath="..\..\src\base\ServerSocket.cpp">
 			</File>
 			<File
-				RelativePath="..\..\src\base\PhysicsEngine.cpp">
+				RelativePath="..\..\src\base\ServerSocket.h">
 			</File>
 			<File
-				RelativePath="..\..\src\base\PhysicsEngine.h">
+				RelativePath="..\..\src\base\Socket.cpp">
 			</File>
 			<File
-				RelativePath="..\..\src\base\PlanarMap.cpp">
+				RelativePath="..\..\src\base\Socket.h">
 			</File>
 			<File
-				RelativePath="..\..\src\base\PlanarMap.h">
+				RelativePath="..\..\src\base\WriterThread.cpp">
 			</File>
 			<File
-				RelativePath="..\..\src\base\Platform.cpp">
+				RelativePath="..\..\src\base\WriterThread.h">
 			</File>
+		</Filter>
+		<Filter
+			Name="python"
+			Filter="">
 			<File
-				RelativePath="..\..\src\base\Platform.h">
-			</File>
-			<File
-				RelativePath="..\..\src\base\PlayerBehavior.cpp">
-			</File>
-			<File
-				RelativePath="..\..\src\base\PlayerBehavior.h">
-			</File>
-			<File
-				RelativePath="..\..\src\base\Profiler.cpp">
-			</File>
-			<File
-				RelativePath="..\..\src\base\Profiler.h">
+				RelativePath="..\..\src\base\IncludePython.h">
 			</File>
 			<File
 				RelativePath="..\..\src\base\PythonBehavior.cpp">
@@ -352,47 +297,148 @@
 			<File
 				RelativePath="..\..\src\base\PythonScript.h">
 			</File>
+		</Filter>
+		<Filter
+			Name="map"
+			Filter="">
 			<File
-				RelativePath="..\..\src\base\ReaderThread.cpp">
+				RelativePath="..\..\src\base\Map.cpp">
 			</File>
 			<File
-				RelativePath="..\..\src\base\ReaderThread.h">
+				RelativePath="..\..\src\base\Map.h">
 			</File>
 			<File
-				RelativePath="..\..\src\base\RefCounted.h">
+				RelativePath="..\..\src\base\MapElement.cpp">
 			</File>
 			<File
-				RelativePath="..\..\src\base\RefPtr.h">
+				RelativePath="..\..\src\base\MapElement.h">
 			</File>
 			<File
-				RelativePath="..\..\src\base\ResourceManager.cpp">
+				RelativePath="..\..\src\base\MapLoader.cpp">
 			</File>
 			<File
-				RelativePath="..\..\src\base\ResourceManager.h">
+				RelativePath="..\..\src\base\MapLoader.h">
 			</File>
 			<File
-				RelativePath="..\..\src\base\ScopedArray.h">
+				RelativePath="..\..\src\base\MapRenderer.cpp">
 			</File>
 			<File
-				RelativePath="..\..\src\base\ScopedLock.h">
+				RelativePath="..\..\src\base\MapRenderer.h">
 			</File>
 			<File
-				RelativePath="..\..\src\base\ScopedPtr.h">
+				RelativePath="..\..\src\base\MapVisitor.h">
 			</File>
 			<File
-				RelativePath="..\..\src\base\ServerSocket.cpp">
+				RelativePath="..\..\src\base\Material.h">
 			</File>
 			<File
-				RelativePath="..\..\src\base\ServerSocket.h">
+				RelativePath="..\..\src\base\OBJLoader.cpp">
 			</File>
 			<File
-				RelativePath="..\..\src\base\Singleton.h">
+				RelativePath="..\..\src\base\OBJLoader.h">
 			</File>
 			<File
-				RelativePath="..\..\src\base\Socket.cpp">
+				RelativePath="..\..\src\base\PlanarMap.cpp">
 			</File>
 			<File
-				RelativePath="..\..\src\base\Socket.h">
+				RelativePath="..\..\src\base\PlanarMap.h">
+			</File>
+		</Filter>
+		<Filter
+			Name="entity"
+			Filter="">
+			<File
+				RelativePath="..\..\src\base\Appearance.h">
+			</File>
+			<File
+				RelativePath="..\..\src\base\Behavior.cpp">
+			</File>
+			<File
+				RelativePath="..\..\src\base\Behavior.h">
+			</File>
+			<File
+				RelativePath="..\..\src\base\BoundingRectangle.h">
+			</File>
+			<File
+				RelativePath="..\..\src\base\Entity.cpp">
+			</File>
+			<File
+				RelativePath="..\..\src\base\Entity.h">
+			</File>
+			<File
+				RelativePath="..\..\src\base\MonsterBehavior.cpp">
+			</File>
+			<File
+				RelativePath="..\..\src\base\MonsterBehavior.h">
+			</File>
+			<File
+				RelativePath="..\..\src\base\PlayerBehavior.cpp">
+			</File>
+			<File
+				RelativePath="..\..\src\base\PlayerBehavior.h">
+			</File>
+		</Filter>
+		<Filter
+			Name="game"
+			Filter="">
+			<File
+				RelativePath="..\..\src\base\ArmorPool.cpp">
+			</File>
+			<File
+				RelativePath="..\..\src\base\ArmorPool.h">
+			</File>
+			<File
+				RelativePath="..\..\src\base\WeaponPool.cpp">
+			</File>
+			<File
+				RelativePath="..\..\src\base\WeaponPool.h">
+			</File>
+		</Filter>
+		<Filter
+			Name="thread"
+			Filter="">
+			<File
+				RelativePath="..\..\src\base\CondVar.h">
+			</File>
+			<File
+				RelativePath="..\..\src\base\Mutex.h">
+			</File>
+			<File
+				RelativePath="..\..\src\base\Thread.cpp">
+			</File>
+			<File
+				RelativePath="..\..\src\base\Thread.h">
+			</File>
+		</Filter>
+		<Filter
+			Name="render"
+			Filter="">
+			<File
+				RelativePath="..\..\src\base\Canvas.cpp">
+			</File>
+			<File
+				RelativePath="..\..\src\base\Canvas.h">
+			</File>
+			<File
+				RelativePath="..\..\src\base\CanvasBlitter.h">
+			</File>
+			<File
+				RelativePath="..\..\src\base\GLUtility.cpp">
+			</File>
+			<File
+				RelativePath="..\..\src\base\GLUtility.h">
+			</File>
+			<File
+				RelativePath="..\..\src\base\Image.h">
+			</File>
+			<File
+				RelativePath="..\..\src\base\MultiTextureImage.cpp">
+			</File>
+			<File
+				RelativePath="..\..\src\base\MultiTextureImage.h">
+			</File>
+			<File
+				RelativePath="..\..\src\base\OpenGL.h">
 			</File>
 			<File
 				RelativePath="..\..\src\base\Texture.cpp">
@@ -405,45 +451,6 @@
 			</File>
 			<File
 				RelativePath="..\..\src\base\TextureImage.h">
-			</File>
-			<File
-				RelativePath="..\..\src\base\Thread.cpp">
-			</File>
-			<File
-				RelativePath="..\..\src\base\Thread.h">
-			</File>
-			<File
-				RelativePath="..\..\src\base\Types.h">
-			</File>
-			<File
-				RelativePath="..\..\src\base\Utility.cpp">
-			</File>
-			<File
-				RelativePath="..\..\src\base\Utility.h">
-			</File>
-			<File
-				RelativePath="..\..\src\base\VecMath.h">
-			</File>
-			<File
-				RelativePath="..\..\src\base\WeaponPool.cpp">
-			</File>
-			<File
-				RelativePath="..\..\src\base\WeaponPool.h">
-			</File>
-			<File
-				RelativePath="..\..\src\base\WriterThread.cpp">
-			</File>
-			<File
-				RelativePath="..\..\src\base\WriterThread.h">
-			</File>
-			<File
-				RelativePath="..\..\src\base\wx.h">
-			</File>
-			<File
-				RelativePath="..\..\src\base\XMLParser.cpp">
-			</File>
-			<File
-				RelativePath="..\..\src\base\XMLParser.h">
 			</File>
 			<Filter
 				Name="glew"
@@ -458,6 +465,28 @@
 					RelativePath="..\..\src\base\wglew.h">
 				</File>
 			</Filter>
+		</Filter>
+		<Filter
+			Name="physics"
+			Filter="">
+			<File
+				RelativePath="..\..\src\base\Collider.cpp">
+			</File>
+			<File
+				RelativePath="..\..\src\base\Collider.h">
+			</File>
+			<File
+				RelativePath="..\..\src\base\CollisionBox.cpp">
+			</File>
+			<File
+				RelativePath="..\..\src\base\CollisionBox.h">
+			</File>
+			<File
+				RelativePath="..\..\src\base\PhysicsEngine.cpp">
+			</File>
+			<File
+				RelativePath="..\..\src\base\PhysicsEngine.h">
+			</File>
 		</Filter>
 	</Files>
 	<Globals>
