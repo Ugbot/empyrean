@@ -1,6 +1,7 @@
 #ifndef PYR_GAME_STATE_H
 #define PYR_GAME_STATE_H
 
+#include <gltext.h>
 #include <vector>
 #include "InputManager.h"
 #include "PlayerEntity.h"
@@ -8,8 +9,6 @@
 #include "State.h"
 
 namespace pyr {
-
-    class Font;
 
     class GameState : public State {
     public:
@@ -32,10 +31,10 @@ namespace pyr {
         Input* _inputSpace;
         Input* _inputQuit;
         
+        gltext::FontRendererPtr _renderer;
+        
         Scene _scene;
         PlayerEntity* _player;
-        
-        ScopedPtr<Font> _font;
     };
 
 }

@@ -1,7 +1,6 @@
 #include <gmtl/VecOps.h>
 
 #include "Entity.h"
-#include "Font.h"
 #include "GameState.h"
 #include "GLUtility.h"
 #include "Input.h"
@@ -27,8 +26,11 @@ namespace pyr {
         _inputSpace  = &_im.getInput("Space");
         _inputQuit   = &_im.getInput("Escape");
 
-        _font = new Font("fonts/Vera.ttf", 16);
-        _font->setScale(400.0f / 1024.0f);
+        gltext::FontPtr font = gltext::OpenFont("fonts/Vera.ttf", 16);
+        _renderer = gltext::CreateRenderer(gltext::TEXTURE, font);
+        if (!_renderer) {
+            throw std::runtime_error("Error opening fonts/Vera.ttf");
+        }
 
         _player = new PlayerEntity(
             new Model("models/paladin/paladin.cfg"),
@@ -61,7 +63,7 @@ namespace pyr {
         glColor4f(1, 1, 1, 1);
         glTranslatef(0, 8, 0);
         bool loggedIn = ServerConnection::instance().isLoggedIn();
-        (*_font) << (loggedIn ? "Logged In" : "Not Logged In") << "\n";
+        GLTEXT_STREAM(_renderer) << (loggedIn ? "Logged In" : "Not Logged In");
     }
 
     void GameState::update(float dt) {

@@ -2,7 +2,6 @@
 #include <sstream>
 
 #include "Application.h"
-#include "Font.h"
 #include "IntroState.h"
 #include "NSPRUtility.h"
 #include "OpenGL.h"
@@ -40,8 +39,11 @@ namespace pyr {
         _totalFadeTime = 0;
         _currentFadeTime = 0;
 
-        _font = new Font("fonts/Vera.ttf", 24);
-        _font->setScale(1);
+        gltext::FontPtr font = gltext::OpenFont("fonts/Vera.ttf", 24);
+        _renderer = gltext::CreateRenderer(gltext::TEXTURE, font);
+        if (!_renderer) {
+            throw std::runtime_error("Creating font renderer failed");
+        }
         
         _pointer = Texture::create("images/pointer.png");
     }
@@ -85,18 +87,17 @@ namespace pyr {
             
             glMatrixMode(GL_MODELVIEW);
             glLoadIdentity();
-            glTranslatef(0,24,0);
             
             glEnable(GL_TEXTURE_2D);
 	    glEnable(GL_BLEND);
 	    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	    glColor4f(1, 1, 1, 1);
-            (*_font) << "FPS: " << _fps.getFPS() << "\n";
+            GLTEXT_STREAM(_renderer) << "FPS: " << _fps.getFPS();
 
             for (Profiler::ProcessMap::const_iterator iter = pi.begin(); iter != pi.end(); iter++) {
                 glTranslatef(0,24,0);
                 int i = int(iter->second.time / totaltime * 100);
-                (*_font) << iter->first << ": " << i << "%\n";
+                GLTEXT_STREAM(_renderer) << iter->first << ": " << i << "%";
             }
         }
     }

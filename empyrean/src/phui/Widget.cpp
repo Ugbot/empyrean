@@ -24,8 +24,8 @@
  *
  * -----------------------------------------------------------------
  * File:          $RCSfile: Widget.cpp,v $
- * Date modified: $Date: 2003-07-22 03:24:31 $
- * Version:       $Revision: 1.1 $
+ * Date modified: $Date: 2003-08-05 05:00:28 $
+ * Version:       $Revision: 1.2 $
  * -----------------------------------------------------------------
  *
  ************************************************************** phui-cpr-end */
@@ -33,12 +33,6 @@
 #include <stdexcept>
 #include "Widget.h"
 #include "WidgetContainer.h"
-
-
-// Win32 can be annoying.  ^_^
-#ifdef CreateFont
-#undef CreateFont
-#endif
 
 
 namespace phui
@@ -50,20 +44,15 @@ namespace phui
       , mBackgroundColor(BLACK)
       , mForegroundColor(WHITE)
    {
-      mFont = gltext::CreateFont("fonts/Vera.ttf", gltext::PLAIN, 12);
-      if (!mFont)
+      gltext::FontPtr font = gltext::OpenFont("fonts/Vera.ttf", 18);
+      if (!font)
       {
          throw std::runtime_error("phui: Font not found");
       }
+      setFont(font);  // creates the renderer
       
       mParent = 0;
    }
-
-   Widget::~Widget()
-   {}
-
-   void Widget::draw()
-   {}
 
    const Point& Widget::getPosition() const
    {
@@ -137,12 +126,21 @@ namespace phui
 
    void Widget::setFont(const gltext::FontPtr& font)
    {
-      mFont = font;
+      mFontRenderer = gltext::CreateRenderer(gltext::TEXTURE, font);
+      if (!mFontRenderer)
+      {
+         throw std::runtime_error("phui: Font renderer creation failed");
+      }
    }
 
-   const gltext::FontPtr& Widget::getFont() const
+   gltext::FontPtr Widget::getFont() const
    {
-      return mFont;
+      return mFontRenderer->getFont();
+   }
+   
+   const gltext::FontRendererPtr& Widget::getFontRenderer() const
+   {
+      return mFontRenderer;
    }
 
    WidgetContainer* Widget::getParent() const

@@ -24,8 +24,8 @@
  *
  * -----------------------------------------------------------------
  * File:          $RCSfile: ListBox.cpp,v $
- * Date modified: $Date: 2003-07-22 03:24:31 $
- * Version:       $Revision: 1.1 $
+ * Date modified: $Date: 2003-08-05 05:00:28 $
+ * Version:       $Revision: 1.2 $
  * -----------------------------------------------------------------
  *
  ************************************************************** phui-cpr-end */
@@ -50,7 +50,6 @@ namespace phui
       const Size& size = getSize();
       const int width = size.getWidth();
       const int height = size.getHeight();
-      gltext::FontPtr font = getFont();
 
       // draw the box background
       glColor(getBackgroundColor());
@@ -66,8 +65,8 @@ namespace phui
       // draw text
       glColor(getForegroundColor());
 
-      gltext::FontRendererPtr renderer = gltext::CreateRenderer(gltext::PIXMAP);
-      renderer->setFont(font.get());
+      gltext::FontPtr font = getFont();
+      gltext::FontRendererPtr renderer = getFontRenderer();
 
       int fontHeight = font->getAscent() + font->getDescent();
       int fontLineGap = font->getLineGap();

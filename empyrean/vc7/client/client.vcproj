@@ -33,7 +33,7 @@
 				Name="VCCustomBuildTool"/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="../base/Debug/base.lib ../phui/Debug/phui.lib SDL.lib SDLmain.lib nspr4.lib gltext.lib corona.lib cal3d_d.lib opengl32.lib glu32.lib freetype211MT_D.lib"
+				AdditionalDependencies="../base/Debug/base.lib ../phui/Debug/phui.lib SDL.lib SDLmain.lib nspr4.lib gltext.lib corona.lib cal3d_d.lib opengl32.lib glu32.lib"
 				OutputFile="../bin/$(OutDir)/client.exe"
 				LinkIncremental="2"
 				AdditionalLibraryDirectories="../../third-party-vc7/lib"
@@ -88,7 +88,7 @@
 				Name="VCCustomBuildTool"/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="../base/Debug/base.lib ../phui/Release/phui.lib SDL.lib SDLmain.lib nspr4.lib gltext.lib corona.lib cal3d.lib opengl32.lib glu32.lib freetype211MT.lib"
+				AdditionalDependencies="../base/Debug/base.lib ../phui/Release/phui.lib SDL.lib SDLmain.lib nspr4.lib gltext.lib corona.lib cal3d.lib opengl32.lib glu32.lib"
 				OutputFile="../bin/$(OutDir)/client.exe"
 				LinkIncremental="1"
 				AdditionalLibraryDirectories="../../third-party-vc7/lib"
@@ -142,12 +142,6 @@
 			</File>
 			<File
 				RelativePath="..\..\src\client\Entity.h">
-			</File>
-			<File
-				RelativePath="..\..\src\client\Font.cpp">
-			</File>
-			<File
-				RelativePath="..\..\src\client\Font.h">
 			</File>
 			<File
 				RelativePath="..\..\src\client\FPSCounter.h">

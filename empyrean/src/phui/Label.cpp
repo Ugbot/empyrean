@@ -24,8 +24,8 @@
  *
  * -----------------------------------------------------------------
  * File:          $RCSfile: Label.cpp,v $
- * Date modified: $Date: 2003-07-22 03:24:31 $
- * Version:       $Revision: 1.1 $
+ * Date modified: $Date: 2003-08-05 05:00:28 $
+ * Version:       $Revision: 1.2 $
  * -----------------------------------------------------------------
  *
  ************************************************************** phui-cpr-end */
@@ -65,9 +65,7 @@ namespace phui
       // draw text
       glColor(getForegroundColor());
 
-      gltext::FontRendererPtr renderer = gltext::CreateRenderer(gltext::PIXMAP);
-      renderer->setFont(font.get());
-
+      gltext::FontRendererPtr renderer = getFontRenderer();
       double labelWidth = double(renderer->getWidth(mText.c_str()));
       double fontHeight = double(font->getAscent() + font->getDescent());
 

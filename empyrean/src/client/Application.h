@@ -2,13 +2,13 @@
 #define PYR_APPLICATION_H
 
 #include <SDL.h>
+#include <gltext.h>
 
 #include "Utility.h"
 #include "FPSCounter.h"
 
 namespace pyr {
 
-    class Font;
     class State;
     class Texture;
 
@@ -60,7 +60,7 @@ namespace pyr {
 
         bool _showCPUInfo;
 
-        ScopedPtr<Font> _font;
+        gltext::FontRendererPtr _renderer;
         Texture* _pointer;
 
         FPSCounter _fps;

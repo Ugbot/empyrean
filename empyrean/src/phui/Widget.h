@@ -24,8 +24,8 @@
  *
  * -----------------------------------------------------------------
  * File:          $RCSfile: Widget.h,v $
- * Date modified: $Date: 2003-07-22 03:24:31 $
- * Version:       $Revision: 1.1 $
+ * Date modified: $Date: 2003-08-05 05:00:28 $
+ * Version:       $Revision: 1.2 $
  * -----------------------------------------------------------------
  *
  ************************************************************** phui-cpr-end */
@@ -59,12 +59,10 @@ namespace phui
        */
       Widget();
 
-      virtual ~Widget();
-
       /**
        * Draws this widget.
        */
-      virtual void draw();
+      virtual void draw() = 0;
 
       /**
        * Gets the position of this widget relative to its parent.
@@ -197,7 +195,9 @@ namespace phui
       /**
        * Gets the font for this widget.
        */
-      virtual const gltext::FontPtr& getFont() const;
+      virtual gltext::FontPtr getFont() const;
+      
+      virtual const gltext::FontRendererPtr& getFontRenderer() const;
 
       /**
        * Gets the parent container for this widget or NULL if this
@@ -259,17 +259,10 @@ namespace phui
        */
       bool mVisible;
 
-      /**
-       * The background color.
-       */
       Colorf mBackgroundColor;
-
-      /**
-       * The foreground color.
-       */
       Colorf mForegroundColor;
 
-      gltext::FontPtr mFont;
+      gltext::FontRendererPtr mFontRenderer;
 
       /// The parent container for this widget.
       WidgetContainer* mParent;

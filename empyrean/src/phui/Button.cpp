@@ -24,8 +24,8 @@
  *
  * -----------------------------------------------------------------
  * File:          $RCSfile: Button.cpp,v $
- * Date modified: $Date: 2003-07-22 03:24:31 $
- * Version:       $Revision: 1.1 $
+ * Date modified: $Date: 2003-08-05 05:00:28 $
+ * Version:       $Revision: 1.2 $
  * -----------------------------------------------------------------
  *
  ************************************************************** phui-cpr-end */
@@ -53,7 +53,6 @@ namespace phui
       const int width = size.getWidth();
       const int height = size.getHeight();
 
-      gltext::FontPtr font = getFont();
       // draw the button background
       glColor(mButtonDown ? getForegroundColor() : getBackgroundColor());
       glBegin(GL_TRIANGLE_FAN);
@@ -68,12 +67,10 @@ namespace phui
       // draw text
       glColor(mButtonDown ? getBackgroundColor() : getForegroundColor());
 
-      gltext::FontRendererPtr renderer = gltext::CreateRenderer(gltext::PIXMAP);
-      renderer->setFont(font.get());
-
-
-      double labelWidth = double(renderer->getWidth(mText.c_str()));
-      double fontHeight = double(font->getAscent() + font->getDescent());
+      gltext::FontPtr font = getFont();
+      gltext::FontRendererPtr renderer = getFontRenderer();
+      float labelWidth = float(renderer->getWidth(mText.c_str()));
+      float fontHeight = float(font->getAscent() + font->getDescent());
 
       //Lets store the Matrix so we don't piss anyone off
       glPushMatrix();
@@ -81,19 +78,10 @@ namespace phui
       //These checks see if the button Label fits inside the
       //button.  If not start in the lower left-hand corner of
       //the button and render the text.
-      double yLoc = (height - fontHeight)/2.0;
-      if (yLoc < 0)
-      {
-         yLoc = 0;
-      }
-
-      double xLoc = (width - labelWidth)/2.0;
-      if (xLoc < 0)
-      {
-         xLoc = 0;
-      }
-      glTranslatef(GLfloat(xLoc), GLfloat(height - yLoc), 0.0f);
-
+      float xLoc = std::max((width  - labelWidth) / 2.0f, 0.0f);
+      float yLoc = std::max((height - fontHeight) / 2.0f, 0.0f);
+      glTranslatef(xLoc, height - yLoc, 0.0f);
+      
       renderer->render(mText.c_str());
 
       //Lets restore the Matrix
@@ -102,12 +90,10 @@ namespace phui
       if (hasFocus())
       {
          glBegin(GL_LINE_LOOP);
-         {
-            glVertex2i(0,     0     );
-            glVertex2i(width, 0     );
-            glVertex2i(width, height);
-            glVertex2i(0,     height);
-         }
+         glVertex2i(0,     0     );
+         glVertex2i(width, 0     );
+         glVertex2i(width, height);
+         glVertex2i(0,     height);
          glEnd();
       }
    }
