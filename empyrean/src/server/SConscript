@@ -23,7 +23,7 @@ SOURCES = Split("""
 """)
 
 env = env.Copy()
-for t in Split('PyrBase Expat NSPR Corona wxWindows'):
+for t in Split('PyrBase Boost Python Expat NSPR Corona wxWindows'):
     TOOLS[t](env)
 
 server = env.Program('#/build/server', SOURCES)

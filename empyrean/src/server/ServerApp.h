@@ -30,6 +30,7 @@ namespace pyr {
     private:
         std::string getDatabaseFilename();
 
+        std::string _startDirectory;
         ServerFrame* _frame;
         ScopedPtr<Thread> _serverThread;
     };

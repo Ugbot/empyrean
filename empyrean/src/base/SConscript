@@ -39,7 +39,7 @@ SOURCES = Split("""
     XMLParser.cpp
 """)
 
-env = env.Copy(tools = [TOOLS[n] for n in ['NSPR', 'Corona']])
+env = env.Copy(tools = [TOOLS[n] for n in ['NSPR', 'Corona', 'Boost', 'Python']])
 
 if env['USE_EXTGL']:
     SOURCES.append('extgl.c')

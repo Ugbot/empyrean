@@ -4,6 +4,9 @@
 
 namespace pyr {
 
+    std::string getCurrentDirectory();
+    bool setCurrentDirectory(const std::string& dir);
+
     /**
      * This gives an absolute path, or a relative path from the
      * startup directory to the directory in which the executable

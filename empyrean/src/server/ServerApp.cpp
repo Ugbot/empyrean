@@ -16,17 +16,18 @@ namespace pyr {
         // Give the UI thread high priority so the world update thread
         // and connections don't starve it.
         PR_SetThreadPriority(PR_GetCurrentThread(), PR_PRIORITY_HIGH);
-    
+
         _frame = 0;
         _serverThread = 0;
     }
 
     bool ServerApp::OnInit() {
         PYR_BEGIN_EXCEPTION_TRAP()
-        
+
             // Prepare the log file
             the<Log>().open(getStartDirectory(argc, argv) + "/server.log");
-        
+
+            _startDirectory = getCurrentDirectory();
             setStartDirectory(argc, argv);
             try {
                 the<Configuration>().load();
@@ -36,7 +37,7 @@ namespace pyr {
             }
 
             wxInitAllImageHandlers();
-            
+
             _frame = new ServerFrame();
             _frame->Show(true);
 
@@ -55,13 +56,16 @@ namespace pyr {
             }
 
             return true;
-        
+
         PYR_END_EXCEPTION_TRAP()
         return false;
     }
-    
+
     int ServerApp::OnExit() {
         PYR_BEGIN_EXCEPTION_TRAP()
+            // setStartDirectory requires that we chdir *from* the directory we
+            // started in.
+            setCurrentDirectory(_startDirectory);
             setStartDirectory(argc, argv);
             _frame = 0;
             the<Database>().save(getDatabaseFilename());
@@ -69,7 +73,7 @@ namespace pyr {
         PYR_END_EXCEPTION_TRAP()
         return 0;
     }
-    
+
     void ServerApp::log(const std::string& s) {
         if (_frame) {
             // Use the wxWindows event system so logging can be used from
