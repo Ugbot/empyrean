@@ -161,6 +161,12 @@
 				RelativePath="..\..\src\base\GLUtility.h">
 			</File>
 			<File
+				RelativePath="..\..\src\base\Log.cpp">
+			</File>
+			<File
+				RelativePath="..\..\src\base\Log.h">
+			</File>
+			<File
 				RelativePath="..\..\src\base\LokiTypeInfo.h">
 			</File>
 			<File

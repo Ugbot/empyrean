@@ -159,12 +159,6 @@
 				RelativePath="..\..\src\server\ListenerThread.h">
 			</File>
 			<File
-				RelativePath="..\..\src\server\Log.cpp">
-			</File>
-			<File
-				RelativePath="..\..\src\server\Log.h">
-			</File>
-			<File
 				RelativePath="..\..\src\server\LogEvent.cpp">
 			</File>
 			<File
@@ -187,6 +181,12 @@
 			</File>
 			<File
 				RelativePath="..\..\src\server\ServerFrame.h">
+			</File>
+			<File
+				RelativePath="..\..\src\server\ServerLog.cpp">
+			</File>
+			<File
+				RelativePath="..\..\src\server\ServerLog.h">
 			</File>
 			<File
 				RelativePath="..\..\src\server\ServerThread.cpp">
