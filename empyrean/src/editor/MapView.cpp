@@ -52,6 +52,16 @@ namespace pyr {
     Tool* MapView::getTool() const {
         return _tool.get();
     }
+    
+    gmtl::Vec2f MapView::getMapCoordinates(const gmtl::Vec2i& screenPos) {
+        wxSize size = GetClientSize();
+        gmtl::Vec2f upperLeft(
+            _viewCenter[0] - size.x / 2.0f,
+            _viewCenter[1] - size.y / 2.0f);
+        return gmtl::Vec2f(
+            screenPos[0] / _zoomFactor + upperLeft[0],
+            -(screenPos[1] / _zoomFactor + upperLeft[1]));
+    }
 
     void MapView::OnSize(wxSizeEvent& e) {
         wxGLCanvas::OnSize(e);
@@ -86,13 +96,13 @@ namespace pyr {
         if (size.GetX() == 0 || size.GetY() == 0) {
             return;
         }
+        
+        const gmtl::Vec2i screenPos(e.GetX(), e.GetY());
     
         ToolEvent te;
         te.cmd = _mainFrame;
-        te.pos[0] = float(e.GetX()) / size.x *  2 - 1;
-        te.pos[1] = float(e.GetY()) / size.y * -2 + 1;
-        te.screenPos[0] = e.GetX();
-        te.screenPos[1] = e.GetY();
+        te.pos = getMapCoordinates(screenPos);
+        te.screenPos = screenPos;
         te.leftButton = e.LeftIsDown();
         te.rightButton = e.RightIsDown();
         te.middleButton = e.MiddleIsDown();
@@ -137,7 +147,8 @@ namespace pyr {
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
         MapRenderer renderer;
-        getMap()->getRoot()->handleVisitor(&renderer); // why do I need to dereference?  I overloaded for MapVisitor&
+        // why do I need to dereference?  I overloaded for MapVisitor&
+        getMap()->getRoot()->handleVisitor(&renderer);
 
         MapOutliner outliner;
         getMap()->getRoot()->handleVisitor(&outliner);
@@ -146,8 +157,8 @@ namespace pyr {
         
         // draw origin
         glBegin(GL_LINES);
-        glColor3f(1, 0, 0); glVertex2f(0, 0); glVertex2f(1, 0);
-        glColor3f(0, 1, 0); glVertex2f(0, 0); glVertex2f(0, 1);
+        glColor3f(1, 0, 0); glVertex2f(-1,  0); glVertex2f(1, 0);
+        glColor3f(0, 1, 0); glVertex2f( 0, -1); glVertex2f(0, 1);
         glEnd();
     }
 }

@@ -30,6 +30,8 @@ namespace pyr {
         
         void setZoomFactor(float factor) { _zoomFactor = factor; }
         float getZoomFactor() const      { return _zoomFactor; }
+        
+        gmtl::Vec2f getMapCoordinates(const gmtl::Vec2i& screenPos);
 
     private:
         void OnSize(wxSizeEvent& e);
