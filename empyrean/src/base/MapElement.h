@@ -32,7 +32,7 @@ namespace pyr {
 
     // entities, triggers, obstructions should all inherit MapElement
 
-    /*
+    /**
      * This indexed triangle list setup is decidedly inconvenient.  I suppose
      * the internal interface can keep it under control, but consider ditching
      * it in favour of something less annoying if it does not.

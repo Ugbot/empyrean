@@ -215,6 +215,12 @@
 				RelativePath="..\..\src\base\PacketTypes.h">
 			</File>
 			<File
+				RelativePath="..\..\src\base\Platform.cpp">
+			</File>
+			<File
+				RelativePath="..\..\src\base\Platform.h">
+			</File>
+			<File
 				RelativePath="..\..\src\base\ReaderThread.cpp">
 			</File>
 			<File

@@ -17,6 +17,9 @@ namespace pyr {
         glVertex(e->pos);
         glEnd();
 
+        glPushMatrix();
+        glTranslate(e->pos);
+
         // Draw segments in blue
         glColor3f(0, 0, 1);
         for (unsigned i = 0; i < e->tris.size(); i++) {
@@ -39,6 +42,8 @@ namespace pyr {
             glVertex(e->vertices[i].pos);
         }
         glEnd();
+
+        glPopMatrix();
     }
 
     void MapOutliner::visitGroup(GroupElement* e) {
@@ -46,6 +51,8 @@ namespace pyr {
             // maybe not so hot if we start recursing out the wazoo.
             glPushMatrix();
             glTranslate(e->pos);
+
+            // TODO: draw something to indicate where the group's origin is
 
             e->children[i]->handleVisitor(this);
 

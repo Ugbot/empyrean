@@ -47,7 +47,7 @@ namespace pyr {
         // GetSelection returns a wxTreeItemId, getSelection returns the map element.  GOOD NAME
         TreeItemData* tid = static_cast<TreeItemData*>(GetItemData(GetSelection()));
 
-        return tid->element;
+        return tid ? tid->element : 0;
     }
 
     void MapTree::onRightClick(wxMouseEvent& event) {

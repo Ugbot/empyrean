@@ -10,6 +10,7 @@ namespace pyr {
 
     class MapView;
     class MapTree;
+    class MapElement;
 
     // HACK THE MAINFRAME
     class MainFrame : public wxFrame, public CommandReciever {
@@ -20,6 +21,7 @@ namespace pyr {
         const Map* getMap() const;
         MapView* getMapView() const;
         wxGrid* getPropertiesGrid() const;
+        MapElement* getSelectedElement() const;
         
         void handleCommand(pyr::Command* cmd);
         void updateTree();

@@ -87,6 +87,10 @@ namespace pyr {
         return _propertiesGrid;
     }
 
+    MapElement* MainFrame::getSelectedElement() const {
+        return _mapTree->getSelection();
+    }
+
     void MainFrame::handleCommand(pyr::Command* cmd) {
         CommandContext context(_mapTree, _mapView, this, _map.get());
 
@@ -231,6 +235,7 @@ namespace pyr {
     }
 
     void MainFrame::onUseTranslateTool(wxCommandEvent&) {
+        _mapView->setTool(new TranslateTool());
     }
 
     void MainFrame::onUseRectangleTool(wxCommandEvent&) {
