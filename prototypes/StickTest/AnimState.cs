@@ -114,12 +114,28 @@ namespace StickTest
             }
         }
 
+        public struct TriangleList
+        {
+            public int[] vertices;
+            public int[] normals;
+        }
+
+        public class ModelData
+        {
+            public Vector[] transformedvertices;
+            public Vector[] untransformedvertices;
+            public Vector[] transformednormals;
+            public Vector[] untransformednormals;
+            public TriangleList[] trianglelists;
+        }
+
         Model model;
         JointState[] joints;
         JointState rootjoint;
 
         Vector[][] transformedvertices;
         Vector[][] untransformedvertices;
+        int[][][] trianglelists; // @_@
 
         JointState FindJointByName(string name)
         {
@@ -167,6 +183,10 @@ namespace StickTest
             }
 
             UndeformJoint(rootjoint,Matrix.identity);
+
+            trianglelists=new int[model.meshes.Length][][];
+            for (int i=0; i<model.meshes.Length; i++)
+                GenerateTriangleLists(i);
 		}
 
         void UndeformJoint(JointState j, Matrix parentm)
@@ -240,6 +260,71 @@ namespace StickTest
         public Vector[] GetVerts(int i)
         {
             return transformedvertices[i];
+        }
+        void GenerateTriangleLists(int meshidx)
+        {
+            ArrayList list=new ArrayList(); // list of triangle strips (int[]s)
+            ArrayList tris=new ArrayList(); // lists of arrays of vertex indeces of as-yet un-listified triangles (one triangle == 3 indeces)
+            Mesh mesh=model.meshes[meshidx];
+
+            // first, get a list of all the triangles
+            for (int i=0; i<mesh.triangles.Length; i++)
+            {
+                int[] t=(int[])mesh.triangles[i].i.Clone();
+                tris.Add(t);
+            }
+
+            // now, pick a triangle, and find triangles still in the list, that share two vertices.
+            // If we find one, add the third vertex to the list, and continue on.  Else add what we've got to list, and start anew.
+            ArrayList cur=new ArrayList(); // list of ints
+            while (tris.Count>0)
+            {
+                cur.Clear();
+                int[] t=(int[])tris[0];
+                cur.Add(t[0]);
+                cur.Add(t[1]);
+                cur.Add(t[2]);
+                tris.RemoveAt(0);
+                int[] l=(int[])(GenList(cur,tris).ToArray(typeof(int)));    // get a list
+                list.Add(l);
+            }
+
+            trianglelists[meshidx]=(int[][])list.ToArray(typeof(int[]));
+
+            // just for fun -- find out how many lists we have, and how long they are
+            
+        }
+
+        // recursive thinger for grabbing a wad of triangles and arranging them into a list
+        ArrayList GenList(ArrayList inlist,ArrayList tris)
+        {
+            // get the last two points on the list
+            int[] lastpoints={(int)inlist[inlist.Count-2],(int)inlist[inlist.Count-1]};
+
+            foreach (int[] tri in tris)
+            {
+                int shared=0,unsharedidx=-1;
+                for (int i=0; i<3; i++)
+                    if (tri[i]==lastpoints[0] || tri[i]==lastpoints[1])
+                        shared++;
+                    else
+                        unsharedidx=tri[i];
+
+                if (shared==2)
+                {
+                    inlist.Add(unsharedidx);
+                    tris.Remove(tri);
+                    return GenList(inlist,tris);
+                }
+            }
+
+            // can't find any more. :(
+            return inlist;
+        }
+
+        public int[][] GetTriangleLists(int modelidx)
+        {
+            return trianglelists[modelidx];
         }
     }
 }

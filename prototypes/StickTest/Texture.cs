@@ -16,10 +16,16 @@ namespace StickTest
 
 		public Texture(string fname)
 		{
+            int maxsize;
+            GL.glGetIntegerv(GL.GL_MAX_TEXTURE_SIZE,out maxsize);
+
             Bitmap bmp=new Bitmap(fname);
             int w=1,h=1;
             while ((w<<=1)<bmp.Width);
             while ((h<<=1)<bmp.Height);
+            if (w>maxsize) w=maxsize;
+            if (h>maxsize) h=maxsize;
+
             if (w!=bmp.Width && h!=bmp.Height)
                 bmp=new Bitmap(bmp,w,h);
 
@@ -56,7 +62,8 @@ namespace StickTest
             int i=0;
             
             // cell shading texture thingo
-            while (i<3) pixels[i++]=0;
+            // a literal array would be too much work
+            while (i<3) pixels[i++]=32;
             while (i<33) pixels[i++]=128;
             while (i<32*3) pixels[i++]=255;
 

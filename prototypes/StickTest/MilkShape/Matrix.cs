@@ -79,6 +79,7 @@ namespace StickTest.MilkShape
             }
         }
 
+        public double[] Values { get { return v; } } // mainly provided for more efficient OpenGL interoperation.
 
         public static Matrix operator + (Matrix l,Matrix r)
         {
