@@ -2,20 +2,20 @@
 #include "Database.h"
 #include "Game.h"
 #include "PacketTypes.h"
+#include "Server.h"
 #include "ServerLog.h"
-#include "World.h"
 
 
 namespace pyr {
 
-    World::~World() {
+    Server::~Server() {
         clearConnections();
         
         for_each(_games.begin(), _games.end(), delete_function<Game>);
         _games.clear();
     }
 
-    void World::update(float dt) {
+    void Server::update(float dt) {
         ConnectionHolder::update();
 
         // update games
@@ -24,12 +24,12 @@ namespace pyr {
             g->update(dt);
         }
     }
-    
-    World::ConnectionData* World::getData(Connection* c) {
+
+    Server::ConnectionData* Server::getData(Connection* c) {
         return static_cast<ConnectionData*>(c->getOpaque());
     }
-    
-    Game* World::getGame(const std::string& name) {
+
+    Game* Server::getGame(const std::string& name) {
         for (size_t i = 0; i < _games.size(); ++i) {
             if (_games[i]->getName() == name) {
                 return _games[i];
@@ -37,12 +37,8 @@ namespace pyr {
         }
         return 0;
     }
-    
-    std::string italic(const std::string& s) {
-        return "<i>" + s + "</i>";
-    }
-    
-    void World::connectionAdded(Connection* connection) {
+
+    void Server::connectionAdded(Connection* connection) {
         PYR_SERVER_LOG() << "Connection from address " << italic(connection->getPeerAddress());
 
         // set up connection-specific data
@@ -52,13 +48,13 @@ namespace pyr {
         connection->setOpaque(cd);
 
         // set up packet handlers
-        connection->definePacketHandler(this, &World::handleLogin);
-        connection->definePacketHandler(this, &World::handleSay);
-        connection->definePacketHandler(this, &World::handleJoinGame);
-        connection->definePacketHandler(this, &World::handleNewCharacter);
+        connection->definePacketHandler(this, &Server::handleLogin);
+        connection->definePacketHandler(this, &Server::handleSay);
+        connection->definePacketHandler(this, &Server::handleJoinGame);
+        connection->definePacketHandler(this, &Server::handleNewCharacter);
     }
 
-    void World::connectionRemoved(Connection* connection) {
+    void Server::connectionRemoved(Connection* connection) {
         ConnectionData* cd = getData(connection);
         
         if (cd->loggedIn) {
@@ -75,7 +71,7 @@ namespace pyr {
         }
     }
     
-    void World::handleLogin(Connection* c, LoginPacket* p) {
+    void Server::handleLogin(Connection* c, LoginPacket* p) {
         ConnectionData* cd = getData(c);
         if (cd->loggedIn) {
             c->sendPacket(new LoginResponsePacket(LR_ALREADY_LOGGED_IN));
@@ -131,7 +127,7 @@ namespace pyr {
         }
     }
 
-    void World::handleSay(Connection* c, SayPacket* p) {
+    void Server::handleSay(Connection* c, SayPacket* p) {
         ConnectionData* cd = getData(c);
         sendAll(new LobbyPacket(cd->account->getUsername(),
                                 LOBBY_SAY,
@@ -140,7 +136,7 @@ namespace pyr {
         PYR_SERVER_LOG() << italic(cd->account->getUsername()) << " says: " << p->text();
     }
     
-    void World::handleJoinGame(Connection* c, JoinGamePacket* p) {
+    void Server::handleJoinGame(Connection* c, JoinGamePacket* p) {
         ConnectionData* cd = getData(c);
         
         if (!cd->account) {
@@ -190,7 +186,7 @@ namespace pyr {
         }
     }
     
-    void World::handleNewCharacter(Connection* c, NewCharacterPacket* p) {
+    void Server::handleNewCharacter(Connection* c, NewCharacterPacket* p) {
         ConnectionData* cd = getData(c);
         
         if (!cd->account) {
@@ -216,14 +212,14 @@ namespace pyr {
             PYR_SERVER_LOG() << italic(username) << " created character " << italic(p->name());
         }
     }
-    
-    void World::announceLogin(Connection* c) {
+
+    void Server::announceLogin(Connection* c) {
         ConnectionData* cd = getData(c);
         sendAllBut(c, new LobbyPacket(cd->account->getUsername(),
                                       LOBBY_LOGIN, ""));
     }
     
-    void World::announceLogout(Connection* c) {
+    void Server::announceLogout(Connection* c) {
         ConnectionData* cd = getData(c);
         sendAllBut(c, new LobbyPacket(cd->account->getUsername(),
                                       LOBBY_LOGOUT, ""));

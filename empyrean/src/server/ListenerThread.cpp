@@ -2,7 +2,6 @@
 #include "ListenerThread.h"
 #include "ScopedLock.h"
 #include "ServerSocket.h"
-#include "World.h"
 
 
 namespace pyr {
@@ -10,7 +9,7 @@ namespace pyr {
     ListenerThread::ListenerThread(int port)  {
         _listener = new ServerSocket(port);
     }
-    
+
     void ListenerThread::run(Thread* thread) {
         while (!thread->shouldQuit()) {
             Socket* socket = _listener->accept(0.5f);

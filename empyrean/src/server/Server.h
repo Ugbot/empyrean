@@ -1,5 +1,5 @@
-#ifndef PYR_WORLD_H
-#define PYR_WORLD_H
+#ifndef PYR_SERVER_H
+#define PYR_SERVER_H
 
 
 #include <map>
@@ -18,16 +18,17 @@ namespace pyr {
     class SayPacket;
 
     /**
-     * Represents the actual server and server-logic.
+     * Represents the actual server and server-logic.  Contains a list of
+     * games.
      *
      * @note This class is designed to run within one thread.
      */
-    class World : public ConnectionHolder {
+    class Server : public ConnectionHolder {
     public:
-        ~World();
+        ~Server();
 
         void update(float dt);
-        
+
     private:
         struct ConnectionData {
             bool loggedIn;
@@ -35,12 +36,12 @@ namespace pyr {
         };
 
         static ConnectionData* getData(Connection* c);
-        
+
         Game* getGame(const std::string& name);
-        
+
         void connectionAdded(Connection* connection);
         void connectionRemoved(Connection* connection);
-    
+
         void handleLogin(Connection* c, LoginPacket* p);
         void handleSay(Connection* c, SayPacket* p);
         void handleJoinGame(Connection* c, JoinGamePacket* p);

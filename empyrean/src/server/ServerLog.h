@@ -21,6 +21,11 @@ namespace pyr {
             return *this;
         }
     };
+    
+    // Italicizes a string.
+    inline std::string italic(const std::string& s) {
+        return "<i>" + s + "</i>";
+    }
 
     /// Same as PYR_LOG(), but logs to server window.
     #define PYR_SERVER_LOG() ::pyr::ServerLogStream().get()

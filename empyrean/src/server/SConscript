@@ -8,12 +8,12 @@ SOURCES = Split("""
     ListenerThread.cpp
     LogEvent.cpp
     Main.cpp
+    Server.cpp
     ServerApp.cpp
     ServerEntity.cpp
     ServerFrame.cpp
     ServerLog.cpp
     ServerThread.cpp
-    World.cpp
 """)
 
 env = base_env.Copy()
