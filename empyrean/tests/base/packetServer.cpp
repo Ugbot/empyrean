@@ -7,8 +7,12 @@
 using namespace std;
 using namespace pyr;
 
+const int PORT = 8765;
+
 int run() {
-    ServerSocket listener(8765);
+    ServerSocket listener(PORT);
+
+    cout << "Listening on port " << PORT << endl;
 
     Socket* socket = listener.accept();
     if (!socket) {
