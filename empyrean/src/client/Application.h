@@ -1,10 +1,14 @@
 #ifndef PYR_APPLICATION_H
 #define PYR_APPLICATION_H
 
-
 #include <SDL.h>
+
 #include "Utility.h"
 
+namespace gltext {
+    class Font;
+    class FontRenderer;
+}
 
 namespace pyr {
 
@@ -55,6 +59,11 @@ namespace pyr {
         ScopedPtr<State> _fadingState;
         float _totalFadeTime;
         float _currentFadeTime;
+
+        bool _showCPUInfo;
+
+        gltext::FontRenderer* _fontRenderer;
+        gltext::Font* _font;
     };
     
 }

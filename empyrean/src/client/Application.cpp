@@ -1,12 +1,15 @@
 #include <stdlib.h>
+#include <sstream>
+
+#include <gltext.h>
+
 #include "Application.h"
 #include "IntroState.h"
-
+#include "Profiler.h"
 
 namespace pyr {
 
     typedef IntroState InitialState;
-
 
     Application* Application::_instance = 0;
 
@@ -29,9 +32,14 @@ namespace pyr {
         _lastX = 0;
         _lastY = 0;
         _currentState = new InitialState();
+        _showCPUInfo = false;
         
         _totalFadeTime = 0;
         _currentFadeTime = 0;
+
+        _fontRenderer = gltext::CreateRenderer(gltext::BITMAP);
+        _font = gltext::CreateFont("fonts/arial.ttf", gltext::PLAIN, 14);
+        _fontRenderer->setFont(_font);
     }
     
     void Application::resize(int width, int height) {
@@ -45,6 +53,26 @@ namespace pyr {
         }
         if (_fadingState && _totalFadeTime != 0) {
             _fadingState->draw(_currentFadeTime / _totalFadeTime);
+        }
+
+        if (_showCPUInfo) {
+            const Profiler::ProcessMap& pi = Profiler::getProfileInfo();
+            float totaltime = Profiler::getTotalTime();
+
+            glDisable(GL_BLEND);
+            glPushMatrix();
+
+            glTranslatef(0,(float)_font->getAscent(),0);
+
+            for (Profiler::ProcessMap::const_iterator iter = pi.begin(); iter != pi.end(); iter++) {
+                std::stringstream ss;
+                int i = int(iter->second.time / totaltime * 100);
+                ss << iter->first << ": " << i << "%";
+                _fontRenderer->render(ss.str().c_str());
+                glTranslatef(0, float(_font->getAscent() + _font->getDescent() + _font->getLineGap()), 0);
+            }
+
+            glPopMatrix();
         }
     }
     
@@ -69,6 +97,10 @@ namespace pyr {
     void Application::onKeyPress(SDLKey key, bool down) {
         if (_currentState) {
             _currentState->onKeyPress(key, down);
+        }
+
+        if (down && key == SDLK_F1) {
+            _showCPUInfo = !_showCPUInfo;
         }
     }
     

@@ -46,11 +46,16 @@ namespace pyr {
             float timePlusChildren;
         };
 
+        typedef std::map<std::string, Process> ProcessMap;
+
         Profiler(const std::string& name);
         ~Profiler();
 
         /// Accessor for gathered profiling information.
-        static const std::map<std::string, Process>& getProfileInfo();
+        static const ProcessMap& getProfileInfo();
+
+        /// Returns the total number of seconds we've been profiling things.
+        static float getTotalTime();
 
         /// Dumps the profiling information to a file named profile.html
         static void dump();
@@ -69,7 +74,7 @@ namespace pyr {
         static float _totalTime;
         
         /// Tallied up times for all started processes.
-        static std::map<std::string, Process> _processes;
+        static ProcessMap _processes;
         
         /// "call stack"
         static std::stack<Process*> _procHistory;

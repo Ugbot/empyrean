@@ -13,7 +13,7 @@ namespace pyr {
     // Static things.
     float                          Profiler::_lastTime;
     float                          Profiler::_totalTime;
-    map<string, Profiler::Process> Profiler::_processes;
+    Profiler::ProcessMap           Profiler::_processes;
     stack<Profiler::Process*>      Profiler::_procHistory;
     
     Profiler::Profiler(const string& name) {
@@ -44,8 +44,12 @@ namespace pyr {
         _lastTime = now;
     }
 
-    const std::map<std::string,Profiler::Process>& Profiler::getProfileInfo() {
+    const Profiler::ProcessMap& Profiler::getProfileInfo() {
         return _processes;
+    }
+
+    float Profiler::getTotalTime() {
+        return _totalTime;
     }
 
     void Profiler::dump() {
@@ -55,7 +59,7 @@ namespace pyr {
         ofstream file("profile.html");
         
         file << "<table border=1><tr><th>Process</th><th>Time</th><th>%</th><th>Time+children</th><th>%</th></tr>" << endl;
-        for (map<string, Process>::iterator i = _processes.begin(); 
+        for (ProcessMap::iterator i = _processes.begin(); 
             i!=_processes.end(); i++)
         {
             file << "<tr><td>" << i->first << "</td><td>" << i->second.time << "</td><td>" << int(i->second.time*100/_totalTime) << "</td><td>" <<

@@ -5,6 +5,7 @@ TARGET = ARGUMENTS.get('TARGET', '.')
 Default(TARGET)
 
 DIRS = Split("""
+   fonts
    images
    models
    models/paladin
@@ -16,6 +17,7 @@ WILD = Split("""
    *.jpeg
    *.raw
    *.caf *.cfg *.cmf *.crf *.csf
+   *.ttf
 """)
 
 env = Environment()
