@@ -67,7 +67,7 @@ def SetupAudiere(env):
 def SetupBoost(env):
     env.Append(CPPDEFINES=['BOOST_PYTHON_STATIC_LIB',
                            'BOOST_PYTHON_STATIC_MODULE'],
-               CPPPATH=['/usr/local/include/boost-1_31'],
+               CPPPATH=['$boostIncludes'],
                LIBS=['boost_python-gcc'])
 
 def SetupCal3D(env):
@@ -111,6 +111,8 @@ def SetupPython(env):
     env.Append(CPPPATH=[os.path.join(sys.prefix, 'include', pybase)],
                LIBPATH=[os.path.join(sys.prefix, 'lib', pybase, 'config')],
                LIBS=['lib%s' % pybase])
+    if env['PLATFORM'] not in ['cygwin', 'win32']:
+        env.Append(LIBS=['util'])
 
 def SetupNSPR(env):
     try:
@@ -174,7 +176,8 @@ opts.AddOptions(
     BoolOption('distcc', 'Enable compiling with distcc', 0),
     BoolOption('nowarn', 'Disable all warnings', 0),
     BoolOption('warningsAsErrors', 'Treat warnings as errors', 0),
-    BoolOption('saveTemps', 'Save temporary files, such as preprocessor output', 0))
+    BoolOption('saveTemps', 'Save temporary files, such as preprocessor output', 0),
+    PathOption('boostIncludes', 'Directory containing boost header files', '/usr/local/include/boost-1_31'))
 
 # Create base environment.
 env = Environment(ENV=os.environ, options=opts)

@@ -25,7 +25,9 @@ namespace pyr {
         PYR_BEGIN_PYTHON_CODE()
 
         handle<> code( Py_CompileString(
-            contents.c_str(), filename.c_str(), Py_file_input) );
+            const_cast<char*>(contents.c_str()),
+            const_cast<char*>(filename.c_str()),
+            Py_file_input) );
 
         std::string name = va("EmpyreanScript%d", _moduleCount++);
         handle<> module( PyImport_ExecCodeModule(
