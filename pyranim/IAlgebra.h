@@ -378,6 +378,119 @@ public:
     }
 };
 
+class IQuat {
+private:
+    GLdouble m_x[4];
+  
+public:
+    inline IQuat() {
+	m_x[0] = m_x[1] = m_x[2] = 0.0;
+	m_x[3] = 1.0;
+    }
+
+    inline IQuat(const GLdouble x, const GLdouble y, const GLdouble z) {
+	m_x[0] = x;
+	m_x[1] = y;
+	m_x[2] = z;
+	m_x[3] = 1.0;
+    }
+
+    inline IQuat(const GLdouble x, const GLdouble y, const GLdouble z, const GLdouble w) {
+	m_x[0] = x;
+	m_x[1] = y;
+	m_x[2] = z;
+	m_x[3] = w;
+    }
+
+    inline IQuat(const GLdouble *p) {
+	memcpy(m_x, p, 4 * sizeof(GLdouble));
+    }
+
+    /*inline IQuat(const IPoint &p) {
+        m_x[0] = p[0];
+        m_x[1] = p[1];
+        m_x[2] = p[2];
+        m_x[3] = 0.0;
+    }*/
+
+    inline IQuat(double theta, const IVector &axis) {
+        double halfTheta = theta / 2.0;
+        m_x[3] = cos(halfTheta);
+
+        double sht = sin(halfTheta);
+        m_x[0] = axis[0] * sht;
+        m_x[1] = axis[1] * sht;
+        m_x[2] = axis[2] * sht;
+    }
+
+    inline IQuat(const IQuat& p) {
+	memcpy(m_x, p.m_x, 4 * sizeof(GLdouble));
+    }
+
+    //inline ~IPoint() {}
+
+    inline void unpack(GLdouble *p) const {
+	memcpy(p, m_x, 4 * sizeof(GLdouble));
+    }
+
+    inline const GLdouble *getData() const {
+	return m_x;
+    }
+  
+    inline int operator==(const IQuat& q) const {
+	GLdouble deltaX = m_x[0] - q.m_x[0];
+	GLdouble deltaY = m_x[1] - q.m_x[1];
+	GLdouble deltaZ = m_x[2] - q.m_x[2];
+	GLdouble deltaW = m_x[3] - q.m_x[3];
+	GLdouble error = (deltaX * deltaX + 
+			  deltaY * deltaY + 
+			  deltaZ * deltaZ +
+			  deltaW * deltaW);
+	return (error < IALGEBRA_EPSILON);
+    }
+
+    inline int operator!=(const IQuat& q) const {
+	GLdouble deltaX = m_x[0] - q.m_x[0];
+	GLdouble deltaY = m_x[1] - q.m_x[1];
+	GLdouble deltaZ = m_x[2] - q.m_x[2];
+	GLdouble deltaW = m_x[3] - q.m_x[3];
+	GLdouble error = (deltaX * deltaX + 
+			  deltaY * deltaY + 
+			  deltaZ * deltaZ +
+			  deltaW * deltaW);
+	return (error >= IALGEBRA_EPSILON);	
+    }
+
+    inline int operator<(const IQuat &q2) const {
+	if(m_x[0] < q2.m_x[0]) return 1;
+	if(m_x[0] > q2.m_x[0]) return 0;
+
+	if(m_x[1] < q2.m_x[1]) return 1;
+	if(m_x[1] > q2.m_x[1]) return 0;
+
+	if(m_x[2] < q2.m_x[2]) return 1;
+	return 0;
+    }
+
+    inline IQuat& operator=(const IQuat& p) {
+	memcpy(m_x, p.m_x, 4 * sizeof(GLdouble));
+	return *this;
+    }
+ 
+    inline GLdouble operator[](const int i) const {
+	return m_x[i];
+    }
+
+    inline GLdouble& operator[](const int i) {
+	return m_x[i];
+    }
+
+    inline void print() const {
+	printf("(%g,%g,%g,%g)\n", m_x[0], m_x[1], m_x[2], m_x[3]);
+    }
+};
+
+
 // This adds a vector to a point, and returns the resultant point
 inline IPoint operator+(const IVector& v, const IPoint& p) {
   return IPoint(p[0] + v[0],
@@ -569,7 +682,7 @@ inline IMatrix rotZ_mat(const GLdouble radians) {
     return IMatrix(IMatrix::TYPE_ROTATE_Z, radians);
 }
 
-inline IMatrix quat_to_mat(const IPoint &p) {
+inline IMatrix quat_to_mat(const IQuat &p) {
     // Quaternion to matrix routine from Watt and Watt, p.363
 
     GLdouble qx = p[0];
@@ -620,7 +733,7 @@ inline IMatrix rot_mat(const IPoint& p, const IVector& v, const GLdouble angle) 
     // Set up quaternion
 
     assert(fabs(l) >= IALGEBRA_EPSILON);
-    IPoint q;
+    IQuat q;
     q[0] = sinAngle * v[0] / l;
     q[1] = sinAngle * v[1] / l;
     q[2] = sinAngle * v[2] / l;
@@ -744,6 +857,46 @@ inline IMatrix invert(const IMatrix& m) {
 		   me, mf, mg, mh,
 		   mi, mj, mk, ml,
 		   0.0, 0.0, 0.0, 1.0);
+}
+
+// Quaternion operations:
+
+// Returns the sum of quaternions.
+inline IQuat operator+(const IQuat& q1, const IQuat& q2) {
+  return IQuat(q1[0] + q2[0],
+               q1[1] + q2[1],
+               q1[2] + q2[2], 
+               q1[3] + q2[3]);
+}
+
+// Returns negated quaternion.
+inline IQuat operator-(const IQuat& q) {
+    return IQuat(-q[0],-q[1],-q[2],-q[3]);
+}
+
+// Returns the difference between quaternions.
+inline IQuat operator-(const IQuat& q1, const IQuat& q2) {
+    return IQuat(q1[0] - q2[0],
+                 q1[1] - q2[1],
+                 q1[2] - q2[2],
+                 q1[3] - q2[3]);
+}
+
+// Returns product of quaternions.
+inline IQuat operator*(const IQuat& q1, const IQuat& q2) {
+    double qw = q1[3]*q2[3] - q1[0]*q2[0] - q1[1]*q2[1] - q1[2]*q2[2];
+    double qx = q1[3]*q2[0] + q1[0]*q2[3] + q1[1]*q2[2] - q1[2]*q2[1];
+    double qy = q1[3]*q2[1] - q1[0]*q2[2] + q1[1]*q2[3] + q1[2]*q2[0];
+    double qz = q1[3]*q2[2] + q1[0]*q2[1] - q1[1]*q2[0] + q1[2]*q2[3];
+    return IQuat(qx, qy, qz, qw);
+}
+
+// Returns the magnitude of a quaternion.
+inline double magnitude(const IQuat &q) {
+    return sqrt(q[0]*q[0] +
+                q[1]*q[1] +
+                q[2]*q[2] +
+                q[3]*q[3]);
 }
 
 #endif
