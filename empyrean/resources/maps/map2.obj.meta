@@ -30,6 +30,13 @@
     <property key="appearance" value="obj"/>
     <property key="appearanceResource" value="maps/gargon.skeleton.obj"/>
   </node>
+  <node name="Fish" position="-6.0946 -8.37314e-008 1.91555">
+    <property key="entity" value="true"/>
+    <property key="behavior" value="python"/>
+    <property key="behaviorResource" value="maps/entity.py"/>
+    <property key="appearance" value="obj"/>
+    <property key="appearanceResource" value="maps/fish-smoothed2.obj"/>
+  </node>
   <node name="Dummy02" position="6.18181 -3.89528e-007 8.91136">
     <property key="enemy" value="true"/>
   </node>
