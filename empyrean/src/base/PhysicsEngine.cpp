@@ -26,7 +26,7 @@ namespace pyr {
 
     void PhysicsEngine::checkVelocity(Vec2f& newVel) {
         // Set velocity to zero if it is small to stop friction
-        if (abs(newVel[0]) < 0.05 && abs(newVel[1]) < 0.05) {
+        if (fabs(newVel[0]) < 0.05f && fabs(newVel[1]) < 0.05f) {
                 newVel[0] = 0.0f;
                 newVel[1] = 0.0f;
         }
@@ -91,7 +91,7 @@ namespace pyr {
 
         if ( velAlongGround[0] == 0) {
             // see if it is kinematic friction
-            if (abs(oldAccel) > mus*cos(ent->getAngleWithGround())*constants::GRAVITY) {
+            if (fabs(oldAccel) > mus*cos(ent->getAngleWithGround())*constants::GRAVITY) {
                 frictionAccel = -sgn(velAlongGround[0])*muk*cos(ent->getAngleWithGround())*constants::GRAVITY;
             }
             // it is static friction
