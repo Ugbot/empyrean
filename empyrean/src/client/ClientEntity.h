@@ -15,7 +15,7 @@ namespace pyr {
         }
 
         /// Override update() so we can update the appearance.
-        void update(float dt, const Map* map);
+        void update(float dt, const Environment& env);
         void draw() const;
 
         void getVitalityUpdate(int& current, int& max);

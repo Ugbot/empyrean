@@ -3,8 +3,8 @@
 
 namespace pyr {
 
-    void ClientEntity::update(float dt, const Map* map) {
-        Entity::update(dt, map);
+    void ClientEntity::update(float dt, const Environment& env) {
+        Entity::update(dt, env);
         getClientAppearance()->update(dt);
     }
 

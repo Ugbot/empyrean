@@ -12,7 +12,7 @@ namespace pyr {
         //beginAnimationCycle("idle");
     }
 
-    void PlayerBehavior::update(Entity* entity, float dt, const Map* map) {
+    void PlayerBehavior::update(Entity* entity, float dt, const Environment& env) {
         // Default behavior.
         Vec2f& pos = entity->getPos();
         Vec2f& vel = entity->getVel();
@@ -29,7 +29,7 @@ namespace pyr {
         const Vec2f precollideVelocity = vel;
 
         /// @todo Save the collision data for debugging.
-        collide(dt, origPos, pos, vel, entity->getBounds(), map);
+        collide(dt, origPos, pos, vel, entity->getBounds(), env.map);
 
         const int FALLING_SPEED = 0;
 

@@ -166,9 +166,7 @@ namespace pyr {
             instantiateBehavior(p->behavior(), p->behaviorResource()),
             instantiateAppearance(p->appearance(), p->appearanceResource()));
         // Hardcoded for now.  Hardcoded in the server as well.
-        float width  = 0.3f;
-        float height = 1.9f;
-        entity->setBounds(BoundingRectangle(Vec2f(-width / 2, 0), Vec2f(width / 2, height)));
+        entity->setBounds(BoundingRectangle(p->boundsMin(), p->boundsMax()));
         the<Scene>().addEntity(p->id(), entity);
     }
 
@@ -221,5 +219,5 @@ namespace pyr {
             PYR_LOG() << "Received update entity packet for nonexistent entity " << p->id();
         }
     }
-    
+
 }

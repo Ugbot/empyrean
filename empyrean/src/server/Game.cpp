@@ -32,9 +32,13 @@ namespace pyr {
             if (elt->properties["enemy"] == "true") {
                 ServerEntity* entity = new ServerEntity(
                     _idGenerator.reserve(),
-                    instantiateBehavior("dumb"),
-                    new ServerAppearance("cal3d", "models/Walk1/walk1.cfg"),
+                    instantiateBehavior("monster"),
+                    new ServerAppearance("cal3d", "models/paladin/paladin.cal3d"),
                     0);
+
+                float width  = 0.3f;
+                float height = 1.9f;
+                entity->setBounds(BoundingRectangle(Vec2f(-width / 2, 0), Vec2f(width / 2, height)));
                 entity->setPos(elt->pos);
                 addEntity(entity);
             }
@@ -50,9 +54,13 @@ namespace pyr {
 
     void Game::update(float dt) {
         ConnectionHolder::update();
+        
+        Environment env;
+        env.map = _map.get();
+        env.entities = std::vector<const Entity*>(_entities.begin(), _entities.end());
 
         for (size_t i = 0; i < _entities.size(); ++i) {
-            _entities[i]->update(dt, _map.get());
+            _entities[i]->update(dt, env);
 
             // Send all appearance updates to all of the clients.
             ServerAppearance* appearance = _entities[i]->getServerAppearance();
@@ -98,7 +106,9 @@ namespace pyr {
             entity->getBehavior()->getName(),
             entity->getBehavior()->getResource(),
             entity->getAppearance()->getName(),
-            entity->getAppearance()->getResource());
+            entity->getAppearance()->getResource(),
+            entity->getBounds().min,
+            entity->getBounds().max);
     }
 
     void Game::connectionAdded(Connection* connection) {

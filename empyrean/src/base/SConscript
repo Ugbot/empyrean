@@ -16,6 +16,7 @@ SOURCES = Split("""
     MapElement.cpp
     MapLoader.cpp
     MapRenderer.cpp
+    MonsterBehavior.cpp
     NSPRUtility.cpp
     OBJLoader.cpp
     PacketFactory.cpp

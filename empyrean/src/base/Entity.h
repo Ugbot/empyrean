@@ -30,7 +30,7 @@ namespace pyr {
          * Updates the entity's behavior.  If you need to update something else,
          * override this.
          */
-        virtual void update(float dt, const Map* map);
+        virtual void update(float dt, const Environment& env);
 
         Behavior*   getBehavior()   const { return _behavior.get();   }
         Appearance* getAppearance() const { return _appearance.get(); }

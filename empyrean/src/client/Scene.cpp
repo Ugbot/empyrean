@@ -80,19 +80,26 @@ namespace pyr {
             glPopMatrix();
         }
     }
-    
-    void Scene::update(float dt) {
-        EntityMap::iterator itr = _entities.begin();
-        Entity::EntityList entityList;
 
-        // Update all entities (regardless of collision with others)
-        for (; itr != _entities.end(); ++itr) {
-            itr->second->update(dt, _map.get());
+    void Scene::update(float dt) {
+        Entity::EntityList entityList;
+        for (EntityMap::iterator itr = _entities.begin();
+             itr != _entities.end(); ++itr) {
             entityList.push_back(itr->second);
         }
+
+        Environment env;
+        env.map = _map.get();
+        env.entities = std::vector<const Entity*>(entityList.begin(), entityList.end());
+
+        // Update all entities (regardless of collision with others)
+        for (EntityMap::iterator itr = _entities.begin();
+             itr != _entities.end(); ++itr) {
+            itr->second->update(dt, env);
+        }
         // Now that everyone has moved do a collision amongst entities (game entities that is)
-        itr = _entities.begin();
-        for (; itr != _entities.end(); ++itr) {
+        for (EntityMap::iterator itr = _entities.begin();
+             itr != _entities.end(); ++itr) {
             Entity* entity = itr->second;
             entity->collideWithOthers(entityList);
         }

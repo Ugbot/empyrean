@@ -4,8 +4,8 @@
 
 namespace pyr {
 
-    void Entity::update(float dt, const Map* map) {
-        _behavior->update(this, dt, map);
+    void Entity::update(float dt, const Environment& env) {
+        _behavior->update(this, dt, env);
     }
 
     void Entity::collideWithOthers(EntityList entities) {

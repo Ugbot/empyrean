@@ -1,5 +1,6 @@
 #include "Behavior.h"
 #include "Entity.h"
+#include "MonsterBehavior.h"
 #include "PlayerBehavior.h"
 #include "Utility.h"
 #include "VecMath.h"
@@ -35,7 +36,7 @@ namespace pyr {
         DumbBehavior(const std::string& /*resource*/) {
         }
 
-        void update(Entity* entity, float dt, const Map* map) {
+        void update(Entity* entity, float dt, const Environment& /*env*/) {
             entity->getPos() += entity->getVel() * dt;
 
             entity->getVel()[0] += sin(angle) * dt / 2;
@@ -59,7 +60,7 @@ namespace pyr {
         NullBehavior(const std::string& /*resource*/) {
         }
 
-        void update(Entity* entity, float dt, const Map* map) {
+        void update(Entity* entity, float dt, const Environment& /*env*/) {
             entity->getPos() += entity->getVel() * dt;
         }
 
@@ -78,6 +79,7 @@ namespace pyr {
         TRY_TYPE(DumbBehavior);
         TRY_TYPE(NullBehavior);
         TRY_TYPE(PlayerBehavior);
+        TRY_TYPE(MonsterBehavior);
         return new NullBehavior(resource);
     }
 

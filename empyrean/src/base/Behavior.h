@@ -3,6 +3,7 @@
 
 
 #include <string>
+#include <vector>
 
 
 namespace pyr {
@@ -19,6 +20,17 @@ namespace pyr {
         return (name);                      \
     }
     
+    
+    /**
+     * Represents the surroundings of an entity, passed into Behavior's
+     * update() so it can use information from the map and nearby entities.
+     */
+    struct Environment {
+        const Map* map;
+        std::vector<const Entity*> entities;
+    };
+
+
     /**
      * An object that can control an entity's motion and actions.
      */
@@ -27,7 +39,7 @@ namespace pyr {
         virtual ~Behavior() { }
         virtual std::string getName() = 0;
         virtual std::string getResource() = 0;
-        virtual void update(Entity* entity, float dt, const Map* map) = 0;
+        virtual void update(Entity* entity, float dt, const Environment& env) = 0;
 
     protected:
         void sendAppearanceCommand(Entity* entity, const std::string& command);

@@ -77,7 +77,7 @@ namespace pyr {
     #define PYR_JOIN_GAME_RESPONSE_PACKET_NAME JoinGameResponsePacket
     #define PYR_JOIN_GAME_RESPONSE_PACKET(_)  \
         _(field)(u16, code)
-        
+
     // Player Event codes
     //   "Begin Left"
     //   "End Left"
@@ -97,13 +97,13 @@ namespace pyr {
         _(field)(u16, addVit)       \
         _(field)(u16, decVit)       \
         _(field)(u16, addEth)       \
-        _(field)(u16, decEth)       
-        
+        _(field)(u16, decEth)
+
     // server -> client
     #define PYR_SET_PLAYER_PACKET_NAME SetPlayerPacket
     #define PYR_SET_PLAYER_PACKET(_) \
         _(field)(u16, id)
-    
+
     // server -> client
     #define PYR_ENTITY_ADDED_PACKET_NAME EntityAddedPacket
     #define PYR_ENTITY_ADDED_PACKET(_)     \
@@ -111,7 +111,9 @@ namespace pyr {
         _(string)(16,  behavior)           \
         _(string)(256, behaviorResource)   \
         _(string)(16,  appearance)         \
-        _(string)(256, appearanceResource)
+        _(string)(256, appearanceResource) \
+        _(field)(Vec2f, boundsMin)         \
+        _(field)(Vec2f, boundsMax)
 
     // server -> client
     #define PYR_ENTITY_REMOVED_PACKET_NAME EntityRemovedPacket

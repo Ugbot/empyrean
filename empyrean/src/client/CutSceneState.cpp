@@ -48,6 +48,10 @@ namespace pyr {
     }
 
     void CutSceneState::onKeyPress(SDLKey key, bool down) {
+        if (key == SDLK_ESCAPE) {
+            invokeTransition<GameState>();
+            return;
+        }
         if (down) {
             next();
         }

@@ -14,7 +14,7 @@ namespace pyr {
 
         PlayerBehavior(const std::string& resource);
 
-        void update(Entity* entity, float dt, const Map* map);
+        void update(Entity* entity, float dt, const Environment& env);
 
         std::string getResource() {
             return "";
