@@ -1,3 +1,10 @@
+/**
+ * These classes were originally written for the Midworld project
+ * in the ISU Game Developers Club.
+ *
+ * This file (c) Ben Scott
+ */
+
 #ifndef PYR_RESOURCE_MANAGER_H
 #define PYR_RESOURCE_MANAGER_H
 
