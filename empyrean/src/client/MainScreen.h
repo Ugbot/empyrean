@@ -16,6 +16,7 @@ namespace pyr {
         {
             createMainScreen();
             createConnectWindow();
+            createConnectingWindow();
         }
         
     private:
@@ -50,6 +51,7 @@ namespace pyr {
         void createConnectWindow() {
             using namespace phui;
         
+
             std::string server = Configuration::instance().getServer();
             std::string port = itos(Configuration::instance().getPort());
             _server = new TextField(server + ":" + port);
@@ -58,21 +60,37 @@ namespace pyr {
                 new BoxLayout(BoxLayout::HORIZONTAL));
             serverPanel->add(new Label("Server"));
             serverPanel->add(_server);
-                        
+            
+
             ButtonPtr connect = new Button("Connect");
             connect->addListener(this, MainScreen::onConnect);
             
             ButtonPtr cancel  = new Button("Cancel");
             cancel->addListener(this, MainScreen::onCancel);
         
+            WidgetContainerPtr buttonPanel = new WidgetContainer(
+                new BoxLayout(BoxLayout::HORIZONTAL));
+            buttonPanel->add(connect);
+            buttonPanel->add(cancel);
+                        
+
             _connectWindow = new Window(
                 "Connect to Server",
                 new BoxLayout(BoxLayout::VERTICAL));
             _connectWindow->show();
             _connectWindow->setPositionAndSize(300, 250, 424, 440);
             _connectWindow->add(serverPanel);
-            _connectWindow->add(connect);
-            _connectWindow->add(cancel);
+            _connectWindow->add(buttonPanel);
+        }
+        
+        void createConnectingWindow() {
+            using namespace phui;
+            
+            _connectingWindow = new Window(
+                "Connecting...",
+                new BoxLayout(BoxLayout::VERTICAL));
+            _connectingWindow->add(new Label("Connecting..."));
+            //_connectingWindow->add();
         }
     
         void onConnectToServer(const phui::ActionEvent&) {
@@ -112,6 +130,8 @@ namespace pyr {
         
         phui::WindowPtr _connectWindow;
         phui::TextFieldPtr _server;
+        
+        phui::WindowPtr _connectingWindow;
     };
     
 }

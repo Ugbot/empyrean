@@ -1,4 +1,3 @@
-#include <iostream>
 #include <pratom.h>
 #include "CondVar.h"
 #include "Debug.h"

@@ -10,10 +10,10 @@
 
 #else
 
-    #include <iostream>
+    #include <stdio.h>
 
     void pyr::error(const std::string& message) {
-        std::cerr << message << std::endl;
+        fputs(message.c_str(), stderr);
     }
 
 #endif

@@ -36,15 +36,12 @@ namespace pyr {
             Packet* p = packets.front();
             packets.pop();
 
-	    //std::cout << "Processing packet with id: " << p->getID() << std::endl;
-            
             TypeInfo ti(typeid(*p));
             PacketHandler* handler = _handlers[ti];
             if (handler) {
                 handler->processPacket(this, p);
                 delete p;
             } else {
-		//std::cout << "Unhandled packet: id = " << p->getID() << std::endl;
                 _unhandledPackets.push_back(p);
             }
         }

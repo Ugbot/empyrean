@@ -51,15 +51,14 @@ namespace pyr {
         
         glMatrixMode(GL_MODELVIEW);
         glLoadIdentity();
-        gluOrtho2D(0, 400, 300, 0);
+        Application& a = Application::instance();
+        gluOrtho2D(0, a.getWidth(), a.getHeight(), 0);
         
         glEnable(GL_TEXTURE_2D);
         glEnable(GL_BLEND);
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
         glColor4f(1, 1, 1, 1);
         glTranslatef(0, 8, 0);
-        //bool loggedIn = ServerConnection::instance().isLoggedIn();
-        //GLTEXT_STREAM(_renderer) << (loggedIn ? "Logged In" : "Not Logged In");
     }
 
     void GameState::update(float dt) {
@@ -70,7 +69,6 @@ namespace pyr {
 
         ServerConnection& sc = ServerConnection::instance();
         sc.update();
-//        sc.setForce(_inputRight->getValue() - _inputLeft->getValue());
 
         float dx = _inputRight->getValue() - _inputLeft->getValue();
         float dy = 1 - _inputSpace->getValue() * 2;

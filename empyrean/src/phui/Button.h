@@ -24,8 +24,8 @@
  *
  * -----------------------------------------------------------------
  * File:          $RCSfile: Button.h,v $
- * Date modified: $Date: 2003-09-23 00:36:30 $
- * Version:       $Revision: 1.7 $
+ * Date modified: $Date: 2003-09-24 00:48:56 $
+ * Version:       $Revision: 1.8 $
  * -----------------------------------------------------------------
  *
  ************************************************************** phui-cpr-end */
@@ -33,7 +33,6 @@
 #define PHUI_BUTTON_H
 
 #include <string>
-#include <iostream>
 #include <list>
 #include "Widget.h"
 #include "ActionListener.h"

@@ -1,4 +1,3 @@
-#include <iostream>
 #include <memory>
 #include <stdexcept>
 #include <string>
@@ -21,8 +20,6 @@
 namespace pyr {
 
     void runClient() {
-        std::cout << "Starting Empyrean..." << std::endl;
-    
         PYR_PROFILE_BLOCK("main");
 
         // initialize the random number generator in case we ever
@@ -154,9 +151,7 @@ namespace pyr {
 #endif
 
 
-/**
- * main() needs to be defined with argc and argv so SDL works right.
- */
+/// main() needs to be defined with argc and argv so SDL works right.
 int main(int /*argc*/, char* /*argv*/[]) {
 
 #ifdef WIN32

@@ -24,8 +24,8 @@
  *
  * -----------------------------------------------------------------
  * File:          $RCSfile: ListBox.cpp,v $
- * Date modified: $Date: 2003-09-23 00:36:30 $
- * Version:       $Revision: 1.4 $
+ * Date modified: $Date: 2003-09-24 00:48:56 $
+ * Version:       $Revision: 1.5 $
  * -----------------------------------------------------------------
  *
  ************************************************************** phui-cpr-end */
@@ -156,7 +156,6 @@ namespace phui
          if (selectedIdx < mItems.size())
          {
             mSelectedItem = selectedIdx;
-            std::cout<<"Selected index "<<mSelectedItem<<"/"<<mItems.size()<<std::endl;
             fireListSelectionEvent(mSelectedItem);
          }
       }

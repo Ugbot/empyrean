@@ -24,15 +24,14 @@
  *
  * -----------------------------------------------------------------
  * File:          $RCSfile: WindowAdapter.h,v $
- * Date modified: $Date: 2003-09-23 00:36:30 $
- * Version:       $Revision: 1.2 $
+ * Date modified: $Date: 2003-09-24 00:48:56 $
+ * Version:       $Revision: 1.3 $
  * -----------------------------------------------------------------
  *
  ************************************************************** phui-cpr-end */
 #ifndef PHUI_WINDOW_ADAPTER_H
 #define PHUI_WINDOW_ADAPTER_H
 
-#include <iostream>
 #include "WindowListener.h"
 
 namespace phui

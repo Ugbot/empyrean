@@ -1,4 +1,3 @@
-//#include <iostream>
 #include "ByteBuffer.h"
 #include "ReaderThread.h"
 #include "ScopedLock.h"
@@ -28,8 +27,6 @@ namespace pyr {
                 _incoming.push(p);
             }
         }
-
-//        std::cout << "Quitting reader thread" << std::endl;
     }
     
     std::queue<Packet*> ReaderThread::getPackets() {

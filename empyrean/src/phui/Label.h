@@ -24,8 +24,8 @@
  *
  * -----------------------------------------------------------------
  * File:          $RCSfile: Label.h,v $
- * Date modified: $Date: 2003-09-23 00:36:30 $
- * Version:       $Revision: 1.2 $
+ * Date modified: $Date: 2003-09-24 00:48:56 $
+ * Version:       $Revision: 1.3 $
  * -----------------------------------------------------------------
  *
  ************************************************************** phui-cpr-end */
@@ -33,7 +33,6 @@
 #define PHUI_LABEL_H
 
 #include <string>
-#include <iostream>
 #include "Widget.h"
 
 namespace phui
