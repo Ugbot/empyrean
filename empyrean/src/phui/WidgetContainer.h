@@ -24,8 +24,8 @@
  *
  * -----------------------------------------------------------------
  * File:          $RCSfile: WidgetContainer.h,v $
- * Date modified: $Date: 2003-09-23 00:36:30 $
- * Version:       $Revision: 1.8 $
+ * Date modified: $Date: 2003-09-23 08:32:34 $
+ * Version:       $Revision: 1.9 $
  * -----------------------------------------------------------------
  *
  ************************************************************** phui-cpr-end */
@@ -87,7 +87,7 @@ namespace phui {
 
     private:
         /** Widgets contained by this container sorted from bottom to top
-            where the */
+            where the first one is bottom-most. */
         std::vector<WidgetPtr> mWidgets;
 
         LayoutPtr mLayout;

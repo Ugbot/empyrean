@@ -80,6 +80,38 @@ namespace pyr {
         T* _ptr;
     };
     
+    
+    template<typename T, typename U>
+    bool operator==(const RefPtr<T>& a, const RefPtr<U>& b) {
+        return (a.get() == b.get());
+    }
+
+    template<typename T>
+    bool operator==(const RefPtr<T>& a, const T* b) {
+        return (a.get() == b);
+    }
+
+    template<typename T>
+    bool operator==(const T* a, const RefPtr<T>& b) {
+        return (a == b.get());
+    }
+    
+
+    template<typename T, typename U>
+    bool operator!=(const RefPtr<T>& a, const RefPtr<U>& b) {
+        return (a.get() != b.get());
+    }
+
+    template<typename T>
+    bool operator!=(const RefPtr<T>& a, const T* b) {
+        return (a.get() != b);
+    }
+
+    template<typename T>
+    bool operator!=(const T* a, const RefPtr<T>& b) {
+        return (a != b.get());
+    }
+    
 }
 
 

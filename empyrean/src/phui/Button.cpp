@@ -24,8 +24,8 @@
  *
  * -----------------------------------------------------------------
  * File:          $RCSfile: Button.cpp,v $
- * Date modified: $Date: 2003-09-22 23:45:02 $
- * Version:       $Revision: 1.10 $
+ * Date modified: $Date: 2003-09-23 08:32:34 $
+ * Version:       $Revision: 1.11 $
  * -----------------------------------------------------------------
  *
  ************************************************************** phui-cpr-end */
@@ -151,10 +151,6 @@ namespace phui
       {
          mButtonDown = true;
          mButtonPressed = true;
-         if (getParent())
-         {
-            getParent()->capture(this);
-         }
       }
    }
 
@@ -181,11 +177,6 @@ namespace phui
       if (mButtonPressed && button == BUTTON_LEFT && contains(p))
       {
          fireActionEvent();
-      }
-
-      if (mButtonPressed && getParent())
-      {
-         getParent()->capture(0);
       }
 
       mButtonDown = false;
