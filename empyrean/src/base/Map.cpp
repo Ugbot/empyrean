@@ -124,7 +124,7 @@ namespace pyr {
     }
 
     void Map::getSegs(std::vector<Segment>& segs, float xposition) const {
-        for(int i = 0; i < _numberRegions; ++i) {
+        for(size_t i = 0; i < _regions.size(); ++i) {
             if(xposition >= _regions[i].minX &&
                 xposition < _regions[i].maxX) { 
                 segs = _regions[i]._regionSegs;
@@ -137,6 +137,10 @@ namespace pyr {
     void Map::processMap() {
         SegmentExtractor extractor(_mapSegs, 0);
         this->handleVisitor(extractor);
+
+        if (_mapSegs.empty()) {
+            return;
+        }
 
         float maxX = std::max(_mapSegs[0].v1[0],_mapSegs[0].v2[0]);
         float minX = std::min(_mapSegs[0].v1[0],_mapSegs[0].v2[0]);
@@ -154,17 +158,18 @@ namespace pyr {
         }
 
         // Geographically divide regions
+        const int REGION_COUNT = 8;
         float length = maxX - minX;
-        float regionLength = length / (float) _numberRegions;
+        float regionLength = length / REGION_COUNT;
 
         // Create a predefined number of regions
-        for(int i = 0; i < _numberRegions; ++i) {
+        for(int i = 0; i < REGION_COUNT; ++i) {
             Region reg;
             _regions.push_back(reg);
         }
 
         // Create boundaries for these regions
-        for(int i = 0; i < _numberRegions; ++i) {
+        for(size_t i = 0; i < _regions.size(); ++i) {
             _regions[i].minX = i * regionLength + minX;
             _regions[i].maxX = (i + 1) * regionLength + minX;
         }
@@ -175,7 +180,7 @@ namespace pyr {
         // Check each segment to see which region it falls into
         for(size_t i = 0; i < _mapSegs.size(); ++i) {
             // Check against each region
-            for(int j = 0; j < _numberRegions; ++j) {
+            for(size_t j = 0; j < _regions.size(); ++j) {
                 // Check first point
                 if(_mapSegs[i].v1[0] >= (_regions[j].minX - overlap) &&
                     _mapSegs[i].v1[0] < (_regions[j].maxX + overlap)) {

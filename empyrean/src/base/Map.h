@@ -52,7 +52,6 @@ namespace pyr {
             float maxX;
         };
 
-        Inited<int,8> _numberRegions;
         std::vector<Region> _regions;
 
     };
