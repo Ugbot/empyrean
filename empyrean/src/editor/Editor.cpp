@@ -10,9 +10,9 @@ namespace pyr {
     bool Editor::OnInit() {
         PYR_BEGIN_EXCEPTION_TRAP()
         
-            the<Log>().open(getStartDirectory(argc, (char**)argv) + "/editor.log");
+            the<Log>().open(getStartDirectory(argc, argv) + "/editor.log");
         
-            setStartDirectory(argc, (char**)argv);
+            setStartDirectory(argc, argv);
         
             // we use PNG images for the UI
             wxInitAllImageHandlers();
