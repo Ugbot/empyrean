@@ -6,10 +6,6 @@
 #include <string>
 
 namespace pyr {
-    using std::map;
-    using std::stack;
-    using std::string;
-
     /** A Simple class for figuring out what's going on when, and for how long.
      * 
      * This is a bit goofy, but I'll try to explain anyway.  _lastTime is the time
@@ -31,30 +27,40 @@ namespace pyr {
     public:
         struct Process
         {
-            int time;                               //!< Time spent in this process, in milliseconds.
-            int timepluschildren;                   //!< Time spent in this process, and in processes spawned by it. (also in milliseconds)
+            int time;                               /// Time spent in this process, in milliseconds.
+            int timePlusChildren;                   /// Time spent in this process, and in processes spawned by it. (also in milliseconds)
             Process()
-                : time(0), timepluschildren(0) {
+                : time(0), timePlusChildren(0) {
             }
         };
 
     private:
-        Process* _proc;                             //!< The process we're tracking right now.
-        int _starttime;                             //!< The time at which this object was created.
+        /// The process we're tracking right now.
+        Process* _proc;
+        
+        /// The time at which this object was created.
+        int _startTime;
 
-        static int _lastTime;                       //!< Time since the last process transition
-        static int _totalTime;                      //!< Total number of ticks elapsed with profiling on
-        static map<string,Process> _processes;      //!< Tallied up times for all started processes.
-        static stack<Process*>     _procHistory;    //!< "call stack"
+        /// Time since the last process transition
+        static int _lastTime;
+        
+        /// Total number of ticks elapsed with profiling on
+        static int _totalTime;
+        
+        /// Tallied up times for all started processes.
+        static std::map<std::string, Process> _processes;
+        
+        /// "call stack"
+        static std::stack<Process*> _procHistory;
 
     public:
-        Profiler(const string& name);
+        Profiler(const std::string& name);
         ~Profiler();
 
-        //! Accessor for gathered profiling information.
-        static const map<string,Process>& getProfileInfo();
+        /// Accessor for gathered profiling information.
+        static const std::map<std::string, Process>& getProfileInfo();
 
-        //! Dumps the profiling information to a file named profile.html
+        /// Dumps the profiling information to a file named profile.html
         static void dump();
     };
 
