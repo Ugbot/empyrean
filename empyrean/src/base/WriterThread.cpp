@@ -46,8 +46,8 @@ namespace pyr {
             int out_size = static_cast<int>(out.getSize());
             if (_socket->write(&id, sizeof(id)) != sizeof(id) ||
                 _socket->write(&size, sizeof(size)) != sizeof(size) ||
-                _socket->write(out.getBuffer(), out_size) != out_size)
-            {
+                _socket->write(out.getBuffer(), out_size) != out_size
+            ) {
                 break;
             }
             
@@ -63,8 +63,8 @@ namespace pyr {
     void WriterThread::addPackets(const std::vector<PacketPtr>& packets) {
         PYR_SYNCHRONIZED(_outgoingLock, {
             for (size_t i = 0; i < packets.size(); ++i) {
-                //PYR_LOG() << "Queueing packet for writing:";
-                //packets[i]->log();
+                PYR_LOG() << "Queueing packet for writing:";
+                packets[i]->log();
                 _outgoing.push(packets[i]);
             }
 

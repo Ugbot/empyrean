@@ -53,6 +53,10 @@ namespace pyr {
      *           read otherwise
      */
     int Socket::read(void* buffer, int size, float timeout) {
+        if (size == 0) {
+            return 0;
+        }
+    
         int result = PR_Recv(_socket, buffer, size, 0, secondsToInterval(timeout));
         PRErrorCode error = PR_GetError();
         
@@ -70,6 +74,10 @@ namespace pyr {
     }
     
     int Socket::write(const void* buffer, int size) {
+        if (size == 0) {
+            return 0;
+        }
+    
         int sent = PR_Send(_socket, buffer, size, 0, PR_INTERVAL_NO_TIMEOUT);
         // if we were interrupted
         if (sent < 0 && PR_GetError() == PR_PENDING_INTERRUPT_ERROR) {

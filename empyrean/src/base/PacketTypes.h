@@ -109,6 +109,10 @@ namespace pyr {
         _(field)(u16, decEth)
 
     // server -> client
+    #define PYR_SET_MAP_PACKET_NAME SetMapPacket
+    #define PYR_SET_MAP_PACKET(_) \
+        _(string)(256, map)
+    
     #define PYR_SET_PLAYER_PACKET_NAME SetPlayerPacket
     #define PYR_SET_PLAYER_PACKET(_) \
         _(field)(u16, id)
@@ -171,6 +175,7 @@ namespace pyr {
         _(PYR_JOIN_GAME_RESPONSE_PACKET)        \
         _(PYR_ALLOW_UPDATES_PACKET)             \
         _(PYR_PLAYER_EVENT_PACKET)              \
+        _(PYR_SET_MAP_PACKET)                   \
         _(PYR_SET_PLAYER_PACKET)                \
         _(PYR_ENTITY_ADDED_PACKET)              \
         _(PYR_ENTITY_REMOVED_PACKET)            \

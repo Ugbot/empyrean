@@ -27,6 +27,8 @@ namespace pyr {
         
         wxPoint windowPosition;
         wxSize windowSize;
+
+        std::string map;
     };
 
 }

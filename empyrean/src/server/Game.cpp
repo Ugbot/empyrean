@@ -361,6 +361,7 @@ namespace pyr {
     }
     
     void Game::handleAllowUpdates(Connection* c, AllowUpdatesPacket* p) {
+        PYR_LOG() << "Allowing updates for connection";
         getData(c)->acceptingUpdates = true;  // maybe allow it to turn off later.
     }
 
