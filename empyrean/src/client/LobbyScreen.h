@@ -13,10 +13,13 @@ namespace pyr {
         LobbyScreen(MenuState* state)
             : MenuScreen(state)
         {
+            phui::PicturePtr background = new phui::Picture("images/backdrop.jpg");
+            background->setPositionAndSize(0, 0, 1024, 768);
+
             phui::ButtonPtr joinGame = new phui::Button("Join Game");
             joinGame->addListener(this, &LobbyScreen::onJoinGame);
             joinGame->setPositionAndSize(0, 0, 100, 100);
-            
+
             phui::ButtonPtr newGame = new phui::Button("New Game");
             newGame->addListener(this, &LobbyScreen::onNewGame);
             newGame->setPositionAndSize(0, 100, 100, 100);
@@ -27,14 +30,16 @@ namespace pyr {
 
             _messages = new phui::ListBox();
             _messages->setPositionAndSize(100, 0, 924, 668);
+            _messages->setBackgroundColor(phui::Colorf(0, 0, 0, 0.5f));
 
             _text = new phui::TextField();
             _text->setPositionAndSize(100, 668, 724, 100);
-        
+
             phui::ButtonPtr say = new phui::Button("Say");
             say->addListener(this, &LobbyScreen::onSay);
             say->setPositionAndSize(824, 668, 200, 100);
-            
+
+            add(background);
             add(joinGame);
             add(newGame);
             add(leave);
@@ -47,7 +52,7 @@ namespace pyr {
             std::vector<std::string> msgs = ServerConnection::instance().getLobbyMessages();
             _messages->add(msgs);
         }
-    
+
     private:
         void onJoinGame(const phui::ActionEvent&) {
             getState()->onLobbyJoinGame();

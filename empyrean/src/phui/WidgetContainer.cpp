@@ -24,8 +24,8 @@
  *
  * -----------------------------------------------------------------
  * File:          $RCSfile: WidgetContainer.cpp,v $
- * Date modified: $Date: 2003-09-23 09:24:56 $
- * Version:       $Revision: 1.9 $
+ * Date modified: $Date: 2004-04-26 00:39:44 $
+ * Version:       $Revision: 1.10 $
  * -----------------------------------------------------------------
  *
  ************************************************************** phui-cpr-end */
@@ -53,7 +53,7 @@ namespace phui {
         if (widget->getParent()) {
             widget->getParent()->remove(widget);
         }
-        
+
         // Now add the widget to this container.
         mWidgets.push_back(widget);
         widget->setParent(this);
@@ -92,7 +92,7 @@ namespace phui {
             drawWidget(mModalWidget);
         }
     }
-   
+
     void WidgetContainer::update(float dt) {
         for (size_t i = 0; i < mWidgets.size(); ++i) {
             mWidgets[i]->update(dt);
@@ -210,11 +210,14 @@ namespace phui {
         if (mModalWidget) {
             return mModalWidget;
         }
-    
-        WidgetPtr widget = getCapture();
-        return (widget ? widget : getWidgetAt(p));
+
+        if (WidgetPtr widget = getCapture()) {
+            return widget;
+        }
+        
+        return getWidgetAt(p);
     }
-   
+
     void WidgetContainer::drawWidget(WidgetPtr widget) {
         if (widget->isVisible()) {
             glPushMatrix();

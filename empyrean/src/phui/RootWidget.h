@@ -24,8 +24,8 @@
  *
  * -----------------------------------------------------------------
  * File:          $RCSfile: RootWidget.h,v $
- * Date modified: $Date: 2003-09-23 00:36:30 $
- * Version:       $Revision: 1.3 $
+ * Date modified: $Date: 2004-04-26 00:39:44 $
+ * Version:       $Revision: 1.4 $
  * -----------------------------------------------------------------
  *
  ************************************************************** phui-cpr-end */
@@ -63,7 +63,7 @@ namespace phui
       void genMouseDownEvent(InputButton button, const Point& p);
       void genMouseUpEvent(InputButton button, const Point& p);
       void genMouseMoveEvent(const Point& p);
-      
+
       bool isPointerVisible() const;
       void setPointerVisible(bool visible);
       void showPointer() { setPointerVisible(true);  }

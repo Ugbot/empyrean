@@ -24,8 +24,8 @@
  *
  * -----------------------------------------------------------------
  * File:          $RCSfile: ListBox.cpp,v $
- * Date modified: $Date: 2004-03-01 07:17:55 $
- * Version:       $Revision: 1.6 $
+ * Date modified: $Date: 2004-04-26 00:39:44 $
+ * Version:       $Revision: 1.7 $
  * -----------------------------------------------------------------
  *
  ************************************************************** phui-cpr-end */
@@ -59,7 +59,7 @@ namespace phui
          glVertex2i(0,     height);
       }
       glEnd();
-
+      
       // draw text
       glColor(getForegroundColor());
 
