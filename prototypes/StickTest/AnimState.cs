@@ -186,7 +186,8 @@ namespace StickTest
                 meshdata[i].untransformedvertices=new Vector[verts.Length];  // filled up in UndeformJoint
             }
 
-            UndeformJoint(rootjoint,Matrix.identity);
+            if (rootjoint!=null)
+                UndeformJoint(rootjoint,Matrix.identity);
 
             for (int i=0; i<model.meshes.Length; i++)
                 GenerateTriangleLists(i);

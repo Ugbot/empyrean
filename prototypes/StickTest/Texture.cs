@@ -34,7 +34,7 @@ namespace StickTest
             handle=new uint[1];
             glGenTextures(1,handle);
             glBindTexture(GL_TEXTURE_2D,handle[0]);
-            glTexImage2D(GL_TEXTURE_2D,0,3,bmp.Width,bmp.Height,0,GL_RGBA,GL_UNSIGNED_BYTE,bi.Scan0);
+            glTexImage2D(GL_TEXTURE_2D,0,3,bmp.Width,bmp.Height,0,GL_BGRA,GL_UNSIGNED_BYTE,bi.Scan0);
             glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_NEAREST);
             glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_NEAREST); // no mipmapping
 		}
@@ -43,6 +43,8 @@ namespace StickTest
         {
             glBindTexture(GL_TEXTURE_2D,handle[0]);
         }
+
+        public uint Handle { get { return handle[0]; } }
 
         public void Dispose()
         {
@@ -79,6 +81,8 @@ namespace StickTest
         {
             glBindTexture(GL_TEXTURE_1D,handle[0]);
         }
+
+        public uint Handle { get { return handle[0]; } }
 
         public void Dispose()
         {

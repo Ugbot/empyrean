@@ -15,10 +15,10 @@ using StickTest.MilkShape;
 
 namespace StickTest
 {
-    public class MainClass
+    public class MainClass : GL
     {
         [DllImport("winmm")]
-            static extern int timeGetTime();
+        static extern int timeGetTime();
 
         Form form;
         OpenGLControl gl;
@@ -27,6 +27,7 @@ namespace StickTest
         AnimState a2;
 
         Texture backdrop;
+        Texture modeltex;
         Tex1D shadetex;
 
         const int xres=1024;
@@ -40,56 +41,58 @@ namespace StickTest
         double xangle=90;
         double yangle=0;
         double zangle=0;
-        double time=0;
         int dragx,dragy;    // the point at which the user began dragging
         bool dragging;      // whether we're dragging around or not
+        bool drawwireframe=true;
+        bool toonshade=true;
 
         // position/orientation of the model
-/*        const double startx=-380;
-        const double endx=380;
-        const double vel=1;*/
+        /*        const double startx=-380;
+                const double endx=380;
+                const double vel=1;*/
         const double startx=0,endx=0,vel=0;
         Vector modelpos=new Vector(startx,-210,-555);
-        Vector lightvec=new Vector(0.5,0.7,0.2);
+        Vector lightvec=new Vector(0.5,0.5,0.5);
         
         void InitGL()
         {
             lightvec.Normalize();
-            GL.glClearColor(0,0,0.4f,1);
-            GL.glClearDepth(1);
-            GL.glEnable(GL.GL_DEPTH_TEST);
-            GL.glDepthFunc(GL.GL_LEQUAL);
-            GL.glHint(GL.GL_PERSPECTIVE_CORRECTION_HINT,GL.GL_NICEST);
-            GL.glHint(GL.GL_LINE_SMOOTH_HINT,GL.GL_NICEST);
-            GL.glEnable(GL.GL_LINE_SMOOTH);
+            glClearColor(0,0,0.4f,1);
+            glClearDepth(1);
+            glEnable(GL_DEPTH_TEST);
+            glDepthFunc(GL_LEQUAL);
+            glHint(GL_PERSPECTIVE_CORRECTION_HINT,GL_NICEST);
+            glHint(GL_LINE_SMOOTH_HINT,GL_NICEST);
+            glEnable(GL_LINE_SMOOTH);
 
-            GL.glViewport(0,0,xres,yres);
-            GL.glMatrixMode(GL.GL_PROJECTION);
-            GL.glLoadIdentity();
-            GL.gluPerspective(45,1.0*xres/yres,0.1,800);
-            GL.glMatrixMode(GL.GL_MODELVIEW);
-            GL.glLoadIdentity();
+            glViewport(0,0,xres,yres);
+            glMatrixMode(GL_PROJECTION);
+            glLoadIdentity();
+            gluPerspective(45,1.0*xres/yres,0.1,800);
+            glMatrixMode(GL_MODELVIEW);
+            glLoadIdentity();
 
             float[] ambient= new float[] { 0.5f, 0.5f, 0.5f, 1.0f };
             float[] diffuse= new float[] { 1,1,1,1 };
             float[] lightpos=new float[] { 0,0,2,1 };
 
-            GL.glLightfv(GL.GL_LIGHT1,GL.GL_AMBIENT,ambient);
-            GL.glLightfv(GL.GL_LIGHT1,GL.GL_DIFFUSE,diffuse);
-            GL.glLightfv(GL.GL_LIGHT1,GL.GL_POSITION,lightpos);
-            GL.glEnable(GL.GL_LIGHT1);
+            glLightfv(GL_LIGHT1,GL_AMBIENT,ambient);
+            glLightfv(GL_LIGHT1,GL_DIFFUSE,diffuse);
+            glLightfv(GL_LIGHT1,GL_POSITION,lightpos);
+            glEnable(GL_LIGHT1);
 
-            GL.glEnable(GL.GL_CULL_FACE);
-            GL.glCullFace(GL.GL_BACK);
-            GL.glColor3f(1,1,1);
+            glEnable(GL_CULL_FACE);
+            glCullFace(GL_BACK);
+            glColor3f(1,1,1);
 
-            GL.glHint(GL.GL_LINE_SMOOTH_HINT,GL.GL_NICEST);
-            GL.glEnable(GL.GL_LINE_SMOOTH);
-            GL.glEnable(GL.GL_BLEND);
-            GL.glBlendFunc(GL.GL_SRC_ALPHA,GL.GL_ONE_MINUS_SRC_ALPHA);
-            GL.glLineWidth(1.5f);
+            glHint(GL_LINE_SMOOTH_HINT,GL_NICEST);
+            glEnable(GL_LINE_SMOOTH);
+            glEnable(GL_BLEND);
+            glBlendFunc(GL_SRC_ALPHA,GL_ONE_MINUS_SRC_ALPHA);
+            glLineWidth(1.5f);
 
             backdrop=new Texture("backdrop.jpg");
+            modeltex=new Texture("generic_male.png");
             shadetex=new Tex1D();
         }
 
@@ -131,34 +134,39 @@ namespace StickTest
          */
         void DrawGLShade(Mesh mesh,AnimState.TriangleList[] lists,Vector[] verts)
         {
-            /*            
-            GL.glBegin(GL.GL_TRIANGLES);
+            //*            
+            modeltex.Bind();
+            glBegin(GL_TRIANGLES);
             foreach (Mesh.Triangle tri in mesh.triangles)
             {
                 for (int i=0; i<3; i++)
                 {
                     Normal n=mesh.normals[tri.n[i]];
                     Vector v=verts[tri.i[i]];
+                    Vertex vert=mesh.vertices[tri.i[i]];
 
-                    GL.glNormal3d(n.x,n.y,n.z);
-                    GL.glVertex3d(v.x,v.y,v.z);
+                    glTexCoord2d(vert.u,vert.v);
+                    glNormal3d(n.x,n.y,n.z);
+                    glVertex3d(v.x,v.y,v.z);
                 }
             }
-            GL.glEnd();
+            glEnd();
             /*/
+
+            modeltex.Bind();
 
             foreach (AnimState.TriangleList curlist in lists)
             {
-                GL.glBegin(GL.GL_TRIANGLE_STRIP);
+                glBegin(GL_TRIANGLE_STRIP);
                 for (int i=0; i<curlist.vertices.Length; i++)
                 {
                     Normal n=mesh.normals[curlist.normals[i]];
                     Vector v=verts[curlist.vertices[i]];
 
-                    GL.glNormal3d(n.x,n.y,n.z);
-                    GL.glVertex3d(v.x,v.y,v.z);
+                    glNormal3d(n.x,n.y,n.z);
+                    glVertex3d(v.x,v.y,v.z);
                 }
-                GL.glEnd();
+                glEnd();
             }
             //*/
         }
@@ -167,126 +175,179 @@ namespace StickTest
          * This isn't technically as correct as it could be, since the normals aren't deformed along with the
          * vertices when the mesh is animated.  Probably faster, though, it doesn't look bad at all so far.
          */
-        void DrawToonShade(Mesh mesh,Vector[] verts)
+        void DrawToonShade(Mesh mesh,AnimState.TriangleList[] lists,Vector[] verts)
         {
+            //*
             Matrix m=new Matrix();
-            GL.glGetDoublev(GL.GL_MODELVIEW_MATRIX,m.Values);
+            glGetDoublev(GL_MODELVIEW_MATRIX,m.Values);
             m[3,0]=m[3,1]=m[3,2]=0; // don't care about translation.  just want rotation
 
-            shadetex.Bind();
+            glActiveTexture(GL_TEXTURE0);
+            glBindTexture(GL_TEXTURE_1D,shadetex.Handle);
+            glEnable(GL_TEXTURE_1D);
+            glActiveTexture(GL_TEXTURE1);
+            glBindTexture(GL_TEXTURE_2D,modeltex.Handle);
+            glEnable(GL_TEXTURE_2D);
 
-            GL.glBegin(GL.GL_TRIANGLES);
+            glBegin(GL_TRIANGLES);
             foreach (Mesh.Triangle tri in mesh.triangles)
             {
                 for (int i=0; i<3; i++)
                 {
                     Normal n=mesh.normals[tri.n[i]];
                     Vector v=verts[tri.i[i]];
+                    Vertex vert=mesh.vertices[tri.i[i]];
 
                     Vector normal=m*new Vector(n.x,n.y,n.z);
                     double light= lightvec | normal; // dot product
                     if (light<0) light=0;
 
-                    GL.glTexCoord1d(light);
-                    GL.glVertex3d(v.x,v.y,v.z);
+                    glMultiTexCoord1dARB(GL_TEXTURE0,light);
+                    glMultiTexCoord2dARB(GL_TEXTURE1,vert.u,vert.v);
+                    glVertex3d(v.x,v.y,v.z);
                 }
             }
-            GL.glEnd();
+            glEnd();
+
+            glBindTexture(GL_TEXTURE_2D,0);
+            glDisable(GL_TEXTURE_2D); // turn off multitexturing
+            glActiveTexture(GL_TEXTURE0);
+            glBindTexture(GL_TEXTURE_1D,0);
+            glDisable(GL_TEXTURE_1D);
+            /*/
+
+            Matrix m=new Matrix();
+            glGetDoublev(GL_MODELVIEW_MATRIX,m.Values);
+            m[3,0]=m[3,1]=m[3,2]=0; // don't care about translation.  just want rotation
+
+            shadetex.Bind();
+
+            foreach (AnimState.TriangleList list in lists)
+            {
+                glBegin(GL_TRIANGLE_STRIP);
+
+                for (int i=0; i<list.vertices.Length; i++)
+                {
+                    Normal n=mesh.normals[list.normals[i]];
+                    Vector v=verts[list.vertices[i]];
+
+                    Vector normal=m*new Vector(n.x,n.y,n.z);
+                    double light= lightvec | normal; // dot product
+                    if (light<0) light=0;
+
+                    glTexCoord1d(light);
+                    glVertex3d(v.x,v.y,v.z);
+                }
+
+                glEnd();
+            }
+            //*/
         }
 
         void DrawOutLine(Mesh mesh,Vector[] verts)
         {
-            GL.glPolygonMode(GL.GL_BACK,GL.GL_LINE);
-            GL.glCullFace(GL.GL_FRONT);
-            GL.glDepthFunc(GL.GL_LEQUAL);
+            glPolygonMode(GL_BACK,GL_LINE);
+            glCullFace(GL_FRONT);
+            glDepthFunc(GL_LEQUAL);
 
-            GL.glBegin(GL.GL_TRIANGLES);
+            glBegin(GL_TRIANGLES);
             foreach (Mesh.Triangle tri in mesh.triangles)
             {
                 for (int i=0; i<3; i++)
                 {
                     Vector v=verts[tri.i[i]];
-                    GL.glVertex3d(v.x,v.y,v.z);
+                    glVertex3d(v.x,v.y,v.z);
                 }
             }
-            GL.glEnd();
+            glEnd();
 
-            GL.glDepthFunc(GL.GL_LESS);
-            GL.glCullFace(GL.GL_BACK);
-            GL.glPolygonMode(GL.GL_BACK,GL.GL_FILL);
+            glDepthFunc(GL_LESS);
+            glCullFace(GL_BACK);
+            glPolygonMode(GL_BACK,GL_FILL);
         }
 
         void Set2D()
         {
-            GL.glLoadIdentity();
-            GL.glMatrixMode(GL.GL_PROJECTION);
-            GL.glPushMatrix();
-            GL.glLoadIdentity();
-            GL.gluOrtho2D(0,1,1,0);
-            GL.glDisable(GL.GL_DEPTH_TEST);
+            glLoadIdentity();
+            glMatrixMode(GL_PROJECTION);
+            glPushMatrix();
+            glLoadIdentity();
+            gluOrtho2D(0,1,1,0);
+            glDisable(GL_DEPTH_TEST);
         }
 
         void Unset2D()
         {
-            GL.glPopMatrix();
-            GL.glEnable(GL.GL_DEPTH_TEST);
-            GL.glMatrixMode(GL.GL_MODELVIEW);
+            glPopMatrix();
+            glEnable(GL_DEPTH_TEST);
+            glMatrixMode(GL_MODELVIEW);
         }
 
         void Render()
         {
-            GL.glClear(GL.GL_DEPTH_BUFFER_BIT | GL.GL_COLOR_BUFFER_BIT);
-            GL.glLoadIdentity();
+            glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
+            glLoadIdentity();
 
             Set2D();
-            GL.glEnable(GL.GL_TEXTURE_2D);
+            glEnable(GL_TEXTURE_2D);
             backdrop.Bind();
-            GL.glBegin(GL.GL_QUADS);
-            GL.glTexCoord2d(0,0);       GL.glVertex2i(0,0);
-            GL.glTexCoord2d(0,1);       GL.glVertex2i(0,1);
-            GL.glTexCoord2d(1,1);       GL.glVertex2i(1,1);
-            GL.glTexCoord2d(1,0);       GL.glVertex2i(1,0);
-            GL.glEnd();
-            GL.glDisable(GL.GL_TEXTURE_2D);
+            glBegin(GL_QUADS);
+            glTexCoord2d(0,0);       glVertex2i(0,0);
+            glTexCoord2d(0,1);       glVertex2i(0,1);
+            glTexCoord2d(1,1);       glVertex2i(1,1);
+            glTexCoord2d(1,0);       glVertex2i(1,0);
+            glEnd();
+            glDisable(GL_TEXTURE_2D);
             Unset2D();
 
-            GL.glBindTexture(GL.GL_TEXTURE_2D,0);
+            glBindTexture(GL_TEXTURE_2D,0);
 
 
-            GL.glTranslated(x,y,z);
-            GL.glTranslated(modelpos.x,modelpos.y,modelpos.z);
-            GL.glRotated(xangle,0,1,0);
-            GL.glRotated(yangle,1,0,0);
-            GL.glRotated(zangle,0,0,1);
+            glTranslated(x,y,z);
+            glTranslated(modelpos.x,modelpos.y,modelpos.z);
+            glRotated(xangle,0,1,0);
+            glRotated(yangle,1,0,0);
+            glRotated(zangle,0,0,1);
 
             int i=0;
-            GL.glEnable(GL.GL_TEXTURE_1D);
-            foreach (Mesh m in model.meshes)
+            if (toonshade)
             {
-                DrawToonShade(m,animstate.GetVerts(i));
-                GL.glColor3ub(0,0,0);
-                DrawOutLine(m,animstate.GetVerts(i));
-                GL.glColor3ub(255,255,255);
-                i++;
+                foreach (Mesh m in model.meshes)
+                {
+                    try
+                    {
+                        DrawToonShade(m,animstate.GetTriangleLists(i),animstate.GetVerts(i));
+                    }
+                    catch (Exception){}
+                    i++;
+                }
             }
-            GL.glDisable(GL.GL_TEXTURE_1D);
-
-            GL.glLoadIdentity();
-            GL.glTranslated(0,0,-555);
-            GL.glRotated(xangle,0,1,0);
-            GL.glRotated(yangle,1,0,0);
-            GL.glRotated(zangle,0,0,1);
-            i=0;
-
-            GL.glEnable(GL.GL_LIGHTING);
-            foreach (Mesh m in model.meshes)
+            else
             {
-                DrawGLShade(m,a2.GetTriangleLists(i),a2.GetVerts(i));
-                i++;
+                glEnable(GL_TEXTURE_2D);
+                glEnable(GL_LIGHTING);
+                foreach (Mesh m in model.meshes)
+                {
+                    DrawGLShade(m,animstate.GetTriangleLists(i),animstate.GetVerts(i));
+                    i++;
+                }
+
+                glDisable(GL_LIGHTING);
+                glDisable(GL_TEXTURE_2D);
             }
 
-            GL.glDisable(GL.GL_LIGHTING);
-                
+            if (drawwireframe)
+            {
+                i=0;
+                glColor3f(0,0,0);
+                foreach (Mesh m in model.meshes)
+                {
+                    DrawOutLine(m,animstate.GetVerts(i));
+                    i++;
+                }
+                glColor3f(1,1,1);
+            }
+
             gl.Context.SwapBuffer();
         }
 
@@ -320,10 +381,11 @@ namespace StickTest
                     form.Text=String.Format("{0},{1},{2}    {3},{4},{5}     {6} fps",x,y,z,xangle,yangle,zangle,curfps);
                 }
                 
+                glFlush();
                 Application.DoEvents();
             }
 
-            GL.glFlush();
+            glFlush();
             gl.Dispose();
         }
 
@@ -351,21 +413,45 @@ namespace StickTest
         void KeyDown(object o,KeyEventArgs e)
         {
             const double v=5;
-            if (e.KeyCode==Keys.A)
+
+            switch (e.KeyCode)
             {
-                if ((Control.ModifierKeys & Keys.Shift) != 0)
-                    z+=v;
-                else
-                    z-=v;
+                case Keys.A:
+                    if (e.KeyCode==Keys.A)
+                    {
+                        if ((Control.ModifierKeys & Keys.Shift) != 0)
+                            z+=v;
+                        else
+                            z-=v;
+                    }
+                    break;
+
+                case Keys.NumPad4:  x+=v;   break;
+                case Keys.NumPad6:  x-=v;   break;
+                case Keys.NumPad2:  y+=v;   break;
+                case Keys.NumPad8:  y-=v;   break;
+
+                case Keys.O:
+                    drawwireframe=!drawwireframe;
+                    break;
+
+                case Keys.S:
+                    toonshade=!toonshade;
+                    break;
+
+                case Keys.V:
+                    foreach (Mesh m in model.meshes)
+                    {
+                        for (int i=0; i<m.normals.Length; i++)
+                        {
+                            Normal n=m.normals[i];
+                            m.normals[i].x=-n.x;
+                            m.normals[i].y=-n.y;
+                            m.normals[i].z=-n.z;
+                        }
+                    }
+                    break;
             }
-            if (e.KeyCode==Keys.NumPad4)
-                x+=v;
-            if (e.KeyCode==Keys.NumPad6)
-                x-=v;
-            if (e.KeyCode==Keys.NumPad2)
-                y+=v;
-            if (e.KeyCode==Keys.NumPad8)
-                y-=v;
 
             gl.Invalidate();
         }
