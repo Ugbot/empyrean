@@ -217,7 +217,7 @@ namespace pyr {
         return rv;
     }
 
-    Map* loadOBJFile(const string& filename) {
+    MapElementPtr loadOBJFile(const string& filename) {
         PathHandler ph;
         ScopedPathSearch sps(ph, getPath(filename));
 
@@ -232,7 +232,7 @@ namespace pyr {
         MaterialPtr currentMaterial;
         VertexArrayPtr vertexArray = new VertexArray;
 
-        Map* map = new Map;
+        GroupElementPtr result = new GroupElement;
 
         GeometryElementPtr currentGeometry = new GeometryElement;
 
@@ -247,7 +247,7 @@ namespace pyr {
                     while (ss >> mtlfile) {
                         std::string found = ph.findFile(mtlfile);
                         PYR_LOG(_logger, INFO,
-                                "Map referencing material library " << mtlfile
+                                "OBJ referencing material library " << mtlfile
                                 << " found at: " << found);
                         mtllib.loadFrom(found);
                     }
@@ -260,7 +260,7 @@ namespace pyr {
                     if (!currentGeometry->triangles.empty()) {
                         currentGeometry->material = currentMaterial;
                         currentGeometry->vertexArray = vertexArray;
-                        map->addElement(currentGeometry);
+                        result->addChild(currentGeometry);
                     }
                     currentGeometry = new GeometryElement;
 
@@ -271,20 +271,20 @@ namespace pyr {
                 } else if (command == "v") {
                     float x, y, z;
                     if (ss >> x >> y >> z) {
-                        //vertexArray->positions.push_back(Vec3f(x, y, z));
+                        vertexArray->positions.push_back(Vec3f(x, y, z));
                         // notice: convert from maya coordinates to empyrean coordinates
                         //vertexArray->positions.push_back(Vec3f(-z, y, x));
                         // notice: convert from max coordinates to empyrean coordinates here
-                        vertexArray->positions.push_back(Vec3f(x, z, -y));
+                        //vertexArray->positions.push_back(Vec3f(x, z, -y));
                     }
                 } else if (command == "vn") {
                     float x, y, z;
                     if (ss >> x >> y >> z) {
-                        //vertexArray->normals.push_back(Vec3f(x, y, z));
+                        vertexArray->normals.push_back(Vec3f(x, y, z));
                         // notice: convert from maya coordinates to empyrean coordinates
                         //vertexArray->normals.push_back(Vec3f(-z, y, x));
                         // notice: convert from max coordinates to empyrean coordinates here
-                        vertexArray->normals.push_back(Vec3f(x, z, -y));
+                        //vertexArray->normals.push_back(Vec3f(x, z, -y));
                     }
                 } else if (command == "vt") {
                     float u, v;
@@ -321,10 +321,10 @@ namespace pyr {
         if (!currentGeometry->triangles.empty()) {
             currentGeometry->material = currentMaterial;
             currentGeometry->vertexArray = vertexArray;
-            map->addElement(currentGeometry);
+            result->addChild(currentGeometry);
         }
 
-        return map;
+        return result;
     }
 
 }

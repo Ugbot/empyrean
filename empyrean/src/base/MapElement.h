@@ -25,10 +25,18 @@ namespace pyr {
         ~MapElement() {}
 
     public:
+        MapElement() {
+            scale = 1.0f;
+        }
+
         typedef std::map<std::string, std::string> PropertyMap;
 
         std::string name;
+
+        // Should be replaced by a 3x3 matrix.
         Vec2f pos;
+        float scale;
+
         PropertyMap properties;
 
         void addProperty(const std::string& k, const std::string& v) {
@@ -81,6 +89,10 @@ namespace pyr {
     class GroupElement : public MapElement {
     public:
         std::vector<MapElementPtr> children;
+
+        void addChild(MapElementPtr child) {
+            children.push_back(child);
+        }
     
         virtual void handleVisitor(MapVisitor& v);
     };

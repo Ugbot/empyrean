@@ -58,7 +58,7 @@ namespace pyr {
     protected:
         static MainFrame* getMainFrame();
         static MapView* getMapView();
-        static const Map* getMap();
+        static MapPtr getMap();
         static MapElement* getSelectedElement();
 
         //static void setPropertiesGrid(std::map<std::string, std::string>& properties);

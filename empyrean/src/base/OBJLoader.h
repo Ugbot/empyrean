@@ -1,13 +1,12 @@
 #ifndef PYR_OBJ_LOADER_H
 #define PYR_OBJ_LOADER_H
 
-#include <string>
+#include "MapElement.h"
+#include "Types.h"
 
 namespace pyr {
 
-    class Map;
-
-    Map* loadOBJFile(const std::string& filename);
+    MapElementPtr loadOBJFile(const string& filename);
 
 }
 

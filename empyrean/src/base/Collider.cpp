@@ -30,7 +30,7 @@ namespace pyr {
         collision::COLLISION_TYPE result = newBox.collideWithStationary(dt,ent->getVel(),rv.interesting, rv.points);
 
         if(result == collision::GROUND_BELOW) {
-            Behavior* beh = ent->getBehavior();
+            Behavior* beh = ent->getBehavior().get();
             PlayerBehavior* pb = dynamic_cast<PlayerBehavior*>(beh);
             if(pb) {
                 pb->handleEvent(ent, "Reset Jumping");

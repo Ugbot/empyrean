@@ -13,7 +13,7 @@ namespace pyr {
         return getMainFrame()->getMapView();
     }
 
-    const Map* Tool::getMap() {
+    MapPtr Tool::getMap() {
         return getMainFrame()->getMap();
     }
     

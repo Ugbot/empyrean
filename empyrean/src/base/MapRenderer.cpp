@@ -10,6 +10,7 @@ namespace pyr {
     void MapRenderer::visitGroup(GroupElement* e) {
         glPushMatrix();
         glTranslate(e->pos);
+        glScalef(e->scale, e->scale, e->scale);
 
         for (size_t i = 0; i < e->children.size(); i++) {
             e->children[i]->handleVisitor(*this);
@@ -23,8 +24,13 @@ namespace pyr {
     }
 
     void MapRenderer::visitGeometry(GeometryElement* e) {
+        if (_wireframe) {
+            glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+        }
+
         glPushMatrix();
         glTranslate(e->pos);
+        glScalef(e->scale, e->scale, e->scale);
 
         std::vector<Vec3f>& v = e->vertexArray->positions;
         std::vector<Vec3f>& n = e->vertexArray->normals;
@@ -68,6 +74,7 @@ namespace pyr {
         }
 
         glPopMatrix();
+        glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
     }
 
 }

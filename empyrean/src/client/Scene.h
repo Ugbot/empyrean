@@ -13,7 +13,6 @@
 namespace pyr {
 
     class ClientEntity;
-    class Map;
     class Texture;
 
     class Scene {
@@ -34,6 +33,8 @@ namespace pyr {
 
         void setFocus(u16 id);
         ClientEntityPtr getFocus() const;
+
+        void toggleWireframe();
         
     private:
         void drawMap();
@@ -44,7 +45,9 @@ namespace pyr {
         ClientEntityPtr _focus;
         Texture* _backdrop;
         EntityMap _entities;
-        ScopedPtr<Map> _map;
+        MapPtr _map;
+
+        Inited<bool, false> _wireframe;
     };
 
 }

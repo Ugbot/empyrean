@@ -7,13 +7,19 @@
 #include <map>
 #include "Collider.h"
 #include "MapElement.h"
+#include "RefCounted.h"
+#include "RefPtr.h"
 #include "Utility.h"
 
 namespace pyr {
 
     class MapVisitor;
 
-    class Map {
+    class Map : public RefCounted {
+    protected:
+        ~Map() {
+        }
+
     public:
         Map() {
             _root = new GroupElement;
@@ -24,6 +30,7 @@ namespace pyr {
         }
 
         void addElement(MapElementPtr e) {
+            _isPartitioned = false;
             getRoot()->children.push_back(e);
         }
 
@@ -36,15 +43,15 @@ namespace pyr {
 
         void getSegs(std::vector<Segment>& segs, float xposition) const;
         
-        void processMap();
-
     private:
+        void processMap() const;
 
         // The root should always be a GroupElement.  It's rather convenient
         // to be able to assume that the root has children.
         GroupElementPtr _root;
         
-        std::vector<Segment> _mapSegs;
+        mutable Inited<bool, false> _isPartitioned;
+        mutable std::vector<Segment> _mapSegs;
         
         struct Region {
             std::vector<Segment> _regionSegs;
@@ -52,9 +59,9 @@ namespace pyr {
             float maxX;
         };
 
-        std::vector<Region> _regions;
-
+        mutable std::vector<Region> _regions;
     };
+    PYR_REF_PTR(Map);
 
 }
 

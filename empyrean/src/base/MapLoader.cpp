@@ -3,6 +3,7 @@
 #include "MapElement.h"
 #include "MapLoader.h"
 #include "OBJLoader.h"
+#include "PathHandler.h"
 #include "ScopedPtr.h"
 #include "XMLParser.h"
 
@@ -60,15 +61,52 @@ namespace pyr {
         }
     }
 
-    Map* loadMap(const std::string& filename) {
-        Map* map = loadOBJFile(filename);
-        if (!map) {
-            throw LoadMapError("loadMap(" + filename + ") failed");
+    MapPtr loadMap(const std::string& filename) {
+        PathHandler ph;
+        ScopedPathSearch sps(ph, getPath(filename));
+
+        ScopedPtr<XMLNode> maproot;
+        try {
+            maproot = parseXMLFile(filename);
+            if (!maproot) {
+                PYR_THROW(LoadMapError, "Map " << filename << " is empty.  (parseXMLFile returned null.)");
+            }
+
+            if (maproot->getName() != "pyrmap") {
+                PYR_THROW(LoadMapError, filename << " is not an Empyrean map file.");
+            }
+        }
+        catch (const XMLParseError& e) {
+            PYR_THROW(LoadMapError, "Couldn't load map " << filename << ": " << e.what());
         }
 
-        loadMetaData(map, filename + ".meta");
-        map->processMap();
-        return map;
+        MapPtr result = new Map;
+
+        for (size_t i = 0; i < maproot->getChildCount(); ++i) {
+            XMLNode* child = maproot->getChild(i);
+
+            if (child->getName() == "geometry") {
+                string obj_filename = child->getAttr("file");
+                MapElementPtr elt = loadOBJFile(ph.findFile(obj_filename));
+                if (!elt) {
+                    PYR_THROW(LoadMapError, "Can't load " << obj_filename << " referenced by " << filename);
+                }
+
+                if (child->hasAttr("scale")) {
+                    float scale = static_cast<float>(atof(child->getAttr("scale").c_str()));
+                    GroupElementPtr group = new GroupElement;
+                    group->scale = scale;
+                    group->addChild(elt);
+                    elt = group;
+                }
+
+                result->addElement(elt);
+            }
+        }
+
+        //loadMetaData(map, filename + ".meta");
+
+        return result;
     }
 
 }

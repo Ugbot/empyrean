@@ -154,10 +154,15 @@ namespace pyr {
         return _focus;
     }
 
+    void Scene::toggleWireframe() {
+        _wireframe = !_wireframe;
+    }
+
     void Scene::drawMap() {
         PYR_PROFILE_BLOCK("Scene::drawMap");
         if (_map) {
             MapRenderer renderer;
+            renderer.drawWireframe(_wireframe);
             _map->handleVisitor(renderer);
         }
     }

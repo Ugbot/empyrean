@@ -34,7 +34,7 @@ namespace pyr {
         delete _contextMenu;
     }
 
-    void MapTree::update(const Map* map) {
+    void MapTree::update(MapPtr map) {
         MapTreeUpdater updater(this, GetRootItem());
         DeleteChildren(GetRootItem());
         map->getRoot()->handleVisitor(updater);

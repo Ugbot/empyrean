@@ -2,6 +2,7 @@
 #define PYR_ERROR_H
 
 
+#include <sstream>
 #include <stdexcept>
 #include <string>
 
@@ -40,6 +41,12 @@
         name(const std::string& what)   \
         : std::runtime_error(what) { }  \
     }
+
+#define PYR_THROW(error, messageStream) {   \
+    std::ostringstream os;                  \
+    os << messageStream;                    \
+    throw error(os.str());                  \
+}
 
 
 namespace pyr {

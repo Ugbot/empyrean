@@ -62,7 +62,7 @@ namespace pyr {
         Vec2f accel;
 
         // If the entity is on the ground use these equations
-        if (getJumpNumber(ent->getBehavior()) == 0) {
+        if (getJumpNumber(ent->getBehavior().get()) == 0) {
             // Determine vector with x' along ground angle, y' along ground normal without friction
             accel[0] = getBehaviorAccel(ent) - constants::GRAVITY*sin(ent->getAngleWithGround());
             accel[0] += getFrictionEffect(ent,accel[0]);
@@ -108,7 +108,7 @@ namespace pyr {
     }
 
     float PhysicsEngine::getBehaviorAccel(Entity* ent) {
-        float behaviorVelComp = getDesiredGroundSpeed(ent->getBehavior());
+        float behaviorVelComp = getDesiredGroundSpeed(ent->getBehavior().get());
         Vec2f velAlongGround = ent->getVel();
         rotateVector(-ent->getAngleWithGround(),velAlongGround);
 
@@ -117,7 +117,7 @@ namespace pyr {
             return 0.0f;
         }
         else {
-            return getDesiredAccel(ent->getBehavior())[0];
+            return getDesiredAccel(ent->getBehavior().get())[0];
         }
     }
 }

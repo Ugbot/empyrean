@@ -37,7 +37,7 @@ namespace pyr {
     MapView::~MapView() {
     }
 
-    const Map* MapView::getMap() const {
+    MapPtr MapView::getMap() const {
         return _mainFrame->getMap();
     }
 

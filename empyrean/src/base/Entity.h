@@ -35,7 +35,7 @@ namespace pyr {
          */
         virtual ActionQueue update(float dt, const Environment& env);
 
-        Behavior*   getBehavior()   const { return _behavior.get();   }
+        BehaviorPtr getBehavior()   const { return _behavior;         }
         Appearance* getAppearance() const { return _appearance.get(); }
 
         void setPos(const Vec2f& pos) { _pos = pos;  }

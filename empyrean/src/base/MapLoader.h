@@ -3,16 +3,15 @@
 
 
 #include "Error.h"
+#include "Map.h"
 #include "Types.h"
 
 
 namespace pyr {
-    class Map;
-
     PYR_DEFINE_RUNTIME_ERROR(LoadMapError);    
 
     /// Throws LoadMapError on failure.
-    Map* loadMap(const string& filename);
+    MapPtr loadMap(const string& filename);
 }
 
 

@@ -18,7 +18,7 @@ namespace pyr {
         windowPosition = wxDefaultPosition;
         windowSize     = wxDefaultSize;
 
-        map = "maps/map2.obj";
+        map = "maps/level1.pyrmap";
     }
 
     void Configuration::load() {

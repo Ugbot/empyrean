@@ -19,7 +19,7 @@ namespace pyr {
         MapView(wxWindow* parent, MainFrame* mainFrame);
         ~MapView();
 
-        const Map* getMap() const;
+        MapPtr getMap() const;
         
         void setTool(Tool* tool);
         Tool* getTool() const;

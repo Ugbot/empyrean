@@ -7,26 +7,32 @@ namespace pyr {
     class SegmentExtractor : public MapVisitor {
     public:
         SegmentExtractor(std::vector<Segment>& segments, float z)
-            : _segments(segments)
-            , _plane(z)
-        {
+        : _currentScale(1.0f)
+        , _segments(segments)
+        , _plane(z) {
         }
 
         void visitGroup(GroupElement* e) {
             Vec2f oldPosition = _currentPosition;
-            _currentPosition += e->pos;
+            float oldScale    = _currentScale;
+            _currentPosition += e->pos * _currentScale;
+            _currentScale    *= e->scale;
 
             for (size_t i = 0; i < e->children.size(); i++) {
                 e->children[i]->handleVisitor(*this);
             }
 
             _currentPosition = oldPosition;
+            _currentScale    = oldScale;
         }
 
         void visitGeometry(GeometryElement* e) {
             Vec2f oldPosition = _currentPosition;
-            _currentPosition += e->pos;
+            float oldScale    = _currentScale;
+            _currentPosition += e->pos * _currentScale;
+            _currentScale    *= e->scale;
             Vec3f currentPos(_currentPosition[0], _currentPosition[1], 0);
+            
 
             std::vector<Vec3f>& v = e->vertexArray->positions;
 
@@ -38,8 +44,8 @@ namespace pyr {
                 GeometryElement::Triangle& t = e->triangles[i];
                 // For each segment in the triangle...
                 for (int j = 0; j < 3; ++j) {
-                    Vec3f v1 = currentPos + v[t.pos[j]];
-                    Vec3f v2 = currentPos + v[t.pos[(j + 1) % 3]];
+                    Vec3f v1 = currentPos + v[t.pos[j]]           * _currentScale;
+                    Vec3f v2 = currentPos + v[t.pos[(j + 1) % 3]] * _currentScale;
 
                     // Intersect each segment with the plane.
                     float dz = v2[2] - v1[2];
@@ -63,6 +69,7 @@ namespace pyr {
             }
 
             _currentPosition = oldPosition;
+            _currentScale    = oldScale;
         }
 
     private:
@@ -76,6 +83,7 @@ namespace pyr {
         }
 
         Vec2f _currentPosition;
+        float _currentScale;
         std::vector<Segment>& _segments;
         float _plane;
     };
@@ -124,6 +132,11 @@ namespace pyr {
     }
 
     void Map::getSegs(std::vector<Segment>& segs, float xposition) const {
+        if (!_isPartitioned) {
+            processMap();
+            _isPartitioned = true;
+        }
+
         for(size_t i = 0; i < _regions.size(); ++i) {
             if(xposition >= _regions[i].minX &&
                 xposition < _regions[i].maxX) { 
@@ -134,7 +147,7 @@ namespace pyr {
         
     }
     
-    void Map::processMap() {
+    void Map::processMap() const {
         SegmentExtractor extractor(_mapSegs, 0);
         this->handleVisitor(extractor);
 

@@ -95,7 +95,7 @@ namespace pyr {
             .def("addAction", &Behavior::addAction)
             ;
 
-        class_<Map>("Map")
+        class_<Map, MapPtr, noncopyable>("Map", no_init)
             ;
 
         class_<Environment>("Environment", no_init)
@@ -105,6 +105,7 @@ namespace pyr {
 
         // Perhaps this should go into a bindEntity() function somewhere else.
         class_<Entity, EntityPtr, noncopyable>("Entity", no_init)
+            .add_property("behavior", &Entity::getBehavior)
             .add_property("pos", &getPos, &setPos)
             .add_property("vel", &getVel, &setVel)
             ;

@@ -3,7 +3,7 @@
 
 
 #include "ClientAppearance.h"
-#include "Map.h"
+#include "MapElement.h"
 #include "ScopedPtr.h"
 
 
@@ -30,7 +30,7 @@ namespace pyr {
     
     private:
         string _resource;
-        ScopedPtr<Map> _map;
+        MapElementPtr _model;
         Zeroed<float> _time;
     };
 

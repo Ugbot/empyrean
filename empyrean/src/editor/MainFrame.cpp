@@ -42,7 +42,8 @@ namespace pyr {
 
     
     MainFrame::MainFrame()
-        : wxFrame(0, -1, "pyrEdit", wxDefaultPosition, wxSize(640, 480))
+    : wxFrame(0, -1, "pyrEdit", wxDefaultPosition, wxSize(640, 480))
+    , _map(new Map)
     {
         createMenu();
         createToolBars();
@@ -57,8 +58,8 @@ namespace pyr {
         clearStack(_redoList);
     }
 
-    const Map* MainFrame::getMap() const {
-        return &_map;
+    MapPtr MainFrame::getMap() const {
+        return _map;
     }
     
     MapView* MainFrame::getMapView() const {
@@ -76,7 +77,7 @@ namespace pyr {
     void MainFrame::handleCommand(pyr::Command* cmd) {
         PYR_ASSERT(cmd, "Can't handle null command");
 
-        CommandContext context(_mapTree, _mapView, this, &_map);
+        CommandContext context(_mapTree, _mapView, this, getMap());
 
         clearStack(_redoList);
         _undoList.push(cmd);
@@ -84,7 +85,7 @@ namespace pyr {
     }
 
     void MainFrame::updateTree() {
-        _mapTree->update(&_map);
+        _mapTree->update(getMap());
     }
 
     void MainFrame::updatePropertyGrid() {
@@ -281,7 +282,7 @@ namespace pyr {
             pyr::Command* c = _undoList.top();
             _undoList.pop();
             _redoList.push(c);
-            CommandContext context(_mapTree, _mapView, this, &_map);
+            CommandContext context(_mapTree, _mapView, this, getMap());
             c->undo(context);
         }
     }
@@ -291,7 +292,7 @@ namespace pyr {
             pyr::Command* c = _redoList.top();
             _redoList.pop();
             _undoList.push(c);
-            CommandContext context(_mapTree, _mapView, this, &_map);
+            CommandContext context(_mapTree, _mapView, this, getMap());
             c->perform(context);
         }
     }

@@ -60,7 +60,7 @@ namespace pyr {
         string _name;
         string _password;
 
-        ScopedPtr<Map> _map;
+        MapPtr _map;
         Vec2f _startPosition;
 
         std::vector<ServerEntityPtr> _entities;

@@ -172,6 +172,14 @@ namespace pyr {
         }
 
         resolveCollisions(dt, _map.get(),entityVector);
+
+        // If we fall off of the world, get pushed back up.  :)
+        for (size_t i = 0; i < _entities.size(); ++i) {
+            EntityPtr e = _entities[i];
+            if (e->getPos()[1] < -1000) {
+                e->getPos()[1] = +1000;
+            }
+        }
     }
 
     void Game::updateConnections() {

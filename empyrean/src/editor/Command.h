@@ -1,12 +1,15 @@
 #ifndef PYR_COMMAND_H
 #define PYR_COMMAND_H
 
+
+#include "Map.h"
+
+
 namespace pyr {
 
     class MapTree;
     class MapView;
     class MainFrame;
-    class Map;
 
     class Command;
 
@@ -28,9 +31,9 @@ namespace pyr {
         MapView* mapView;
         MainFrame* mainFrame;
 
-        Map* map;
+        MapPtr map;
 
-        CommandContext(MapTree* tree, MapView* view, MainFrame* frame, Map* m)
+        CommandContext(MapTree* tree, MapView* view, MainFrame* frame, MapPtr m)
             : mapTree(tree)
             , mapView(view)
             , mainFrame(frame)

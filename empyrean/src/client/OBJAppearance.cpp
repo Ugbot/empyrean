@@ -8,7 +8,7 @@ namespace pyr {
 
     OBJAppearance::OBJAppearance(const string& resource) {
         _resource = resource;
-        _map = loadOBJFile(resource);
+        _model = loadOBJFile(resource);
     }
 
     void OBJAppearance::sendCommand(const std::string& command) {
@@ -33,7 +33,7 @@ namespace pyr {
         //glRotatef(_time * 53 / 200, 0, 0, 1);
 
         MapRenderer m;
-        _map->handleVisitor(m);
+        _model->handleVisitor(m);
 
         glPopMatrix();
     }

@@ -348,6 +348,10 @@ namespace pyr {
             _showPlayerData = !_showPlayerData;
         }
 
+        if (key == SDLK_F3 && down) {
+            _scene.toggleWireframe();
+        }
+
         _im.onKeyPress(key, down);
     }
     

@@ -19,7 +19,7 @@ namespace pyr {
         MainFrame();
         ~MainFrame();
 
-        const Map* getMap() const;
+        MapPtr getMap() const;
         MapView* getMapView() const;
         wxGrid* getPropertiesGrid() const;
         MapElement* getSelectedElement() const;
@@ -68,7 +68,7 @@ namespace pyr {
         std::stack<pyr::Command*> _redoList;
         void clearStack(std::stack<pyr::Command*>& list); // deletes and clears
 
-        Map _map;
+        MapPtr _map;
         
         DECLARE_EVENT_TABLE()
     };
