@@ -1,0 +1,26 @@
+<map-metadata>
+  <node name="Scene Root" position="0 0 0">
+  </node>
+  <node name="Line01" position="1.97709 10.3293 0">
+  </node>
+  <node name="Line02" position="6.09655 8.2373 5.64044">
+  </node>
+  <node name="Line03" position="-9.41362 14.3663 7.91741">
+  </node>
+  <node name="Line04" position="27.8393 17.8492 9.62532">
+  </node>
+  <node name="Dummy01" position="-32.0946 -8.37314e-008 1.91555">
+    <property key="enemy" value="true"/>
+  </node>
+  <node name="Dummy02" position="6.18181 -3.89528e-007 8.91136">
+    <property key="enemy" value="true"/>
+  </node>
+  <node name="Dummy03" position="43.4006 1.16142e-007 -2.65701">
+    <property key="enemy" value="true"/>
+  </node>
+  <node name="Dummy04" position="30.3564 9.47228e-008 -2.16701">
+    <property key="enemy" value="true"/>
+  </node>
+  <node name="Plane01" position="9.75583 19.6469 5.54371">
+  </node>
+</map-metadata>

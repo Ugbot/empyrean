@@ -19,6 +19,17 @@ namespace pyr {
 
     GameState::GameState() {
         PYR_PROFILE_BLOCK("GameState::GameState");
+
+        _device = audiere::OpenDevice();
+        if (!_device) {
+            PYR_LOG() << "Couldn't open normal Audiere device, trying null...";
+            _device = audiere::OpenDevice("null");
+            if (!_device) {
+                throw std::runtime_error("Error opening null Audiere device");
+            }
+        }
+
+        _sfx = audiere::OpenSoundEffect(_device, "sounds/attack.wav", audiere::MULTIPLE);
         
         _inputLeft   = &_im.getInput("Left");
         _inputRight  = &_im.getInput("Right");
@@ -118,6 +129,9 @@ namespace pyr {
 
         // attack!
         if (_inputAttack->getDelta() > gmtl::GMTL_EPSILON) {
+            if (_sfx) {
+                _sfx->play();
+            }
             sc.sendAttack("Attack");
         }
 
@@ -156,6 +170,9 @@ namespace pyr {
         
         // attack!
         if (_inputJoyAttack->getDelta() > gmtl::GMTL_EPSILON) {
+            if (_sfx) {
+                _sfx->play();
+            }
             sc.sendAttack("Attack");
         }
 

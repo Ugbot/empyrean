@@ -32,7 +32,7 @@ namespace pyr {
             glDisable(GL_TEXTURE_2D);
             glEnable(GL_BLEND);
             glPushMatrix();
-            glTranslatef(-0.1f,getBounds().getHeight()+0.5,0);
+            glTranslatef(-0.1f,getBounds().getHeight()+0.5f,0);
             glScalef(0.02f,-0.02f,0.02f);
             if (_vitalityChange < 0) {
                 glColor3f(1.0f,0.0f,0.0f);
@@ -48,7 +48,7 @@ namespace pyr {
             glDisable(GL_TEXTURE_2D);
             glEnable(GL_BLEND);
             glPushMatrix();
-            glTranslatef(-0.1f,getBounds().getHeight()+0.5,0);
+            glTranslatef(-0.1f,getBounds().getHeight()+0.5f,0);
             glScalef(0.02f,-0.02f,0.02f);
             if (_etherChange < 0) {
                 glColor3f(0.0f,0.0f,1.0f);

@@ -27,7 +27,7 @@ SOURCES = Split("""
 """)
 
 env = env.Copy()
-for t in Split('PyrBase PHUI Cal3D Corona Expat GLText NSPR OpenGL SDL'):
+for t in Split('PyrBase PHUI Cal3D Audiere Corona Expat GLText NSPR OpenGL SDL'):
     TOOLS[t](env)
 
 client = env.Program('#/build/client', SOURCES)

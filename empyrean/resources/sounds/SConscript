@@ -1,0 +1,4 @@
+Import('*')
+Install(env, Split("""
+    attack.wav
+"""))

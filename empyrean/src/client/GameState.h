@@ -1,6 +1,7 @@
 #ifndef PYR_GAME_STATE_H
 #define PYR_GAME_STATE_H
 
+#include <audiere.h>
 #include <gltext.h>
 #include <vector>
 #include "InputManager.h"
@@ -24,6 +25,9 @@ namespace pyr {
         void onJoyMove(int axis, float value);
         
     private:
+        audiere::AudioDevicePtr _device;
+        audiere::SoundEffectPtr _sfx;
+
         InputManager _im;
 	Input* _inputLeft;
 	Input* _inputRight;

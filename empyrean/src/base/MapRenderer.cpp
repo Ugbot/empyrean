@@ -19,20 +19,6 @@ namespace pyr {
     }
 
     void MapRenderer::visitGeometry(GeometryElement* e) {
-#if 0
-        try {
-            if (e->material) {
-                // I hope this isn't as slow as it looks
-                Texture* tex = Texture::create(e->material->texture);
-                tex->bind();
-            } else {
-                Texture::unbind();
-            }
-        } catch (const std::runtime_error&) {
-            Texture::unbind();
-        }
-#endif
-
         glPushMatrix();
         glTranslate(e->pos);
 
@@ -40,6 +26,9 @@ namespace pyr {
         std::vector<Vec2f>& tc = e->vertexArray->texCoords;
         std::vector<GeometryElement::Triangle>& tris = e->triangles;
         MaterialPtr mtl = e->material;
+        if (!mtl) {
+            mtl = new Material;
+        }
 
         Texture* texture = 0;
         if (!mtl->texture.empty()) {

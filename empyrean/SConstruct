@@ -55,6 +55,15 @@ def ParseConfig(env, command, options):
             env.Append(LIBS = [arg])
 
 
+def SetupAudiere(env):
+    try:
+        ParseConfig(env, 'audiere-config', ['--cxxflags', '--libs'])
+    except SCons.Errors.UserError, e:
+        env.Append(LIBS=['audiere'])
+
+    if env['PLATFORM'] == 'cygwin':
+        env.Append(CPPDEFINES = ['ADR_CALL=', 'ADR_DECL='])
+
 def SetupCal3D(env):
     env.Append(CXXFLAGS=['-DCAL3D_API='], LIBS=['cal3d', 'm'])
 
@@ -130,6 +139,7 @@ def SetupWxWindows(env):
 
 # Initialize set of external dependencies.
 TOOLS = {
+    'Audiere'   : SetupAudiere,
     'Cal3D'     : SetupCal3D,
     'Corona'    : SetupCorona,
     'Expat'     : SetupExpat,

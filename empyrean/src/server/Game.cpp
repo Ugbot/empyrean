@@ -16,7 +16,7 @@ namespace pyr {
         _name = name;
         _password = password;
 
-        _map = loadMap("maps/map1.obj");
+        _map = loadMap("maps/map2.obj");
         if (!_map) {
             throw std::runtime_error("Loading maps/map1.obj failed");
         }

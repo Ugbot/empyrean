@@ -103,7 +103,10 @@ namespace pyr {
         MaterialPtr buildMaterial(PathHandler& ph, const string& name) {
             OBJMaterial* om = findMaterial(name);
             if (!om) {
-                return 0;
+                // Build a default material.
+                MaterialPtr m = new Material;
+                m->diffuse = Vec3f(1, 1, 1);
+                return m;
             }
 
             MaterialPtr m = new Material;
@@ -126,12 +129,18 @@ namespace pyr {
         string::size_type d1 = s.find('/');
         PYR_ASSERT(d1 != string::npos, "Syntax error in face specification");
         string::size_type d2 = s.find('/', d1 + 1);
-        PYR_ASSERT(d2 != string::npos, "Syntax error in face specification");
+        //PYR_ASSERT(d2 != string::npos, "Syntax error in face specification");
 
         vector<string> rv;
-        rv.push_back(s.substr(0, d1));
-        rv.push_back(s.substr(d1 + 1, d2 - d1 - 1));
-        rv.push_back(s.substr(d2 + 1));
+        if (d2 != string::npos) {
+            rv.push_back(s.substr(0, d1));
+            rv.push_back(s.substr(d1 + 1, d2 - d1 - 1));
+            rv.push_back(s.substr(d2 + 1));
+        } else {
+            rv.push_back(s.substr(0, d1));
+            rv.push_back(s.substr(d1 + 1));
+            rv.push_back("");
+        }
         return rv;
     }
 
@@ -247,7 +256,8 @@ namespace pyr {
                 } else if (command == "vt") {
                     float u, v;
                     if (ss >> u >> v) {
-                        vertexArray->texCoords.push_back(Vec2f(u, v));
+                        // @todo XXX NOTE: THIS IS A HACK FOR THE DEMO
+                        vertexArray->texCoords.push_back(Vec2f(u * 2, 0.9f - 0.8f * v + 0.25f));
                     }
                 } else if (command == "f") {
                     string si, sj, sk;

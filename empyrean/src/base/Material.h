@@ -14,6 +14,10 @@ namespace pyr {
         ~Material() { }
 
     public:
+        Material() {
+            diffuse = Vec3f(1, 1, 1);
+        }
+
         Vec3f diffuse;
         std::string texture;
     };
