@@ -5,12 +5,12 @@
 
 namespace pyr {
 
-    void logMessage(const std::string& s) {
+    void logServerMessage(const std::string& s) {
         // use the wxWindows logging system because it's thread-safe
         wxGetApp().log(s);
 
-        // Log this in the file
-        the<Log>().write(s);
+        // Send the message to the normal empyrean Log too.
+        writeLog(s);
     }
 
 }

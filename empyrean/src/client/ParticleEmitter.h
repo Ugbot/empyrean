@@ -1,10 +1,9 @@
 #ifndef PYR_PARTICLEEMITTER_H
 #define PYR_PARTICLEEMITTER_H
 
-#include <gmtl/Vec.h>
-
-#include "Entity.h"
 #include "Color.h"
+#include "Entity.h"
+#include "VecMath.h"
 
 namespace pyr {
 
@@ -21,11 +20,11 @@ namespace pyr {
         void setColor(const Color& color);
         void fadeToColor(const Color& color,float time);
 
-        const gmtl::Vec2f& getAccel() const;
-        void setAccel(const gmtl::Vec2f& accel);
+        const Vec2f& getAccel() const;
+        void setAccel(const Vec2f& accel);
 
-        const gmtl::Vec2f& getVelocity() const;
-        void setVelocity(const gmtl::Vec2f& velocity);
+        const Vec2f& getVelocity() const;
+        void setVelocity(const Vec2f& velocity);
 
         float getLifeTime() const;
         void setLifeTime(float lifetime);
@@ -37,16 +36,16 @@ namespace pyr {
         ParticleSystem* _system;
         Color           _curColor;
 
-        gmtl::Vec2f     _velocity;          ///< new particles are given this velocity vector ...
-        gmtl::Vec2f     _accel;             ///< and this acceleration
+        Vec2f _velocity;          ///< new particles are given this velocity vector ...
+        Vec2f _accel;             ///< and this acceleration
 
-        Color           _colorTransform;    ///< _curColor is multiplied by this every second...
-        float           _transformTime;     ///< ...until this reaches zero
+        Color _colorTransform;    ///< _curColor is multiplied by this every second...
+        float _transformTime;     ///< ...until this reaches zero
 
-        float           _period;            ///< How long to wait before spawning another particle
-        float           _spawnCount;        ///< when this reaches zero, we spawn.
+        float _period;            ///< How long to wait before spawning another particle
+        float _spawnCount;        ///< when this reaches zero, we spawn.
 
-        float           _lifeTime;          ///< Lifetime for spawned particles
+        float _lifeTime;          ///< Lifetime for spawned particles
     };
 }
 

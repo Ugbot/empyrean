@@ -215,15 +215,15 @@ namespace pyr {
             PYR_LOG() << "Num Hats " << SDL_JoystickNumHats(joystick);
         }
 
-        pyr::Application& app = pyr::Application::instance();
-
         // notify the app and the input manager of the window size
-        app.resize(width, height);
+        the<Application>().resize(width, height);
 
         mainLoop();
 
         // Close the joystick
-        SDL_JoystickClose(joystick);
+        if (joystick) {
+            SDL_JoystickClose(joystick);
+        }
 
         try {
             // Perhaps this should be saved right after changes, in case

@@ -50,26 +50,22 @@ namespace pyr {
         
         Scene& scene = the<Scene>();
         scene.draw();
-        
-        // Draw entity related stuff
-        if (Entity* entity = scene.getFocus()) {
-            Application& app = the<Application>();
-            
 
-            the<HUD>().draw(_renderer,entity);
-            
+        if (GameEntity* entity = dynamic_cast<GameEntity*>(scene.getFocus())) {
+            the<HUD>().draw(_renderer, entity);
 
             if (_showPlayerData) {
-                if (GameEntity* entity = (GameEntity*) scene.getFocus()) {
-                    Application& app = the<Application>();
-                    glEnable(GL_BLEND);
-                    setOrthoProjection(float(app.getWidth()), float(app.getHeight()));
-                    glTranslatef(app.getWidth() / 2.0f, 0, 0);
-                    GLTEXT_STREAM(_renderer)
-                        << "Position: " << entity->getPos() << "\n"
-                        << "Velocity: " << entity->getVel() << "\n"
-                        << "Jumping: " << entity->getJumping();
-                }
+                Application& app = the<Application>();
+                glEnable(GL_BLEND);
+                setOrthoProjection(float(app.getWidth()), float(app.getHeight()));
+                glPushMatrix();
+                glTranslatef(app.getWidth() / 2.0f, 0, 0);
+                glColor3f(1, 1, 1);
+                GLTEXT_STREAM(_renderer)
+                    << "Position: " << entity->getPos() << "\n"
+                    << "Velocity: " << entity->getVel() << "\n"
+                    << "Jumping: " << entity->getJumping();
+                glPopMatrix();
             }
         }
     }
@@ -84,17 +80,19 @@ namespace pyr {
 
         // Effect the player's vitality
         GameEntity* gent = dynamic_cast<GameEntity*>(the<Scene>().getFocus());
-        if (_input1->getValue() == 1) {
-            gent->decrVitality(2);
-        }
-        if (_input2->getValue() == 1) {
-            gent->incrVitality(2);
-        }
-        if (_input3->getValue() == 1) {
-            gent->decrEther(1);
-        }
-        if (_input4->getValue() == 1) {
-            gent->incrEther(1);
+        if (gent) {
+            if (_input1->getValue() == 1) {
+                gent->decrVitality(2);
+            }
+            if (_input2->getValue() == 1) {
+                gent->incrVitality(2);
+            }
+            if (_input3->getValue() == 1) {
+                gent->decrEther(1);
+            }
+            if (_input4->getValue() == 1) {
+                gent->incrEther(1);
+            }
         }
 
         // move to the right!

@@ -125,6 +125,8 @@ namespace pyr {
             addEntity(id--, ps);
 
             ParticleEmitter* pe = new ParticleEmitter(ps);
+            pe->setVelocity(Vec2f(0, 1));
+            pe->setAccel(Vec2f(0, -2));
             addEntity(id--, pe);
         }
 

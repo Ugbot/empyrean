@@ -40,13 +40,13 @@ namespace pyr {
             _frame = new ServerFrame();
             _frame->Show(true);
 
-            logMessage("Welcome to Empyrean!");
+            PYR_SERVER_LOG() << "Welcome to Empyrean!";
 
             try {
                 the<Database>().load(getDatabaseFilename());
             }
             catch (const DatabaseError& e) {
-                logMessage(std::string("Error loading database: ") + e.what());
+                PYR_SERVER_LOG() << "Error loading database: " << e.what();
             }
 
             if (the<Configuration>().shouldStartServer) {
@@ -92,15 +92,15 @@ namespace pyr {
     }
     
     void Server::start() {
-        logMessage("Starting...");
+        PYR_SERVER_LOG() << "Starting...";
         _serverThread = new Thread(new ServerThread());
-        logMessage("Started");
+        PYR_SERVER_LOG() << "Started";
     }
     
     void Server::stop() {
-        logMessage("Stopping...");
+        PYR_SERVER_LOG() << "Stopping...";
         _serverThread = 0;
-        logMessage("Stopped");
+        PYR_SERVER_LOG() << "Stopped";
     }
     
     std::string Server::getDatabaseFilename() {

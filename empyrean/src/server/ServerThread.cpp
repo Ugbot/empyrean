@@ -19,9 +19,7 @@ namespace pyr {
         ListenerThread* listener = new ListenerThread(port);
         ScopedPtr<Thread> thread(new Thread(listener, PR_PRIORITY_HIGH));
         
-        char str[80];
-        sprintf(str, "%d", port);
-        logMessage("Listening on port " + std::string(str));
+        PYR_SERVER_LOG() << "Listening on port " << port;
         
         float last = getNow();
         while (!self->shouldQuit()) {
@@ -37,8 +35,8 @@ namespace pyr {
 
             // Cap dt to threshold.
             if (dt > constants::DT_CAP) {
-                PYR_LOG() << "Warning, time between frames too large.  It was " << dt << " seconds.";
-                PYR_LOG() << "It is now being set to " << constants::DT_CAP;
+                PYR_SERVER_LOG() << "Warning, time between frames too large.  It was " << dt << " seconds.";
+                PYR_SERVER_LOG() << "It is now being set to " << constants::DT_CAP;
                 dt = constants::DT_CAP;
             }
             

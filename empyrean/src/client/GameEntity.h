@@ -47,7 +47,7 @@ namespace pyr {
         void decrEther(int decr);
         void incrEther(int incr);
  
-        bool jump();        
+        bool jump();
         void startJumpAction();
 
     private:
