@@ -1,6 +1,5 @@
 #include "CollisionBox.h"
 #include "Constants.h"
-#include <gmtl/Math.h>
 
 namespace pyr {
 
@@ -225,7 +224,7 @@ namespace pyr {
                 }
             }
             else if(maxY > (_verts[2][1] + _verts[0][1])/2.0f) {
-                vel[1] = dt * constants::GRAVITY; // To make the person start to fall down again.  
+                vel[1] = -dt * constants::GRAVITY; // To make the person start to fall down again.  
                 vel[0] = 0;
                 setDisplacement(Vec2f(0,minY-_verts[2][1]));
                 return collision::GROUND_ABOVE;

@@ -22,7 +22,7 @@ namespace pyr {
 
     void collideWithEntity(Entity* ent1, Entity* ent2);
 
-    void resolveCollisions(float dt, Map* terrain, std::vector<Entity*>& ents);
+    void resolveCollisions(float dt, const Map* terrain, std::vector<Entity*>& ents);
 
 }
 

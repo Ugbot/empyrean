@@ -46,6 +46,9 @@ namespace pyr {
         void setBounds(const BoundingRectangle& br) { _bounds = br; }
         BoundingRectangle& getBounds()              { return _bounds; }
         const BoundingRectangle& getBounds() const  { return _bounds; }
+
+        float getAngleWithGround() { return _angleWithGround; }
+        void setAngleWithGround(float val) { _angleWithGround = val; }
         
     private:
         ScopedPtr<Behavior> _behavior;
@@ -54,6 +57,7 @@ namespace pyr {
         Vec2f _pos;
         Vec2f _vel;
         BoundingRectangle _bounds;
+        Zeroed<float> _angleWithGround;
     };
 
 }

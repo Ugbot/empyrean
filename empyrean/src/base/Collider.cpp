@@ -126,14 +126,9 @@ namespace pyr {
         CollisionData rv;
 
         collision::COLLISION_TYPE result = entityBox.collideWithDynamic(0,ent1->getVel(),ent2->getVel(), otherBox, rv.points);
-        
-        
-
-        //ent1->getPos() += entityBox.getDisplacement();
-        //ent2->getPos() += otherBox.getDisplacement();
     };
 
-    void resolveCollisions(float dt, Map* terrain, std::vector<Entity*>& ents) {
+    void resolveCollisions(float dt, const Map* terrain, std::vector<Entity*>& ents) {
         int* entityRegionAssignment = new int[ents.size()];
         std::vector<CollisionRegion> regions;
 
@@ -184,69 +179,5 @@ namespace pyr {
             }
         }
 
-    };    
-        /*
-        // Clear region assignments
-        for (size_t i = 0; i < ents.size(); ++i) {
-            ents[i].region = collision::REGION_UNASSIGNED;
-        }
-        
-        std::vector<region> regions;
-
-        // Classify the entities into different regions (this is to speed up collisions between entities)
-        for (size_t i = 0; i < ents.size(); ++i) {
-            if(ents[i].region == collision::REGION_UNASSIGNED) {
-                region currentRegion;
-                currentRegion.indici.push_back(i);
-                for(size_t j = 0; j < ents.size(); ++j) {
-                    if(vecDistance(*(ents[i].pos), *(ents[j].pos)) < collision::REGION_RADIUS) {
-                        ents[j].region = i;
-                        currentRegion.indici.push_back(j);
-                    }
-                }
-                regions.push_back(currentRegion);
-            }
-        }
-
-        // Do collision on each of the regions
-        for (size_t i = 0; i < regions.size(); ++i) {
-            if(regions[i].indici.size() == 1) {  // Simply collide with the ground
-                int index = regions[i].indici[0];
-                collide(dt,*(ents[index].pos),*(ents[index].vel),ents[index].width, ents[index].height, terrain);
-            }
-            else {
-                for(size_t j = 0; j < regions[i].indici.size(); ++j) {
-                    for(size_t k = 0; k < regions[i].indici.size(); ++k) {
-                        if(j!=k) {  // Don't Collide with yourself
-                            // Ultimately collide with others here          
-                        }
-                    }
-                }
-
-                for(size_t j = 0; j < regions[i].indici.size(); ++j) {
-                    // Collide everyone with the ground after all
-                    int index = regions[i].indici[j];
-                    collide(dt,*(ents[index].pos),*(ents[index].vel),ents[index].width, ents[index].height, terrain);
-                }
-            }
-        }
-        */
-
-
-    //// For testing to see if jumping is done
-    //Vec2f precollideposition = getPos();
-    //Vec2f precollidevelocity = getVel();
-
-    //_lastCD = collide(dt, origPos, getPos(), getVel(), getWidth(), getHeight(), terrain);
-
-    //// If you are higher than you once were so you were forced up and you were falling 
-    //// (before the collision) This means that you hit a surface below you so therefore 
-    //// reset jumping
-    //if((precollideposition[1]-getPos()[1]) < 0 && precollidevelocity[1] < FALLING_SPEED) {
-    //        getJumping() = 0;
-    //}
-
-    //}
-    //}
-
+    }    
 }

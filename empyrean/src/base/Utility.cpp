@@ -149,4 +149,14 @@ namespace pyr {
         }
         return (int)num;
     }
+
+    int sgn(float num) {
+        if (num < 0) {
+            return -1;
+        }
+        else if (num > 0) {
+            return 1;
+        }
+        return 0;
+    }
 };

@@ -4,7 +4,8 @@
 
 #include <string>
 #include <vector>
-
+#include "Utility.h"
+#include "VecMath.h"
 
 namespace pyr {
 
@@ -27,7 +28,7 @@ namespace pyr {
      */
     struct Environment {
         const Map* map;
-        std::vector<const Entity*> entities;
+        std::vector<Entity*> entities;
     };
 
 
@@ -41,10 +42,20 @@ namespace pyr {
         virtual std::string getResource() = 0;
         virtual void update(Entity* entity, float dt, const Environment& env) = 0;
 
+        bool facingRight() { return _facingRight; }
+        Vec2f getDesiredAccel() { return _desiredAccel; }
+        float getDesiredGroundSpeed() { return _desiredGroundSpeed; }
+        int jumpNumber() { return _jumping; }
+
     protected:
         void sendAppearanceCommand(Entity* entity, const std::string& command);
         void beginAnimationCycle(Entity* entity, const std::string& animation);
         void beginAnimation(Entity* entity, const std::string& animation);
+
+        Inited<int,1> _jumping;
+        Vec2f _desiredAccel;
+        Inited<bool,true> _facingRight;
+        Zeroed<float> _desiredGroundSpeed;
 
     private:
         static Appearance* getAppearance(Entity* entity);
@@ -58,7 +69,6 @@ namespace pyr {
      */
     Behavior* instantiateBehavior(const std::string& name,
                                   const std::string& resource = "");
-
 }
 
 #endif

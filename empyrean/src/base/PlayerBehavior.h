@@ -22,12 +22,8 @@ namespace pyr {
 
         void handleEvent(Entity* entity, const std::string& event);
 
-        bool facingRight() { return _facingRight; }
-
     private:
-        Zeroed<int> _jumping;
-        Zeroed<float> _desiredVelocity;
-        bool _facingRight;
+
     };
 
 }

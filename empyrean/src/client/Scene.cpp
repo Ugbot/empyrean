@@ -92,7 +92,7 @@ namespace pyr {
 
         Environment env;
         env.map = _map.get();
-        env.entities = std::vector<const Entity*>(entityVector.begin(), entityVector.end());
+        env.entities = std::vector<Entity*>(entityVector.begin(), entityVector.end());
 
 
         // Update all entities (regardless of collision with others)

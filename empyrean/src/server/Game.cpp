@@ -60,7 +60,7 @@ namespace pyr {
         std::vector<Entity*> entityVector;
         Environment env;
         env.map = _map.get();
-        env.entities = std::vector<const Entity*>(_entities.begin(), _entities.end());
+        env.entities = std::vector<Entity*>(_entities.begin(), _entities.end());
 
         for (size_t i = 0; i < _entities.size(); ++i) {
             _entities[i]->update(dt, env);

@@ -42,10 +42,10 @@ namespace pyr {
         const Vec2f origPos = pos;
 
         pos += vel * dt;
-        vel[1] += constants::GRAVITY * dt;           // gravity
+        vel[1] += -constants::GRAVITY * dt;           // gravity
 
         const float mu = 0.8f;
-        const float acc = mu * constants::GRAVITY;
+        const float acc = -mu * constants::GRAVITY;
 
         if(vel[0] > 0) {
             vel[0] += acc * dt;

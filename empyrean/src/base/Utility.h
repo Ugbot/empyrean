@@ -154,6 +154,9 @@ namespace pyr {
 
     /** Round a number to the nearest integer (0.5 rounded up) */
     int round(float num);
+
+    /** Get the sign of the number */
+    int sgn(float num);
 }
 
 #endif
