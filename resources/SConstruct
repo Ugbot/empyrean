@@ -2,6 +2,7 @@ from os.path import join
 from glob import glob
 
 TARGET = ARGUMENTS.get('TARGET', '.')
+Default(TARGET)
 
 DIRS = Split("""
    images
