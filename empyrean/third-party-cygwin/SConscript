@@ -1,0 +1,2 @@
+Import('*')
+env.Install('#/build', 'lib/nspr4.dll')

@@ -186,7 +186,7 @@ if env['PLATFORM'] == 'irix':
 
 # Process build options.
 if env.get('dbg'):
-    env.Append(CCFLAGS = ['-g'], CPPDEFINES=['DEBUG', '_DEBUG'])
+    env.Append(CCFLAGS = ['-g'], CPPDEFINES=['DEBUG'])
 if env.get('opt'):
     env.Append(CCFLAGS = ['-O2'], LINKFLAGS = ['-s'], CPPDEFINES=['NDEBUG'])
 if env.get('distcc'):
@@ -214,3 +214,6 @@ Export('env')
 # The bug is that if one subscript does an Export(), it overwrites imports in
 # other scripts.
 SConscript(dirs = ['src', 'resources'])
+
+if env['PLATFORM'] == 'cygwin':
+    SConscript(dirs = ['third-party-cygwin'])
