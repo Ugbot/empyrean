@@ -10,6 +10,7 @@ SOURCES = Split("""
     Main.cpp
     Server.cpp
     ServerApp.cpp
+    ServerAppearance.cpp
     ServerEntity.cpp
     ServerFrame.cpp
     ServerLog.cpp
