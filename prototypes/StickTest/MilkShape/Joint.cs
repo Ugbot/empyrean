@@ -72,7 +72,6 @@ namespace StickTest.MilkShape
                 {
                     time=0;
                     nextkey=0;
-                    cur.x=cur.y=cur.z=0;    // reset; flush any accumulated floating point errors
                 }
 
                 delta=(keys[nextkey].v-cur)*(1/(keys[nextkey].time-time));

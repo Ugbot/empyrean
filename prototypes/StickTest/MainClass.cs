@@ -1,5 +1,3 @@
-#define USE_GL_STACK
-
 using System;
 using System.Drawing;
 using System.Windows.Forms;
