@@ -1,6 +1,8 @@
 #include <string>
 #include <vector>
 
+#include <stdarg.h>
+
 namespace pyr {
 
     using std::string;
@@ -91,5 +93,17 @@ namespace pyr {
             return s.substr(p+1);
         else
             return s;
+    }
+
+    string va(const char* s, ...)
+    {
+        char temp[1024];
+        va_list lst;
+        
+        va_start(lst, s);
+        vsprintf(temp, s, lst);
+        va_end(lst);
+
+        return string(temp);
     }
 };

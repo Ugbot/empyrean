@@ -9,16 +9,26 @@ namespace pyr {
     class MapElement;
     class Map;
 
+    class TreeItemData : public wxTreeItemData {
+    public:
+        MapElement* element;
+
+        TreeItemData(MapElement* e)
+            : element(e)
+        {}
+    };
+
     class MapTree : public wxTreeCtrl {
     public:
-        MapTree(wxWindow* parent, MainFrame* mainFrame, const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxDefaultSize);
+        MapTree(wxWindow* parent, const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxDefaultSize);
         ~MapTree();
 
         void update(const Map* map);
 
+        MapElement* getSelection() const;
+
     private:
         wxMenu* _contextMenu;
-        MainFrame* _mainFrame; // I dislike this.
 
         void onRightClick(wxMouseEvent& event);
 

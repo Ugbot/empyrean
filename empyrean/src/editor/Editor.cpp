@@ -8,9 +8,15 @@ namespace pyr {
         // we use PNG images for the UI
         wxInitAllImageHandlers();
     
-        MainFrame* frame = new MainFrame;
-        frame->Show(true);
+        _theMainFrame = new MainFrame;
+        _theMainFrame->Show(true);
         return true;
     }
+
+    MainFrame* Editor::getMainFrame() {
+        return _theMainFrame;
+    }
+
+    MainFrame* Editor::_theMainFrame = 0;
 
 }

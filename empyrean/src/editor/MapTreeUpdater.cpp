@@ -1,5 +1,6 @@
 #include "MapTreeUpdater.h"
 #include "MapElement.h"
+#include "MapTree.h"
 
 namespace pyr {
 

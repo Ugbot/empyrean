@@ -8,15 +8,6 @@
 
 namespace pyr {
 
-    class TreeItemData : public wxTreeItemData {
-    public:
-        MapElement* element;
-
-        TreeItemData(MapElement* e)
-            : element(e)
-        {}
-    };
-
     class MapTreeUpdater : public MapVisitor {
     public:
         MapTreeUpdater(wxTreeCtrl* treeView, const wxTreeItemId& root);

@@ -1,6 +1,9 @@
+
+#include "MapTree.h"
+
+#include "Editor.h"
 #include "MainFrame.h"
 #include "MapFile.h"
-#include "MapTree.h"
 #include "MapTreeUpdater.h"
 #include "MapFile.h"
 #include "MapElement.h"
@@ -24,10 +27,9 @@ namespace pyr {
         EVT_MENU(ID_DESTROY_NODE, MapTree::onDestroyNode)
     END_EVENT_TABLE()
 
-    MapTree::MapTree(wxWindow* parent, MainFrame* mainFrame, const wxPoint& pos, const wxSize& size)
+    MapTree::MapTree(wxWindow* parent, const wxPoint& pos, const wxSize& size)
         : wxTreeCtrl(parent, -1, pos, size, wxTR_DEFAULT_STYLE | wxTR_HIDE_ROOT)
         , _contextMenu(new wxMenu)
-        , _mainFrame(mainFrame)
     {
         _contextMenu->Append(ID_NEW_GEO_NODE, "New Geometry Node");
     }
@@ -63,8 +65,9 @@ namespace pyr {
         if (id.IsOk() && group) {
             GeometryElement* element = new GeometryElement();
 
-            _mainFrame->handleCommand(new CreateMapElementCommand(element, group));
-            update(_mainFrame->getMap());
+            // Don't think I like this.
+            Editor::getMainFrame()->handleCommand(new CreateMapElementCommand(element, group));
+            update(Editor::getMainFrame()->getMap());
         }
     }
 

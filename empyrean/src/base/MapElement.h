@@ -16,6 +16,10 @@ namespace pyr {
 
         virtual void handleVisitor(MapVisitor* v) = 0;
 
+        // Allows more convenient syntax when creating MapVisitors on the stack.
+        // ie. nameless temporaries.
+        void handleVisitor(MapVisitor& v) { handleVisitor(&v); }
+
     protected:
 
         virtual ~MapElement() {}

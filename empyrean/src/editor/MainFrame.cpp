@@ -6,6 +6,7 @@
 #include "MapFile.h"
 #include "MapElement.h"
 #include "MapTree.h"
+#include "PropertyGridUpdater.h"
 
 namespace pyr {
 
@@ -27,6 +28,8 @@ namespace pyr {
 
         EVT_GRID_EDITOR_SHOWN(MainFrame::onBeginEditGrid)
         EVT_GRID_CELL_CHANGE(MainFrame::onChangeGrid)
+
+        EVT_TREE_SEL_CHANGED(-1, MainFrame::onSelectTreeNode)
     END_EVENT_TABLE()
     
     const Map* MainFrame::getMap() const {
@@ -63,8 +66,8 @@ namespace pyr {
         e->addVert(gmtl::Vec2f(1, 0), gmtl::Vec2f(1, 0), gmtl::Vec4f(1, 1, 1, 1));
         e->addVert(gmtl::Vec2f(1, 1), gmtl::Vec2f(1, 1), gmtl::Vec4f(1, 1, 1, 1));
         e->addVert(gmtl::Vec2f(0, 1), gmtl::Vec2f(0, 1), gmtl::Vec4f(1, 1, 1, 1));
-        e->addVert(gmtl::Vec2f(-1, 0), gmtl::Vec2f(-1, 0), gmtl::Vec4f(0, 0, 0, 1));
-        e->addVert(gmtl::Vec2f(-1, 1), gmtl::Vec2f(-1, 1), gmtl::Vec4f(0, 0, 0, 1));
+        e->addVert(gmtl::Vec2f(-1, 0), gmtl::Vec2f(1, 0), gmtl::Vec4f(0, 0, 0, 1));
+        e->addVert(gmtl::Vec2f(-1, 1), gmtl::Vec2f(1, 1), gmtl::Vec4f(0, 0, 0, 1));
         e->addTri(0, 1, 2);
         e->addTri(0, 2, 3);
         e->addTri(0, 3, 5);
@@ -159,7 +162,7 @@ namespace pyr {
             _splitter, -1, wxDefaultPosition, wxDefaultSize,
             wxSP_3D | wxSP_LIVE_UPDATE | wxCLIP_CHILDREN);
         
-        _mapTree = new MapTree(split2, this);
+        _mapTree = new MapTree(split2);
         wxTreeItemId root = _mapTree->AddRoot("Root");
         _mapTree->AppendItem(root, "Map");
         _mapTree->AppendItem(root, "Imports");
@@ -216,6 +219,16 @@ namespace pyr {
         if (result) {
             _mapView->Refresh();
         }
+    }
+
+    void MainFrame::onSelectTreeNode(wxTreeEvent& event) {
+        TreeItemData* data = static_cast<TreeItemData*>(_mapTree->GetItemData(event.GetItem()));
+        wxASSERT(data != 0);
+
+        MapElement* e = data->element;
+        wxASSERT(e != 0);
+
+        e->handleVisitor(PropertyGridUpdater(_propertiesGrid));
     }
 
     void MainFrame::undo() {

@@ -45,6 +45,7 @@ namespace pyr {
         void onUseObstructionTool(wxCommandEvent&);
         void onBeginEditGrid(wxGridEvent& event);
         void onChangeGrid(wxGridEvent& event);
+        void onSelectTreeNode(wxTreeEvent& event);
 
         // Other junk
         void undo();

@@ -268,6 +268,11 @@ namespace pyr {
      * If there are no slashes in the path, the string is returned unaltered.
      */
     std::string getFilename(const std::string& s);
+
+    /** Does the printf thing; returns a string.
+     * (it rhymes!)
+     */
+    std::string va(const char* s, ...);
 }
 
 #endif

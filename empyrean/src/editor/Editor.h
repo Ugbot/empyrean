@@ -7,9 +7,15 @@
 
 namespace pyr {
 
+    class MainFrame;
+
     class Editor : public wxApp {
     public:
         bool OnInit();
+        static MainFrame* getMainFrame();
+
+    private:
+        static MainFrame* _theMainFrame;
     };
 
 }
