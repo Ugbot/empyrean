@@ -17,6 +17,7 @@ namespace pyr {
     inline void throwSDLNetError(const std::string& prefix) {
         throw std::runtime_error(prefix + ": " + SDLNet_GetError());
     }
+
     
     /**
      * Initializes SDL (with initflags) and SDL_net.  Also registers

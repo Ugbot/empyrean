@@ -223,7 +223,7 @@ namespace pyr {
         _model->setMaterialSet(0);
 
         _model->getMixer()->blendCycle(0,1,4.0f);
-        _model->setLodLevel(0.5f);
+        //_model->setLodLevel(0.5f);
     }
 
     Model::~Model()

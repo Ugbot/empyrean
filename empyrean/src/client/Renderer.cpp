@@ -38,12 +38,19 @@ namespace {
 
         static float ambient[]=  { 0.5f, 0.5f, 0.5f, 1.0f };
         static float diffuse[]=  { 1, 1, 1, 1 };
-        static gmtl::Vec3f lightvec(0, 0, 1);
+        static gmtl::Vec3f lightvec(0.5, 0.5, 1);
+        gmtl::normalize(lightvec);
 
         glLightfv(GL_LIGHT1, GL_AMBIENT, ambient);
         glLightfv(GL_LIGHT1, GL_DIFFUSE, diffuse);
         glLightfv(GL_LIGHT1, GL_POSITION, lightvec.getData());
-        glEnable(GL_LIGHT1);        glEnable(GL_LIGHTING);
+        glEnable(GL_LIGHT1);
+
+        if (!cellshade)
+        {
+            glEnable(GL_LIGHTING);
+        }
+        glColor3f(1,1,1);
 
         int nMeshes=r->getMeshCount();
         for (int curmesh=0; curmesh<nMeshes; curmesh++)
@@ -75,13 +82,16 @@ namespace {
                         texcoords2[i]=light;
                     }
 
-                    glActiveTextureARB(GL_TEXTURE1_ARB);
                     glClientActiveTextureARB(GL_TEXTURE1_ARB);
-                    glBindTexture(GL_TEXTURE_1D,shadetex);
+                    glActiveTextureARB(GL_TEXTURE1_ARB);
                     glEnable(GL_TEXTURE_1D);
+                    glEnableClientState(GL_TEXTURE_COORD_ARRAY);
+                    glBindTexture(GL_TEXTURE_1D,shadetex);
                     glTexCoordPointer(1,GL_FLOAT,0,texcoords2);
-                    glActiveTextureARB(GL_TEXTURE0_ARB);
+
                     glClientActiveTextureARB(GL_TEXTURE0_ARB);
+                    glActiveTextureARB(GL_TEXTURE0_ARB);
+
                 } else {
                     glEnableClientState(GL_NORMAL_ARRAY);
                     glNormalPointer(GL_FLOAT, 0, &normals[0][0]);
@@ -94,12 +104,23 @@ namespace {
                     glBindTexture(GL_TEXTURE_2D, (GLuint)r->getMapUserData(0));
                     glEnableClientState(GL_TEXTURE_COORD_ARRAY);
                     glTexCoordPointer(2, GL_FLOAT, 0, &texcoords[0][0]);
-                }                
+                } else {
+                    glDisable(GL_TEXTURE_2D);
+                }
+
 
                 static int faces[50000][3];
                 int nFaces=r->getFaces(&faces[0][0]);
 
                 glDrawElements(GL_TRIANGLES, nFaces*3, GL_UNSIGNED_INT, &faces[0][0]);
+
+                if (cellshade) {
+                    glClientActiveTextureARB(GL_TEXTURE1_ARB);
+                    glDisableClientState(GL_TEXTURE_COORD_ARRAY);
+                    glActiveTextureARB(GL_TEXTURE1_ARB);
+                    glDisable(GL_TEXTURE_1D);
+                    glActiveTextureARB(GL_TEXTURE0_ARB);
+                }
             }
         }
 

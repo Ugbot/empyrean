@@ -22,6 +22,7 @@ namespace pyr {
 
         _renderer=new CellShadeRenderer; //new DefaultRenderer;
         _testModel=Model::create("paladin/paladin.cfg");
+        //_testModel=Model::create("Walk1/walk1.cfg");
     }
     
     void GameState::draw(float fade) {
