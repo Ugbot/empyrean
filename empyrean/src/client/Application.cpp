@@ -64,12 +64,15 @@ namespace pyr {
 
             glTranslatef(0,(float)_font->getAscent(),0);
 
+            std::stringstream ss;
             for (Profiler::ProcessMap::const_iterator iter = pi.begin(); iter != pi.end(); iter++) {
-                std::stringstream ss;
+                
                 int i = int(iter->second.time / totaltime * 100);
                 ss << iter->first << ": " << i << "%";
                 _fontRenderer->render(ss.str().c_str());
                 glTranslatef(0, float(_font->getAscent() + _font->getDescent() + _font->getLineGap()), 0);
+
+                ss.clear();
             }
 
             glPopMatrix();

@@ -193,6 +193,12 @@
 			<File
 				RelativePath="..\..\src\base\WriterThread.h">
 			</File>
+			<File
+				RelativePath="..\..\src\base\extgl.c">
+			</File>
+			<File
+				RelativePath="..\..\src\base\extgl.h">
+			</File>
 		</Filter>
 	</Files>
 	<Globals>

@@ -213,6 +213,9 @@
 			<File
 				RelativePath="..\..\src\client\Texture.h">
 			</File>
+			<File
+				RelativePath="..\..\src\client\Types.h">
+			</File>
 		</Filter>
 	</Files>
 	<Globals>
