@@ -1,0 +1,56 @@
+How to Build Empyrean using SCons and Cygwin
+
+--
+
+First, you need cygwin <http://www.cygwin.com/>.  Make sure you have
+the following packages: gcc, libpng, libjpeg, and freetype.  You may
+need to go back later and add other packages as you find you need
+them.  Just run the installer again and select new packages.  (In
+fact, I like to keep a cygwin-setup directory on my C: drive that has
+the installer and packages I have already downloaded.)
+
+Then, get SCons <http://www.scons.org/>.  Installation is pretty
+straightforward:  untar, then run 'python setup.py install'
+
+Get the SDL 1.2 source code <http://www.libsdl.org/>.  Untar it into
+/usr/src and do the standard "./configure && make && make install"
+dance.
+
+Now you need NSPR.  This one is kind of tricky because it does not
+build or install in Cygwin the same way most libraries do.  First, get
+the following zip file:
+ftp://ftp.mozilla.org/pub/nspr/releases/v4.2.2/WIN954.0_OPT.OBJ/nspr-4.2.2.zip
+Make a third-party directory inside of the empyrean module, and move
+the nspr 'include' and 'lib' directories into 'third-party'.
+
+Our next dependency (isn't this fun??) is gmtl.  Go to ggt.sf.net and
+download the latest gmtl version.  "./configure && make && make install"
+
+Next is Cal3D.  http://cal3d.sf.net/ "./configure && make && make
+install" If the make step fails, you may need to start over, remove
+$(all_libraries) from src/cal3d/Makefile.am, and run the following
+commands before you build:
+
+  - aclocal
+  - libtoolize --force --copy
+  - automake --foreign --add-missing --copy
+  - autoconf
+
+Next, you need Corona (<http://corona.sf.net/>) and Audiere
+(<http://audiere.sf.net/>).  Download the Win32 binary releases and
+put the libraries and include files into the third-party directory,
+just like NSPR.  However, this time you have to put both corona.lib
+and corona.dll into lib, renaming corona.lib to libcorona.a.  (NOTE:
+Right now, you don't need Audiere.  But you definitely will
+eventually.)
+
+FINALLY, you can cd back into the empyrean module, run SCons, and
+watch as all of the executables are compiled into the 'build' directory.
+
+
+--
+
+Now that you have Empyrean built, you need to get the latest resources
+for the game.  Run the get-resources.sh script in the empyrean
+module and it will download the latest resources and install them into
+the correct places in your tree.
