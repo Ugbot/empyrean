@@ -191,7 +191,7 @@ class Client:
     def draw(self):
         self.screen.fill(0)
         for o in self.others.values():
-            pos = o.pos.add(Vec(2, 2)).mul(Vec(100, 100)).as_tuple()
+            pos = o.pos.add(Vec(2, 2)).mul(Vec(100, 100)).add(Vec(-16, -16)).as_tuple()
             self.screen.blit(self.player, pos)
 
 if __name__ == '__main__':
