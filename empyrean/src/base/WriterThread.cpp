@@ -29,6 +29,7 @@ namespace pyr {
                 }
             }
             if (shouldQuit()) {
+                _outgoingLock->unlock();
                 break;
             }
             
