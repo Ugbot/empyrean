@@ -2,6 +2,10 @@ import socket
 import threading
 import time
 
+
+print_packets = 0
+
+
 class ScopedLock:
     def __init__(self, l):
         self.lock = l
@@ -11,7 +15,7 @@ class ScopedLock:
         self.lock.release()
 
 class World:
-    lock = threading.Lock()
+    lock = threading.RLock()
     connections = []
 
     def update(self, dt):
@@ -28,10 +32,10 @@ class World:
         l = ScopedLock(self.lock)
 
         for c in self.connections:
-            conn.send('added %d %f %f' % (c.id, c.x, c.y))
+            conn.send('added %s %d %f %f' % (conn.image, c.id, c.x, c.y))
         self.connections.append(conn)
         for c in self.connections:
-            c.send('added %d %f %f' % (conn.id, conn.x, conn.y))
+            c.send('added %s %d %f %f' % (conn.image, conn.id, conn.x, conn.y))
 
     def remove_connection(self, conn):
         l = ScopedLock(self.lock)
@@ -41,6 +45,7 @@ class World:
         self.connections.remove(conn)
         for c in self.connections:
             conn.send('removed %d' % c.id)
+        
 
 world = World()
  
@@ -52,15 +57,59 @@ def generate_id():
     __last_id += 1
     return id
 
+  
+def bound(value, lo, hi):
+    return min(max(value, lo), hi)
 
-def bound(value, n, x):
-    return max(min(value, x), n)
+
+class Bullet:
+    x = 0.0
+    y = 0.0
+    vx = 0.0
+    vy = 0.0
+
+    last_x = 0.0
+    last_y = 0.0
+    last_vx = 0.0
+    last_vy = 0.0
+    
+    elapsed = 0.0
+    total = 2.0
+
+    def __init__(self, x, y, vx, vy):
+        self.id = generate_id()
+        self.image = "shot.png"
+        self.x = x
+        self.y = y
+        self.vx = vx
+        self.vy = vy
+
+    def update(self, dt):
+        self.last_x = self.x
+        self.last_y = self.y
+        self.last_vx = self.vx
+        self.last_vy = self.vy
+        
+        self.x += dt * self.vx
+        self.y += dt * self.vy
+        self.elapsed += dt
+        if self.elapsed > self.total:
+            world.remove_connection(self)
+
+    def process_packets(self):
+        pass
+
+    def broadcast(self, connections):
+        pass
+
+    def send(self, packet):
+        pass
 
 
 class ConnectionThread(threading.Thread):
     # socket
 
-    lock = threading.Lock()
+    lock = threading.RLock()
     packets = []
 
     # id
@@ -81,6 +130,7 @@ class ConnectionThread(threading.Thread):
         threading.Thread.__init__(self)
         self.socket = socket
         self.id = generate_id()
+        self.image = "player.png"
 
     def run(self):
         print 'Connection!'
@@ -127,7 +177,8 @@ class ConnectionThread(threading.Thread):
         self.lock.release()
 
     def process_packet(self, packet):
-        print "Processing packet: %s" % repr(packet)
+        if print_packets:
+            print "Processing packet: %s" % repr(packet)
 
         split = packet.split()
         if split:
@@ -141,9 +192,15 @@ class ConnectionThread(threading.Thread):
             elif command == "addvel":
                 self.vx += float(args[0])
                 self.vy += float(args[1])
+            elif command == 'fire':
+                world.add_connection(Bullet(self.x, self.y,  1,  1))
+                world.add_connection(Bullet(self.x, self.y, -1,  1))
+                world.add_connection(Bullet(self.x, self.y, -1, -1))
+                world.add_connection(Bullet(self.x, self.y,  1, -1))
 
     def send(self, packet):
-        print "Sending: " + repr(packet)
+        if print_packets:
+            print "Sending: " + repr(packet)
         try:
             self.socket.sendall(packet + '\n')
         except:
@@ -160,9 +217,8 @@ class ConnectionThread(threading.Thread):
 
     def broadcast(self, connections):
         for c in connections:
-            if c.x != c.last_x or c.y != c.last_y or c.vx != c.last_vx or c.vy != c.last_vy:
-                self.send("update %d %f %f %f %f" %
-                          (c.id, c.x, c.y, c.vx, c.vy))
+            self.send("update %d %f %f %f %f" %
+                      (c.id, c.x, c.y, c.vx, c.vy))
 
 
 class ListenerThread(threading.Thread):

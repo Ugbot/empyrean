@@ -6,6 +6,9 @@ import pygame
 from pygame.locals import *
 
 
+print_packets = 0
+
+
 class Vec:
     x = 0
     y = 0
@@ -25,11 +28,13 @@ class Vec:
 
 
 class Entity:
+    # image
     # id
     # pos
     # vel
 
-    def __init__(self, id, pos):
+    def __init__(self, image, id, pos):
+        self.image = image
         self.id = id
         self.pos = pos
         self.vel = Vec(0, 0)
@@ -78,11 +83,13 @@ class NetworkThread(threading.Thread):
         self.socket.close()
 
     def process_packet(self, line):
-        print "Processing packet: " + line
+        if print_packets:
+            print "Processing packet: " + line
         self.listener.recieve(line)
 
     def send(self, packet):
-        print "Sending: " + repr(packet)
+        if print_packets:
+            print "Sending: " + repr(packet)
         try:
             self.socket.sendall(packet + '\n')
         except:
@@ -91,7 +98,7 @@ class NetworkThread(threading.Thread):
 
 class ServerConnection:
     queue = []
-    lock = threading.Lock()
+    lock = threading.RLock()
     # net_thread = NetworkThread()
 
     def __init__(self):
@@ -167,6 +174,8 @@ class Client:
                     self.connection.send('addvel 0 1')
                 elif event.key == K_LEFT:
                     self.connection.send('addvel -1 0')
+                elif event.key == K_SPACE:
+                    self.connection.send('fire')
             elif event.type == KEYUP:
                 if event.key == K_UP:
                     self.connection.send('addvel 0 1')
@@ -199,10 +208,11 @@ class Client:
                 self.others[id].pos = Vec(x, y)
                 self.others[id].vel = Vec(vx, vy)
             elif command == "added":
-                id = int(args[0])
-                x = float(args[1])
-                y = float(args[2])
-                self.others[id] = Entity(id, Vec(x, y))
+                image = str(args[0])
+                id = int(args[1])
+                x = float(args[2])
+                y = float(args[3])
+                self.others[id] = Entity(image, id, Vec(x, y))
             elif command == "removed":
                 id = int(args[0])
                 del self.others[id]
@@ -214,8 +224,13 @@ class Client:
     def draw(self):
         self.screen.fill(0)
         for o in self.others.values():
-            pos = o.pos.add(Vec(2, 2)).mul(Vec(100, 100)).add(Vec(-16, -16)).as_tuple()
-            self.screen.blit(self.player, pos)
+            image = (o.image == "player.png" and self.player or self.shot)
+            offset = Vec(-image.get_width() / 2, -image.get_height() / 2)
+            pos = o.pos.add(Vec(2, 2)).mul(Vec(100, 100)).add(offset).as_tuple()
+            if o.image == "player.png":
+                self.screen.blit(image, pos)
+            else:
+                self.screen.blit(self.shot, pos)
 
 if __name__ == '__main__':
     Client().main()
