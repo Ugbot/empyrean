@@ -12,6 +12,7 @@ namespace pyr {
     class EntityAddedPacket;
     class EntityRemovedPacket;
     class LoginResponsePacket;
+    class Packet;
     class Scene;
     class UpdatePacket;
     
@@ -35,6 +36,16 @@ namespace pyr {
         bool isLoggedIn() {
             return _loggedIn;
         }
+
+	void setForce(float force);
+
+	/**
+	 * Sends a packet to the server.
+	 *
+	 * @returns  true if connection is made and packet is sent,
+         *           false otherwise
+	 */
+	bool sendPacket(Packet* p);
     
     private:
         void handleLoginResponse(Connection*, LoginResponsePacket* p);
@@ -49,6 +60,8 @@ namespace pyr {
         
         bool _loggedIn;
         int _entityID;
+
+	float _force;
     };
 
 }

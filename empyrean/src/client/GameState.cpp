@@ -21,10 +21,12 @@ namespace pyr {
     GameState::GameState() {
         PYR_PROFILE_BLOCK("GameState::GameState()");
         
-        _inputLeft  = &_im.getInput("MouseLeft");
-        _inputRight = &_im.getInput("MouseRight");
-        _inputSpace = &_im.getInput("Space");
-        _inputQuit  = &_im.getInput("Escape");
+        _inputMLeft  = &_im.getInput("MouseLeft");
+        _inputMRight = &_im.getInput("MouseRight");
+	_inputLeft   = &_im.getInput("Left");
+	_inputRight  = &_im.getInput("Right");
+        _inputSpace  = &_im.getInput("Space");
+        _inputQuit   = &_im.getInput("Escape");
 
         _font = new Font("fonts/arial.ttf", 16);
         _font->setScale(400.0f / 1024.0f);
@@ -49,6 +51,10 @@ namespace pyr {
         glLoadIdentity();
         gluOrtho2D(0, 400, 300, 0);
         
+	glEnable(GL_TEXTURE_2D);
+	glEnable(GL_BLEND);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+	glColor4f(1, 1, 1, 1);
         glTranslatef(0, 8, 0);
         bool loggedIn = ServerConnection::instance().isLoggedIn();
         (*_font) << (loggedIn ? "Logged In" : "Not Logged In") << "\n";
@@ -62,18 +68,8 @@ namespace pyr {
 
         ServerConnection& sc = ServerConnection::instance();
         sc.update();
-        
-        float dv = 0;
-        if (_inputLeft->getDelta() < -0.5f) {
-            dv -= 1;
-        } else if (_inputLeft->getDelta() > 0.5f) {
-            dv += 1;
-        }
-        if (_inputRight->getDelta() < -0.5f) {
-            dv += 1;
-        } else if (_inputRight->getDelta() > 0.5f) {
-            dv -= 1;
-        }
+
+	sc.setForce(_inputRight->getValue() - _inputLeft->getValue());
 
         if (_inputQuit->getValue() >= 0.50f) {
             invokeTransition<MenuState>();

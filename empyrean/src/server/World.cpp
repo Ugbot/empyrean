@@ -4,6 +4,7 @@
 #include "EntityRemovedPacket.h"
 #include "LoginPacket.h"
 #include "LoginResponsePacket.h"
+#include "PlayerStatePacket.h"
 #include "ServerEntity.h"
 #include "UpdatePacket.h"
 #include "World.h"
@@ -62,6 +63,7 @@ namespace pyr {
         
         // set up packet handlers
         connection->definePacketHandler(this, &World::handleLogin);
+	connection->definePacketHandler(this, &World::handlePlayerState);
     
         // add the connection to the list of connections
         _connections.push_back(connection);
@@ -108,7 +110,23 @@ namespace pyr {
             // add new avatar entity to world
             ServerEntity* se = new ServerEntity();
             addEntity(cd->entityID, se);
-        }
+        } else {
+	    std::cout << "Already logged in!" << std::endl;
+	}
+    }
+
+    void World::handlePlayerState(Connection* c, PlayerStatePacket* p) {
+	std::cout << "handlePlayerState" << std::endl;
+	ConnectionData* cd = (ConnectionData*)c->getOpaque();
+	if (cd->loggedIn) {
+	    std::cout << "Player state update" << std::endl;
+	    ServerEntity* entity = getEntity(cd->entityID);
+	    if (entity) {
+		entity->setVel(gmtl::Vec2f(p->getForce() * 50, 0));
+	    } else {
+		std::cout << "- Unknown entity" << std::endl;
+	    }
+	}
     }
     
     void World::addEntity(u16 id, ServerEntity* entity) {
@@ -139,6 +157,10 @@ namespace pyr {
                 c->sendPacket(new EntityRemovedPacket(id));
             }
         }
+    }
+
+    ServerEntity* World::getEntity(u16 id) {
+	return (_entities.count(id) ? _entities[id] : 0);
     }
 
 }

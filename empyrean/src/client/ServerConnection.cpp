@@ -5,6 +5,7 @@
 #include "LoginResponsePacket.h"
 #include "Model.h"
 #include "PlayerEntity.h"
+#include "PlayerStatePacket.h"
 #include "Renderer.h"
 #include "Scene.h"
 #include "ServerConnection.h"
@@ -33,6 +34,7 @@ namespace pyr {
         _scene = 0;
         _loggedIn = false;
         _entityID = -1;
+	_force = 0;
     }
     
     void ServerConnection::connect(
@@ -70,17 +72,34 @@ namespace pyr {
         const std::string& user,
         const std::string& pass)
     {
-        if (_connection) {
-            _connection->sendPacket(new LoginPacket(user, pass));
-        }
+	sendPacket(new LoginPacket(user, pass));
+    }
+
+    void ServerConnection::setForce(float force) {
+	if (force != _force) {
+	    std::cout << "Sending force: " << force << std::endl;
+	    sendPacket(new PlayerStatePacket(force));
+	    _force = force;
+	}
     }
     
+    bool ServerConnection::sendPacket(Packet* p) {
+	if (_connection) {
+	    _connection->sendPacket(p);
+	    return true;
+	} else {
+	    return false;
+	}
+    }
+            
     void ServerConnection::handleLoginResponse(Connection*, LoginResponsePacket* p) {
         _loggedIn = true;
         _entityID = p->getEntityID();
     }
-            
+
     void ServerConnection::handleEntityAdded(Connection*, EntityAddedPacket* p) {
+	std::cout << "Adding entity: " << p->getEntityID() << std::endl;
+
         Entity* entity = new PlayerEntity(
             new Model(p->getAppearance()),
             new CellShadeRenderer());
@@ -91,10 +110,12 @@ namespace pyr {
     }
     
     void ServerConnection::handleEntityRemoved(Connection* c, EntityRemovedPacket* p) {
+	std::cout << "Removing entity: " << p->getEntityID() << std::endl;
         _scene->removeEntity(p->getEntityID());
     }
     
     void ServerConnection::handleUpdate(Connection* c, UpdatePacket* p) {
+	std::cout << "handleUpdate()" << std::endl;
         Entity* e = _scene->getEntity(p->getEntityID());
         if (e) {
             e->setPos(p->getPos());

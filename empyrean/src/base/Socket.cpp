@@ -48,8 +48,16 @@ namespace pyr {
         }
     }
     
+    /**
+     * @returns  0 if read timed out, -1 if error, and number of bytes
+     *           read otherwise
+     */
     int Socket::read(void* buffer, int size, float timeout) {
-        return PR_Recv(_socket, buffer, size, 0, secondsToInterval(timeout));
+        int result = PR_Recv(_socket, buffer, size, 0, secondsToInterval(timeout));
+	if (result == -1 && PR_GetError() == PR_IO_TIMEOUT_ERROR) {
+	    return 0;
+	}
+	return result;
     }
     
     int Socket::write(const void* buffer, int size) {

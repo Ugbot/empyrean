@@ -25,8 +25,10 @@ namespace pyr {
         
     private:
         InputManager _im;
-        Input* _inputLeft;
-        Input* _inputRight;
+        Input* _inputMLeft;
+        Input* _inputMRight;
+	Input* _inputLeft;
+	Input* _inputRight;
         Input* _inputSpace;
         Input* _inputQuit;
         

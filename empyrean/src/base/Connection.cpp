@@ -1,3 +1,4 @@
+#include <iostream>
 #include "ByteBuffer.h"
 #include "Connection.h"
 #include "Packet.h"
@@ -33,6 +34,8 @@ namespace pyr {
         while (!packets.empty()) {
             Packet* p = packets.front();
             packets.pop();
+
+	    std::cout << "Processing packet with id: " << p->getID() << std::endl;
             
             TypeInfo ti(typeid(*p));
             PacketHandler* handler = _handlers[ti];
@@ -40,6 +43,7 @@ namespace pyr {
                 handler->processPacket(this, p);
                 delete p;
             } else {
+		std::cout << "Unhandled packet: id = " << p->getID() << std::endl;
                 _unhandledPackets.push_back(p);
             }
         }

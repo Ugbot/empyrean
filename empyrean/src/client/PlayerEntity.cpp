@@ -14,11 +14,9 @@ namespace pyr {
     PlayerEntity::PlayerEntity(Model* model, Renderer* renderer) {
         _model = model;
         _renderer = renderer;
+	_direction = 0;
 
         startStandState();
-    }
-
-    PlayerEntity::~PlayerEntity() {
     }
 
     void PlayerEntity::draw() {
@@ -30,39 +28,20 @@ namespace pyr {
     }
 
     void PlayerEntity::update(float dt) {
-        (this->*_state)(dt);
-
-/*
-        if (_inputAttack->getValue()==1.0f) {
-            _model->getModel().getMixer()->executeAction(1, 0.5f, 1.0f);
-        }
-*/
-
+	setPos(getPos() + getVel() * dt);
+	if (_state) {
+	    (this->*_state)(dt);
+	}
         _model->update(dt);
     }
 
-    const float vel=70.0f;
+    static const float vel = 70.0f;
 
     void PlayerEntity::startStandState() {
         _model->getModel().getMixer()->clearCycle(0, 0.0f);
         setVel(gmtl::Vec2f(0,0));
 
-        _state = &PlayerEntity::updateStandState;
-    }
-
-    void PlayerEntity::updateStandState(double dt) {
-/*
-        if (_inputLeft->getValue() != 0) {
-            _direction = 90;
-            setVel(gmtl::Vec2f(-vel, 0));
-            startWalkState();
-        }
-        else if (_inputRight->getValue() != 0) {
-            _direction = -90;
-            setVel(gmtl::Vec2f(vel, 0));
-            startWalkState();
-        }
-*/
+        _state = 0;
     }
 
     void PlayerEntity::startWalkState() {

@@ -13,8 +13,10 @@ namespace pyr {
     
 
     void runServer() {
+	std::cout << "Starting Empyrean Server..." << std::endl;
+
         World world;
-    
+
         ListenerThread* listener = new ListenerThread(PORT);
         ScopedPtr<Thread> thread(new Thread(listener));
         
@@ -31,7 +33,7 @@ namespace pyr {
             }
             
             world.update(dt);
-            PR_Sleep(secondsToInterval(0.020f));
+            PR_Sleep(secondsToInterval(0.050f));
         }
     }
 }

@@ -27,7 +27,6 @@ namespace pyr {
     class PlayerEntity : public Entity {
     public:
         PlayerEntity(Model* model, Renderer* renderer);
-        virtual ~PlayerEntity();
 
         virtual void draw();
         virtual void update(float dt);
@@ -42,21 +41,12 @@ namespace pyr {
         Model* _model;
         Renderer* _renderer;
 
-/*
-        InputManager* _im;
-        Input* _inputLeft;
-        Input* _inputRight; 
-        Input* _inputAttack;
-        Input* _inputRun;
-*/
-
         float _direction;
 
         void startWalkState();
         void updateWalkState(double dt);
 
         void startStandState();
-        void updateStandState(double dt);
     };
 
 }

@@ -1,3 +1,4 @@
+#include "BufferParser.h"
 #include "LoginPacket.h"
 
 
@@ -12,33 +13,18 @@ namespace pyr {
     }
     
     void LoginPacket::serialize(ByteBuffer& out) const {
-        out.add_u16(_username.length());
-        out.add_u16(_password.length());
-        out.add(_username.c_str(), _username.length());
-        out.add(_password.c_str(), _password.length());
+	out.add_string(_username, 12);
+	out.add_string(_password, 12);
     }
     
     Packet* LoginPacket::create(int size, const void* bytes) {
-        std::string username;
-        std::string password;
-        
-        u16* p_username_size = (u16*)bytes;
-        u16* p_password_size = (u16*)bytes + 1;
-        
-        u16 username_size = PR_ntohs(*p_username_size);
-        u16 password_size = PR_ntohs(*p_password_size);
-        
-        if (size >= username_size + password_size + 4) {
-            char* buffer = (char*)bytes + 4;
-            username.assign(
-                buffer,
-                buffer + username_size);
-            password.assign(
-                buffer + username_size,
-                buffer + username_size + password_size);
-            return new LoginPacket(username, password);
+	BufferParser bp(size, bytes);
+        std::string username = bp.read_string(12);
+        std::string password = bp.read_string(12);
+	if (bp.passedEnd()) {
+	    return 0;
         } else {
-            return 0;
+	    return new LoginPacket(username, password);
         }
     }
 

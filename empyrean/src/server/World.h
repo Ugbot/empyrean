@@ -12,6 +12,7 @@ namespace pyr {
 
     class Connection;
     class LoginPacket;
+    class PlayerStatePacket;
     class ServerEntity;
 
     /// @note This class is designed to run within one thread.
@@ -31,9 +32,11 @@ namespace pyr {
         void removeConnection(unsigned index);
     
         void handleLogin(Connection* c, LoginPacket* p);
+	void handlePlayerState(Connection* c, PlayerStatePacket* p);
         
         void addEntity(u16 id, ServerEntity* entity);
         void removeEntity(u16 id);
+	ServerEntity* getEntity(u16 id);
         
     private:
         std::vector<Connection*> _connections;
