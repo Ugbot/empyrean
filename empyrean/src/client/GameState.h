@@ -1,9 +1,9 @@
 #ifndef PYR_GAME_STATE_H
 #define PYR_GAME_STATE_H
 
-
 #include <vector>
 #include "InputManager.h"
+#include "PlayerEntity.h"
 #include "Scene.h"
 #include "State.h"
 
@@ -33,6 +33,7 @@ namespace pyr {
         Input* _inputQuit;
         
         Scene _scene;
+        PlayerEntity* _player;
         
         ScopedPtr<Font> _font;
     };

@@ -18,7 +18,7 @@
 namespace pyr {
 
     GameState::GameState() {
-        PYR_PROFILE_BLOCK("GameState::GameState()");
+        PYR_PROFILE_BLOCK("GameState::GameState");
         
         _inputMLeft  = &_im.getInput("MouseLeft");
         _inputMRight = &_im.getInput("MouseRight");
@@ -30,15 +30,20 @@ namespace pyr {
         _font = new Font("fonts/arial.ttf", 16);
         _font->setScale(400.0f / 1024.0f);
 
-        ServerConnection& sc = ServerConnection::instance();
-        sc.connect("localhost", 8765, &_scene);
-        sc.login("aegis", "wazaa");
+        _player = new PlayerEntity(
+            new Model("models/paladin/paladin.cfg"),
+            new DefaultRenderer());
+        _scene.addEntity(0, _player);
+
+//        ServerConnection& sc = ServerConnection::instance();
+//        sc.connect("localhost", 8765, &_scene);
+//        sc.login("aegis", "wazaa");
     }
 
     GameState::~GameState() {
-        ServerConnection::instance().disconnect();
+//        ServerConnection::instance().disconnect();
     }
-    
+
     void GameState::draw(float fade) {
         PYR_PROFILE_BLOCK("GameState::draw");
         _scene.draw();
@@ -58,17 +63,20 @@ namespace pyr {
         bool loggedIn = ServerConnection::instance().isLoggedIn();
         (*_font) << (loggedIn ? "Logged In" : "Not Logged In") << "\n";
     }
-        
+
     void GameState::update(float dt) {
         PYR_PROFILE_BLOCK("GameState::update");
         
         _im.update(dt);
         _scene.update(dt);
 
-        ServerConnection& sc = ServerConnection::instance();
-        sc.update();
+//        ServerConnection& sc = ServerConnection::instance();
+//        sc.update();
+//        sc.setForce(_inputRight->getValue() - _inputLeft->getValue());
 
-        sc.setForce(_inputRight->getValue() - _inputLeft->getValue());
+        float dx = _inputRight->getValue() - _inputLeft->getValue();
+        float dy = 1 - _inputSpace->getValue() * 2;
+        _player->setVel(gmtl::Vec2f(dx * 50, dy * 10));
 
         if (_inputQuit->getValue() >= 0.50f) {
             quit();

@@ -28,8 +28,8 @@ namespace pyr {
     public:
         PlayerEntity(Model* model, Renderer* renderer);
 
-        virtual void draw();
-        virtual void update(float dt);
+        void draw();
+        void update(float dt);
 
     private:
         typedef void (PlayerEntity::*StateHandler)(double dt);

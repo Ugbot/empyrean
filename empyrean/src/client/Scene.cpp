@@ -8,7 +8,7 @@
 namespace pyr {
 
     Scene::Scene() {
-        _backdrop = Texture::create("images/backdrop.jpg");
+        _backdrop = Texture::create("images/stars.png");
     }
     
     Scene::~Scene() {
