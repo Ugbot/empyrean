@@ -66,12 +66,14 @@ namespace pyr {
         Vec2f origPos = getPos();
 
         getPos() += getVel() * dt;
-        getVel()[1] -= 9.81f * dt;
-
+        getVel()[1] -= 9.81f * dt;             // gravity
+        if(getVel()[1] < -56) {                // terminal velocity
+            getVel()[1] = -56;
+        }
         float height = 1.9f;
         float width = 0.3f;
 
-        _lastCD = collide(origPos, getPos(), getVel(), width, height, terrain);
+        _lastCD = collide(dt, origPos, getPos(), getVel(), width, height, terrain);
 
         if (_state) {
             (this->*_state)(dt);

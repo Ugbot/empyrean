@@ -9,11 +9,14 @@ namespace pyr {
 
         _pos += _vel * dt;
         _vel[1] -= 9.81f * dt;             // gravity
+        if(_vel[1] < -56) {                // terminal velocity
+            _vel[1] = -56;
+        }
 
         float height = 1.9f;
         float width = 0.3f;
 
-        collide(origPos, _pos, _vel, width, height, terrain);
+        collide(dt, origPos, _pos, _vel, width, height, terrain);
 
     }
 

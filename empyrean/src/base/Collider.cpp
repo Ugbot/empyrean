@@ -49,21 +49,9 @@ namespace pyr {
         std::vector<Segment>& _segments;
     };
 
-    CollisionData collide(const Vec2f& origPos, Vec2f& newPos, Vec2f& vel,
+    CollisionData collide(const double& dt, const Vec2f& origPos, Vec2f& newPos, Vec2f& vel,
                           float width, float height, const Map* terrain) {
                           
-        /*
-        CollisionBox origBox(origPos - Vec2f(width / 2.0f, 0),
-                    origPos + Vec2f(width / 2.0f, height));
-
-        float maxX = std::max(newBox[1][0],origBox[1][0]);
-        float minX = std::min(newBox[0][0],origBox[0][0]);
-        float maxY = std::max(newBox[2][1],origBox[2][1]);
-        float minY = std::min(newBox[1][1],origBox[1][1]);
-
-        CollisionBox bigBox(Vec2f(minX, minY),Vec2f(maxX,maxY));
-        */
-
         CollisionBox newBox(newPos - Vec2f(width / 2.0f, 0),
                             newPos + Vec2f(width / 2.0f, height));
 
@@ -74,7 +62,7 @@ namespace pyr {
         CollisionData rv;
         newBox.getIntersectingSegs(rv.interesting, segs);
 
-        Vec2f displacement = newBox.getDisplacement(vel,rv.interesting, rv.points);
+        Vec2f displacement = newBox.getDisplacement(dt,vel,rv.interesting, rv.points);
 
         newPos += displacement;
 

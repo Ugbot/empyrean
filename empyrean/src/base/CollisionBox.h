@@ -24,7 +24,7 @@ namespace pyr {
         
         void getIntersectingSegs(std::vector<Segment>& interestingSegs,
                                  const std::vector<Segment>& segs);
-        Vec2f getDisplacement(Vec2f& vel, const std::vector<Segment>& segs,
+        Vec2f getDisplacement(const double& dt, Vec2f& vel, const std::vector<Segment>& segs,
                               std::vector<Vec2f>& points);
 
     private:

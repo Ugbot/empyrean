@@ -128,7 +128,16 @@ namespace pyr {
                 break;
                 
             case PE_JUMP:
-                entity->getVel()[1] = 8;
+                if(entity->getVel()[1] == 0) {
+                    entity->getVel()[1] = 8;
+                    entity->jumping() = 1;
+                }
+                else {
+                    if(entity->jumping() < 2) {
+                        entity->jumping()++;
+                        entity->getVel()[1] = 8;
+                    }
+                }
                 break;
                 
             case PE_ATTACK:
