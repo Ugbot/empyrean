@@ -32,8 +32,8 @@ namespace pyr {
             glDisable(GL_TEXTURE_2D);
             glEnable(GL_BLEND);
             glPushMatrix();
-            glTranslatef(-0.3f,getBounds().getHeight()+0.4,0);
-            glScalef(0.03f,-0.03f,0.03f);
+            glTranslatef(-0.1f,getBounds().getHeight()+0.5,0);
+            glScalef(0.02f,-0.02f,0.02f);
             if (_vitalityChange < 0) {
                 glColor3f(1.0f,0.0f,0.0f);
             }
@@ -48,8 +48,8 @@ namespace pyr {
             glDisable(GL_TEXTURE_2D);
             glEnable(GL_BLEND);
             glPushMatrix();
-            glTranslatef(-0.3f,getBounds().getHeight()+0.4,0);
-            glScalef(0.03f,-0.03f,0.03f);
+            glTranslatef(-0.1f,getBounds().getHeight()+0.5,0);
+            glScalef(0.02f,-0.02f,0.02f);
             if (_etherChange < 0) {
                 glColor3f(0.0f,0.0f,1.0f);
             }
@@ -107,7 +107,7 @@ namespace pyr {
         }
         else {
             _vitalityChange = val - _currentVitality;
-            _timeToShowVitChange = 2.0f;
+            _timeToShowVitChange = 1.0f;
         }
         _currentVitality = val; 
         
@@ -119,7 +119,7 @@ namespace pyr {
         }
         else {
             _etherChange = val - _currentEther;
-            _timeToShowEthChange = 2.0f;
+            _timeToShowEthChange = 1.0f;
         }
         _currentEther = val; 
         

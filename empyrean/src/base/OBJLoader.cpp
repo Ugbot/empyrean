@@ -235,12 +235,14 @@ namespace pyr {
                     if (ss >> x >> y >> z) {
                         // notice: convert from max coordinates to empyrean coordinates here
                         vertexArray->positions.push_back(Vec3f(x, z, -y));
+                        //vertexArray->positions.push_back(Vec3f(0.33f*x, 0.33f*z, -0.33f*y));
                     }
                 } else if (command == "vn") {
                     float x, y, z;
                     if (ss >> x >> y >> z) {
                         // notice: convert from max coordinates to empyrean coordinates here
-                        vertexArray->normals.push_back(Vec3f(x, z, -y));
+                        vertexArray->normals.push_back(Vec3f(x, z, y));
+                        //vertexArray->normals.push_back(Vec3f(0.33f*x, 0.33f*z, -0.33f*y));
                     }
                 } else if (command == "vt") {
                     float u, v;
