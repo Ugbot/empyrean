@@ -57,6 +57,7 @@ namespace pyr {
                 _connection->definePacketHandler(this, &ServerConnection::handleEntityRemoved);
                 _connection->definePacketHandler(this, &ServerConnection::handleEntityUpdated);
                 _connection->definePacketHandler(this, &ServerConnection::handleAppearance);
+                _connection->definePacketHandler(this, &ServerConnection::handleCharacterUpdate);
                 
                 _connectionMaker = 0;
                 _connectionThread = 0;
@@ -209,4 +210,16 @@ namespace pyr {
         }
     }
 
+    void ServerConnection::handleCharacterUpdate(Connection*, CharacterUpdatedPacket* p) {
+        ClientEntity* entity = the<Scene>().getEntity(p->id());
+        if (entity) {
+            entity->setCurrentVitality(p->currVit());
+            entity->setMaxVitality(p->maxVit());
+            entity->setCurrentEther(p->currEth());
+            entity->setMaxEther(p->maxEth());
+        } else {
+            PYR_LOG() << "Received update entity packet for nonexistent entity " << p->id();
+        }
+    }
+    
 }

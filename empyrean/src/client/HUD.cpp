@@ -1,7 +1,7 @@
 #include "HUD.h"
 #include "GLUtility.h"
 #include "OpenGL.h"
-#include "Player.h"
+#include "ClientEntity.h"
 #include "Texture.h"
 
 namespace pyr {
@@ -18,6 +18,8 @@ namespace pyr {
         _barBufferY = 10;
         _barBuffer = 3;
         _barPathLength = _barShortStraight+PI*_barRadius+_barLongStraight;
+        _timeSinceLastVitChange = 0;
+        _vitUseRed = false;
 
         calcBar();
         PYR_ASSERT(_vertsRight.size() == _vertsLeft.size(),
@@ -29,16 +31,28 @@ namespace pyr {
         _thumbnail = Texture::create("images/MikeThumbnail.jpg");
     }
 
-    void HUD::draw(gltext::FontRendererPtr rend, Player& player) {
+    void HUD::update(float dt) {
+        // Determine the color of the vitality numbers
+        _timeSinceLastVitChange += dt;
+        if (_timeSinceLastVitChange > 0.4f) {
+            _timeSinceLastVitChange = 0;
+            _vitUseRed = _vitUseRed ? false : true;
+        }
+    }
+
+    void HUD::draw(gltext::FontRendererPtr rend, ClientEntity* entity) {
+        PYR_ASSERT(entity, "Invalid entity passed to the HUD!");
+
         int vitality, ether, maxVitality, maxEther;
-        player.getVitalityUpdate(vitality,maxVitality);
-        player.getEtherUpdate(ether,maxEther);
+        entity->getVitalityUpdate(vitality,maxVitality);
+        entity->getEtherUpdate(ether,maxEther);
         PYR_ASSERT(maxVitality>0,"Invalid maximum vitality!");
         PYR_ASSERT(maxEther>0,"Invalid maximum ether!");
 
         setOrthoProjection(400.0f, 300.0f);
         
         glDisable(GL_TEXTURE_2D);
+        glEnable(GL_BLEND);
         glPushMatrix();
 
         // Draw the vitality bar
@@ -51,6 +65,14 @@ namespace pyr {
         GLTEXT_STREAM(rend) << "VIT";
         glScalef(1.5,1.5,1.5);
         glTranslatef(-6,15,0);
+        if (vitality <= 0.1*maxVitality) {
+            if (_vitUseRed ) {
+                glColor3f(1.0,0.0,0.0);
+            }
+            else {
+                glColor3f(1.0,1.0,1.0);
+            }
+        }
         if (vitality < 100) {
             GLTEXT_STREAM(rend) << " " << vitality;
         }

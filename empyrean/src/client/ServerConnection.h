@@ -28,6 +28,7 @@ namespace pyr {
     class Packet;
     class ServerConnectionThread;
     class SetPlayerPacket;
+    class CharacterUpdatedPacket;
     
     class ServerConnection {
         PYR_DECLARE_SINGLETON(ServerConnection)
@@ -67,6 +68,7 @@ namespace pyr {
                       const std::string& password,
                       bool newGame);
         bool sendEvent(const std::string& event);
+        bool sendHUDUpdate(Packet* p) { return sendPacket(p); }
 
     private:
         /**
@@ -86,6 +88,7 @@ namespace pyr {
         void handleEntityRemoved(Connection*, EntityRemovedPacket* p);
         void handleEntityUpdated(Connection*, EntityUpdatedPacket* p);
         void handleAppearance(Connection*, AppearancePacket* p);
+        void handleCharacterUpdate(Connection*, CharacterUpdatedPacket* p);
     
         Inited<Status, DISCONNECTED> _status;
         

@@ -15,6 +15,7 @@ namespace pyr {
     class EntityAddedPacket;
     class PlayerBehavior;
     class PlayerEventPacket;
+    class TempHUDPacket;
     class ServerEntity;
 
     /// While in a game, extra data is needed.
@@ -64,6 +65,7 @@ namespace pyr {
         void connectionRemoved(Connection* connection);
 
         void handlePlayerEvent(Connection* c, PlayerEventPacket* p);
+        void handleHUDUpdate(Connection* c, TempHUDPacket* p);
 
     private:
         std::string _name;

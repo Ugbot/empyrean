@@ -151,6 +151,9 @@ namespace pyr {
      * (it rhymes!)
      */
     std::string va(const char* s, ...);
+
+    /** Round a number to the nearest integer (0.5 rounded up) */
+    int round(float num);
 }
 
 #endif

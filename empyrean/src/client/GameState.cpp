@@ -48,9 +48,9 @@ namespace pyr {
         Scene& scene = the<Scene>();
         scene.draw();
 
-        the<HUD>().draw(_renderer, _player);
+        if (ClientEntity* entity = scene.getFocus()) {
+            the<HUD>().draw(_renderer,entity);
 
-        if (Entity* entity = scene.getFocus()) {
             if (_showPlayerData) {
                 Application& app = the<Application>();
                 glEnable(GL_BLEND);
@@ -70,22 +70,23 @@ namespace pyr {
         PYR_PROFILE_BLOCK("GameState::update");
         
         the<Scene>().update(dt);
+        the<HUD>().update(dt);
 
         ServerConnection& sc = the<ServerConnection>();
         sc.update();
 
         // Affect the player's vitality
         if (_input1->getValue() == 1) {
-            _player.decrVitality(2);
+            sc.sendHUDUpdate(new TempHUDPacket(0,1,0,0));
         }
         if (_input2->getValue() == 1) {
-            _player.incrVitality(2);
+            sc.sendHUDUpdate(new TempHUDPacket(1,0,0,0));
         }
         if (_input3->getValue() == 1) {
-            _player.decrEther(1);
+            sc.sendHUDUpdate(new TempHUDPacket(0,0,0,1));
         }
         if (_input4->getValue() == 1) {
-            _player.incrEther(1);
+            sc.sendHUDUpdate(new TempHUDPacket(0,0,1,0));
         }
 
         // Combined key/joy input needs to be implemented with an Input

@@ -39,4 +39,14 @@ namespace pyr {
 #endif
     }
 
+    void ClientEntity::getVitalityUpdate(int& current, int& max) {
+        current = _currentVitality;
+        max = _maxVitality;
+    }
+
+    void ClientEntity::getEtherUpdate(int& current, int& max) {
+        current = _currentEther;
+        max = _maxEther;
+    }
+
 }

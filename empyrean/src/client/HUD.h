@@ -6,8 +6,7 @@
 #include "VecMath.h"
 
 namespace pyr {
-    class Entity;
-    class Player;
+    class ClientEntity;
     class Texture;
 
     class HUD {
@@ -17,7 +16,8 @@ namespace pyr {
         ~HUD(){}
 
     public:
-        void draw(gltext::FontRendererPtr rend, Player& player); 
+        void draw(gltext::FontRendererPtr rend, ClientEntity* entity); 
+        void update(float dt);
 
     private:
         void drawVitalityBar(float vitPerc);
@@ -41,6 +41,8 @@ namespace pyr {
         int _barBufferY;
         int _barBuffer;
         float _barPathLength;
+        bool _vitUseRed;
+        float _timeSinceLastVitChange;
     };
 };
 #endif

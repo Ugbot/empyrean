@@ -141,4 +141,12 @@ namespace pyr {
 
         return temp;
     }
+
+    int round(float num) {
+        int temp = (int)(num * 10);
+        if (temp%10 >= 5) {
+            return (int)num + 1;
+        }
+        return (int)num;
+    }
 };

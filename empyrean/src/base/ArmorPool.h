@@ -3,6 +3,7 @@
 
 #include <map>
 #include "Singleton.h"
+#include "ScopedPtr.h"
 
 namespace pyr {
 

@@ -90,6 +90,14 @@ namespace pyr {
     #define PYR_PLAYER_EVENT_PACKET_NAME PlayerEventPacket
     #define PYR_PLAYER_EVENT_PACKET(_) \
         _(string)(32, event)
+
+    // client -> server //TEMP!!!!!
+    #define PYR_TEMP_HUD_PACKET_NAME TempHUDPacket
+    #define PYR_TEMP_HUD_PACKET(_)  \
+        _(field)(u16, addVit)       \
+        _(field)(u16, decVit)       \
+        _(field)(u16, addEth)       \
+        _(field)(u16, decEth)       
         
     // server -> client
     #define PYR_SET_PLAYER_PACKET_NAME SetPlayerPacket
@@ -116,6 +124,15 @@ namespace pyr {
         _(field)(u16, id)                \
         _(field)(Vec2f, pos)             \
         _(field)(Vec2f, vel)
+
+    // server -> client
+    #define PYR_CHARACTER_UPDATED_PACKET_NAME CharacterUpdatedPacket
+    #define PYR_CHARACTER_UPDATED_PACKET(_) \
+        _(field)(u16, id)                   \
+        _(field)(u16, currVit)              \
+        _(field)(u16, maxVit)               \
+        _(field)(u16, currEth)              \
+        _(field)(u16, maxEth)
 
     enum AppearancePacketCode {
         AP_COMMAND,
@@ -146,7 +163,9 @@ namespace pyr {
         _(PYR_ENTITY_ADDED_PACKET)              \
         _(PYR_ENTITY_REMOVED_PACKET)            \
         _(PYR_ENTITY_UPDATED_PACKET)            \
-        _(PYR_APPEARANCE_PACKET)
+        _(PYR_APPEARANCE_PACKET)                \
+        _(PYR_CHARACTER_UPDATED_PACKET)         \
+        _(PYR_TEMP_HUD_PACKET)
 
 
     // allocate packet IDs

@@ -129,6 +129,7 @@ namespace pyr {
 
         // Add packet handlers.
         connection->definePacketHandler(this, &Game::handlePlayerEvent);
+        connection->definePacketHandler(this, &Game::handleHUDUpdate);
 
         addEntity(entity);
 
@@ -139,8 +140,15 @@ namespace pyr {
         for (size_t i = 0; i < _entities.size(); ++i) {
             connection->sendPacket(buildEntityAddedPacket(_entities[i]));
         }
-
+        
         connection->sendPacket(new SetPlayerPacket(entity->getID()));
+
+        // Send the client its character stats
+        connection->sendPacket(new CharacterUpdatedPacket( entity->getID(),
+                                                           entity->getCharacter()->getCurrentVitality(),
+                                                           entity->getCharacter()->getMaxVitality(),
+                                                           entity->getCharacter()->getCurrentEther(),
+                                                           entity->getCharacter()->getMaxEther()        ));
     }
 
     void Game::connectionRemoved(Connection* connection) {
@@ -166,6 +174,21 @@ namespace pyr {
         PlayerBehavior* behavior = cd->behavior;
         Entity* entity = cd->playerEntity;
         behavior->handleEvent(entity, p->event());
+    }
+
+    void Game::handleHUDUpdate(Connection* c, TempHUDPacket* p) {
+        // Update the character
+        GameConnectionData* cd = getData(c);
+        ServerEntity* entity = dynamic_cast<ServerEntity*>(cd->playerEntity);
+        entity->getCharacter()->changeVitality(p->addVit() == 0 ? -p->decVit() : p->addVit());
+        entity->getCharacter()->changeEther(p->addEth() == 0 ? -p->decEth() : p->addEth());
+
+        // Send the change
+        c->sendPacket(new CharacterUpdatedPacket( entity->getID(),
+                                                  entity->getCharacter()->getCurrentVitality(),
+                                                  entity->getCharacter()->getMaxVitality(),
+                                                  entity->getCharacter()->getCurrentEther(),
+                                                  entity->getCharacter()->getMaxEther()        ));
     }
 
 }
