@@ -166,6 +166,12 @@
 				RelativePath="..\..\src\client\Model.h">
 			</File>
 			<File
+				RelativePath="..\..\src\client\PlayerEntity.cpp">
+			</File>
+			<File
+				RelativePath="..\..\src\client\PlayerEntity.h">
+			</File>
+			<File
 				RelativePath="..\..\src\client\Profiler.cpp">
 			</File>
 			<File

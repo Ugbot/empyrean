@@ -8,9 +8,13 @@ namespace pyr {
 
     class Renderer
     {
+    protected:
+        template <class Shader>
+        static void renderMesh(Model& model,Shader shader);
     public:
         virtual ~Renderer(){}
         virtual void draw(Model*)=0;
+        virtual void useVertexArrays(bool)=0;
 
         static void begin2D();
         static void end2D();
@@ -21,8 +25,12 @@ namespace pyr {
 
     class DefaultRenderer : public Renderer
     {
+        bool _useVertexArrays;
     public:
+        DefaultRenderer();
+
         virtual void draw(Model* m);
+        virtual void useVertexArrays(bool b);
     };
 
     class CellShadeRenderer : public Renderer
@@ -32,12 +40,15 @@ namespace pyr {
             ShadeTex();
             ~ShadeTex();
         } _shadeTex;
+
+        bool _useVertexArrays;
     public:
 
         CellShadeRenderer();
 
         virtual void draw(Model* m);
+        virtual void useVertexArrays(bool b);
     };
-};
+}
 
 #endif

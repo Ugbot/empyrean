@@ -31,7 +31,8 @@ namespace pyr {
      * 
      */
     class CoreModel {
-        static std::map<std::string,CoreModel*> _instances;
+        typedef std::map<std::string,CoreModel*> InstanceMap;
+        static InstanceMap _instances;
 
         CalCoreModel _coreModel;
         int _refCount;
@@ -44,9 +45,8 @@ namespace pyr {
 
         ~CoreModel() {
             // gaaaaay.  But I can find no way to search a std::map for a certain value.
-            for (std::map<std::string,CoreModel*>::iterator i = _instances.begin(); i != _instances.end(); i++)
-                if (i->second == this)
-                {
+            for (InstanceMap::iterator i = _instances.begin(); i != _instances.end(); i++)
+                if (i->second == this) {
                     _instances.erase(i);
                     break;
                 }
@@ -107,44 +107,50 @@ namespace pyr {
                 curline++;
             }
 
-            int result;
+            file.close();
 
+            // Actually load things, now that the config file has been consumed.
+            struct CalException {};
             try {
-                result=model.loadCoreSkeleton(path+skeleton);
-                if (!result)        throw skeleton;
+                int result;
+
+                result=model.loadCoreSkeleton(path + skeleton);
+                if (!result)        throw CalException();
 
                 for (u32 i = 0; i < animations.size(); i++) {
-                    result=model.loadCoreAnimation(path+animations[i]);
-                    if (result==-1) throw animations[i];
+                    result=model.loadCoreAnimation(path + animations[i]);
+                    if (result==-1) throw CalException();
                 }
 
                 for (u32 i = 0; i < meshes.size(); i++) {
-                    result=model.loadCoreMesh(path+meshes[i]);
-                    if (result==-1) throw meshes[i];
+                    result=model.loadCoreMesh(path + meshes[i]);
+                    if (result==-1) throw CalException();
                 }
 
                 for (u32 i = 0; i < materials.size(); i++) {
-                    result=model.loadCoreMaterial(path+materials[i]);
-                    if (result==-1) throw materials[i];
+                    result=model.loadCoreMaterial(path + materials[i]);
+                    if (result==-1) throw CalException();
                 }
             }
-            catch (const std::string& fname) {
+            catch (CalException) {
                 std::stringstream ss;
-                ss << "CoreModel::loadConfigFile: Unable to load " << path << fname;
+                ss << "CoreModel::loadConfigFile " << fname << "(" << curline << "): " << CalError::getLastErrorText() << std::endl;
                 throw std::runtime_error(ss.str().c_str());
             }
 
-            for (int i=0; i<model.getCoreMaterialCount(); i++) {
+            // Load textures
+            for (int i = 0; i < model.getCoreMaterialCount(); i++) {
                 CalCoreMaterial& material=*model.getCoreMaterial(i);
 
-                for (int j=0; j<material.getMapCount(); j++) {
+                for (int j = 0; j < material.getMapCount(); j++) {
                     string s=material.getMapFilename(j);
-                    u32 hTex=loadTexture(path+s); // for now, loading RAW textures.  TODO: replace with corona
+                    u32 hTex=loadTexture(path + s); // for now, loading RAW textures.  TODO: replace with corona
                     material.setMapUserData(j,(Cal::UserData)hTex);
                 }
             }
 
-            for (int i=0; i<model.getCoreMaterialCount(); i++) {
+            // Assign material threads to materials.
+            for (int i = 0; i < model.getCoreMaterialCount(); i++) {
                 model.createCoreMaterialThread(i);
                 model.setCoreMaterialId(i,0,i);
             }
@@ -160,9 +166,10 @@ namespace pyr {
             file.read((char*)&h, 4);
             file.read((char*)&d, 4);
 
-            ScopedArray<u8> pixels(new u8[w*h*d]);
-            u8* p=pixels.get() + (h-1)*w*d;
+            ScopedArray<u8> pixels(new u8[w * h * d]);
+            u8* p=pixels.get() + (h - 1) * w * d;
 
+            // RAWs are stored bottom-to-top.  Flip as we read
             for (int i = 0; i < h; i++) {
                 file.read((char*)p, w * d);
                 p -= w * d;
@@ -170,11 +177,13 @@ namespace pyr {
 
             file.close();
 
+            int pixelformat = (d == 3) ? GL_RGB : GL_RGBA;
+
             u32 tex;
             glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
             glGenTextures(1, &tex);
             glBindTexture(GL_TEXTURE_2D, tex);
-            glTexImage2D(GL_TEXTURE_2D, 0, d==3 ? GL_RGB:GL_RGBA, w, h, 0, d==3 ? GL_RGB:GL_RGBA, GL_UNSIGNED_BYTE, pixels.get());
+            glTexImage2D(GL_TEXTURE_2D, 0, pixelformat, w, h, 0, pixelformat, GL_UNSIGNED_BYTE, pixels.get());
             glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
             glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
@@ -211,7 +220,7 @@ namespace pyr {
 
     };
 
-    std::map<std::string,CoreModel*> CoreModel::_instances;
+    CoreModel::InstanceMap CoreModel::_instances;
 
     template<>
     class CachePolicy<pyr::Model*> {
@@ -232,13 +241,12 @@ namespace pyr {
         _model=new CalModel();
         _model->create(_coreModel->get());
 
-        for (int i=0; i<_coreModel->get()->getCoreMeshCount(); i++)
+        for (int i = 0; i < _coreModel->get()->getCoreMeshCount(); i++)
             _model->attachMesh(i);
         
         _model->setMaterialSet(0);
 
-        _model->getMixer()->blendCycle(0,1,4.0f);
-        //_model->setLodLevel(0.5f);
+        _model->getMixer()->blendCycle(0, 1, 4.0f);
     }
 
     Model::~Model()

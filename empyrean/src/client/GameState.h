@@ -3,7 +3,6 @@
 
 
 #include <vector>
-#include "Entity.h"
 #include "InputManager.h"
 #include "State.h"
 #include "Utility.h"
@@ -12,10 +11,13 @@ namespace pyr {
 
     class Renderer;
     class Model;
+    class Entity;
+    class Texture;
 
     class GameState : public State {
     public:
         GameState();
+        ~GameState();
         
         void draw(float fade);
         void update(float dt);
@@ -34,6 +36,7 @@ namespace pyr {
 
         Model* _testModel;
         Renderer* _renderer;
+        Texture* _backdropTex;
         
         std::vector<Entity*> _entities;
         

@@ -8,6 +8,9 @@
 #include "Profiler.h"
 #include "Model.h"
 #include "Renderer.h"
+#include "Entity.h"
+#include "PlayerEntity.h"
+#include "Texture.h"
 
 namespace pyr {
 
@@ -20,29 +23,53 @@ namespace pyr {
         _inputQuit  = &_im.getInput("Escape");
         _rotation = 0;
 
-        _renderer=new CellShadeRenderer; //new DefaultRenderer;
-        _testModel=Model::create("paladin/paladin.cfg");
-        //_testModel=Model::create("Walk1/walk1.cfg");
+        _renderer = new CellShadeRenderer;
+        _renderer->useVertexArrays(true);
+        _testModel = Model::create("paladin/paladin.cfg");
+
+        _backdropTex = Texture::create("images/backdrop.jpg");
+
+        Entity* player = new PlayerEntity(_testModel, _renderer, &_im);
+        player->setPos( gmtl::Vec2f(200,290) );
+
+        _entities.push_back(player);
     }
+
+    GameState::~GameState() {
+        while (_entities.size()>0) {
+            Entity* ent=_entities.back();
+            _entities.pop_back();
+            delete ent;
+        }
+    }
+            
     
     void GameState::draw(float fade) {
         PYR_PROFILE_BLOCK("Render");
 
-        glDisable(GL_TEXTURE_2D);
-        glDisable(GL_BLEND);
+        glMatrixMode(GL_PROJECTION);
+        glLoadIdentity();
+        glOrtho(0, 400, 300, 0, -100, 100);
         
-        Renderer::begin2D();
-        glClearColor(0, 0, 0, 0);
-        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+        glMatrixMode(GL_MODELVIEW);
+        glLoadIdentity();
 
+        Renderer::begin2D();
+        glEnable(GL_TEXTURE_2D);
+
+        glClear(GL_DEPTH_BUFFER_BIT);
+        _backdropTex->drawRectangle(0, 0, 400, 300);
+
+        /*
+        glDisable(GL_TEXTURE_2D);
         glPushMatrix();
-            float x = _inputX->getValue() * 4;
-            float y = _inputY->getValue() * 3;
+            float x = _inputX->getValue() * 400;
+            float y = _inputY->getValue() * 300;
             glTranslatef(x, y, 0);
             
             glRotatef(_rotation, 0, 0, 1);
             
-            float scale = fade * 10 + 1;
+            float scale = fade * 1000 + 100;
             glScalef(scale, scale, scale);
             
             glBegin(GL_QUADS);
@@ -52,6 +79,7 @@ namespace pyr {
             glColor3f(1, 0, 1); glVertex2f( 0.5f, -0.5f);
             glEnd();
         glPopMatrix();
+        */
         
         for (unsigned i = 0; i < _entities.size(); ++i) {
             glPushMatrix();
@@ -59,16 +87,6 @@ namespace pyr {
             _entities[i]->draw();
             glPopMatrix();
         }
-
-        Renderer::begin3D();
-        glPushMatrix();
-            glTranslatef(200, 200, 0);
-            glRotatef(_rotation-90, 0, 1, 0);
-            glRotatef(90, 1, 0, 0);
-            glColor4f(1,1,1,1);
-            _renderer->draw(_testModel);
-        glPopMatrix();
-        Renderer::end3D();
     }
         
     void GameState::update(float dt) {
@@ -81,7 +99,11 @@ namespace pyr {
             invokeTimedTransition<MenuState>(1);
         }
 
-        _testModel->update(dt);
+        for (unsigned int i = 0; i < _entities.size(); i++) {
+            _entities[i]->update(dt);
+        }
+
+        //_testModel->update(dt);
     }
     
     void GameState::onKeyPress(SDLKey key, bool down) {

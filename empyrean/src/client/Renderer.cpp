@@ -22,14 +22,16 @@ namespace {
     PFNGLCLIENTACTIVETEXTUREARBPROC glClientActiveTextureARB=0;
     PFNGLMULTITEXCOORD1FARBPROC glMultiTexCoord1fARB=0;
 
-    /*
-     * I like this algorithm a lot more, as it's much cleaner and more flexible.
-     * Sadly, it's also quite a bit slower than the other method.
-     * It's still here for reference, basically.
+    /** Render a mesh using OpenGL vertex arrays.
+     *
+     * In theory, this algorithm should be faster on all hardware.
+     * On my radeon 8500, though, the immediate mode implementation
+     * (below) is faster.  Ear has testified that this method is
+     * faster on his GeForce2MX, though.
      */
     void renderMesh(Model& model,bool cellshade=false,u32 shadetex=0) {
 
-        glEnableClientState(GL_VERTEX_ARRAY);
+glEnableClientState(GL_VERTEX_ARRAY);
         glEnableClientState(GL_NORMAL_ARRAY);
         glEnable(GL_TEXTURE_2D);
 
@@ -53,12 +55,10 @@ namespace {
         glColor3f(1,1,1);
 
         int nMeshes=r->getMeshCount();
-        for (int curmesh=0; curmesh<nMeshes; curmesh++)
-        {
+        for (int curmesh = 0; curmesh < nMeshes; curmesh++) {
             int nSubs=r->getSubmeshCount(curmesh);
 
-            for (int cursub=0; cursub < nSubs; cursub++)
-            {
+            for (int cursub = 0; cursub < nSubs; cursub++) {
                 r->selectMeshSubmesh(curmesh, cursub);
 
                 static float verts[30000][3];
@@ -75,9 +75,9 @@ namespace {
                     static float texcoords2[30000];
                     for (int i = 0; i < nNormals; i++) {
                         gmtl::Vec3f v(mat * gmtl::Vec3f(normals[i][0], normals[i][1], normals[i][2]));
-                        float light=gmtl::dot(v,lightvec);
-                        if (light<0)
-                            light=0;
+                        float light=gmtl::dot(v, lightvec);
+                        if (light < 0)
+                            light = 0;
 
                         texcoords2[i]=light;
                     }
@@ -130,7 +130,9 @@ namespace {
         glDisableClientState(GL_NORMAL_ARRAY);
         glDisable(GL_LIGHTING);
     }
+}
 
+namespace pyr {
     /** Main model rendering function
      *
      * The ideal to shoot for is to have this function completely bereft of OpenGL calls.
@@ -144,7 +146,7 @@ namespace {
      * void setTexture(u32 tex) -- sets the texture to be used henceforth
      */
     template <class Shader>
-    void renderMesh(Model& model,Shader shader) {
+    void Renderer::renderMesh(Model& model,Shader shader) {
         PYR_PROFILE_BLOCK("renderMesh");
 
         CalRenderer& r=*model.getModel().getRenderer();
@@ -305,36 +307,31 @@ namespace {
 
     }
 
-};
+}
 
 namespace pyr {
 
     void Renderer::begin2D() {
-        glMatrixMode(GL_PROJECTION);
-        glLoadIdentity();
-        gluOrtho2D(0, 4, 3, 0);
-        
-        glMatrixMode(GL_MODELVIEW);
-        glLoadIdentity();
-
         glDisable(GL_DEPTH_TEST);
     }
 
     void Renderer::end2D() {
-        glMatrixMode(GL_PROJECTION);
-        glLoadIdentity();
-        float w=500;
-        glOrtho(0,w,w*3/4,0,-100,100);
-
-        glMatrixMode(GL_MODELVIEW);
-        glLoadIdentity();
-
         glEnable(GL_DEPTH_TEST);
     }
 
+    DefaultRenderer::DefaultRenderer() {
+        _useVertexArrays=false;
+    }
+
     void DefaultRenderer::draw(Model* m) {
-        renderMesh(*m,DefaultShade());
-        //renderMesh(m);
+        if (_useVertexArrays)
+            ::renderMesh(*m);
+        else
+            renderMesh(*m,DefaultShade());
+    }
+
+    void DefaultRenderer::useVertexArrays(bool b) {
+        _useVertexArrays=b;
     }
 
     CellShadeRenderer::ShadeTex::ShadeTex() {
@@ -348,7 +345,6 @@ namespace pyr {
         glTexImage1D(GL_TEXTURE_1D,0,GL_RGB,32,0,GL_RGB,GL_UNSIGNED_BYTE,pixels);
         glTexParameteri(GL_TEXTURE_1D,GL_TEXTURE_MIN_FILTER,GL_NEAREST);
         glTexParameteri(GL_TEXTURE_1D,GL_TEXTURE_MAG_FILTER,GL_NEAREST);
-        glTexParameteri(GL_TEXTURE_1D,GL_TEXTURE_WRAP_R,GL_CLAMP);
     }
 
     CellShadeRenderer::ShadeTex::~ShadeTex() {
@@ -360,11 +356,19 @@ namespace pyr {
             initExtensions();
         
         if (!glActiveTextureARB)
-            throw std::exception("CellShadeRenderer requires the GL_ARB_multitexture extension.");
+            throw std::runtime_error("CellShadeRenderer requires the GL_ARB_multitexture extension.");
+
+        _useVertexArrays=true;
     }
 
     void CellShadeRenderer::draw(Model* m) {
-        renderMesh(*m,CellShade(_shadeTex.handle));
-        //renderMesh(*m,true,_shadeTex.handle);
+        if (_useVertexArrays)
+            ::renderMesh(*m, true, _shadeTex.handle);
+        else
+            renderMesh(*m, CellShade(_shadeTex.handle));
     }
-};
+
+    void CellShadeRenderer::useVertexArrays(bool b) {
+        _useVertexArrays=b;
+    }
+}
