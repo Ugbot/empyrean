@@ -16,7 +16,6 @@
 
 namespace pyr {
 
-    
     using std::ifstream;
     using std::string;
     using std::vector;
@@ -25,28 +24,25 @@ namespace pyr {
      *
      * Since CalCoreModel must be destroy()ed before any CalModels using it,
      * I was forced to refcount them without using the existing ResourceManager
-     * codebase.  Regardless, it's encapsulated, and not too convoluted.  addRef()
-     * right after you create() one, and decRef when you're through with it.
+     * codebase.  Regardless, it's encapsulated, and not too convoluted.
      *
      * I'm not entirely sure how sound it is from a design standpoint, but
      * CoreModel also does the parsing of the config files, in addition to
      * a RAW texture loader. (which only needs to exist while I'm using models
      * included in the cal3d test demo)
-     * 
+     *
      */
-    class CoreModel {
+    class CoreModel : public RefCounted {
         typedef std::map<std::string,CoreModel*> InstanceMap;
         static InstanceMap _instances;
 
         CalCoreModel _coreModel;
-        int _refCount;
         float _scale;
 
         CoreModel(const std::string& id) {
             _coreModel.create(id);
             _scale = 1.0f;
             loadConfigFile(id, _coreModel);
-            _refCount = 0;
         }
 
         ~CoreModel() {
@@ -61,7 +57,7 @@ namespace pyr {
             for (int i = 0; i < _coreModel.getCoreMaterialCount(); i++) {
                 CalCoreMaterial& material = *_coreModel.getCoreMaterial(i);
 
-                for (int j = 0; j < material.getMapCount(); j++) {                    
+                for (int j = 0; j < material.getMapCount(); j++) {
                     CalTexture* tex = static_cast<CalTexture*>(material.getMapUserData(j));
                     glDeleteTextures(1, &tex->tex);
                     delete tex;
@@ -173,8 +169,10 @@ namespace pyr {
 
         //! Temporary RAW texture loader.
         static CalTexture* loadTexture(const string& fname) {
-            ifstream file;
-            file.open(fname.c_str(), std::ios::in | std::ios::binary);
+            ifstream file(fname.c_str(), std::ios::in | std::ios::binary);
+            if (!file) {
+                return 0;
+            }
 
             u8 buf[12];
             file.read((char*)buf, 12);
@@ -224,18 +222,6 @@ namespace pyr {
             return &_coreModel;
         }
 
-        void addRef() {
-            _refCount++;
-        }
-
-        void decRef() {
-            _refCount--;
-
-            if (_refCount == 0) {
-                delete this;
-            }
-        }
-        
         float getScale() const {
             return _scale;
         }
@@ -245,13 +231,12 @@ namespace pyr {
 
     Model::Model(const string& fname) {
         _coreModel=CoreModel::create(fname);
-        _coreModel->addRef();
 
         _model.create(_coreModel->get());
 
         for (int i = 0; i < _coreModel->get()->getCoreMeshCount(); i++)
             _model.attachMesh(i);
-        
+
         _model.setMaterialSet(0);
         
         _scale = _coreModel->getScale();
@@ -259,7 +244,6 @@ namespace pyr {
 
     Model::~Model() {
         _model.destroy();
-        _coreModel->decRef();
     }
 
     CalCoreModel& Model::getCoreModel() {

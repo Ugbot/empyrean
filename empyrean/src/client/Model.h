@@ -3,9 +3,12 @@
 
 #include <cal3d/cal3d.h>
 #include "OpenGL.h"
+#include "RefPtr.h"
 
 namespace pyr {
+
     class CoreModel;
+    typedef RefPtr<CoreModel> CoreModelPtr;
 
     struct CalTexture {
         GLuint tex;
@@ -32,7 +35,7 @@ namespace pyr {
 
         CalCoreModel& getCoreModel();
         CalModel& getModel();
-        
+
         float getScale() const {
             return _scale;
         }
@@ -40,7 +43,7 @@ namespace pyr {
         void update(float timedelta);
 
     private:
-        CoreModel* _coreModel;
+        CoreModelPtr _coreModel;
         CalModel _model;
         float _scale;
         // We'll probably want to store information on how this particular model

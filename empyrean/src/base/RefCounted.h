@@ -3,6 +3,7 @@
 
 
 #include "Debug.h"
+#include "Utility.h"
 
 
 namespace pyr {
@@ -25,12 +26,10 @@ namespace pyr {
     class RefCounted {
         template<typename T> friend class RefPtr;
         
-    public:
+    protected:
         RefCounted() {
-            _refCount = 0;
         }
 
-    protected:
         /**
          * Protected so users of refcounted classes don't use std::auto_ptr
          * or the delete operator.
@@ -63,9 +62,9 @@ namespace pyr {
         }
         
     private:
-        int _refCount;
+        Zeroed<int> _refCount;
     };
-    
+
 }
 
 
