@@ -23,7 +23,7 @@ namespace pyr {
     class State {
     public:
         virtual ~State() { }
-        
+
         // The order of the update and draw methods in this class reflect the
         // fact that update is called just before draw in order to minimize
         // perceived system latency.  (Or maybe it's just a wrong guess.)
@@ -45,16 +45,17 @@ namespace pyr {
     protected:
         template<typename T>
         static void invokeTransition() {
-	    invokeTransition(StateFactory<T>::create());
+            invokeStateTransition(StateFactory<T>::create());
         }
-        
+
         static void quit();
-        
+
         void showPointer() { _pointerVisible = true;  }
         void hidePointer() { _pointerVisible = false; }
-               
+
     private:
-	static void invokeTransition(State* state);
+        // This can't be called invokeTransition because gcc 3.2 is a whore.
+        static void invokeStateTransition(State* state);
 
         Inited<bool, false> _pointerVisible;
     };

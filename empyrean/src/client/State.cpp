@@ -25,8 +25,8 @@ namespace pyr {
     PYR_ENABLE_STATE(MenuState)
     
 
-    void State::invokeTransition(State* state) {
-	the<Application>().invokeTransition(state);
+    void State::invokeStateTransition(State* state) {
+        the<Application>().invokeTransition(state);
     }
 
     void State::quit() {

@@ -20,20 +20,20 @@ namespace pyr {
     void CreditsState::draw() {
         glEnable(GL_BLEND);
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-    
+
         setOrthoProjection(640, 480);
-        
+
         glClear(GL_COLOR_BUFFER_BIT);
         _renderer->render("Credits to be determined.");
     }
-    
-    
+
+
     void CreditsState::onKeyPress(SDLKey key, bool down) {
         if (down) {
             invokeTransition<MenuState>();
         }
     }
-    
+
     void CreditsState::onMousePress(Uint8 button, bool down, int x, int y) {
         if (down) {
             invokeTransition<MenuState>();
