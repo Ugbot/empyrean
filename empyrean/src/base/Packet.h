@@ -142,9 +142,11 @@ namespace pyr {
             return PYR_STR(name);                                           \
         }                                                                   \
                                                                             \
-        void name::log() const {                                            \
-            PYR_LOG_SCOPE(_logger, INFO, PYR_STR(name))                     \
-            body(PYR_WRITE_LOG);                                            \
+        void name::log() const {                                        \
+            /*                                                          \
+            PYR_LOG_SCOPE(_logger, INFO, PYR_STR(name))                 \
+            body(PYR_WRITE_LOG);                                        \
+            */                                                          \
         }
 
 }

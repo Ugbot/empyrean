@@ -113,6 +113,7 @@ namespace pyr {
         Logger& _logger;
         LogLevel _level;
         string _name;
+        bool _enabled;
     };
 
     #define PYR_LOG_SCOPE(logger, level, name) \

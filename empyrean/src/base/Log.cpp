@@ -161,15 +161,20 @@ namespace pyr {
     LogScope::LogScope(Logger& logger, LogLevel level, const string& name)
     : _logger(logger)
     , _level(level)
-    , _name(name) {
-        _logger.log(_level, _name + " {");
-        _logger.indent();
+    , _name(name)
+    , _enabled(logger.enabled(level)) {
+        if (_enabled) {
+            _logger.log(_level, _name + " {");
+            _logger.indent();
+        }
     }
 
     LogScope::~LogScope() {
         try {
-            _logger.unindent();
-            _logger.log(_level, "}");
+            if (_enabled) {
+                _logger.unindent();
+                _logger.log(_level, "}");
+            }
         }
         catch (const std::exception& e) {
         }
