@@ -24,8 +24,8 @@
  *
  * -----------------------------------------------------------------
  * File:          $RCSfile: WidgetContainer.h,v $
- * Date modified: $Date: 2003-07-22 03:24:31 $
- * Version:       $Revision: 1.1 $
+ * Date modified: $Date: 2003-08-08 02:51:24 $
+ * Version:       $Revision: 1.2 $
  * -----------------------------------------------------------------
  *
  ************************************************************** phui-cpr-end */
@@ -127,6 +127,9 @@ namespace phui
 
       /// The layout manager
       LayoutManagerPtr mLayoutManager;
+
+      int mModifiers;
+      int mLocks;
 
       WidgetPtr mCapturedWidget;
    };

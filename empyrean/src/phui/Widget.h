@@ -24,8 +24,8 @@
  *
  * -----------------------------------------------------------------
  * File:          $RCSfile: Widget.h,v $
- * Date modified: $Date: 2003-08-05 05:00:28 $
- * Version:       $Revision: 1.2 $
+ * Date modified: $Date: 2003-08-08 02:51:24 $
+ * Version:       $Revision: 1.3 $
  * -----------------------------------------------------------------
  *
  ************************************************************** phui-cpr-end */
@@ -225,8 +225,8 @@ namespace phui
       bool hasFocus();
 
       // external events
-      virtual void onKeyDown(InputKey key) { }
-      virtual void onKeyUp(InputKey key) { }
+      virtual void onKeyDown(InputKey key, InputModifiers modifiers) { }
+      virtual void onKeyUp(InputKey key, InputModifiers modifiers) { }
       virtual void onMouseDown(InputButton button, const Point& p) { }
       virtual void onMouseUp(InputButton button, const Point& p) { }
       virtual void onMouseMove(const Point& p) { }

@@ -24,8 +24,8 @@
  *
  * -----------------------------------------------------------------
  * File:          $RCSfile: SDLBridge.cpp,v $
- * Date modified: $Date: 2003-07-22 03:24:31 $
- * Version:       $Revision: 1.1 $
+ * Date modified: $Date: 2003-08-08 02:51:24 $
+ * Version:       $Revision: 1.2 $
  * -----------------------------------------------------------------
  *
  ************************************************************** phui-cpr-end */
@@ -99,9 +99,9 @@ namespace phui
          case SDLK_END:          return KEY_END;
          case SDLK_PAGEUP:       return KEY_PAGE_UP;
          case SDLK_PAGEDOWN:     return KEY_PAGE_DOWN;
-         case SDLK_NUMLOCK:      return KEY_UNKNOWN;
-         case SDLK_CAPSLOCK:     return KEY_UNKNOWN;
-         case SDLK_SCROLLOCK:    return KEY_UNKNOWN;
+         case SDLK_NUMLOCK:      return KEY_NUM_LOCK;
+         case SDLK_CAPSLOCK:     return KEY_CAPS_LOCK;
+         case SDLK_SCROLLOCK:    return KEY_SCROLL_LOCK;
          case SDLK_RSHIFT:       return KEY_SHIFT;
          case SDLK_LSHIFT:       return KEY_SHIFT;
          case SDLK_RCTRL:        return KEY_CTRL;

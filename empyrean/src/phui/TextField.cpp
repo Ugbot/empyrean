@@ -24,8 +24,8 @@
  *
  * -----------------------------------------------------------------
  * File:          $RCSfile: TextField.cpp,v $
- * Date modified: $Date: 2003-08-05 06:17:06 $
- * Version:       $Revision: 1.2 $
+ * Date modified: $Date: 2003-08-08 02:51:24 $
+ * Version:       $Revision: 1.3 $
  * -----------------------------------------------------------------
  *
  ************************************************************** phui-cpr-end */
@@ -78,7 +78,12 @@ namespace phui
       int textRectH = height - (i.getBottom() + textRectY);
 
       int fontX = textRectX;
-      int fontY = textRectY + fontAscent;
+      int fontY = textRectY;
+     
+      glPushMatrix();
+      glTranslatef(float(fontX), float(fontY), 0);
+      renderer->render(mText.c_str());
+      glPopMatrix();
 
       if(hasFocus())
       {
@@ -87,12 +92,13 @@ namespace phui
          glTranslatef(float(fontX + mCursorScreenPosition), float(fontY), 0);
          renderer->render(cursor.c_str());
          glPopMatrix();
+         glBegin(GL_LINE_LOOP);
+         glVertex2i(0,     0     );
+         glVertex2i(width, 0     );
+         glVertex2i(width, height);
+         glVertex2i(0,     height);
+         glEnd();
       }
-      
-      glPushMatrix();
-      glTranslatef(float(fontX), float(fontY), 0);
-      renderer->render(mText.c_str());
-      glPopMatrix();
    }
 
    void TextField::setText(const std::string& text)
@@ -108,7 +114,7 @@ namespace phui
       return mText;
    }
 
-   void TextField::onKeyDown(InputKey key)
+   void TextField::onKeyDown(InputKey key, InputModifiers modifiers)
    {
       gltext::FontRendererPtr renderer = getFontRenderer();
       std::string toAdd; // if we are to add anything, put it here
@@ -135,7 +141,14 @@ namespace phui
       } else if(key == KEY_SPACE) {
          toAdd+=' ';
       } else if(key >= KEY_A && key <= KEY_Z) {
-         toAdd+=(char)(key-KEY_A)+'a';
+         if (modifiers & MODIF_SHIFT)
+         {
+            toAdd+=(char)(key-KEY_A)+'A';
+         }
+         else
+         {
+            toAdd+=(char)(key-KEY_A)+'a';
+         }
       } else if(key >= KEY_0 && key <= KEY_9) {
          toAdd+=(char)(key-KEY_0)+'0';
       } else if(key == KEY_PERIOD) {

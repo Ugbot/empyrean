@@ -24,8 +24,8 @@
  *
  * -----------------------------------------------------------------
  * File:          $RCSfile: WidgetContainer.cpp,v $
- * Date modified: $Date: 2003-07-22 03:24:31 $
- * Version:       $Revision: 1.1 $
+ * Date modified: $Date: 2003-08-08 02:51:24 $
+ * Version:       $Revision: 1.2 $
  * -----------------------------------------------------------------
  *
  ************************************************************** phui-cpr-end */
@@ -43,6 +43,8 @@ namespace phui
    {
       LayoutConstraintPtr constraint(new EmptyConstraint());
       mLayoutManager = new LayoutManager(this, constraint);
+      mModifiers = MODIF_NONE;
+      mLocks = ILOCK_NONE;
    }
 
    WidgetContainer::WidgetContainer(LayoutManagerPtr manager)
@@ -126,17 +128,69 @@ namespace phui
 
    void WidgetContainer::onKeyDown(InputKey key)
    {
+      if (key == KEY_CTRL)
+      {
+         mModifiers |= MODIF_CTRL;
+      }
+      else if (key == KEY_ALT)
+      {
+         mModifiers |= MODIF_ALT;
+      }
+      else if (key == KEY_SHIFT)
+      {
+         mModifiers |= MODIF_SHIFT;
+      }
+
+      if (key == KEY_CAPS_LOCK)
+      {
+         mLocks |= ILOCK_CAPS;
+      }
+      else if (key == KEY_NUM_LOCK)
+      {
+         mLocks |= ILOCK_NUM;
+      }
+      else if (key == KEY_SCROLL_LOCK)
+      {
+         mLocks |= ILOCK_SCROLL;
+      }
+
       if (WidgetPtr focus = getFocus())
       {
-         focus->onKeyDown(key);
+         focus->onKeyDown(key, (InputModifiers)(mModifiers ^ ((mLocks & ILOCK_CAPS) ? MODIF_SHIFT : 0)));
       }
    }
 
    void WidgetContainer::onKeyUp(InputKey key)
    {
+      if (key == KEY_CTRL)
+      {
+         mModifiers &= MODIF_CTRL ^ 0xFFFFFFFF;
+      }
+      else if (key == KEY_ALT)
+      {
+         mModifiers &= MODIF_ALT ^ 0xFFFFFFFF;
+      }
+      else if (key == KEY_SHIFT)
+      {
+         mModifiers &= MODIF_SHIFT ^ 0xFFFFFFFF;
+      }
+
+      if (key == KEY_CAPS_LOCK)
+      {
+         mLocks &= ILOCK_CAPS ^ 0xFFFFFFFF;
+      }
+      else if (key == KEY_NUM_LOCK)
+      {
+         mLocks &= ILOCK_NUM ^ 0xFFFFFFFF;
+      }
+      else if (key == KEY_SCROLL_LOCK)
+      {
+         mLocks &= ILOCK_SCROLL ^ 0xFFFFFFFF;
+      }
+
       if (WidgetPtr focus = getFocus())
       {
-         focus->onKeyUp(key);
+         focus->onKeyUp(key, (InputModifiers)(mModifiers ^ ((mLocks & ILOCK_CAPS) ? MODIF_SHIFT : 0)));
       }
    }
 

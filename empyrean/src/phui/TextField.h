@@ -24,8 +24,8 @@
  *
  * -----------------------------------------------------------------
  * File:          $RCSfile: TextField.h,v $
- * Date modified: $Date: 2003-08-05 06:17:06 $
- * Version:       $Revision: 1.2 $
+ * Date modified: $Date: 2003-08-08 02:51:24 $
+ * Version:       $Revision: 1.3 $
  * -----------------------------------------------------------------
  *
  ************************************************************** phui-cpr-end */
@@ -77,7 +77,7 @@ namespace phui
       /**
        * Called whenever a key has been pressed while this box has focus
        */
-      virtual void onKeyDown(InputKey key);
+      virtual void onKeyDown(InputKey key, InputModifiers modifiers);
 
    private:
       /**

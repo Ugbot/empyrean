@@ -24,8 +24,8 @@
  *
  * -----------------------------------------------------------------
  * File:          $RCSfile: Input.h,v $
- * Date modified: $Date: 2003-07-22 03:24:31 $
- * Version:       $Revision: 1.1 $
+ * Date modified: $Date: 2003-08-08 02:51:24 $
+ * Version:       $Revision: 1.2 $
  * -----------------------------------------------------------------
  *
  ************************************************************** phui-cpr-end */
@@ -40,7 +40,7 @@ namespace phui
       BUTTON_MIDDLE,
       BUTTON_RIGHT,
 
-      BUTTON_UNKNOWN,
+      BUTTON_UNKNOWN
    };
 
    enum InputKey
@@ -122,8 +122,31 @@ namespace phui
       KEY_RIGHT,
       KEY_DOWN,
       KEY_LEFT,
+      KEY_CAPS_LOCK,
+      KEY_NUM_LOCK,
+      KEY_SCROLL_LOCK,
 
-      KEY_UNKNOWN,
+      KEY_UNKNOWN
+   };
+
+   enum InputModifiers
+   {
+      MODIF_NONE,
+      MODIF_CTRL = 1,
+      MODIF_ALT = 2,
+      MODIF_SHIFT = 4,
+
+      MODIF_UNKNOWN = 8
+   };
+
+   enum InputLocks
+   {
+      ILOCK_NONE,
+      ILOCK_CAPS = 1,
+      ILOCK_NUM = 2,
+      ILOCK_SCROLL = 4,
+
+      ILOCK_UNKNOWN = 8
    };
 }
 

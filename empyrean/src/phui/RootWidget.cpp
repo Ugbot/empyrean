@@ -24,8 +24,8 @@
  *
  * -----------------------------------------------------------------
  * File:          $RCSfile: RootWidget.cpp,v $
- * Date modified: $Date: 2003-07-22 03:24:31 $
- * Version:       $Revision: 1.1 $
+ * Date modified: $Date: 2003-08-08 02:51:24 $
+ * Version:       $Revision: 1.2 $
  * -----------------------------------------------------------------
  *
  ************************************************************** phui-cpr-end */
@@ -88,6 +88,14 @@ namespace phui
    void RootWidget::onMouseMove(const Point& p)
    {
       mPointerPosition = p;
+      if (WidgetPtr widget = getMouseWidget(p))
+      {
+         // we'll want to simply ignore this event if widget is disabled
+         if (widget->isEnabled())
+         {
+            widget->onMouseMove(p - widget->getPosition());
+         }
+      }
    }
    
    bool RootWidget::isPointerVisible() const

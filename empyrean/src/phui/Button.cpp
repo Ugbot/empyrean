@@ -24,8 +24,8 @@
  *
  * -----------------------------------------------------------------
  * File:          $RCSfile: Button.cpp,v $
- * Date modified: $Date: 2003-08-08 00:17:54 $
- * Version:       $Revision: 1.3 $
+ * Date modified: $Date: 2003-08-08 02:51:24 $
+ * Version:       $Revision: 1.4 $
  * -----------------------------------------------------------------
  *
  ************************************************************** phui-cpr-end */
@@ -40,6 +40,7 @@ namespace phui
    Button::Button(const std::string& text)
       : mText(text)
       , mButtonDown(false)
+      , mButtonPressed(false)
    {
       setBackgroundColor(Colorf(0.5f, 0.5f, 0.5f));
    }
@@ -143,18 +144,30 @@ namespace phui
 
    void Button::onMouseDown(InputButton button, const Point& p)
    {
-      if (button == BUTTON_LEFT)
+      if ((button == BUTTON_LEFT) && (contains(p)))
       {
          mButtonDown = true;
+         mButtonPressed = true;
+         getParent()->capture(this);
+      }
+   }
+
+   void Button::onMouseMove(const Point& p)
+   {
+	   if (mButtonPressed)
+      {
+		   mButtonDown = contains(p);
+	   }
+      else
+      {
+         mButtonDown = false;
       }
    }
 
    void Button::onMouseUp(InputButton button, const Point& p)
    {
-      if (mButtonDown && button == BUTTON_LEFT)
+      if (mButtonPressed && button == BUTTON_LEFT)
       {
-         mButtonDown = false;
-
          // Only fire button pressed event if the mouse was released
          // inside this button.
          if (contains(p))
@@ -162,6 +175,11 @@ namespace phui
             fireActionEvent();
          }
       }
+
+      if (mButtonPressed) getParent()->capture(0);
+
+      mButtonDown = false;
+      mButtonPressed = false;
    }
 
    void Button::addActionListener(ActionListenerPtr listener)

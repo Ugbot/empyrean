@@ -24,8 +24,8 @@
  *
  * -----------------------------------------------------------------
  * File:          $RCSfile: Button.h,v $
- * Date modified: $Date: 2003-08-08 00:17:54 $
- * Version:       $Revision: 1.2 $
+ * Date modified: $Date: 2003-08-08 02:51:24 $
+ * Version:       $Revision: 1.3 $
  * -----------------------------------------------------------------
  *
  ************************************************************** phui-cpr-end */
@@ -80,6 +80,13 @@ namespace phui
        */
       void onMouseDown(InputButton button, const Point& p);
 
+	  /**
+       * Called whenever the mouse has moved inside this button. In this case,
+	   * we want to make the button only appear pressed while the mouse is inside
+	   * its rectangle (like a real windows button).
+       */
+      void onMouseMove(const Point& p);
+
       /**
        * Called whenever a mouse button has been released after it has been
        * pressed inside this button. If the button is released inside this
@@ -133,8 +140,11 @@ namespace phui
       /// The text on this button.
       std::string mText;
 
-      /// Button down state. True if the button is down.
+      /// Button down state. True if the button appears down.
       bool mButtonDown;
+
+      /// Button press state. True if the button is being pressed.
+      bool mButtonPressed;
 
       /**
        * All listeners for this button
