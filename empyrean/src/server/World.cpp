@@ -26,10 +26,6 @@ namespace pyr {
             }
             
             c->processIncomingPackets();
-            
-
-            // XXX so disconnection isn't delayed...
-            c->sendPacket(new PingPacket());
         }
     }
     

@@ -48,6 +48,7 @@ namespace pyr {
     
     int Server::OnExit() {
         PYR_BEGIN_EXCEPTION_TRAP()
+            _frame = 0;
             Database::instance().save(getDatabaseFilename());
         PYR_END_EXCEPTION_TRAP()
         return 0;
