@@ -8,12 +8,10 @@ namespace pyr {
 
     CutSceneState::CutSceneState() {
         static const std::string images[] = {
-            "ANOTHERGUESTSTRIPBYANDY.jpg",
-            "comic12.jpg",
-            "comic18.jpg",
-            "comic7.jpg",
-            "comic8.jpg",
-            "GUESTSTRIPBYTHRASHER.jpg",
+            "warrior1.jpg",
+            "Caphriel3.jpg",
+            "ninja1.jpg",
+            "Robot3.jpg",
         };
 
         for (size_t i = 0; i < sizeof(images) / sizeof(*images); ++i) {

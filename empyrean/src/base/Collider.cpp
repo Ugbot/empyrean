@@ -125,7 +125,10 @@ namespace pyr {
         
         CollisionData rv;
 
-        entityBox.collideWithDynamic(0,ent1->getVel(),ent2->getVel(), otherBox, rv.points);
+        collision::COLLISION_TYPE result = entityBox.collideWithDynamic(0,ent1->getVel(),ent2->getVel(), otherBox, rv.points);
+        
+        
+
         //ent1->getPos() += entityBox.getDisplacement();
         //ent2->getPos() += otherBox.getDisplacement();
     };
