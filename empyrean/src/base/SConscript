@@ -1,0 +1,21 @@
+Import('base_env SetupSDL SetupGL')
+
+SOURCES = [
+    'ByteBuffer.cpp',
+    'Error.cpp',
+    'NSPRUtility.cpp',
+    'ReaderThread.cpp',
+    'Socket.cpp',
+    'Utility.cpp',
+    'Connection.cpp',
+    'LoginPacket.cpp',
+    'PacketFactory.cpp',
+    'ServerSocket.cpp',
+    'Thread.cpp',
+    'WriterThread.cpp']
+
+env = base_env.Copy()
+SetupSDL(env)
+SetupGL(env)
+
+env.Library('base', SOURCES)

@@ -1,3 +1,4 @@
+#include <stdexcept>
 #include <prerror.h>
 #include <prinrval.h>
 #include "NSPRUtility.h"

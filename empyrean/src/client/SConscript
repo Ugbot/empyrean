@@ -15,11 +15,16 @@ SOURCES = [
     'Profiler.cpp',
     'Renderer.cpp',
     'ResourceManager.cpp',
+    'SDLUtility.cpp',
     'ServerConnection.cpp',
-    'Texture.cpp']
+    'Texture.cpp',
+    'extgl.c']
 
 env = base_env.Copy()
 SetupSDL(env)
 SetupGL(env)
+
+env['LIBPATH'] += ['../base']
+env['LIBS'] += ['base','nspr4']
 
 env.Program('#/build/client.exe', SOURCES)
