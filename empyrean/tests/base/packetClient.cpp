@@ -9,6 +9,7 @@ using namespace pyr;
 
 int run() {
     Connection c(new Socket("localhost", 8765));
+    cout << "Connected\n";
     while (!c.isClosed()) {
         c.sendPacket(new AllowUpdatesPacket);
     }

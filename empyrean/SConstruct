@@ -3,8 +3,9 @@ import string
 import sys
 
 
+# REMOVE THIS WHEN THE TOOLPATH-IMPORT PATCH IS CHECKED INTO SCONS.
 # Add toolspec to sys.path so we can use those tools.
-# sys.path.append(Dir('#/toolspec').abspath)
+sys.path.append(Dir('#/toolspec').abspath)
 
 
 SConsignFile()
@@ -66,6 +67,8 @@ if env['saveTemps']:
 
 # Autoconfiguration.
 conf = env.Configure()
+if conf.CheckHeader('execinfo.h'):
+    env.Append(CPPDEFINES=['HAVE_EXECINFO_H'])
 if conf.CheckHeader('unwind.h'):
     env.Append(CPPDEFINES=['HAVE_UNWIND_H'])
 

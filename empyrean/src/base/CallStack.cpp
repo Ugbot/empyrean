@@ -2,7 +2,6 @@
 #include <sstream>
 #include "CallStack.h"
 #include "Utility.h"
-#include "Win32Memory.h"
 
 
 #if defined(_MSC_VER)
@@ -10,6 +9,7 @@
 #include <windows.h>
 #include <dbghelp.h>
 #include <tlhelp32.h>
+#include "Win32Memory.h"
 
 namespace pyr {
 
@@ -405,6 +405,10 @@ namespace pyr {
     struct CallStack::Impl {
         void* array[MAX_STACK_LENGTH];
         int length;
+        
+        static bool isSupported() {
+            return true;
+        }
 
         void get() {
             length = backtrace(array, MAX_STACK_LENGTH);
@@ -418,6 +422,7 @@ namespace pyr {
                     rv += symbols[i];
                     rv += '\n';
                 }
+                free(symbols);
                 return rv;
             } else {
                 return "";
@@ -455,7 +460,7 @@ namespace pyr {
         std::string asString() const {
             std::ostringstream os;
             for (int i = 0; i < length; ++i) {
-                os << stack[i] << '\n';
+                os << std::hex << stack[i] << '\n';
             }
             return os.str();
         }
@@ -463,7 +468,7 @@ namespace pyr {
         _Unwind_Reason_Code trace(_Unwind_Context* ctx) {
             if (length < MAX_STACK_LENGTH) {
                 stack[length++] = _Unwind_GetIP(ctx);
-                return _URC_CONTINUE_UNWIND;
+                return _URC_NO_REASON;
             } else {
                 return _URC_END_OF_STACK;
             }

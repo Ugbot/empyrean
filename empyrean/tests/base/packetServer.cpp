@@ -15,6 +15,8 @@ int run() {
         cout << "Could not accept connection\n";
         return 1;
     }
+    
+    cout << "Got connection\n";
 
     Connection c(socket);
     while (!c.isClosed()) {

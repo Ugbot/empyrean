@@ -1,3 +1,5 @@
+from ToolCommon import *
+
 def generate(env):
     if env['PLATFORM'] == 'cygwin':
         env.Append(CPPPATH = '/usr/local/include/SDL',
