@@ -32,7 +32,7 @@ namespace pyr {
             }
 
             // write a single packet
-            PacketPtr p(_outgoing.front());
+            PacketPtr p = _outgoing.front();
             _outgoing.pop();
 
             _outgoingLock->unlock();

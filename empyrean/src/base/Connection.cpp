@@ -51,6 +51,8 @@ namespace pyr {
             if (!handled) {
                 PYR_LOG() << "Unhandled packet: ";
                 p->log();
+
+                _unhandled.push_back(p);
             }
         }
     }
@@ -71,6 +73,25 @@ namespace pyr {
         return _tcpSocket->getPeerAddress();
     }
     
-
+    void Connection::addReceiver(PacketReceiver* receiver) {
+        // See if this receiver can handle any of the unhandled packets.
+        PacketQueueIter i = _unhandled.begin();
+        while (i != _unhandled.end()) {
+            if (receiver->receivePacket(this, i->get())) {
+                PacketQueueIter next = i;
+                ++next;
+                _unhandled.erase(i);
+                i = next;
+            } else {
+                ++i;
+            }
+        }
+    
+        _receivers.insert(receiver);
+    }
+    
+    void Connection::removeReceiver(PacketReceiver* receiver) {
+        _receivers.erase(receiver);
+    }
 
 }

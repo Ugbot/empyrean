@@ -2,8 +2,9 @@
 #define PYR_CONNECTION_H
 
 
-#include <set>
+#include <list>
 #include <map>
+#include <set>
 #include "LokiTypeInfo.h"
 #include "Packet.h"
 #include "RefCounted.h"
@@ -144,8 +145,8 @@ namespace pyr {
         void setData(ConnectionData* data) { _data = data;     }
         ConnectionData* getData() const    { return _data.get(); }
 
-        void addReceiver(PacketReceiver* receiver)    { _receivers.insert(receiver); }
-        void removeReceiver(PacketReceiver* receiver) { _receivers.erase(receiver);  }
+        void addReceiver(PacketReceiver* receiver);
+        void removeReceiver(PacketReceiver* receiver);
 
     private:
         typedef std::set<PacketReceiver*> ReceiverSet;
@@ -160,6 +161,11 @@ namespace pyr {
         ScopedPtr<Thread> _writerThread;
 
         bool _closing;  // has close() been called?
+        
+        /// I think storing unhandled packets is a hack.
+        typedef std::list<PacketPtr> PacketQueue;
+        typedef PacketQueue::iterator PacketQueueIter;
+        PacketQueue _unhandled;
 
         /// Used to store user-defined, connection-specific data.
         ScopedPtr<ConnectionData> _data;
