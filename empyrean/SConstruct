@@ -9,7 +9,7 @@ import sys
 
 SConsignFile()
 
-Default('build')
+Default(['build', 'tests'])
 
 opts = Options('options.cache')
 opts.AddOptions(
@@ -70,7 +70,7 @@ Export('env')
 # XXX Due to a bug in SCons, we have to do resources last.
 # The bug is that if one subscript does an Export(), it overwrites imports in
 # other scripts.
-SConscript(dirs = ['src', 'resources'])
+SConscript(dirs = ['src', 'tests', 'resources'])
 
 if env['PLATFORM'] == 'cygwin':
     SConscript(dirs = ['third-party-cygwin'])
