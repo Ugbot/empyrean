@@ -238,7 +238,7 @@ int main(int argc,char* args[])
 void Init()
 {
     model.Load("paladin.cfg");
-    model.GetModel().getMixer()->blendCycle(0,1,4.0f);
+    //model.GetModel().getMixer()->blendCycle(0,1,4.0f);
     camera.x=camera.y=0; camera.z=-200;
     camera.rx=camera.ry=camera.rz=0;
 
@@ -255,19 +255,20 @@ void Init()
 
 void Tick(int time)
 {
+    const float speed = 1.0f; // 0.05f;
     int n;
     unsigned char* keys=SDL_GetKeyState(&n);
 
-    if (keys[SDLK_UP])      camera.y++;
-    if (keys[SDLK_DOWN])    camera.y--;
-    if (keys[SDLK_LEFT])    camera.x--;
-    if (keys[SDLK_RIGHT])   camera.x++;
+    if (keys[SDLK_UP])      camera.y+=speed;;
+    if (keys[SDLK_DOWN])    camera.y-=speed;;
+    if (keys[SDLK_LEFT])    camera.x-=speed;;
+    if (keys[SDLK_RIGHT])   camera.x+=speed;;
     if (keys[SDLK_a])
     {
         if (keys[SDLK_LSHIFT] || keys[SDLK_RSHIFT])
-            camera.z--;
+            camera.z-=speed;
         else
-            camera.z++;
+            camera.z+=speed;
     }
 
     model.update((float)time/1000.0f);
@@ -485,33 +486,55 @@ void RenderOutline()
     glDisable(GL_TEXTURE_1D);
     glDisable(GL_TEXTURE_2D);
     glDisable(GL_LIGHTING);
-    glCullFace(GL_FRONT);
-    glPolygonMode(GL_BACK,GL_LINE);
+    glCullFace(GL_BACK);
+    glPolygonMode(GL_FRONT_AND_BACK,GL_LINE);
     glDepthFunc(GL_LEQUAL);
     glColor3f(0,0,0);
+    glDisable(GL_CULL_FACE);
 
     RenderMesh(NoShade());
 
     glColor3f(1,1,1);
     glDepthFunc(GL_LESS);
-    glPolygonMode(GL_BACK,GL_FILL);
+    glPolygonMode(GL_FRONT_AND_BACK,GL_FILL);
     glCullFace(GL_BACK);
     glPopAttrib();
 }
 
+int colour=0;
 void RenderTriList()
 {
-    glEnable(GL_TEXTURE_2D);
-    glEnable(GL_LIGHTING);
+    //glEnable(GL_TEXTURE_2D);
+    //glEnable(GL_LIGHTING);
+    glPushAttrib(GL_ENABLE_BIT);
+    glDisable(GL_TEXTURE_1D);
+    glDisable(GL_TEXTURE_2D);
+    glDisable(GL_LIGHTING);
+ 
     CalRenderer* r=model.GetModel().getRenderer();
     r->beginRendering();
 
-    glEnableClientState(GL_VERTEX_ARRAY);
-    glEnableClientState(GL_NORMAL_ARRAY);
-    glEnableClientState(GL_TEXTURE_COORD_ARRAY);
+    //glEnableClientState(GL_VERTEX_ARRAY);
+    //glEnableClientState(GL_NORMAL_ARRAY);
+    //glEnableClientState(GL_TEXTURE_COORD_ARRAY);
+
+    const float colours[] =
+    {
+        0,0,0,
+        1,1,1,
+        1,0,0,
+        0,1,0,
+        0,0,1,
+        0,1,1,
+        1,0,1,
+        1,1,0
+    };
+    const int nColours = 8;
+    
 
     for (unsigned int sub=0; sub<trilists.size(); sub++)
     {
+        //unsigned int sub = 1;
         static float verts[30000][3];
         static float normals[30000][3];
         static float texcoords[30000][3];
@@ -519,29 +542,38 @@ void RenderTriList()
         r->selectMeshSubmesh(0,sub);
 
         int nVerts     = r->getVertices(&verts[0][0]);
-        int nNormals   = r->getNormals(&normals[0][0]);
-        int nTexcoords = r->getTextureCoordinates(0,&texcoords[0][0]);
+        //int nNormals   = r->getNormals(&normals[0][0]);
+        //int nTexcoords = r->getTextureCoordinates(0,&texcoords[0][0]);
 
-        glVertexPointer(3,GL_FLOAT,0,&verts[0][0]);
-        glNormalPointer(GL_FLOAT,0,&normals[0][0]);
-        glTexCoordPointer(2,GL_FLOAT,0,&texcoords[0][0]);
+        //glVertexPointer(3,GL_FLOAT,0,&verts[0][0]);
+        //glNormalPointer(GL_FLOAT,0,&normals[0][0]);
+        //glTexCoordPointer(2,GL_FLOAT,0,&texcoords[0][0]);
 
-        glBindTexture(GL_TEXTURE_2D,(GLuint)r->getMapUserData(0));
+        //glBindTexture(GL_TEXTURE_2D,(GLuint)r->getMapUserData(0));
 
         TriList& list=trilists[sub];
 
         for (unsigned int i=0; i<list.size(); i++)
         {
-            int* p=&list[i][0];
-            glDrawElements(GL_TRIANGLE_STRIP,list[i].size(),GL_UNSIGNED_INT,p);
+            colour= (colour+1)&7;
+            glColor3fv(colours+colour*3);
+            glBegin(GL_TRIANGLE_STRIP);
+            for (int v=0; v<list[i].size(); v++)
+            {
+                int vert = list[i][v];
+                glVertex3fv(&verts[vert][0]);
+            }
+            glEnd();
         }
     }
 
-    glDisableClientState(GL_VERTEX_ARRAY);
-    glDisableClientState(GL_NORMAL_ARRAY);
-    glDisableClientState(GL_TEXTURE_COORD_ARRAY);
+    //glDisableClientState(GL_VERTEX_ARRAY);
+    //glDisableClientState(GL_NORMAL_ARRAY);
+    //glDisableClientState(GL_TEXTURE_COORD_ARRAY);
 
     r->endRendering();
+
+    glPopAttrib();
 }
 
 void Render()
@@ -555,7 +587,14 @@ void Render()
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     if (usetrilist)
+    {
+        colour=0;
+        glDisable(GL_CULL_FACE);
         RenderTriList();
+        glEnable(GL_CULL_FACE);
+        glCullFace(GL_FRONT);
+        //RenderOutline();
+    }
     else if (usevertexarrays)
         RenderMesh();
     else

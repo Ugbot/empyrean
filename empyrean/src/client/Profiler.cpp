@@ -36,8 +36,13 @@ namespace pyr {
     Profiler::~Profiler() {
         float now = getNow();
 
-        _proc->time += now - _lastTime;
-        _proc->timePlusChildren += now - _startTime;
+        float t = now - _lastTime;
+        float tps = now - _startTime;
+
+        _proc->running.time += t;
+        _proc->running.timePlusChildren += tps;
+        _proc->lastFrame.time += t;
+        _proc->lastFrame.timePlusChildren += tps;
         _procHistory.pop();
 
         _totalTime += now - _lastTime;

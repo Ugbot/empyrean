@@ -33,7 +33,7 @@ vector<TriList> LoadTriList(const char* fname)
     for (int i=0; i<nSubs; i++)
     {
         ss >> s;
-        if (s!="Lists")
+        if (s!="Strips")
             throw std::runtime_error("LoadTriList: lists");
 
         ss >> s;
@@ -43,8 +43,8 @@ vector<TriList> LoadTriList(const char* fname)
         for (int j=0; j<nLists; j++)
         {
             ss >> s;
-            if (s != "Size")
-                throw std::runtime_error("LoadTriList: size");
+            if (s != "Vertices")
+                throw std::runtime_error("LoadTriList: vertices");
 
             ss >> s;
             int nTris=atoi(s.c_str());

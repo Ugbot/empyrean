@@ -63,6 +63,25 @@ namespace
                         return i;
             return -1;
         }
+
+        int diffVertex(const Face& rhs) const
+        {
+            for (int i=0; i<3; i++)
+                if (v[i] != rhs.v[0] &&
+                    v[i] != rhs.v[1] &&
+                    v[i] != rhs.v[2])
+                    return v[i];
+            return -1; // @_x
+        }
+
+        bool hasVertex(int a) const
+        {
+            for (int i=0; i<3; i++)
+                if (v[i] == a)
+                    return true;
+            return false;
+        }
+
     };
 
     struct Edge
@@ -135,7 +154,7 @@ namespace
     }
 
     int depth = 0;
-    const int max = 30;
+    const int max = 200;
 
     vector<Face> getFaces(CalCoreSubmesh* mesh)
     {
@@ -149,7 +168,7 @@ namespace
         return dest;
     }
 
-    list<int> getList(int lasttri, set<int> facesused, const vector<Face>& faces, const vector<Edge>& edges, bool reversed = false)
+    list<int> getList(int lasttri, int lastvert, int vertbeforelast, set<int> facesused, const vector<Face>& faces, const vector<Edge>& edges, bool reversed = false)
     {
         assert(lasttri >= 0 && lasttri < faces.size());
 
@@ -182,10 +201,20 @@ namespace
                 if (facesused.count(f) != 0)        // this triangle is already in the list somewhere
                     continue;
 
+                if (lastvert != -1 &&
+                    !faces[f].hasVertex(lastvert))
+                    continue;                       // it has to touch the last vertex (if lastvert is -1, then there is no last vertex)
+
+                if (vertbeforelast!= -1 &&
+                    !faces[f].hasVertex(vertbeforelast))
+                    continue;
+
                 set<int> _facesused(facesused);
                 _facesused.insert(f);
 
-                list<int> newlist = getList(f, _facesused, faces, edges, reversed);
+                int _lastvert = faces[f].diffVertex(curface);
+
+                list<int> newlist = getList(f, _lastvert, lastvert, _facesused, faces, edges, reversed);
                 newlist.push_front(f);
 
                 if (newlist.size()+depth > max)
@@ -200,15 +229,7 @@ namespace
             }
         }
 
-        /*if (!reversed)
-        {
-            // buahahahah.
-            best.reverse();
-            best = getList(best.back(), facesused, faces, edges, true);
-        }*/
-
         depth--;
-
         return best;
     }
 
@@ -245,7 +266,7 @@ namespace
         }
 
         // 0 sucks, but it has to go in sometime.
-        // 1 is perfect, the loop will return if it finds such a triangle; execution will never get here in such a case
+        // 1 is perfect.  The loop will return if it finds such a triangle; execution will never get here in such a case
         // 2 is better than 3
         // 3 is the last resort
         for (int i=0; i<4; i++)
@@ -272,8 +293,8 @@ namespace
 
         // first, rotate the points in the first face so that they link up with the second properly.
         int uniquevert=-1;
-        iter = lst.begin();
-        const Face& f = faces[*iter++];
+        iter = lst.begin(); iter++;
+        const Face& f = faces[lst.front()];
         const Face& g = faces[*iter];
         for (int i=0; i<3; i++)
         {
@@ -309,6 +330,9 @@ namespace
                     strip.push_back(tf.v[i]);
                     break;
                 }
+
+                if (i==2)
+                    __asm int 3;
             }
 
             lastface = *iter;
@@ -340,7 +364,7 @@ void MakeLists2(const char* fname)
         vector<Face> faces = getFaces(mesh->getCoreSubmesh(i));
         vector<Edge> edges = getEdges(faces);
 
-        cout << "Faces: " << int(faces.size()) << "\tedges: " << int(edges.size()) << endl;
+        cout << "Faces: " << int(faces.size()) << "\tEdges: " << int(edges.size()) << endl;
 
         list< list<int> > tristrips;
         set<int> usedfaces;
@@ -349,12 +373,9 @@ void MakeLists2(const char* fname)
         {
             int firsttri = BestStartTriangle(faces, edges, usedfaces);
 
-            //if (firsttri > int(faces.size()))        // ... heh
-            //    break;
-
             usedfaces.insert(firsttri);
 
-            list<int> nextlist = getList(firsttri, usedfaces, faces, edges);
+            list<int> nextlist = getList(firsttri, -1, -1, usedfaces, faces, edges);
             nextlist.push_front(firsttri);
 
             usedfaces.insert(nextlist.begin(),nextlist.end());
@@ -363,13 +384,14 @@ void MakeLists2(const char* fname)
             cout << "List: " << int(nextlist.size()) << endl;
         }
 
-        cout << "Writing..."<<endl;
+        cout << "Writing..." << endl;
 
         fprintf(output, "Strips %i\n", tristrips.size());
+        int totalfaces=0;
         for (list< list<int> >::iterator i = tristrips.begin(); i != tristrips.end(); i++)
         {
+            totalfaces += int(i->size());
             list<int> lst = faceListToTriStrip(*i,faces);
-            //list<int>& lst = *i;
 
             fprintf(output, "Vertices %i\n", lst.size());
             for (list<int>::iterator j = lst.begin(); j != lst.end(); j++)
@@ -379,6 +401,8 @@ void MakeLists2(const char* fname)
             }
             fprintf(output, "\n");
          }
+
+        cout << "Faces: " << totalfaces << endl;
     }
 
     fclose(output);
