@@ -9,6 +9,7 @@ SOURCES = Split("""
     LogEvent.cpp
     Main.cpp
     Server.cpp
+    ServerEntity.cpp
     ServerFrame.cpp
     ServerLog.cpp
     ServerThread.cpp

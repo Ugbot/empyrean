@@ -10,6 +10,7 @@ SOURCES = Split("""
     MapElement.cpp
     MapRenderer.cpp
     NSPRUtility.cpp
+    OBJLoader.cpp
     PacketFactory.cpp
     PacketTypes.cpp
     PlanarMap.cpp

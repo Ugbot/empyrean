@@ -1,3 +1,4 @@
+#include <stdexcept>
 #include "Entity.h"
 #include "GLUtility.h"
 #include "MapRenderer.h"

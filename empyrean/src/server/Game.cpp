@@ -1,3 +1,4 @@
+#include <stdexcept>
 #include "Connection.h"
 #include "Game.h"
 #include "PacketTypes.h"
