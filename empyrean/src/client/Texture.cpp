@@ -21,10 +21,6 @@ namespace pyr {
         static void destroy(Texture* texture) {
             delete texture;
         }
-
-        static Texture* copy(Texture* texture) {
-            return texture;
-        }
     };
 
 

@@ -1,4 +1,7 @@
+#include "EntityAddedPacket.h"
+#include "EntityRemovedPacket.h"
 #include "LoginPacket.h"
+#include "LoginResponsePacket.h"
 #include "PacketFactory.h"
 #include "UpdatePacket.h"
 
@@ -6,7 +9,10 @@
 namespace pyr {
 
     PacketFactory::PacketFactory() {
+        registerType<EntityAddedPacket>();
+        registerType<EntityRemovedPacket>();
         registerType<LoginPacket>();
+        registerType<LoginResponsePacket>();
         registerType<UpdatePacket>();
     }
     

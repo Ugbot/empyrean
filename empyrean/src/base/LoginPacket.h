@@ -10,7 +10,7 @@ namespace pyr {
 
     class LoginPacket : public Packet {
     public:
-        enum { ID = 1 };
+        PYR_PACKET_ID(1);
     
         LoginPacket(const std::string& username,
                     const std::string& password);
@@ -21,10 +21,6 @@ namespace pyr {
         
         const std::string& getPassword() const {
             return _password;
-        }
-        
-        u16 getID() const {
-            return ID;
         }
         
         void serialize(ByteBuffer& out) const;

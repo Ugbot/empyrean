@@ -94,6 +94,95 @@ namespace pyr {
     private:
         T* _array;
     };
+    
+    
+    class RefCounted {
+    protected:
+        /**
+         * Protected so users of refcounted classes don't use std::auto_ptr
+         * or the delete operator.
+         *
+         * Interfaces that derive from RefCounted should define an inline,
+         * empty, protected destructor as well.
+         */
+        virtual ~RefCounted() { }
+
+    public:
+        /**
+         * Add a reference to the internal reference count.
+         */
+        virtual void ref() = 0;
+
+        /**
+         * Remove a reference from the internal reference count.  When this
+         * reaches 0, the object is destroyed.
+         */
+        virtual void unref() = 0;
+    };
+    
+    
+    /**
+     * A smart pointer used for refcounted classes.
+     * It is container-safe.
+     */
+    template<typename T>
+    class RefPtr {
+    public:
+        RefPtr(T* ptr = 0) {
+            _ptr = 0;
+            *this = ptr;
+        }
+
+        RefPtr(const RefPtr<T>& ptr) {
+            _ptr = 0;
+            *this = ptr;
+        }
+
+        ~RefPtr() {
+            if (_ptr) {
+                _ptr->unref();
+                _ptr = 0;
+            }
+        }
+     
+        RefPtr<T>& operator=(T* ptr) {
+            if (ptr != _ptr) {
+                if (_ptr) {
+                    _ptr->unref();
+                }
+                _ptr = ptr;
+                if (_ptr) {
+                    _ptr->ref();
+                }
+            }
+            return *this;
+        }
+
+        RefPtr<T>& operator=(const RefPtr<T>& ptr) {
+            *this = ptr._ptr;
+            return *this;
+        }
+
+        T* operator->() const {
+            return _ptr;
+        }
+
+        T& operator*() const {
+            return *_ptr;
+        }
+
+        operator bool() const {
+            return (_ptr != 0);
+        }
+
+        T* get() const {
+            return _ptr;
+        }
+
+    private:
+        T* _ptr;
+    };
+    
 
     /// Returns the string, stripped of leading and trailing whitespace
     std::string trimString(const std::string& s);

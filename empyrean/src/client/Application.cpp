@@ -12,6 +12,7 @@ namespace pyr {
 
     typedef IntroState InitialState;
 
+
     Application* Application::_instance = 0;
 
     Application& Application::instance() {
@@ -48,6 +49,8 @@ namespace pyr {
     }
     
     void Application::draw() {
+        PYR_PROFILE_BLOCK("Application::draw");
+    
         if (_currentState) {
             _currentState->draw(0);
         }
@@ -132,7 +135,7 @@ namespace pyr {
     }
     
     bool Application::shouldQuit() {
-        return !bool(_currentState);
+        return (_currentState == 0);
     }
 
 }

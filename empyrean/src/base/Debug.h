@@ -14,9 +14,12 @@
 
     #ifdef _MSC_VER
     
-        #define PYR_ASSERT(condition, label) \
-            if (!(condition)) {              \
-                __asm int 3                  \
+        #include <windows.h>
+    
+        #define PYR_ASSERT(condition, label)                            \
+            if (!(condition)) {                                         \
+                MessageBox(NULL, (label), "Empyrean Assertion", MB_OK); \
+                __asm int 3                                             \
             } PYR_REQUIRE_SEMI
         
     #else

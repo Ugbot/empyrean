@@ -8,6 +8,12 @@
 
 namespace pyr {
 
+    #define PYR_PACKET_ID(id) \
+        enum { ID = id };     \
+        u16 getID() const {   \
+            return ID;        \
+        }
+
     class Packet {
     public:
         virtual ~Packet() { }

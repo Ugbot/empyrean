@@ -41,7 +41,7 @@ namespace pyr {
             }
             _connections[i]->processIncomingPackets();
             _connections[i]->sendPacket(
-                new UpdatePacket(0, "", gmtl::Vec2f(), gmtl::Vec2f()));
+                new UpdatePacket(0, gmtl::Vec2f(), gmtl::Vec2f()));
         }
     }
     

@@ -4,6 +4,7 @@
 
 #include <prnetdb.h>
 #include "Types.h"
+#include "Utility.h"
 
 
 namespace pyr {
@@ -14,16 +15,16 @@ namespace pyr {
             _size = size;
             _position = 0;
             _bytes = (u8*)bytes;
-            _reachedEnd = false;
+            _passedEnd = false;
         }
         
-        bool reachedEnd() {
-            return _reachedEnd;
+        bool passedEnd() {
+            return _passedEnd;
         }
 
         void read(u8* p, int size) {
             if (size + _position > _size) {
-                _reachedEnd = true;
+                _passedEnd = true;
                 _position = _size;
             } else {
                 memcpy(p, _bytes + _position, size);
@@ -60,7 +61,7 @@ namespace pyr {
         int _position;
         u8* _bytes;
         
-        bool _reachedEnd;
+        bool _passedEnd;
     };
 
 }

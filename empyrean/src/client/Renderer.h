@@ -15,12 +15,6 @@ namespace pyr {
         virtual ~Renderer(){}
         virtual void draw(Model*)=0;
         virtual void useVertexArrays(bool)=0;
-
-        static void begin2D();
-        static void end2D();
-
-        static void begin3D() { end2D();   }
-        static void end3D()   { begin2D(); }
     };
 
     class DefaultRenderer : public Renderer

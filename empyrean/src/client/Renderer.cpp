@@ -291,14 +291,6 @@ namespace pyr {
 
 namespace pyr {
 
-    void Renderer::begin2D() {
-        glDisable(GL_DEPTH_TEST);
-    }
-
-    void Renderer::end2D() {
-        glEnable(GL_DEPTH_TEST);
-    }
-
     DefaultRenderer::DefaultRenderer() {
         _useVertexArrays=false;
     }

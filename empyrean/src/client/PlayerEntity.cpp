@@ -11,13 +11,9 @@
 #include "ResourceManager.h"
 
 namespace pyr {
-    PlayerEntity::PlayerEntity(Model* model,Renderer* renderer,InputManager* im) {
+    PlayerEntity::PlayerEntity(Model* model, Renderer* renderer) {
         _model = model;
         _renderer = renderer;
-        _im = im;
-        _inputLeft = &_im->getInput("Left");
-        _inputRight = &_im->getInput("Right");
-        _inputAttack = &im->getInput("Space");
 
         startStandState();
     }
@@ -26,19 +22,21 @@ namespace pyr {
     }
 
     void PlayerEntity::draw() {
-        Renderer::begin3D();
+        glEnable(GL_DEPTH_TEST);
         glRotatef(_direction,0,1,0);
         glRotatef(90,1,0,0);
         _renderer->draw(_model);
-        Renderer::end3D();
+        glDisable(GL_DEPTH_TEST);
     }
 
     void PlayerEntity::update(float dt) {
         (this->*_state)(dt);
 
+/*
         if (_inputAttack->getValue()==1.0f) {
             _model->getModel().getMixer()->executeAction(1, 0.5f, 1.0f);
         }
+*/
 
         _model->update(dt);
     }
@@ -53,6 +51,7 @@ namespace pyr {
     }
 
     void PlayerEntity::updateStandState(double dt) {
+/*
         if (_inputLeft->getValue() != 0) {
             _direction = 90;
             setVel(gmtl::Vec2f(-vel, 0));
@@ -63,6 +62,7 @@ namespace pyr {
             setVel(gmtl::Vec2f(vel, 0));
             startWalkState();
         }
+*/
     }
 
     void PlayerEntity::startWalkState() {
@@ -71,6 +71,7 @@ namespace pyr {
     }
 
     void PlayerEntity::updateWalkState(double dt) {
+/*
         if (_inputLeft->getValue()!=0) {
             setVel(gmtl::Vec2f(-vel,0));
             _direction=90;
@@ -83,6 +84,7 @@ namespace pyr {
             startStandState();
             return;
         }
+*/
 
         setPos(getPos() + (getVel() * dt));
     }

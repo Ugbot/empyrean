@@ -4,17 +4,10 @@
 
 #include <vector>
 #include "InputManager.h"
+#include "Scene.h"
 #include "State.h"
-#include "Utility.h"
 
 namespace pyr {
-
-    class Renderer;
-    class Model;
-    class Entity;
-    class ParticleSystem;
-    class ParticleEmitter;
-    class Texture;
 
     class GameState : public State {
     public:
@@ -35,17 +28,8 @@ namespace pyr {
         Input* _inputLeft;
         Input* _inputRight;
         Input* _inputQuit;
-
-        ScopedPtr<Model> _testModel;
-        Renderer* _renderer;
-        Texture* _backdropTex;
-
-        ParticleSystem* _particles;
-        ParticleEmitter* _emitter;
         
-        std::vector<Entity*> _entities;
-        
-        float _count;
+        Scene _scene;
     };
 
 }

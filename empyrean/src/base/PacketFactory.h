@@ -3,6 +3,7 @@
 
 
 #include <map>
+#include "Debug.h"
 #include "LokiTypeInfo.h"
 #include "Utility.h"
 
@@ -22,6 +23,7 @@ namespace pyr {
     
         template<typename T>
         void registerType(Type2Type<T> = Type2Type<T>()) {
+            PYR_ASSERT(_factoryMap.count(T::ID) == 0, "Packet can't be registered twice");
             _factoryMap[T::ID] = T::create;
         }
         

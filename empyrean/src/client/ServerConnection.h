@@ -9,8 +9,12 @@
 namespace pyr {
 
     class Connection;
+    class EntityAddedPacket;
+    class EntityRemovedPacket;
+    class LoginResponsePacket;
+    class Scene;
     class UpdatePacket;
-
+    
     class ServerConnection {
     public:
         static ServerConnection& instance();
@@ -18,16 +22,31 @@ namespace pyr {
     private:
         static void destroy();
         
+        ServerConnection();
+        
     public:
-        void connectToServer(const std::string& server);
+        void connect(const std::string& server, int port, Scene* scene);
+        void disconnect();
         bool isConnected();
+        
+        void login(const std::string& user, const std::string& pass);
+        bool isLoggedIn() {
+            return _loggedIn;
+        }
     
     private:
+        void handleLoginResponse(Connection*, LoginResponsePacket* p);
+        void handleEntityAdded(Connection* c, EntityAddedPacket* p);
+        void handleEntityRemoved(Connection* c, EntityRemovedPacket* p);
         void handleUpdate(Connection* c, UpdatePacket* p);
     
         static ServerConnection* _instance;
             
         ScopedPtr<Connection> _connection;
+        Scene* _scene;
+        
+        bool _loggedIn;
+        int _entityID;
     };
 
 }

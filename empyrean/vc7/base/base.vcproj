@@ -110,6 +110,12 @@
 				RelativePath="..\..\src\base\Connection.h">
 			</File>
 			<File
+				RelativePath="..\..\src\base\EntityAddedPacket.h">
+			</File>
+			<File
+				RelativePath="..\..\src\base\EntityRemovedPacket.h">
+			</File>
+			<File
 				RelativePath="..\..\src\base\Error.cpp">
 			</File>
 			<File
@@ -120,6 +126,9 @@
 			</File>
 			<File
 				RelativePath="..\..\src\base\LoginPacket.h">
+			</File>
+			<File
+				RelativePath="..\..\src\base\LoginResponsePacket.h">
 			</File>
 			<File
 				RelativePath="..\..\src\base\LokiTypeInfo.h">
