@@ -43,9 +43,14 @@ namespace pyr {
 
         // set up packet handlers
         connection->definePacketHandler(this, &World::handleLogin);
+        connection->definePacketHandler(this, &World::handleSay);
 
         // add the connection to the list of connections
         _connections.push_back(connection);
+    }
+
+    World::ConnectionData* World::getData(Connection* c) {
+        return static_cast<ConnectionData*>(c->getOpaque());
     }
     
     void World::removeConnection(unsigned index) {
@@ -61,7 +66,7 @@ namespace pyr {
     }
     
     void World::handleLogin(Connection* c, LoginPacket* p) {
-        ConnectionData* cd = (ConnectionData*)c->getOpaque();
+        ConnectionData* cd = getData(c);
         if (cd->loggedIn) {
             c->sendPacket(new LoginResponsePacket(LR_ALREADY_LOGGED_IN));
             logMessage(p->username() + " attempted to log in twice!");
@@ -70,6 +75,15 @@ namespace pyr {
 
         /// @todo  test for invalid username
         /// @todo  test for already logged in
+
+        for (size_t i = 0; i < _connections.size(); ++i) {
+            ConnectionData* cdi = getData(_connections[i]);
+            if (cdi != cd && cdi->account->getUsername() == p->username()) {
+                c->sendPacket(new LoginResponsePacket(LR_ALREADY_LOGGED_IN));
+                logMessage(p->username() + " already logged in!");
+                return;
+            }
+        }
         
         Account* account = Database::instance().getAccount(p->username());
         if (p->newAccount()) {
@@ -100,6 +114,17 @@ namespace pyr {
                 c->sendPacket(new LoginResponsePacket(LR_INVALID_PASSWORD));
                 logMessage(p->username() + " invalid password");
             }
+        }
+    }
+
+    void World::handleSay(Connection* c, SayPacket* p) {
+        ConnectionData* cd = getData(c);
+        for (size_t i = 0; i < _connections.size(); ++i) {
+            _connections[i]->sendPacket(new LobbyPacket(
+                cd->account->getUsername(),
+                0,
+                p->text()));
+            logMessage(cd->account->getUsername() + " says: " + p->text());
         }
     }
 

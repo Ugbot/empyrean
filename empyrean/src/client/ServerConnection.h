@@ -17,12 +17,10 @@
 
 namespace pyr {
 
-    class EntityAddedPacket;
-    class EntityRemovedPacket;
+    class LobbyPacket;
     class LoginResponsePacket;
     class Packet;
     class ServerConnectionThread;
-    class UpdatePacket;
     
     class ServerConnection {
         PYR_DECLARE_SINGLETON(ServerConnection)
@@ -48,10 +46,14 @@ namespace pyr {
         const std::string& getError();
         
         void update();
+
+        std::vector<std::string> getLobbyMessages();
         
         bool login(const std::string& user,
                    const std::string& pass,
                    bool newuser);
+
+        bool say(const std::string& text);
 
         /**
          * Sends a packet to the server.
@@ -63,6 +65,7 @@ namespace pyr {
     
     private:
         void handleLoginResponse(Connection*, LoginResponsePacket* p);
+        void handleLobby(Connection*, LobbyPacket* p);
     
         Status _status;
         
@@ -74,6 +77,8 @@ namespace pyr {
         // if CONNECTED
         ScopedPtr<Connection> _connection;
         bool _loginFailed;
+
+        std::vector<std::string> _lobbyMessages;
     };
 
 }

@@ -60,7 +60,7 @@ def SetupOpenGL(env):
     if env['PLATFORM'] == 'cygwin':
         env.Append(LIBS = ['glu32', 'opengl32'])
     else:
-        env.Append(LIBS = ['GLU', 'GL', 'X11'])
+        env.Append(LIBS = ['GLU', 'GL'])
 
 def SetupPHUI(env):
     env.Append(CPPPATH = ['#/src'],
@@ -135,7 +135,7 @@ if base_env['PLATFORM'] == 'irix':
 if ARGUMENTS.get('dbg'):
     base_env.Append(CCFLAGS = ['-g', '-DDEBUG'])
 if ARGUMENTS.get('opt'):
-    base_env.Append(CCFLAGS = ['-O'],
+    base_env.Append(CCFLAGS = ['-O2'],
                     LINKFLAGS = ['-s'])
 
 Export('base_env')

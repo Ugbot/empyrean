@@ -24,8 +24,8 @@
  *
  * -----------------------------------------------------------------
  * File:          $RCSfile: TextField.cpp,v $
- * Date modified: $Date: 2003-08-13 03:44:31 $
- * Version:       $Revision: 1.5 $
+ * Date modified: $Date: 2003-08-16 02:12:53 $
+ * Version:       $Revision: 1.6 $
  * -----------------------------------------------------------------
  *
  ************************************************************** phui-cpr-end */
@@ -117,46 +117,70 @@ namespace phui
    {
       gltext::FontRendererPtr renderer = getFontRenderer();
       std::string toAdd; // if we are to add anything, put it here
-      if(key == KEY_RIGHT) {
-         if(mCursorCharacterPosition < mText.length()) {
-            mCursorScreenPosition+=renderer->getWidth(mText.substr(mCursorCharacterPosition,1).c_str());
+      if (key == KEY_RIGHT)
+      {
+         if (mCursorCharacterPosition < mText.length())
+         {
+            mCursorScreenPosition += renderer->getWidth(mText.substr(mCursorCharacterPosition,1).c_str());
             mCursorCharacterPosition++;
          }
-      } else if(key == KEY_LEFT) {
-         if(mCursorCharacterPosition > 0) {
+      }
+      else if (key == KEY_LEFT)
+      {
+         if (mCursorCharacterPosition > 0)
+         {
             mCursorCharacterPosition--;
-            mCursorScreenPosition-=renderer->getWidth(mText.substr(mCursorCharacterPosition,1).c_str());
+            mCursorScreenPosition -= renderer->getWidth(mText.substr(mCursorCharacterPosition,1).c_str());
          }
-      } else if(key == KEY_BACKSPACE) {
-         if(mCursorCharacterPosition > 0) {
+      }
+      else if(key == KEY_BACKSPACE)
+      {
+         if (mCursorCharacterPosition > 0)
+         {
             mCursorCharacterPosition--;
-            mCursorScreenPosition-=renderer->getWidth(mText.substr(mCursorCharacterPosition,1).c_str());
+            mCursorScreenPosition -= renderer->getWidth(mText.substr(mCursorCharacterPosition,1).c_str());
+            mText.erase(mCursorCharacterPosition, 1);
+         }
+      }
+      else if (key == KEY_DELETE)
+      {
+         if (mCursorCharacterPosition < mText.length())
+         {
             mText.erase(mCursorCharacterPosition,1);
          }
-      } else if(key == KEY_DELETE) {
-         if(mCursorCharacterPosition < mText.length()) {
-            mText.erase(mCursorCharacterPosition,1);
-         }
-      } else if(key == KEY_SPACE) {
-         toAdd+=' ';
-      } else if(key >= KEY_A && key <= KEY_Z) {
+      }
+      else if (key == KEY_SPACE)
+      {
+         toAdd += ' ';
+      }
+      else if (key >= KEY_A && key <= KEY_Z)
+      {
          if ((modifiers & IMOD_SHIFT) || (modifiers & IMOD_CAPS_LOCK))
          {
-            toAdd += (char)(key-KEY_A)+'A';
+            toAdd += (char)(key - KEY_A) + 'A';
          }
          else
          {
-            toAdd += (char)(key-KEY_A)+'a';
+            toAdd += (char)(key - KEY_A) + 'a';
          }
-      } else if(key >= KEY_0 && key <= KEY_9) {
-         toAdd+=(char)(key-KEY_0)+'0';
-      } else if(key == KEY_PERIOD) {
-         toAdd+='.';
+      }
+      else if (key >= KEY_0 && key <= KEY_9)
+      {
+         toAdd += (char)(key - KEY_0) + '0';
+      }
+      else if(key == KEY_PERIOD)
+      {
+         toAdd += '.';
+      }
+      else if (key == KEY_MINUS)
+      {
+         toAdd += '-';
       }
 
-      if(!toAdd.empty()) {
+      if (!toAdd.empty())
+      {
          mText.insert(mCursorCharacterPosition, toAdd);
-         mCursorScreenPosition+=renderer->getWidth(toAdd.c_str());
+         mCursorScreenPosition += renderer->getWidth(toAdd.c_str());
          mCursorCharacterPosition++;
       }
    }

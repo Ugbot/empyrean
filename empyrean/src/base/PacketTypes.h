@@ -13,8 +13,12 @@ namespace pyr {
 
     // PACKET DEFINITIONS
 
-    #define PYR_CHAT_PACKET_NAME ChatPacket
-    #define PYR_CHAT_PACKET(_)  \
+    #define PYR_SAY_PACKET_NAME SayPacket
+    #define PYR_SAY_PACKET(_) \
+        _(string)(512, text)
+
+    #define PYR_LOBBY_PACKET_NAME LobbyPacket
+    #define PYR_LOBBY_PACKET(_) \
         _(string)(12, username) \
         _(field)(u16, action)   \
         _(string)(512, text)
@@ -73,7 +77,8 @@ namespace pyr {
     
     // Packet IDs are allocated based on the order of this list.
     #define PYR_PACKET_LIST(_)          \
-        _(PYR_CHAT_PACKET)              \
+        _(PYR_SAY_PACKET)               \
+        _(PYR_LOBBY_PACKET)             \
         _(PYR_ENTITY_ADDED_PACKET)      \
         _(PYR_ENTITY_REMOVED_PACKET)    \
         _(PYR_LOGIN_PACKET)             \

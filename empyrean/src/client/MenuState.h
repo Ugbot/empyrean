@@ -8,10 +8,19 @@
 
 namespace pyr {
 
+    class MenuScreen;
+    class MainScreen;
+    class ConnectScreen;
+    class ConnectingScreen;
+    class LoginScreen;
+    class LoggingInScreen;
+    class LobbyScreen;
+
     class MenuState : public State {
     public:
         MenuState();
-        
+        ~MenuState();
+
         void draw(float fade);
         void update(float dt);
         void onKeyPress(SDLKey key, bool down);
@@ -43,7 +52,10 @@ namespace pyr {
         void onLoggingInCancel();
         void onLoggingInError(const std::string& error);
         
-        void onSay(const std::string& text);
+        void onLobbyNewGame();
+        void onLobbyNewChar();
+        void onLobbyQuit();
+        void onLobbySay(const std::string& text);
 
     private:
         void createInterface();
@@ -51,14 +63,14 @@ namespace pyr {
         void createLoginScreen();
         
     
-        phui::RootWidgetPtr _screen;
+        phui::RefPtr<MenuScreen> _screen;
         
-        phui::RootWidgetPtr _mainScreen;
-        phui::RootWidgetPtr _connectScreen;
-        phui::RootWidgetPtr _connectingScreen;
-        phui::RootWidgetPtr _loginScreen;
-        phui::RootWidgetPtr _loggingInScreen;
-        phui::RootWidgetPtr _chatScreen;
+        phui::RefPtr<MainScreen>       _mainScreen;
+        phui::RefPtr<ConnectScreen>    _connectScreen;
+        phui::RefPtr<ConnectingScreen> _connectingScreen;
+        phui::RefPtr<LoginScreen>      _loginScreen;
+        phui::RefPtr<LoggingInScreen>  _loggingInScreen;
+        phui::RefPtr<LobbyScreen>      _lobbyScreen;
     };
 
 }

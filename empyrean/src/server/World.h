@@ -11,6 +11,7 @@ namespace pyr {
     class Account;
     class Connection;
     class LoginPacket;
+    class SayPacket;
 
     /// @note This class is designed to run within one thread.
     class World {
@@ -25,10 +26,13 @@ namespace pyr {
             bool loggedIn;
             Account* account;
         };
+
+        ConnectionData* getData(Connection* c);
         
         void removeConnection(size_t index);
     
         void handleLogin(Connection* c, LoginPacket* p);
+        void handleSay(Connection* c, SayPacket* p);
         
     private:
         std::vector<Connection*> _connections;

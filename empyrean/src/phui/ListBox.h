@@ -24,8 +24,8 @@
  *
  * -----------------------------------------------------------------
  * File:          $RCSfile: ListBox.h,v $
- * Date modified: $Date: 2003-07-22 03:24:31 $
- * Version:       $Revision: 1.1 $
+ * Date modified: $Date: 2003-08-16 02:12:53 $
+ * Version:       $Revision: 1.2 $
  * -----------------------------------------------------------------
  *
  ************************************************************** phui-cpr-end */
@@ -43,19 +43,8 @@ namespace phui
    class ListBox : public Widget
    {
    public:
-      /**
-       * Creates a list with no items.
-       */
       ListBox();
 
-      /**
-       * Destroys this listbox
-       */
-      virtual ~ListBox();
-
-      /**
-       * Draws this listbox
-       */
       void draw();
 
       /**
@@ -65,14 +54,12 @@ namespace phui
        */
       void add(const std::string& text);
 
-      /**
-       * Removes the item at the given index.
-       */
+      void add(const std::vector<std::string>& items);
+
+      /// Removes the item at the given index.
       void remove(unsigned int idx);
 
-      /**
-       * Removes all items in the list.
-       */
+      /// Removes all items in the list.
       void clear();
 
       /**
@@ -112,14 +99,9 @@ namespace phui
       void fireListSelectionEvent(int selectedIdx);
 
    private:
-      /**
-       * The items in the listbox
-       */
       std::vector<std::string> mItems;
 
-      /**
-       * The selected item in the listbox, -1 = none
-       */
+      /// The selected item in the listbox, -1 = none
       int mSelectedItem;
 
       /**

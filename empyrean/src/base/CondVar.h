@@ -4,6 +4,7 @@
 
 #include <prcvar.h>
 #include "Mutex.h"
+#include "NSPRUtility.h"
 
 
 namespace pyr {
@@ -17,7 +18,7 @@ namespace pyr {
         CondVar(Mutex* m) {
             _cvar = PR_NewCondVar(m->_lock);
             if (!_cvar) {
-                throw std::runtime_error("PR_NewCondVar() failed");
+                throwNSPRError("PR_NewCondVar() failed");
             }
         }
         
@@ -28,14 +29,14 @@ namespace pyr {
         void wait(float timeout = -1) {
             PRStatus status = PR_WaitCondVar(_cvar, secondsToInterval(timeout));
             if (status != PR_SUCCESS) {
-                throw std::runtime_error("PR_WaitCondVar() failed");
+                throwNSPRError("PR_WaitCondVar() failed");
             }
         }
         
         void notify() {
             PRStatus status = PR_NotifyCondVar(_cvar);
             if (status != PR_SUCCESS) {
-                throw std::runtime_error("PR_NotifyCondVar() failed");
+                throwNSPRError("PR_NotifyCondVar() failed");
             }
         }
     

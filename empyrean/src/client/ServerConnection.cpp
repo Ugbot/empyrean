@@ -51,6 +51,7 @@ namespace pyr {
             if (status == ServerConnectionThread::CONNECT_SUCCEEDED) {
                 _connection = new Connection(_connectionMaker->getSocket());
                 _connection->definePacketHandler(this, &ServerConnection::handleLoginResponse);
+                _connection->definePacketHandler(this, &ServerConnection::handleLobby);
                 _connectionMaker = 0;
                 _connectionThread = 0;
                 _status = CONNECTED;
@@ -66,6 +67,12 @@ namespace pyr {
             _connection->processIncomingPackets();
         }
     }
+
+    std::vector<std::string> ServerConnection::getLobbyMessages() {
+        std::vector<std::string> msgs = _lobbyMessages;
+        _lobbyMessages.clear();
+        return msgs;
+    }
     
     bool ServerConnection::login(
         const std::string& user,
@@ -73,7 +80,12 @@ namespace pyr {
         bool newuser)
     {
         _loginFailed = false;
+        _lobbyMessages.clear();
         return sendPacket(new LoginPacket(user, pass, newuser ? 1 : 0));
+    }
+
+    bool ServerConnection::say(const std::string& text) {
+        return sendPacket(new SayPacket(text));
     }
 
     bool ServerConnection::sendPacket(Packet* p) {
@@ -103,6 +115,10 @@ namespace pyr {
             _loginFailed = true;
             _error = getLRMessage(p->response());
         }
+    }
+
+    void ServerConnection::handleLobby(Connection*, LobbyPacket* p) {
+        _lobbyMessages.push_back(p->username() + ": " + p->text());
     }
 
 }

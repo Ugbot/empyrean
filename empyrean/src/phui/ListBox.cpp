@@ -24,8 +24,8 @@
  *
  * -----------------------------------------------------------------
  * File:          $RCSfile: ListBox.cpp,v $
- * Date modified: $Date: 2003-08-05 05:00:28 $
- * Version:       $Revision: 1.2 $
+ * Date modified: $Date: 2003-08-16 02:12:53 $
+ * Version:       $Revision: 1.3 $
  * -----------------------------------------------------------------
  *
  ************************************************************** phui-cpr-end */
@@ -40,9 +40,6 @@ namespace phui
 {
    ListBox::ListBox()
       : mSelectedItem(-1)
-   {}
-
-   ListBox::~ListBox()
    {}
 
    void ListBox::draw()
@@ -106,6 +103,13 @@ namespace phui
    void ListBox::add(const std::string& text)
    {
       mItems.push_back(text);
+   }
+
+   void ListBox::add(const std::vector<std::string>& items)
+   {
+      for (size_t i = 0; i < items.size(); ++i) {
+         add(items[i]);
+      }
    }
 
    void ListBox::remove(unsigned int idx)

@@ -10,11 +10,11 @@ namespace pyr {
 
     class MenuState;
     
-    class MenuScreen : public RootWidget {
+    class MenuScreen : public phui::RootWidget {
     public:
         MenuScreen(MenuState* state)
-            : RootWidget(Application::instance().getWidth(),
-                         Application::instance().getHeight())
+            : phui::RootWidget(Application::instance().getWidth(),
+                               Application::instance().getHeight())
         {
             _state = state;
         }

@@ -35,8 +35,8 @@ namespace pyr {
             char buffer[1024];
             int read = fread(buffer, 1, BUFFER_SIZE, file);
             
-            XML_Status status = XML_Parse(_parser, buffer, read, 0);
-            if (status != XML_STATUS_OK) {
+            int status = XML_Parse(_parser, buffer, read, 0);
+            if (status == 0) {
                 fclose(file);
                 return finish();
             }
@@ -46,8 +46,8 @@ namespace pyr {
             }
         }
         
-        XML_Status status = XML_Parse(_parser, 0, 0, 1);
-        if (status != XML_STATUS_OK) {
+        int status = XML_Parse(_parser, 0, 0, 1);
+        if (status == 0) {
             fclose(file);
             return finish();
         }

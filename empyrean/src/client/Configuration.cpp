@@ -19,7 +19,7 @@ namespace pyr {
     }
     
     int Configuration::getPort() {
-        return 8765;
+        return 14702;
     }
     
     std::string Configuration::getUsername() {
