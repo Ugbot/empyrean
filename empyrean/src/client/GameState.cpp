@@ -2,6 +2,7 @@
 #include "GameState.h"
 #include "Input.h"
 #include "InputManager.h"
+#include "MenuState.h"
 
 
 namespace pyr {
@@ -15,10 +16,11 @@ namespace pyr {
         _rotation = 0;
     }
     
-    void GameState::draw(float /*fade*/) {
+    void GameState::draw(float fade) {
         glDisable(GL_TEXTURE_2D);
         glDisable(GL_BLEND);
         
+        glClearColor(0, 0, 0, 0);
         glClear(GL_COLOR_BUFFER_BIT);
         
         glMatrixMode(GL_PROJECTION);
@@ -30,9 +32,12 @@ namespace pyr {
         
         float x = _inputX->getValue() * 4;
         float y = _inputY->getValue() * 3;
-        
         glTranslatef(x, y, 0);
+        
         glRotatef(_rotation, 0, 0, 1);
+        
+        float scale = fade * 10 + 1;
+        glScalef(scale, scale, scale);
         
         glBegin(GL_QUADS);
         glColor3f(1, 0, 0); glVertex2f(-0.5f, -0.5f);
@@ -48,7 +53,7 @@ namespace pyr {
         _rotation -= _inputRight->getValue() * dt * 50;
         
         if (_inputQuit->getValue() >= 0.50f) {
-            quit();
+            invokeTimedTransition<MenuState>(1);
         }
     }
     

@@ -2,6 +2,7 @@
 #include <memory>
 #include <stdexcept>
 #include <corona.h>
+#include "ResourceManager.h"
 #include "Texture.h"
 #include "Types.h"
 #include "Utility.h"
@@ -10,7 +11,16 @@ using namespace corona;
 
 namespace pyr {
 
-    int GetNextPowerOf2(int n) {
+    template<>
+    class CachePolicy<Texture*> {
+    public:
+        static Texture* create(const std::string& id) {
+            return new Texture(id);
+        }
+    };
+
+
+    int getNextPowerOf2(int n) {
         int i = 1;
         while (i < n) {
             i *= 2;
@@ -19,8 +29,13 @@ namespace pyr {
     }
 
 
-    inline void ThrowTextureError(const std::string& error) {
+    inline void throwTextureError(const std::string& error) {
         throw std::runtime_error(error.c_str());
+    }
+    
+    
+    Texture* Texture::create(const std::string& id) {
+        return ResourceManager::instance().get<Texture*>(id);
     }
 
 
@@ -28,7 +43,7 @@ namespace pyr {
         ScopedPtr<Image> image(
             OpenImage(filename.c_str(), FF_AUTODETECT, PF_R8G8B8A8));
         if (!image) {
-            ThrowTextureError("Could not load image '" + filename + "'");
+            throwTextureError("Could not load image '" + filename + "'");
         }
       
         // remember the actual size of the image so we know how much of the
@@ -39,8 +54,8 @@ namespace pyr {
 
         // allocate power of two buffer to store actual texture memory
         // and zero it
-        int tex_width  = GetNextPowerOf2(real_width);
-        int tex_height = GetNextPowerOf2(real_height);
+        int tex_width  = getNextPowerOf2(real_width);
+        int tex_height = getNextPowerOf2(real_height);
         ScopedArray<u32> buffer(new u32[tex_width * tex_height]);
         memset(buffer.get(), 0, tex_width * tex_height * sizeof(u32));
 

@@ -19,7 +19,7 @@ namespace pyr {
         void onMousePress(Uint8 button, bool down, int x, int y);
         
     private:
-        ScopedPtr<Texture> _image;  
+        Texture* _image;  
     };
     
 }

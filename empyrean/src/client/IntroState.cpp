@@ -7,14 +7,14 @@
 namespace pyr {
 
     IntroState::IntroState() {
+        _image = Texture::create("images/intro.png");
+    }
+
+    void IntroState::draw(float fade) {
         glEnable(GL_TEXTURE_2D);
         glEnable(GL_BLEND);
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     
-        _image = new Texture("images/intro.png");
-    }
-
-    void IntroState::draw(float fade) {
         glMatrixMode(GL_PROJECTION);
         glLoadIdentity();
         gluOrtho2D(0, 1, 1, 0);
