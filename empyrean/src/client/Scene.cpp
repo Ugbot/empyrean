@@ -32,6 +32,7 @@ namespace pyr {
             focusY = _focus->getPos()[1];
         }
 
+        glEnable(GL_NORMALIZE);
         glDisable(GL_DEPTH_TEST);
         glDisable(GL_BLEND);
 
@@ -70,7 +71,13 @@ namespace pyr {
 
         glEnable(GL_LIGHT0);
         float pos0[] = {1, 1, 1, 0};
+        float specular0[] = {0, 0, 0, 0};
+        float diffuse0[] =  {0.4f, 0.8f, 1.0f, 1.0f};
+        float ambient0[] =  {0, 0, 0, 0};
         glLightfv(GL_LIGHT0, GL_POSITION, pos0);
+        glLightfv(GL_LIGHT0, GL_SPECULAR, specular0);
+        glLightfv(GL_LIGHT0, GL_DIFFUSE,  diffuse0);
+        glLightfv(GL_LIGHT0, GL_AMBIENT,  ambient0);
 
         if (_focus) {
             float pos[4] = {focusX, focusY + 2, 5, 1};
