@@ -28,7 +28,7 @@ int run() {
 
         elapsed += dt;
 
-        if (elapsed > 1000) {
+        if (elapsed > 1) {
             float rate = count / elapsed;
             cout << "Sending " << rate << " packets/second" << endl;
             count = 0;
