@@ -1,0 +1,38 @@
+Import('*')
+
+SystemDebug = Split("""
+    msvcp71d.dll
+    msvcr71d.dll
+""")
+
+SystemRelease = Split("""
+    msvcp71.dll
+    msvcr71.dll
+""")
+
+Both = Split("""
+    SDL.dll
+    corona.dll
+    gltext.dll
+    libexpat.dll
+    nspr4.dll
+""")
+
+Debug = Split("""
+    cal3d_d.dll
+""")
+
+Release = Split("""
+    cal3d.dll
+""")
+
+if env['DEBUG']:
+    Specific = Debug
+    SystemSpecific = SystemDebug
+else:
+    Specific = Release
+    SystemSpecific = SystemRelease
+
+target = env['TARGET']
+env.Install(target, Both + Specific)
+env.Install(target, [env.WhereIs(k) for k in SystemSpecific if k])

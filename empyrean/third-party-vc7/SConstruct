@@ -1,0 +1,12 @@
+import dumbdbm
+import os
+
+SConsignFile(dbm_module=dumbdbm)
+
+builds = [Dir('../vc7/bin/Debug'), Dir('../vc7/bin/Release')]
+debug  = [True, False]
+for b, d in zip(builds, debug):
+    Default(b)
+    env = Environment(ENV=os.environ, TARGET=b, DEBUG=d)
+    Export('env')
+    SConscript(dirs=['lib'])
