@@ -6,6 +6,7 @@
 #include "IntroState.h"
 #include "Profiler.h"
 #include "NSPRUtility.h"
+#include "Font.h"
 
 namespace pyr {
 

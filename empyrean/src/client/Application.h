@@ -3,13 +3,13 @@
 
 #include <SDL.h>
 
-#include "Font.h"
 #include "Utility.h"
 #include "FPSCounter.h"
 
 namespace pyr {
 
     class State;
+    class Font;
 
     /// Lazily-instantiated singleton class representing the game as a whole.
     class Application {
