@@ -16,7 +16,8 @@
 namespace pyr {
 
     void runClient(int argc, char* argv[]) {
-        PYR_PROFILE_BLOCK("main");
+        // Why bother?
+        //PYR_PROFILE_BLOCK("main");
 
         try {
             the<Log>().open(getStartDirectory(argc, argv) + "/client.log");
@@ -24,7 +25,7 @@ namespace pyr {
         catch (const LogFileOpenFailure&) {
             // Could not open log file.  That's okay, defer any problems until later.
         }
-        
+
         setStartDirectory(argc, argv);
 
         try {
@@ -44,12 +45,12 @@ namespace pyr {
         SDL_GL_SetAttribute(SDL_GL_BLUE_SIZE,    5);
         SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE,   16);
         SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
-        
+
         int mode = SDL_OPENGL | SDL_ANYFORMAT;
         if (the<Configuration>().fullscreen) {
             mode |= SDL_FULLSCREEN;
         }
-        
+
         /**
          * @note SDL does silly things when the created window is larger
          * than the desktop.
@@ -74,12 +75,12 @@ namespace pyr {
 
         SDL_WM_SetCaption("Empyrean", 0);
         SDL_ShowCursor(SDL_DISABLE);
-        
+
         pyr::Application& app = pyr::Application::instance();
-        
+
         // notify the app and the input manager of the window size
         app.resize(width, height);
-        
+
         float last_time = getNow();
         while (!app.shouldQuit()) {
             bool should_quit = false;
@@ -139,8 +140,10 @@ namespace pyr {
                 }
             }
             last_time = now;
+            
+            the<Profiler>().nextFrame();
         }
-        
+
         try {
             // Perhaps this should be saved right after changes, in case
             // the program crashes.
@@ -160,12 +163,9 @@ int main(int argc, char* argv[]) {
     PYR_BEGIN_EXCEPTION_TRAP()
 
         pyr::runClient(argc, argv);
-        pyr::Profiler::dump();
         return EXIT_SUCCESS;
-    
+
     PYR_END_EXCEPTION_TRAP()
-    
-    pyr::Profiler::dump();
     return EXIT_FAILURE;
 }
 
@@ -180,5 +180,5 @@ int main(int argc, char* argv[]) {
     int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
         return main(__argc, __argv);
     }
-    
+
 #endif

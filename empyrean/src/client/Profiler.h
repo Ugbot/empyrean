@@ -4,80 +4,119 @@
 #include <map>
 #include <stack>
 #include <string>
+#include "Singleton.h"
 
 namespace pyr {
+
+    struct ProfileData {
+        ProfileData() {
+            runCount = 0;
+            timeInChildren = 0;
+            timePlusChildren = 0;
+        }
+
+        float time() {
+            return timePlusChildren - timeInChildren;
+        }
+
+        int runCount;            ///< Number of complete executions of this block.
+        float timeInChildren;    ///< Time spent only in children blocks.
+        float timePlusChildren;  ///< Time spent in this block including children blocks.
+    };
+
+
+    struct ProfileBlock {
+        static const int REMEMBERED_FRAMES = 20;
+
+        void update(float dt) {
+            update(dt, total);
+            update(dt, lastFrames[0]);
+        }
+
+        void update(float dt, ProfileData& data) {
+            data.runCount += 1;
+            data.timePlusChildren += dt;
+        }
+
+        void updateParent(float dt) {
+            updateParent(dt, total);
+            updateParent(dt, lastFrames[0]);
+        }
+
+        void updateParent(float dt, ProfileData& data) {
+            data.timeInChildren += dt;
+        }
+
+        void nextFrame() {
+            for (int i = REMEMBERED_FRAMES - 1; i > 0; --i) {
+                lastFrames[i] = lastFrames[i - 1];
+            }
+            lastFrames[0] = ProfileData();
+        }
+
+        bool current;    ///< Are we currently in this block?
+        float entryTime; ///< The time this block was entered.
+
+        ProfileData total;
+        /// Circular buffer of remembered frames.  The first one is always the newest.
+        ProfileData lastFrames[REMEMBERED_FRAMES];
+    };
+
+
     /**
      * A Simple class for figuring out what's going on when, and for
-     * how long.
-     * 
-     * This is a bit goofy, but I'll try to explain anyway.  _lastTime
-     * is the time at which the last Process transition occured.  Any
-     * time a Profiler is created or destroyed, it's updated.  When a
-     * new profiler is created, the old Process's time is updated
-     * before it's reset. (time spent in that process, not child
-     * Processes) When all the child states are done, and the Profiler
-     * is being destroyed, it holds the time at which the last child
-     * process terminated, (so once more, we get the time spent in the
-     * process, and not its children)
-     *
-     * _lastTime is much simpler.  It holds the time the Profiler was
-     * born at.  So, when the Profiler is destroyed, we know how much
-     * time was spent in the Process, as well as all child processes
-     * spawned.
-     *
-     * _totalTime is the easiest.  Before we nuke the value of
-     * _lastTime, we add it into _totalTime.
+     * how long.  Use PYR_PROFILE_BLOCK(name) instead of this class directly.
      *
      * @note  This class is not threadsafe.  Do not use it in different
      *        threads.
      */
     class Profiler {
-    public:
-        struct Process {
-            Process() {
-                time = 0;
-                timePlusChildren = 0;
-            }
-        
-            /// Time spent in this process, in seconds.
-            float time;
-            
-            /// Time spent in this process, and in processes spawned by it.
-            float timePlusChildren;
-        };
+        PYR_DECLARE_SINGLETON(Profiler)
 
-        typedef std::map<std::string, Process> ProcessMap;
-
-        Profiler(const std::string& name);
+        Profiler();
         ~Profiler();
 
-        /// Accessor for gathered profiling information.
-        static const ProcessMap& getProfileInfo();
+    public:
+        typedef std::map<std::string, ProfileBlock*> BlockMap;
 
-        /// Returns the total number of seconds we've been profiling things.
-        static float getTotalTime();
+        const BlockMap& getBlockMap() const {
+            return _blocks;
+        }
 
-        /// Dumps the profiling information to a file named profile.html
-        static void dump();
+        float getTotalTime() const {
+            return _totalTime;
+        }
+
+        void beginBlock(const std::string& name);
+        void endBlock();
+
+        void nextFrame();
 
     private:
-        /// The process we're tracking right now.
-        Process* _proc;
-        
-        /// The time at which this object was created.
-        float _startTime;
+        /// Total time spent profiling.
+        float _totalTime;
 
-        /// Time since the last process transition
-        static float _lastTime;
+        /// Set of profiled blocks and their names.
+        BlockMap _blocks;
         
-        /// Total number of seconds elapsed with profiling on
-        static float _totalTime;
-        
-        /// Tallied up times for all started processes.
-        static ProcessMap _processes;
-        
-        /// "call stack"
-        static std::stack<Process*> _procHistory;
+        std::stack<ProfileBlock*> _callStack;
+    };
+
+
+    /**
+     * ProfileScope marks a block of code as being profiled under the
+     * specified name.  Use the PYR_PROFILE_BLOCK(name) macro instead of
+     * ProfileScope directly.
+     */
+    class ProfileScope {
+    public:
+        ProfileScope(const std::string& name) {
+            the<Profiler>().beginBlock(name);
+        }
+
+        ~ProfileScope() {
+            the<Profiler>().endBlock();
+        }
     };
 
 };
@@ -87,9 +126,9 @@ namespace pyr {
 #endif
 
 #ifdef PYR_ENABLE_PROFILE
-#   define PYR_PROFILE_BLOCK(x) ::pyr::Profiler _profileitbaby(x)
+#   define PYR_PROFILE_BLOCK(name) pyr::ProfileScope __profileBlockObject(name)
 #else
-#   define PYR_PROFILE_BLOCK(x)
+#   define PYR_PROFILE_BLOCK(name)
 #endif
 
 #endif

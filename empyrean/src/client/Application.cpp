@@ -3,6 +3,7 @@
 #include <stdexcept>
 
 #include "Application.h"
+#include "GLUtility.h"
 #include "IntroState.h"
 #include "NSPRUtility.h"
 #include "OpenGL.h"
@@ -45,13 +46,13 @@ namespace pyr {
         _width  = width;
         _height = height;
     }
-    
+
     void Application::draw() {
         PYR_PROFILE_BLOCK("Application::draw");
-    
+
         if (_currentState) {
             _currentState->draw(0);
-            
+
             if (_currentState->isPointerVisible()) {
                 glMatrixMode(GL_PROJECTION);
                 glLoadIdentity();
@@ -59,7 +60,7 @@ namespace pyr {
 
                 glMatrixMode(GL_MODELVIEW);
                 glLoadIdentity();
-                
+
                 glColor4f(1, 1, 1, 1);
                 _pointer->drawRectangle(float(_lastX), float(_lastY));
             }
@@ -69,33 +70,31 @@ namespace pyr {
         }
 
         if (_showCPUInfo) {
-            PYR_PROFILE_BLOCK("Render");
+            PYR_PROFILE_BLOCK("displayProfile");
 
-            const Profiler::ProcessMap& pi = Profiler::getProfileInfo();
-            float totaltime = Profiler::getTotalTime();
+            setOrthoProjection(1024, 768);
 
-            glMatrixMode(GL_PROJECTION);
-            glLoadIdentity();
-            glOrtho(0, 1024, 768, 0, -1, 1);
-            
-            glMatrixMode(GL_MODELVIEW);
-            glLoadIdentity();
-            
             glEnable(GL_TEXTURE_2D);
-	    glEnable(GL_BLEND);
-	    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-	    glColor4f(1, 1, 1, 1);
+            glEnable(GL_BLEND);
+            glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+            glColor4f(1, 1, 1, 1);
+
+            const Profiler::BlockMap& bm = the<Profiler>().getBlockMap();
+            float totaltime              = the<Profiler>().getTotalTime();
+
             GLTEXT_STREAM(_renderer) << "FPS: " << _fps.getFPS();
 
-            for (Profiler::ProcessMap::const_iterator iter = pi.begin(); iter != pi.end(); iter++) {
+            for (Profiler::BlockMap::const_iterator iter = bm.begin(); iter != bm.end(); ++iter) {
                 glTranslatef(0,24,0);
-                int i = int(iter->second.time / totaltime * 100);
+                int i = int(iter->second->total.time() / totaltime * 100);
                 GLTEXT_STREAM(_renderer) << iter->first << ": " << i << "%";
             }
         }
     }
-    
+
     void Application::update(float dt) {
+        PYR_PROFILE_BLOCK("Application::update");
+
         if (_currentState) {
             _currentState->update(dt);
         }
@@ -114,7 +113,7 @@ namespace pyr {
 
         _fps.update(dt);
     }
-    
+
     void Application::onKeyPress(SDLKey key, bool down) {
         if (down && key == SDLK_F1) {
             _showCPUInfo = !_showCPUInfo;

@@ -4,71 +4,56 @@
 #include "NSPRUtility.h"
 
 namespace pyr {
-    using std::map;
-    using std::stack;
-    using std::string;
-    using std::ofstream;
-    using std::endl;
 
-    // Static things.
-    float                          Profiler::_lastTime;
-    float                          Profiler::_totalTime;
-    Profiler::ProcessMap           Profiler::_processes;
-    stack<Profiler::Process*>      Profiler::_procHistory;
+    PYR_DEFINE_SINGLETON(Profiler)
     
-    Profiler::Profiler(const string& name) {
-        float now = getNow();
-
-        if (_procHistory.empty()) {
-            _lastTime = now;
-        } else {
-            _procHistory.top()->time += now - _lastTime;
-            _totalTime += now - _lastTime;
-            _lastTime = now;
-        }
-
-        _proc = &_processes[name];
-        _startTime = now;
-
-        _procHistory.push(_proc);
+    Profiler::Profiler() {
     }
 
     Profiler::~Profiler() {
-        float now = getNow();
-
-        float t = now - _lastTime;
-        float tps = now - _startTime;
-        _proc->time += t;
-        _proc->timePlusChildren += tps;
-        _procHistory.pop();
-
-        _totalTime += now - _lastTime;
-        _lastTime = now;
-    }
-
-    const Profiler::ProcessMap& Profiler::getProfileInfo() {
-        return _processes;
-    }
-
-    float Profiler::getTotalTime() {
-        return _totalTime;
-    }
-
-    void Profiler::dump() {
-        if (!_totalTime)    // hack to evade division by zero.  Besides, if _totalTime is zero, then there's nothing to report anyway.
-            return;
-
-        ofstream file("profile.html");
-        
-        file << "<table border=1><tr><th>Process</th><th>Time</th><th>%</th><th>Time+children</th><th>%</th></tr>" << endl;
-        for (ProcessMap::iterator i = _processes.begin(); 
-            i!=_processes.end(); i++)
-        {
-            file << "<tr><td>" << i->first << "</td><td>" << i->second.time << "</td><td>" << int(i->second.time*100/_totalTime) << "</td><td>" <<
-                i->second.timePlusChildren << "</td><td>" << int(i->second.timePlusChildren*100/_totalTime) << "</tr>" << endl;
+        for (BlockMap::iterator i = _blocks.begin(); i != _blocks.end(); ++i) {
+            delete i->second;
         }
-        file << "<tr><td>Total</td><td colspan=3>" << _totalTime << "</td><td>100</td></tr></table>" << endl;
+        _blocks.clear();
+    }
 
-        file.close();
+    void Profiler::beginBlock(const std::string& name) {
+        ProfileBlock* block = _blocks[name];
+        if (!block) {
+            block = new ProfileBlock;
+            _blocks[name] = block;
+        }
+
+        PYR_ASSERT(!block->current, "Block can't be profiled recursively.");
+
+        block->current   = true;
+        block->entryTime = getNow();
+        _callStack.push(block);
+    }
+
+    void Profiler::endBlock() {
+        PYR_ASSERT(!_callStack.empty(), "endBlock() called when call stack is empty.");
+
+        ProfileBlock* block = _callStack.top();
+        _callStack.pop();
+        PYR_ASSERT(block->current, "Can't end block that isn't started.");
+
+        float dt = getNow() - block->entryTime;
+        if (dt > 0) { // ignore timer wraparound
+            _totalTime += dt;
+            block->update(dt);
+            
+            // If call stack isn't empty, update parent with time in children.
+            if (!_callStack.empty()) {
+                _callStack.top()->updateParent(dt);
+            }
+        }
+        block->current = false;
+    }
+    
+    void Profiler::nextFrame() {
+        for (BlockMap::iterator i = _blocks.begin(); i != _blocks.end(); ++i) {
+            i->second->nextFrame();
+        }
     }
 };
