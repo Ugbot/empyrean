@@ -59,6 +59,12 @@ if env.subst('$CXX') == 'cl':
     else:
         env.Append(CXXFLAGS=['/MD'])
 
+# If using GCC, deal with ld O(n^2) algorithm.
+if env['CXX'][:3] == 'g++' and env.WhereIs('objcopy'):
+    objcopy = 'objcopy --set-section-flags .debug_str=contents,debug $TARGET'
+    env['CXXCOM']   = [env['CXXCOM'],   objcopy]
+    env['SHCXXCOM'] = [env['SHCXXCOM'], objcopy]
+
 # Process build options.
 if env.get('dbg'):
     env.Append(CCFLAGS = ['-g'], CPPDEFINES=['DEBUG'])
