@@ -15,6 +15,6 @@ Ks  0.9000 0.9000 0.9000
 d  1.0000
 Ns  0.0000
 illum 2
-map_Kd Mountains.jpg
+map_Kd -o 0.04 0.25 0 -s 2 1 1 Mountains.jpg
 #
 # EOF

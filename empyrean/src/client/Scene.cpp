@@ -15,9 +15,9 @@ namespace pyr {
 
     Scene::Scene() {
         _backdrop = Texture::create("images/stars.tga");
-        _map = loadMap("maps/map3.obj");
+        _map = loadMap("maps/map2.obj");
         if (!_map) {
-            throw std::runtime_error("Loading maps/map3.obj failed");
+            throw std::runtime_error("Loading maps/map2.obj failed");
         }
     }
     
