@@ -20,10 +20,11 @@ namespace pyr {
             Texture* texture = Texture::create("cutscene/" + images[i]);
             _images.push_back(texture);
         }
-        
+
     }
 
     void CutSceneState::update(float dt) {
+        _fade = std::min(1.0f, _fade + dt);
     }
 
     void CutSceneState::draw(float fade) {
@@ -31,9 +32,17 @@ namespace pyr {
 
         glDisable(GL_DEPTH_TEST);
         glEnable(GL_TEXTURE_2D);
-        glColor3f(1, 1, 1);
+        glEnable(GL_BLEND);
+        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
         if (_current <= _images.size()) {
+            glColor4f(1, 1, 1, 1);
+            if (_current > 0) {
+                _images[_current - 1]->drawRectangle(0, 0, 1, 1);
+            } else {
+                glClear(GL_COLOR_BUFFER_BIT);
+            }
+            glColor4f(1, 1, 1, _fade);
             _images[_current]->drawRectangle(0, 0, 1, 1);
         }
     }
@@ -57,6 +66,7 @@ namespace pyr {
     }
 
     void CutSceneState::next() {
+        _fade = 0;
         if (++_current >= _images.size()) {
             invokeTransition<GameState>();
         }

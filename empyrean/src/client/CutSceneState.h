@@ -25,6 +25,7 @@ namespace pyr {
 
         std::vector<Texture*> _images;
         Zeroed<size_t> _current;
+        Zeroed<float> _fade;
     };
 
 }
