@@ -20,7 +20,7 @@
 				Name="VCCLCompilerTool"
 				Optimization="0"
 				AdditionalIncludeDirectories="../../third-party-vc7/include"
-				PreprocessorDefinitions="WIN32;WIN32_LEAN_AND_MEAN;_DEBUG;_LIB;NOMINMAX"
+				PreprocessorDefinitions="WIN32;WIN32_LEAN_AND_MEAN;_DEBUG;_LIB;NOMINMAX;BOOST_PYTHON_STATIC_LIB;BOOST_PYTHON_STATIC_MODULE"
 				GeneratePreprocessedFile="0"
 				MinimalRebuild="TRUE"
 				BasicRuntimeChecks="3"
@@ -67,7 +67,7 @@
 				InlineFunctionExpansion="1"
 				OmitFramePointers="TRUE"
 				AdditionalIncludeDirectories="../../third-party-vc7/include"
-				PreprocessorDefinitions="WIN32;WIN32_LEAN_AND_MEAN;NDEBUG;_LIB;NOMINMAX"
+				PreprocessorDefinitions="WIN32;WIN32_LEAN_AND_MEAN;NDEBUG;_LIB;NOMINMAX;BOOST_PYTHON_STATIC_LIB;BOOST_PYTHON_STATIC_MODULE"
 				GeneratePreprocessedFile="0"
 				StringPooling="TRUE"
 				RuntimeLibrary="2"
@@ -327,6 +327,12 @@
 			</File>
 			<File
 				RelativePath="..\..\src\base\Profiler.h">
+			</File>
+			<File
+				RelativePath="..\..\src\base\PythonBehavior.cpp">
+			</File>
+			<File
+				RelativePath="..\..\src\base\PythonBehavior.h">
 			</File>
 			<File
 				RelativePath="..\..\src\base\PythonBindings.cpp">

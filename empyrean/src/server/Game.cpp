@@ -358,7 +358,6 @@ namespace pyr {
         for (size_t i=0; i < entitiesToClean.size(); i++) {
             _idGenerator.release(entitiesToClean[i]->getID());
             removeEntity(entitiesToClean[i]);
-            delete entitiesToClean[i];
             entitiesToClean[i] = 0;
         }
     }

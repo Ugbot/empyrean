@@ -20,7 +20,7 @@
 				Name="VCCLCompilerTool"
 				Optimization="0"
 				AdditionalIncludeDirectories="../../third-party-vc7/include,../../src/base"
-				PreprocessorDefinitions="_CONSOLE;WIN32;WIN32_LEAN_AND_MEAN;_DEBUG;NOMINMAX"
+				PreprocessorDefinitions="_CONSOLE;WIN32;WIN32_LEAN_AND_MEAN;_DEBUG;NOMINMAX;BOOST_PYTHON_STATIC_LIB;BOOST_PYTHON_STATIC_MODULE"
 				GeneratePreprocessedFile="0"
 				MinimalRebuild="TRUE"
 				BasicRuntimeChecks="3"
@@ -35,7 +35,7 @@
 				Name="VCCustomBuildTool"/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="../base/Debug/base.lib nspr4.lib libexpat.lib wxmswd.lib comctl32.lib rpcrt4.lib ws2_32.lib tiffd.lib jpegd.lib pngd.lib zlibd.lib"
+				AdditionalDependencies="../base/Debug/base.lib nspr4.lib libexpat.lib wxmswd.lib comctl32.lib rpcrt4.lib ws2_32.lib tiffd.lib jpegd.lib pngd.lib zlibd.lib libboost_python-vc71-mt-gd.lib"
 				OutputFile="../bin/$(OutDir)/server.exe"
 				LinkIncremental="2"
 				AdditionalLibraryDirectories="../../third-party-vc7/lib"
@@ -76,7 +76,7 @@
 				InlineFunctionExpansion="1"
 				OmitFramePointers="TRUE"
 				AdditionalIncludeDirectories="../../third-party-vc7/include,../../src/base"
-				PreprocessorDefinitions="_CONSOLE;WIN32;WIN32_LEAN_AND_MEAN;NDEBUG;NOMINMAX"
+				PreprocessorDefinitions="_CONSOLE;WIN32;WIN32_LEAN_AND_MEAN;NDEBUG;NOMINMAX;BOOST_PYTHON_STATIC_LIB;BOOST_PYTHON_STATIC_MODULE"
 				GeneratePreprocessedFile="0"
 				StringPooling="TRUE"
 				RuntimeLibrary="2"
@@ -91,7 +91,7 @@
 				Name="VCCustomBuildTool"/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="../base/Release/base.lib nspr4.lib libexpat.lib wxmsw.lib comctl32.lib rpcrt4.lib ws2_32.lib png.lib tiff.lib jpeg.lib zlib.lib"
+				AdditionalDependencies="../base/Release/base.lib nspr4.lib libexpat.lib wxmsw.lib comctl32.lib rpcrt4.lib ws2_32.lib png.lib tiff.lib jpeg.lib zlib.lib libboost_python-vc71-mt.lib"
 				OutputFile="../bin/$(OutDir)/server.exe"
 				LinkIncremental="1"
 				AdditionalLibraryDirectories="../../third-party-vc7/lib"
