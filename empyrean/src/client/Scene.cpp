@@ -77,6 +77,8 @@ namespace pyr {
             glLightfv(GL_LIGHT1, GL_AMBIENT, ambient);
         }
 
+        drawMap();
+
         EntityMap::iterator itr = _entities.begin();
         for (; itr != _entities.end(); ++itr) {
             ClientEntityPtr e = itr->second;
@@ -85,8 +87,6 @@ namespace pyr {
             e->draw(rend);
             glPopMatrix();
         }
-
-        drawMap();
 
         glDisable(GL_LIGHTING);
         glDisable(GL_LIGHT0);
