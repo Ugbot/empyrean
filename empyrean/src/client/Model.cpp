@@ -7,12 +7,14 @@
 
 #include <cal3d/cal3d.h>
 
+#include "Log.h"
 #include "Model.h"
 #include "Profiler.h"
 #include "ResourceManager.h"
 #include "ScopedArray.h"
+#include "ScopedPtr.h"
 #include "Types.h"
-#include "Log.h"
+#include "XMLParser.h"
 
 namespace pyr {
 
@@ -68,13 +70,54 @@ namespace pyr {
             _coreModel.destroy();
         }
 
-        void loadConfigFile(const string& fname, CalCoreModel& model) {
-            string path = getPath(fname);
+        void loadConfigFile(const string& filename, CalCoreModel& model) {
+            if (getExtension(filename) == ".cfg") {
+                return loadOldConfigFile(filename, model);
+            }
 
-            PYR_LOG() << "Model Load Path " << path;
+            ScopedPtr<XMLNode> modelRoot;
+            try {
+                modelRoot = parseXMLFile(filename);
+                if (!modelRoot) {
+                    throw LoadModelError("Couldn't parse " + filename);
+                }
+            }
+            catch (const XMLParseError& error) {
+                throw LoadModelError("Error parsing " + filename + ": " + error.what());
+            }
 
+            if (modelRoot->getName() != "model") {
+                throw LoadModelError("Model configuration file is invalid (root name should be 'model')");
+            }
+
+            _scale = float(atof(modelRoot->getAttr("scale", "1").c_str()));
+
+            string skeleton;
+            vector<string> animations;
+            vector<string> meshes;
+            vector<string> materials;
+
+            for (size_t i = 0; i < modelRoot->getChildCount(); ++i) {
+                XMLNode* child = modelRoot->getChild(i);
+                if (child->getName() == "skeleton") {
+                    skeleton = child->getAttr("file");
+                } else if (child->getName() == "animation") {
+                    // Utilize name in some way.
+                    animations.push_back(child->getAttr("file"));
+                } else if (child->getName() == "mesh") {
+                    meshes.push_back(child->getAttr("file"));
+                } else if (child->getName() == "material") {
+                    materials.push_back(child->getAttr("file"));
+                } else {
+                    PYR_LOG() << "Unknown child node of model: " << child->getName();
+                }
+            }
+
+            doLoad(filename, skeleton, animations, meshes, materials, model);
+        }
+
+        void loadOldConfigFile(const string& fname, CalCoreModel& model) {
             ifstream file(fname.c_str());
-            std::string c;
 
             string skeleton;
             vector<string> animations;
@@ -83,6 +126,7 @@ namespace pyr {
 
             int curline=1;
             while (file) {
+                std::string c;
                 std::getline(file, c);
                 vector<string> line = splitString(c, " \r\n\t=");
 
@@ -103,13 +147,26 @@ namespace pyr {
                     PYR_LOG() << "UNKNOWN " << line[0];
                     std::ostringstream ss;
                     ss << "Unkown token \"" << line[0] << "\" on line " << curline << " in " << fname;
-                    throw std::runtime_error(ss.str().c_str());
+                    throw LoadModelError(ss.str().c_str());
                 }
 
                 curline++;
             }
 
             file.close();
+
+            doLoad(fname, skeleton, animations, meshes, materials, model);
+        }
+
+        void doLoad(const string& filename,
+                    const string& skeleton,
+                    const vector<string>& animations,
+                    const vector<string>& meshes,
+                    const vector<string>& materials,
+                    CalCoreModel& model)
+        {
+            string path = getPath(filename);
+            PYR_LOG() << "Model Load Path " << path;
 
             // Actually load things, now that the config file has been consumed.
             struct CalException {};
@@ -137,8 +194,8 @@ namespace pyr {
             }
             catch (const CalException&) {
                 std::ostringstream ss;
-                ss << "CoreModel::loadConfigFile " << fname << "(" << curline << "): " << CalError::getLastErrorText() << std::endl;
-                throw std::runtime_error(ss.str().c_str());
+                ss << "CoreModel::loadConfigFile " << filename << ": " <<  CalError::getLastErrorText() << std::endl;
+                throw LoadModelError(ss.str().c_str());
             }
 
             // Load textures

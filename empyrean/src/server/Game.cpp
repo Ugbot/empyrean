@@ -86,7 +86,7 @@ namespace pyr {
             }
         }
     }
-    
+
     EntityAddedPacket* Game::buildEntityAddedPacket(ServerEntity* entity) {
         return new EntityAddedPacket(
             entity->getID(),
@@ -101,7 +101,7 @@ namespace pyr {
         ServerEntity* entity = new ServerEntity(
             _idGenerator.reserve(),
             pb,
-            new ServerAppearance("cal3d", "models/paladin/paladin.cfg"));
+            new ServerAppearance("cal3d", "models/paladin/paladin.cal3d"));
         entity->setPos(_startPosition);
         // Hardcoded for now.  Hardcoded in the client as well.
         float width  = 0.3f;

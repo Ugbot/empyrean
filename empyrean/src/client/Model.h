@@ -2,6 +2,7 @@
 #define PYR_MODEL_H
 
 #include <cal3d/cal3d.h>
+#include "Error.h"
 #include "OpenGL.h"
 #include "RefPtr.h"
 
@@ -13,6 +14,8 @@ namespace pyr {
     struct CalTexture {
         GLuint tex;
     };
+
+    PYR_DEFINE_RUNTIME_ERROR(LoadModelError);
 
     /** Encapsulates a 3D model.
      *

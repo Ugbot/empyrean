@@ -1,6 +1,7 @@
 Import('*')
 
 Install(env, Split("""
+    paladin.cal3d
     paladin.cfg
     paladin.csf
     paladin_arm.raw

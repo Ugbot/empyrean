@@ -27,7 +27,7 @@ namespace pyr {
         }
         
         void setName(const std::string& name) { _name = name; }
-        std::string getName() const           { return _name; }
+        const std::string& getName() const    { return _name; }
         
         bool isText() const         { return _isText; }
         void setIsText(bool isText) { _isText = isText; }
@@ -42,8 +42,8 @@ namespace pyr {
         bool hasAttr(const std::string& key) {
             return _attrs.count(key) > 0;
         }
-        std::string getAttr(const std::string& key) {
-            return (hasAttr(key) ? _attrs[key] : "");
+        std::string getAttr(const std::string& key, const std::string& def = "") {
+            return (hasAttr(key) ? _attrs[key] : def);
         }
         
         void addChild(XMLNode* child)     { _children.push_back(child); }
