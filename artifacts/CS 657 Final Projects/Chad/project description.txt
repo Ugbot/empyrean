@@ -13,7 +13,7 @@ I'm not totally sure how this is going to work out, but I think I'll have to spe
 
 Particle System
 --
-
+											
 This will be a basic integration of particle effects into the game system.  Nothing as fancy as ParticleLib, although I will follow the same basic design.  There are two situations where particle systems will be used.  The first is a constant effect, such as a wire in a cave permanently emitting sparks.  This will be a type of entity in the scene and will either be loaded with the map or created by the server using the AddEntity/RemoveEntity protocol.  The other type of effect will be transient, such as a sword slicing through flesh and flinging blood everywhere.  This will be created by the server and have a finite lifetime, at which point it will just go away.
 
 The difference between this particle system and the one in the project is that this one will collide with the geometry in an OBJ file.  I'll have to generate a BSP tree from the geometry and optimize it for ray and segment intersections.
