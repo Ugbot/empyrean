@@ -28,7 +28,8 @@ namespace pyr {
 
         _renderer = new CellShadeRenderer;
         _renderer->useVertexArrays(true);
-        _testModel = Model::create("models/paladin/paladin.cfg");
+        _testModel = Model::create("models/Paladin/Paladin.cfg");
+        //_testModel = Model::create("models/Walk1/walk1.cfg");
 
         _backdropTex = Texture::create("images/backdrop.jpg");
 
@@ -47,7 +48,7 @@ namespace pyr {
         _entities.push_back(_particles);
         _entities.push_back(_emitter);
         
-        ServerConnection::instance().connectToServer("localhost");
+        //ServerConnection::instance().connectToServer("localhost");
     }
 
     GameState::~GameState() {

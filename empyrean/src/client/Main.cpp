@@ -107,7 +107,7 @@ namespace pyr {
             // ignore wraparound
             if (now >= last_time) {
                 float dt = now - last_time;
-                
+
                 app.update(dt);
                 app.draw();
                 {
@@ -116,10 +116,12 @@ namespace pyr {
                 }
 
                 counter.update(dt);
-                
-                char str[80];
-                sprintf(str, "%d", counter.getFPS());
-                SDL_WM_SetCaption(str, 0);
+
+                if (counter.changed()) {
+                    char str[80];
+                    sprintf(str, "Empyrean - %dfps", counter.getFPS());
+                    SDL_WM_SetCaption(str, 0);
+                }
             }
             last_time = now;
         }
