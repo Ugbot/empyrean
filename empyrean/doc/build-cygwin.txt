@@ -3,11 +3,12 @@ How to Build Empyrean using SCons and Cygwin
 --
 
 First, you need cygwin <http://www.cygwin.com/>.  Make sure you have
-the following packages: gcc, libpng, libjpeg, and freetype.  You may
-need to go back later and add other packages as you find you need
-them.  Just run the installer again and select new packages.  (In
-fact, I like to keep a cygwin-setup directory on my C: drive that has
-the installer and packages I have already downloaded.)
+the following packages: gcc, python, libpng, jpeg, and freetype (may
+come with X11).  You may need to go back later and add other packages
+as you find you need them.  Just run the installer again and select
+new packages.  (In fact, I like to keep a cygwin-setup directory on my
+C: drive that has the installer and packages I have already
+downloaded.)
 
 Then, get SCons <http://www.scons.org/>.  Installation is pretty
 straightforward:  untar, then run 'python setup.py install'
