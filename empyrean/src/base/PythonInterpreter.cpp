@@ -1,10 +1,16 @@
 #include "IncludePython.h"
+#include "Log.h"
 #include "PythonBindings.h"
 #include "PythonInterpreter.h"
+using namespace boost;
 using namespace boost::python;
 
 
 namespace pyr {
+
+    namespace {
+        Logger& _logger = Logger::get("pyr.PythonInterpreter");
+    }
 
     // We don't use Boost.Python in these because it might throw
     // an exception.
@@ -35,23 +41,10 @@ namespace pyr {
             Py_DECREF(value);
         }
         if (traceback) {
-            // Since we're using Boost.Python, don't let it throw exceptions
-            // here.
-            try {
-                boost::python::str StringIOName("StringIO");
-                object StringIOModule((handle<>(
-                    PyImport_Import( PyObject_Str(StringIOName.ptr()) )
-                )));
-                object StringIOClass(StringIOModule.attr("StringIO"));
-                object stringFile(StringIOClass());
-                PyTraceBack_Print(traceback, stringFile.ptr());
-                boost::python::str traceback_str(stringFile.attr("getvalue")());
+            std::string traceback_str;
+            if (the<PythonInterpreter>().printTraceBack(traceback, traceback_str)) {
                 message += "\n\n";
-                message += PyString_AsString(traceback_str.ptr());
-            }
-            catch (const std::exception&) {
-            }
-            catch (const error_already_set&) {
+                message += traceback_str;
             }
             Py_DECREF(traceback);
         }
@@ -75,7 +68,17 @@ namespace pyr {
 
     PythonInterpreter::PythonInterpreter() {
         Py_Initialize();
+
+        // Set sys.path / PYTHONPATH to empty so we can't import modules
+        // from the installed copy of Python, if it exists.
+        PySys_SetPath("");
+
         initpyr();
+
+        // Bind a custom object we need for traceback printing support.
+        class_< StringWriter, shared_ptr<StringWriter> >("StringWriter")
+            .def("write", &StringWriter::write)
+            ;
     }
 
     PythonInterpreter::~PythonInterpreter() {
@@ -104,6 +107,15 @@ namespace pyr {
 
             return object(module);
         })
+    }
+
+    bool PythonInterpreter::printTraceBack(PyObject* tb, std::string& result) {
+        shared_ptr<StringWriter> sw(new StringWriter);
+        object o(sw);
+        PyTraceBack_Print(tb, o.ptr());
+
+        result = sw->contents;
+        return true;
     }
 
 }

@@ -10,6 +10,6 @@ class MonsterBehavior(Behavior):
         # modify the entity
         entity.vel += Vec2f(0.01 * dt, 0)
         entity.pos += entity.vel * dt
-        
+
 def create():
     return MonsterBehavior()

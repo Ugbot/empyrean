@@ -175,6 +175,12 @@
 				RelativePath="..\..\src\client\Configuration.h">
 			</File>
 			<File
+				RelativePath="..\..\src\client\Console.cpp">
+			</File>
+			<File
+				RelativePath="..\..\src\client\Console.h">
+			</File>
+			<File
 				RelativePath="..\..\src\client\CutScene.cpp">
 			</File>
 			<File

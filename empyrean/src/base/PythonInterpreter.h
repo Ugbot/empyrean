@@ -58,7 +58,17 @@ namespace pyr {
         boost::python::object createModule(const std::string& contents,
                                            const std::string& filename);
 
+        bool printTraceBack(PyObject* tb, std::string& result);
+
     private:
+        struct StringWriter {
+            void write(const std::string& towrite) {
+                contents += towrite;
+            }
+
+            std::string contents;
+        };
+
         Zeroed<int> _moduleCount;
     };
 
