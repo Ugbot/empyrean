@@ -6,8 +6,9 @@
 
 namespace pyr {
 
-    IntroState::IntroState() {
-        _image = Texture::create("images/intro.png");
+    IntroState::IntroState() 
+        : _image(Texture::create("images/intro.png"))
+    {
     }
 
     void IntroState::draw(float fade) {
@@ -22,6 +23,7 @@ namespace pyr {
         glMatrixMode(GL_MODELVIEW);
         glLoadIdentity();
         
+        glClear(GL_COLOR_BUFFER_BIT);
         glColor4f(1, 1, 1, 1 - fade);
         _image->drawRectangle(0, 0, 1, 1);
     }

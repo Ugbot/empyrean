@@ -142,6 +142,9 @@
 				RelativePath="..\..\src\client\GameState.h">
 			</File>
 			<File
+				RelativePath="..\..\src\client\Image.h">
+			</File>
+			<File
 				RelativePath="..\..\src\client\Input.h">
 			</File>
 			<File
@@ -170,6 +173,18 @@
 			</File>
 			<File
 				RelativePath="..\..\src\client\Model.h">
+			</File>
+			<File
+				RelativePath="..\..\src\client\MultiImageTex.cpp">
+			</File>
+			<File
+				RelativePath="..\..\src\client\MultiImageTex.h">
+			</File>
+			<File
+				RelativePath="..\..\src\client\MultiTextureImage.cpp">
+			</File>
+			<File
+				RelativePath="..\..\src\client\MultiTextureImage.h">
 			</File>
 			<File
 				RelativePath="..\..\src\client\ParticleEmitter.cpp">
@@ -233,6 +248,12 @@
 			</File>
 			<File
 				RelativePath="..\..\src\client\Texture.h">
+			</File>
+			<File
+				RelativePath="..\..\src\client\TextureImage.cpp">
+			</File>
+			<File
+				RelativePath="..\..\src\client\TextureImage.h">
 			</File>
 			<File
 				RelativePath="..\..\src\client\extgl.c">

@@ -22,13 +22,6 @@ namespace pyr {
      */
     class Model {
     private:
-        /*
-         * These are pointers almost solely so that I don't have to #include
-         * cal3d.h in the header, which would not be good for compile times.
-         * (cal3d.h includes about 20 files of its own)  Of course, this means
-         * that you have to include it yourself in any source file that uses
-         * these classes, so maybe it's not worth it.  Time will tell.
-         */
         CoreModel* _coreModel;
         CalModel _model;
         // We'll probably want to store information on how this particular model

@@ -101,6 +101,15 @@
 				RelativePath="..\..\src\base\ByteBuffer.h">
 			</File>
 			<File
+				RelativePath="..\..\src\base\Canvas.cpp">
+			</File>
+			<File
+				RelativePath="..\..\src\base\Canvas.h">
+			</File>
+			<File
+				RelativePath="..\..\src\base\CanvasBlitter.h">
+			</File>
+			<File
 				RelativePath="..\..\src\base\CondVar.h">
 			</File>
 			<File
