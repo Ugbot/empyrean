@@ -53,7 +53,6 @@ namespace pyr {
                 _connection->definePacketHandler(this, &ServerConnection::handleLoginResponse);
                 _connection->definePacketHandler(this, &ServerConnection::handleLobby);
                 _connection->definePacketHandler(this, &ServerConnection::handleJoinGameResponse);
-                _connection->definePacketHandler(this, &ServerConnection::handleNewCharacterResponse);
                 _connection->definePacketHandler(this, &ServerConnection::handleSetPlayer);
                 _connection->definePacketHandler(this, &ServerConnection::handleEntityAdded);
                 _connection->definePacketHandler(this, &ServerConnection::handleEntityRemoved);
@@ -107,12 +106,6 @@ namespace pyr {
         return sendPacket(new JoinGamePacket(name, password, newGame ? 1 : 0));
     }
     
-    bool ServerConnection::newCharacter(const std::string& name) {
-        _hasNewCharacterResponse = false;
-        _newCharacterResponse = 0;
-        return sendPacket(new NewCharacterPacket(name));
-    }
-
     bool ServerConnection::sendEvent(const std::string& event) {
         return sendPacket(new PlayerEventPacket(event));
     }
@@ -162,11 +155,6 @@ namespace pyr {
     void ServerConnection::handleJoinGameResponse(Connection*, JoinGameResponsePacket* p) {
         _hasJoinGameResponse = true;
         _joinGameResponse = p->code();
-    }
-
-    void ServerConnection::handleNewCharacterResponse(Connection*, NewCharacterResponsePacket* p) {
-        _hasNewCharacterResponse = true;
-        _newCharacterResponse = p->code();
     }
 
     void ServerConnection::handleSetPlayer(Connection*, SetPlayerPacket* p) {

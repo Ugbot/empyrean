@@ -129,6 +129,18 @@
 			Name="files"
 			Filter="">
 			<File
+				RelativePath="..\..\src\server\Account.cpp">
+			</File>
+			<File
+				RelativePath="..\..\src\server\Account.h">
+			</File>
+			<File
+				RelativePath="..\..\src\server\Character.cpp">
+			</File>
+			<File
+				RelativePath="..\..\src\server\Character.h">
+			</File>
+			<File
 				RelativePath="..\..\src\server\Configuration.cpp">
 			</File>
 			<File

@@ -25,7 +25,6 @@ namespace pyr {
     class JoinGameResponsePacket;
     class LobbyPacket;
     class LoginResponsePacket;
-    class NewCharacterResponsePacket;
     class Packet;
     class ServerConnectionThread;
     class SetPlayerPacket;
@@ -53,9 +52,6 @@ namespace pyr {
         bool hasJoinGameResponse() { return _hasJoinGameResponse; }
         u16 getJoinGameResponse()  { return _joinGameResponse; }
 
-        bool hasNewCharacterResponse() { return _hasNewCharacterResponse; }
-        u16 getNewCharacterResponse()  { return _newCharacterResponse; }
-        
         /// valid if DISCONNECTED after beginConnecting()
         const std::string& getError();
         
@@ -70,7 +66,6 @@ namespace pyr {
         bool joinGame(const std::string& name,
                       const std::string& password,
                       bool newGame);
-        bool newCharacter(const std::string& name);
         bool sendEvent(const std::string& event);
 
     private:
@@ -85,7 +80,6 @@ namespace pyr {
         void handleLoginResponse(Connection*, LoginResponsePacket* p);
         void handleLobby(Connection*, LobbyPacket* p);
         void handleJoinGameResponse(Connection*, JoinGameResponsePacket* p);
-        void handleNewCharacterResponse(Connection*, NewCharacterResponsePacket* p);
         void handleSetPlayer(Connection*, SetPlayerPacket* p);
 
         void handleEntityAdded(Connection*, EntityAddedPacket* p);
@@ -108,9 +102,6 @@ namespace pyr {
         
         Inited<bool, false> _hasJoinGameResponse;
         Zeroed<u16> _joinGameResponse;
-        
-        Inited<bool, false> _hasNewCharacterResponse;
-        Zeroed<u16> _newCharacterResponse;
     };
 
 }

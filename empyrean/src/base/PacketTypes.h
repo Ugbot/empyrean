@@ -78,24 +78,6 @@ namespace pyr {
     #define PYR_JOIN_GAME_RESPONSE_PACKET(_)  \
         _(field)(u16, code)
         
-    // client -> server
-    #define PYR_NEW_CHARACTER_PACKET_NAME NewCharacterPacket
-    #define PYR_NEW_CHARACTER_PACKET(_) \
-        _(string)(24, name)
-        
-    // New Character Response codes
-    enum NewCharacterResponseCode {
-        NCR_SUCCESS,    // success
-        
-        NCR_INVALID_NAME,
-        NCR_ALREADY_TAKEN,
-    };
-        
-    // server -> client
-    #define PYR_NEW_CHARACTER_RESPONSE_PACKET_NAME NewCharacterResponsePacket
-    #define PYR_NEW_CHARACTER_RESPONSE_PACKET(_) \
-        _(field)(u16, code)
-        
     // Player Event codes
     //   "Begin Left"
     //   "End Left"
@@ -159,8 +141,6 @@ namespace pyr {
         _(PYR_LOBBY_PACKET)                     \
         _(PYR_JOIN_GAME_PACKET)                 \
         _(PYR_JOIN_GAME_RESPONSE_PACKET)        \
-        _(PYR_NEW_CHARACTER_PACKET)             \
-        _(PYR_NEW_CHARACTER_RESPONSE_PACKET)    \
         _(PYR_PLAYER_EVENT_PACKET)              \
         _(PYR_SET_PLAYER_PACKET)                \
         _(PYR_ENTITY_ADDED_PACKET)              \

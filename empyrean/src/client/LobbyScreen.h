@@ -21,13 +21,9 @@ namespace pyr {
             newGame->addListener(this, &LobbyScreen::onNewGame);
             newGame->setPositionAndSize(0, 100, 100, 100);
 
-            phui::ButtonPtr newChar = new phui::Button("New Character");
-            newChar->addListener(this, &LobbyScreen::onNewChar);
-            newChar->setPositionAndSize(0, 200, 100, 100);
-
             phui::ButtonPtr leave = new phui::Button("Leave Server");
             leave->addListener(this, &LobbyScreen::onQuit);
-            leave->setPositionAndSize(0, 300, 100, 100);
+            leave->setPositionAndSize(0, 200, 100, 100);
 
             _messages = new phui::ListBox();
             _messages->setPositionAndSize(100, 0, 924, 668);
@@ -41,7 +37,6 @@ namespace pyr {
             
             add(joinGame);
             add(newGame);
-            add(newChar);
             add(leave);
             add(_messages);
             add(_text);
@@ -60,10 +55,6 @@ namespace pyr {
 
         void onNewGame(const phui::ActionEvent&) {
             getState()->onLobbyNewGame();
-        }
-
-        void onNewChar(const phui::ActionEvent&) {
-            getState()->onLobbyNewChar();
         }
 
         void onQuit(const phui::ActionEvent&) {

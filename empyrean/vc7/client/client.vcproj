@@ -151,6 +151,9 @@
 				RelativePath="..\..\src\client\ClientAppearance.h">
 			</File>
 			<File
+				RelativePath="..\..\src\client\ClientEntity.cpp">
+			</File>
+			<File
 				RelativePath="..\..\src\client\ClientEntity.h">
 			</File>
 			<File
@@ -164,12 +167,6 @@
 			</File>
 			<File
 				RelativePath="..\..\src\client\FPSCounter.h">
-			</File>
-			<File
-				RelativePath="..\..\src\client\GameEntity.cpp">
-			</File>
-			<File
-				RelativePath="..\..\src\client\GameEntity.h">
 			</File>
 			<File
 				RelativePath="..\..\src\client\HUD.cpp">

@@ -1,6 +1,8 @@
 Import('env TOOLS')
 
 SOURCES = Split("""
+    Account.cpp
+    Character.cpp
     Configuration.cpp
     ConnectionHolder.cpp
     Database.cpp

@@ -51,7 +51,6 @@ namespace pyr {
         connection->definePacketHandler(this, &Server::handleLogin);
         connection->definePacketHandler(this, &Server::handleSay);
         connection->definePacketHandler(this, &Server::handleJoinGame);
-        connection->definePacketHandler(this, &Server::handleNewCharacter);
     }
 
     void Server::connectionRemoved(Connection* connection) {
@@ -182,33 +181,6 @@ namespace pyr {
 
                 giveConnection(c, game);
             }
-        }
-    }
-
-    void Server::handleNewCharacter(Connection* c, NewCharacterPacket* p) {
-        ConnectionData* cd = getData(c);
-
-        if (!cd->account) {
-            // ignore packet, must log in first
-            return;
-        }
-
-        std::string username = cd->account->getUsername();
-
-        if (p->name().empty()) {
-            c->sendPacket(new NewCharacterResponsePacket(NCR_INVALID_NAME));
-            PYR_SERVER_LOG() << italic(username) << " tried to create character with no name";
-            return;
-        }
-
-        CharacterPtr character = the<Database>().getCharacter(p->name());
-        if (character) {
-            c->sendPacket(new NewCharacterResponsePacket(NCR_ALREADY_TAKEN));
-            PYR_SERVER_LOG() << italic(username) << " tried to create character " << italic(p->name()) << ", but name was already taken";
-        } else {
-            the<Database>().addCharacter(new Character(p->name()));
-            c->sendPacket(new NewCharacterResponsePacket(NCR_SUCCESS));
-            PYR_SERVER_LOG() << italic(username) << " created character " << italic(p->name());
         }
     }
 

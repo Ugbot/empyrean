@@ -58,7 +58,7 @@ namespace pyr {
                 glVertexPointer(3, GL_FLOAT, 0, &verts[0][0]);
 
                 static float normals[30000][3];
-                int nNormals=r->getNormals(&normals[0][0]);
+                /*int nNormals=*/r->getNormals(&normals[0][0]);
 
 /*
                 if (cellshade) {

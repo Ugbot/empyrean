@@ -16,7 +16,6 @@ namespace pyr {
     class LoginScreen;
     class LoggingInScreen;
     class LobbyScreen;
-    class NewCharacterScreen;
     class NewGameScreen;
 
     class MenuState : public State {
@@ -56,7 +55,6 @@ namespace pyr {
         
         void onLobbyJoinGame();
         void onLobbyNewGame();
-        void onLobbyNewChar();
         void onLobbyQuit();
         void onLobbySay(const std::string& text);
         
@@ -70,9 +68,6 @@ namespace pyr {
         void onJoiningGameCancel();
         void onJoiningGameError(const std::string& error);
         
-        void onNewCharacterCreate(const std::string& name);
-        void onNewCharacterCancel();
-
     private:
         void createInterface();
         void createMainScreen();
@@ -88,7 +83,6 @@ namespace pyr {
         RefPtr<LoginScreen>        _loginScreen;
         RefPtr<LoggingInScreen>    _loggingInScreen;
         RefPtr<LobbyScreen>        _lobbyScreen;
-        RefPtr<NewCharacterScreen> _newCharacterScreen;
         RefPtr<NewGameScreen>      _newGameScreen;
 
         // For controlling menu with joystick
