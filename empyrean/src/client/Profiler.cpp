@@ -24,7 +24,7 @@ namespace pyr {
 
     float ProfileBlock::getAverageTime() const {
         float total = 0;
-        for (int i = 0; i < REMEMBERED_FRAMES; ++i) {
+        for (size_t i = 0; i < REMEMBERED_FRAMES; ++i) {
             total += lastFrames[i].time();
         }
         return total / REMEMBERED_FRAMES;
@@ -32,7 +32,7 @@ namespace pyr {
 
     float ProfileBlock::getAverageTotalTime() const {
         float total = 0;
-        for (int i = 0; i < REMEMBERED_FRAMES; ++i) {
+        for (size_t i = 0; i < REMEMBERED_FRAMES; ++i) {
             total += lastFrames[i].timePlusChildren;
         }
         return total / REMEMBERED_FRAMES;
