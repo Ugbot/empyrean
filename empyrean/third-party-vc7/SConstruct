@@ -14,3 +14,7 @@ for b, d in zip(builds, debug):
 Command(['include/boost/python.hpp', 'lib/libboost_python-vc71-mt-gd.lib',
          'lib/libboost_python-vc71-mt.lib'], 'boost-1.31.tbz',
         'tar xfvj $SOURCE')
+
+Command(['include/wx/wx.h', 'lib/wxmsw.lib', 'lib/wxmswd.lib'],
+        'wx-2.4.2.tbz',
+        'tar xfvj $SOURCE')

@@ -86,6 +86,9 @@ namespace pyr {
         operator       T&()       { return get(); }
         operator const T&() const { return get(); }
 
+              T* operator&()       { return &_value; }
+        const T* operator&() const { return &_value; }
+
               T& get()       { return _value; }
         const T& get() const { return _value; }
 
@@ -109,6 +112,9 @@ namespace pyr {
 
               T& operator->()       { return get(); }
         const T& operator->() const { return get(); }
+
+              T* operator&()       { return &_value; }
+        const T* operator&() const { return &_value; }
 
               T& get()       { return _value; }
         const T& get() const { return _value; }
