@@ -172,6 +172,7 @@ namespace pyr {
         _propertiesGrid->SetRowLabelSize(0);
         _propertiesGrid->SetColLabelSize(0);
 
+        split2->SetMinimumPaneSize(MINIMUM_PANE_SIZE);
         split2->SplitHorizontally(_mapTree, _propertiesGrid);
         
         _mapView = new MapView(_splitter, this);
