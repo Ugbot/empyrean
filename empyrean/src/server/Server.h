@@ -27,6 +27,8 @@ namespace pyr {
         void stop();
         
     private:
+        std::string getDatabaseFilename();
+    
         ServerFrame* _frame;
         ScopedPtr<Thread> _serverThread;
     };

@@ -35,7 +35,7 @@
 				Name="VCCustomBuildTool"/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="../base/Debug/base.lib nspr4.lib wxmswd.lib comctl32.lib rpcrt4.lib ws2_32.lib"
+				AdditionalDependencies="../base/Debug/base.lib nspr4.lib libexpat.lib wxmswd.lib comctl32.lib rpcrt4.lib ws2_32.lib"
 				OutputFile="../bin/$(OutDir)/server.exe"
 				LinkIncremental="2"
 				AdditionalLibraryDirectories="../../third-party-vc7/lib"
@@ -91,7 +91,7 @@
 				Name="VCCustomBuildTool"/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="../base/Release/base.lib nspr4.lib wxmsw.lib comctl32.lib rpcrt4.lib ws2_32.lib"
+				AdditionalDependencies="../base/Release/base.lib nspr4.lib libexpat.lib wxmsw.lib comctl32.lib rpcrt4.lib ws2_32.lib"
 				OutputFile="../bin/$(OutDir)/server.exe"
 				LinkIncremental="1"
 				AdditionalLibraryDirectories="../../third-party-vc7/lib"

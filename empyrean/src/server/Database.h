@@ -2,6 +2,7 @@
 #define PYR_DATABASE_H
 
 
+#include <stdexcept>
 #include <string>
 #include <vector>
 #include "Singleton.h"
@@ -43,6 +44,12 @@ namespace pyr {
         void save(FILE* file) const { }
     };
     
+    
+    struct DatabaseError : std::runtime_error {
+        DatabaseError(const std::string& what)
+        : std::runtime_error(what) { }
+    };
+    
 
     class Database {
         PYR_DECLARE_SINGLETON(Database)    
@@ -51,6 +58,8 @@ namespace pyr {
         ~Database();
         
     public:
+        void clear();
+    
         void load(const std::string& filename);
         void save(const std::string& filename) const;
     

@@ -1,4 +1,5 @@
 #include "Configuration.h"
+#include "Database.h"
 #include "Error.h"
 #include "Log.h"
 #include "LogEvent.h"
@@ -23,12 +24,17 @@ namespace pyr {
         
             wxInitAllImageHandlers();
             
-            // load database
-
             _frame = new ServerFrame();
             _frame->Show(true);
 
             logMessage("Welcome to Empyrean!");
+
+            try {
+                Database::instance().load(getDatabaseFilename());
+            }
+            catch (const DatabaseError& e) {
+                logMessage(std::string("Error loading database: ") + e.what());
+            }
 
             if (Configuration::instance().shouldStartServer()) {
                 start();
@@ -42,9 +48,7 @@ namespace pyr {
     
     int Server::OnExit() {
         PYR_BEGIN_EXCEPTION_TRAP()
-        
-            // save database
-        
+            Database::instance().save(getDatabaseFilename());
         PYR_END_EXCEPTION_TRAP()
         return 0;
     }
@@ -81,6 +85,10 @@ namespace pyr {
         logMessage("Stopping...");
         _serverThread = 0;
         logMessage("Stopped");
+    }
+    
+    std::string Server::getDatabaseFilename() {
+        return "database.xml";
     }
     
 }

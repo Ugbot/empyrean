@@ -235,6 +235,12 @@
 			<File
 				RelativePath="..\..\src\base\wx.h">
 			</File>
+			<File
+				RelativePath="..\..\src\base\XMLParser.cpp">
+			</File>
+			<File
+				RelativePath="..\..\src\base\XMLParser.h">
+			</File>
 		</Filter>
 	</Files>
 	<Globals>
