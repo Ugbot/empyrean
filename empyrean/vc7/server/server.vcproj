@@ -135,7 +135,10 @@
 				RelativePath="..\..\src\server\Configuration.h">
 			</File>
 			<File
-				RelativePath=".\Database.h">
+				RelativePath="..\..\src\server\Database.cpp">
+			</File>
+			<File
+				RelativePath="..\..\src\server\Database.h">
 			</File>
 			<File
 				RelativePath="..\..\src\server\ListenerThread.cpp">

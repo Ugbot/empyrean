@@ -9,8 +9,6 @@ namespace pyr {
 
     class ServerThread : public Runnable {
     public:
-        ServerThread();
-
         void run();
     };
 

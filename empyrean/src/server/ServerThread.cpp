@@ -9,10 +9,6 @@
 
 namespace pyr {
 
-    ServerThread::ServerThread() {
-        
-    }
-
     void ServerThread::run() {
         World world;
 
