@@ -4,6 +4,7 @@
 
 #include <string>
 #include <vector>
+#include "Singleton.h"
 
 
 namespace pyr {
@@ -14,6 +15,8 @@ namespace pyr {
             _username = username;
             _password = password;
         }
+        
+        void save(FILE* file) const;
     
         const std::string& getUsername() const {
             return _username;
@@ -31,17 +34,25 @@ namespace pyr {
     
     class Character {
     public:
+        void save(FILE* file) const { }
     };
     
     
     class Game {
     public:
+        void save(FILE* file) const { }
     };
     
 
     class Database {
-    public:
+        PYR_DECLARE_SINGLETON(Database)    
+    
+        Database() { }
         ~Database();
+        
+    public:
+        void load(const std::string& filename);
+        void save(const std::string& filename) const;
     
         void addAccount(Account* account);
         Account* getAccount(const std::string& username);

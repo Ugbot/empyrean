@@ -203,6 +203,9 @@
 				RelativePath="..\..\src\base\ServerSocket.h">
 			</File>
 			<File
+				RelativePath="..\..\src\base\Singleton.h">
+			</File>
+			<File
 				RelativePath="..\..\src\base\Socket.cpp">
 			</File>
 			<File

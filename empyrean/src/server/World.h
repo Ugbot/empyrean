@@ -4,11 +4,11 @@
 
 #include <map>
 #include <vector>
-#include "Database.h"
 
 
 namespace pyr {
 
+    class Account;
     class Connection;
     class LoginPacket;
 
@@ -32,8 +32,6 @@ namespace pyr {
         
     private:
         std::vector<Connection*> _connections;
-        
-        Database _database;
     };
 
 }

@@ -1,6 +1,6 @@
 /**
  * These classes were originally written for the Midworld project
- * in the ISU Game Developers Club.
+ * in the ISU Game Developers Club.  Licensed under the LGPL.
  *
  * This file (c) Ben Scott
  */
@@ -12,6 +12,7 @@
 #include <map>
 #include <string>
 #include "LokiTypeInfo.h"
+#include "Singleton.h"
 
 
 namespace pyr {
@@ -65,9 +66,12 @@ namespace pyr {
 
 
     class ResourceManager {
-    public:
-        static ResourceManager& instance();
+        PYR_DECLARE_SINGLETON(ResourceManager)
         
+        ResourceManager() { }
+        ~ResourceManager();
+
+    public:
         /**
          * Returns the cached version of a resource, or creates a new
          * one if it isn't cached.  Throws std::runtime_error if it fails.
@@ -78,10 +82,6 @@ namespace pyr {
         }
         
     private:
-        static void destroy();
-
-        ~ResourceManager();
-        
         /**
          * Return the cache for a given resource type.  If it doesn't exist,
          * this function creates one.
@@ -97,8 +97,6 @@ namespace pyr {
             }
             return *cache;
         }
-        
-        static ResourceManager* _instance;
         
         typedef std::map<TypeInfo, ResourceCache*> CacheMap;
         CacheMap _cacheMap;

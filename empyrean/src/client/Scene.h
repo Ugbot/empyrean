@@ -3,6 +3,7 @@
 
 
 #include <map>
+#include "Singleton.h"
 #include "Types.h"
 
 
@@ -12,11 +13,7 @@ namespace pyr {
     class Texture;
 
     class Scene {
-    public:
-        static Scene& instance();
-        
-    private:
-        static void destroy();
+        PYR_DECLARE_SINGLETON(Scene)
     
         Scene();
         ~Scene();
@@ -32,8 +29,6 @@ namespace pyr {
     private:
         typedef std::map<u16, Entity*> EntityMap;
         
-        static Scene* _instance;
-    
         Texture* _backdrop;
         EntityMap _entities;
     };

@@ -14,20 +14,7 @@ namespace pyr {
     typedef IntroState InitialState;
 
 
-    Application* Application::_instance = 0;
-
-    Application& Application::instance() {
-        if (!_instance) {
-            _instance = new Application();
-            atexit(destroy);
-        }
-        return *_instance;
-    }
-    
-    void Application::destroy() {
-        delete _instance;
-        _instance = 0;
-    }
+    PYR_DEFINE_SINGLETON(Application)
     
     Application::Application() {
         _width  = 0;
@@ -47,6 +34,11 @@ namespace pyr {
         }
         
         _pointer = Texture::create("images/pointer.png");
+    }
+    
+    Application::~Application() {
+        // This destructor has to be here so code to delete States is
+        // generated while the State class is fully defined.
     }
     
     void Application::resize(int width, int height) {

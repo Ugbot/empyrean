@@ -18,6 +18,7 @@ namespace pyr {
         Server();
 
         bool OnInit();
+        int OnExit();
         
         void log(const std::string& s);
         

@@ -1,4 +1,5 @@
 #include "Connection.h"
+#include "Database.h"
 #include "Log.h"
 #include "PacketTypes.h"
 #include "ServerEntity.h"
@@ -70,14 +71,14 @@ namespace pyr {
         /// @todo  test for invalid username
         /// @todo  test for already logged in
         
-        Account* account = _database.getAccount(p->username());
+        Account* account = Database::instance().getAccount(p->username());
         if (p->newAccount()) {
             if (account) {
                 c->sendPacket(new LoginResponsePacket(LR_ACCOUNT_TAKEN));
                 logMessage(p->username() + ": account taken!");
             } else {
                 account = new Account(p->username(), p->password());
-                _database.addAccount(account);
+                Database::instance().addAccount(account);
                 cd->account = account;
                 cd->loggedIn = true;
                 c->sendPacket(new LoginResponsePacket(LR_LOGGED_IN));

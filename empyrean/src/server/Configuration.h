@@ -2,23 +2,20 @@
 #define PYR_CONFIGURATION_H
 
 
+#include "Singleton.h"
+
+
 namespace pyr {
 
     class Configuration {
-    public:
-        static Configuration& instance();
+        PYR_DECLARE_SINGLETON(Configuration)
         
-    private:
-        static void destroy();
         Configuration()  { }
         ~Configuration() { }
         
     public:
         int getServerPort();
         bool shouldStartServer();
-    
-    private:
-        static Configuration* _instance;
     };
 
 }

@@ -7,21 +7,8 @@
 
 namespace pyr {
 
-    Scene* Scene::_instance = 0;
+    PYR_DEFINE_SINGLETON(Scene)
 
-    Scene& Scene::instance() {
-        if (!_instance) {
-            _instance = new Scene();
-            atexit(destroy);
-        }
-        return *_instance;
-    }
-    
-    void Scene::destroy() {
-        delete _instance;
-        _instance = 0;
-    }
-    
     Scene::Scene() {
         _backdrop = Texture::create("images/stars.png");
     }

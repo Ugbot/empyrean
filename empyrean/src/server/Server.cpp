@@ -22,6 +22,8 @@ namespace pyr {
         PYR_BEGIN_EXCEPTION_TRAP()
         
             wxInitAllImageHandlers();
+            
+            // load database
 
             _frame = new ServerFrame();
             _frame->Show(true);
@@ -36,6 +38,15 @@ namespace pyr {
         
         PYR_END_EXCEPTION_TRAP()
         return false;
+    }
+    
+    int Server::OnExit() {
+        PYR_BEGIN_EXCEPTION_TRAP()
+        
+            // save database
+        
+        PYR_END_EXCEPTION_TRAP()
+        return 0;
     }
     
     void Server::log(const std::string& s) {

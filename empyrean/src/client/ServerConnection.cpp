@@ -10,21 +10,9 @@
 
 namespace pyr {
 
-    ServerConnection* ServerConnection::_instance = 0;
+    PYR_DEFINE_SINGLETON(ServerConnection)
 
-    ServerConnection& ServerConnection::instance() {
-        if (!_instance) {
-            _instance = new ServerConnection();
-            atexit(destroy);
-        }
-        return *_instance;
-    }
-    
-    void ServerConnection::destroy() {
-        delete _instance;
-        _instance = 0;
-    }
-    
+   
     ServerConnection::ServerConnection() {
         _loggedIn = false;
         _entityID = -1;

@@ -3,12 +3,13 @@
 
 
 #include <string>
+#include "Connection.h"
+#include "Singleton.h"
 #include "Utility.h"
 
 
 namespace pyr {
 
-    class Connection;
     class EntityAddedPacket;
     class EntityRemovedPacket;
     class LoginResponsePacket;
@@ -16,14 +17,11 @@ namespace pyr {
     class UpdatePacket;
     
     class ServerConnection {
-    public:
-        static ServerConnection& instance();
-        
-    private:
-        static void destroy();
+        PYR_DECLARE_SINGLETON(ServerConnection)
         
         ServerConnection();
-        
+        ~ServerConnection() { }
+
     public:
         void connect(const std::string& server, int port);
         void disconnect();
@@ -54,8 +52,6 @@ namespace pyr {
         void handleEntityRemoved(Connection* c, EntityRemovedPacket* p);
         void handleUpdate(Connection* c, UpdatePacket* p);
     
-        static ServerConnection* _instance;
-            
         ScopedPtr<Connection> _connection;
         
         bool _loggedIn;

@@ -3,9 +3,9 @@
 
 #include <SDL.h>
 #include <gltext.h>
-
 #include "Utility.h"
 #include "FPSCounter.h"
+#include "Singleton.h"
 
 namespace pyr {
 
@@ -14,13 +14,10 @@ namespace pyr {
 
     /// Lazily-instantiated singleton class representing the game as a whole.
     class Application {
-    public:
-        static Application& instance();
-
-    private:
-        static void destroy();
+        PYR_DECLARE_SINGLETON(Application)
 
         Application();
+        ~Application();
         
     public:
         void resize(int width, int height);
@@ -41,8 +38,6 @@ namespace pyr {
         bool shouldQuit();
         
     private:
-        static Application* _instance;
-    
         // dimensions of the window or screen
         int _width;
         int _height;

@@ -3,16 +3,14 @@
 
 
 #include <string>
+#include "Singleton.h"
 
 
 namespace pyr {
 
     class Configuration {
-    public:
-        static Configuration& instance();
-        
-    private:
-        static void destroy();
+        PYR_DECLARE_SINGLETON(Configuration)
+
         Configuration()  { }
         ~Configuration() { }
         
@@ -25,9 +23,6 @@ namespace pyr {
         int getPort();
         
         std::string getUsername();
-        
-    private:
-        static Configuration* _instance;
     };
 
 }

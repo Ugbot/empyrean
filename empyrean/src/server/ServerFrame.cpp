@@ -12,6 +12,10 @@ namespace pyr {
         ID_SERVER_STOP,
         ID_SERVER_RESTART,
         ID_SERVER_OPTIONS,
+        
+        ID_DATABASE_ACCOUNTS,
+        ID_DATABASE_CHARACTERS,
+        ID_DATABASE_GAMES,
     };
     
 
@@ -46,9 +50,15 @@ namespace pyr {
         serverMenu->Append(ID_SERVER_OPTIONS, "&Options...");
         serverMenu->AppendSeparator();
         serverMenu->Append(wxID_EXIT,         "E&xit");
+        
+        wxMenu* databaseMenu = new wxMenu;
+        databaseMenu->Append(ID_DATABASE_ACCOUNTS,   "&Accounts...");
+        databaseMenu->Append(ID_DATABASE_CHARACTERS, "&Characters...");
+        databaseMenu->Append(ID_DATABASE_GAMES,      "&Games...");
     
         wxMenuBar* menuBar = new wxMenuBar;
-        menuBar->Append(serverMenu, "&Server");
+        menuBar->Append(serverMenu,   "&Server");
+        menuBar->Append(databaseMenu, "&Database");
         SetMenuBar(menuBar);
     }
     
