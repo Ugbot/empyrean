@@ -8,6 +8,15 @@ Locals/Args:            whatever the hell you want
 Indentation:  4 characters
 Tabs:         8 spaces (for compatibility with less/cvs)
 
+Indentation looks like this:
+
+namespace pyr {
+    class Foo {
+    public:
+        void bar();
+    }
+}
+
 ----
 
 Bracing style:
@@ -105,6 +114,8 @@ Use doxygen comments if possible.
 Descriptive rather than declarative comments.  If you can get rid of a
 comment by changing a function or variable name, or reordering the
 code, do so.
+
+Complete sentences are good.
 
 ----
 
