@@ -4,7 +4,11 @@ SOURCES = [
     'Application.cpp',
     'GameState.cpp',
     'InputManager.cpp',
-    'Main.cpp']
+    'IntroState.cpp',
+    'Main.cpp',
+    'MenuState.cpp',
+    'Model.cpp',
+    'Texture.cpp']
 
 env = base_env.Copy()
 SetupSDL(env)
