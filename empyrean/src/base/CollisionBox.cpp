@@ -85,7 +85,7 @@ namespace pyr {
         std::vector<Segment> segs;
         otherBox.segment(segs);
 
-        // Find which sides on box one are intersecting segments of box two 
+        // Find which sides on box one are intersecting segments of box two
         Side hit;
         for(size_t i = 0; i<segs.size(); ++i) {
             // Normal Interesection
@@ -98,7 +98,7 @@ namespace pyr {
         return sides.size() > 0;
     }
 
-    bool goingTowards(Vec2f& vel, Vec2f& pos, Vec2f& secPos) {
+    bool goingTowards(const Vec2f& vel, const Vec2f& pos, const Vec2f& secPos) {
         Vec2f posVec = secPos - pos;
         float dotprod = gmtl::dot(posVec, vel);
         if(dotprod > 0) {
@@ -109,7 +109,7 @@ namespace pyr {
 
     void CollisionBox::collideWithDynamic(float dt, Vec2f& vel, Vec2f& vel2, CollisionBox& box2,
                                         std::vector<Vec2f>& points) {
-       
+
         // Test to see if they are going away from each other if they are.. stop
         if(!goingTowards(vel,this->getCenter(),box2.getCenter()) && !goingTowards(vel,this->getCenter(),box2.getCenter())) {
             return;
@@ -124,12 +124,12 @@ namespace pyr {
         // Find which sides on box two are intersecting segments of box one and get the intersection points
         std::vector<Side> sidesHitBox2;
         box2.findCollision(sidesHitBox2,*this,points);
-        
+
         // Hitting on a vertex of the boxes is not a collision (for now)
         if(points.size() < 2) {
             return;
-        } 
-        
+        }
+
         Vec2f collisionVec =  _center - box2.getCenter();
         Vec2f xAxis(1,0);
         float axisRot = gmtl::Math::aCos(gmtl::dot(collisionVec,xAxis)/gmtl::length(collisionVec));

@@ -6,10 +6,13 @@ SOURCES = Split("""
     Configuration.cpp
     ConnectionHolder.cpp
     Database.cpp
+    Die.cpp
     Game.cpp
+    GameStatistics.cpp
     ListenerThread.cpp
     LogEvent.cpp
     Main.cpp
+    Monster.cpp
     Server.cpp
     ServerApp.cpp
     ServerAppearance.cpp

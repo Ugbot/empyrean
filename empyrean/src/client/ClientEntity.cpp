@@ -40,7 +40,7 @@ namespace pyr {
             else {
                 glColor3f(0.0f,1.0f,0.0f);
             }
-            GLTEXT_STREAM(rend) << gmtl::Math::abs(_vitalityChange);
+            GLTEXT_STREAM(rend) << abs(_vitalityChange);
             glPopMatrix();
             glEnable(GL_TEXTURE_2D);
         }
@@ -56,7 +56,7 @@ namespace pyr {
             else {
                 glColor3f(1.0f,1.0f,1.0f);
             }
-            GLTEXT_STREAM(rend) << gmtl::Math::abs(_etherChange);
+            GLTEXT_STREAM(rend) << abs(_etherChange);
             glPopMatrix();
             glEnable(GL_TEXTURE_2D);
         }
