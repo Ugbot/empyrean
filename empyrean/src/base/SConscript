@@ -1,22 +1,22 @@
-Import('base_env SetupNSPR SetupSDL')
+Import('base_env TOOLS')
 
 SOURCES = [
     'ByteBuffer.cpp',
     'Canvas.cpp',
-    'Error.cpp',
-    'NSPRUtility.cpp',
-    'ReaderThread.cpp',
-    'Socket.cpp',
-    'Utility.cpp',
     'Connection.cpp',
+    'Error.cpp',
     'LoginPacket.cpp',
+    'Map.cpp',
+    'NSPRUtility.cpp',
     'PacketFactory.cpp',
+    'ReaderThread.cpp',
     'ServerSocket.cpp',
+    'Socket.cpp',
     'Thread.cpp',
+    'Utility.cpp',
     'WriterThread.cpp']
 
 env = base_env.Copy()
-SetupNSPR(env)
-SetupSDL(env)
+TOOLS['NSPR'](env)
 
 env.Library('base', SOURCES)

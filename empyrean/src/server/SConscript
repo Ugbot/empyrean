@@ -1,4 +1,4 @@
-Import('base_env SetupNSPR SetupSDL')
+Import('base_env TOOLS')
 
 SOURCES = [
     'ListenerThread.cpp',
@@ -6,8 +6,7 @@ SOURCES = [
     'World.cpp']
 
 env = base_env.Copy()
-
-SetupNSPR(env)
-env.Append(LIBS = ['base'])
+for t in Split('PyrBase NSPR'):
+    TOOLS[t](env)
 
 env.Program('#/build/server', SOURCES)

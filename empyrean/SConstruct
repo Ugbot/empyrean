@@ -6,6 +6,7 @@ import SCons.Errors
 
 Default('build')
 
+
 # Courtesy of Ben Scott
 def ParseConfig(env, command, options):
     "Parses xxx-config style output for compilation directives"
@@ -36,26 +37,34 @@ def ParseConfig(env, command, options):
                 env.Append(CXXFLAGS = [arg])
         else:
             # Must be a static library, add it to the libs
+            # XXX think about this more...
             env.Append(LIBS = [arg])
+
 
 def SetupCal3D(env):
     env.Append(LIBS = ['cal3d'])
 
 def SetupCorona(env):
-    env.Append(LIBS = ['corona', 'png', 'z', 'jpeg'])
+    ParseConfig(env, 'corona-config', ['--cxxflags', '--libs'])
 
 def SetupFreeType(env):
-    ParseConfig(env, 'freetype-config', Split('--cflags --libs'))
+    ParseConfig(env, 'freetype-config', ['--cflags', '--libs'])
 
-def SetupGL(env):
-    if sys.platform == 'cygwin':
+def SetupOpenGL(env):
+    if env['PLATFORM'] == 'cygwin':
         env.Append(LIBS = ['glu32', 'opengl32'])
     else:
         env.Append(LIBS = ['GLU', 'GL'])
 
+def SetupPyrBase(env):
+    env.Append(CPPPATH = ['#/src/base'],
+               LIBPATH = ['#/src/base'],
+               LIBS = ['base'])
+
 def SetupNSPR(env):
     try:
-        ParseConfig(env, 'nspr-config', Split('--cflags --libs'))
+        # Try using nspr-config first.
+        ParseConfig(env, 'nspr-config', ['--cflags', '--libs'])
     except SCons.Errors.UserError, e:
         # @todo  make it only include /usr/mozilla...  on debian
         #        check uname's output?
@@ -64,24 +73,39 @@ def SetupNSPR(env):
             LIBS = ['nspr4'])
 
 def SetupSDL(env):
-    if sys.platform == 'cygwin':
+    if env['PLATFORM'] == 'cygwin':
         env.Append(CPPPATH = '/usr/local/include/SDL',
                    LIBS = ['SDL', 'SDLmain'])
     else:
-        ParseConfig(env, 'sdl-config', Split('--cflags --libs'))
+        ParseConfig(env, 'sdl-config', ['--cflags', '--libs'])
+
+def SetupWxWindows(env):
+    ParseConfig(env, 'wx-config', ['--cxxflags', '--libs', '--gl-libs'])
 
 
-Export('SetupCal3D SetupCorona SetupFreeType SetupGL SetupNSPR SetupSDL')
+# Initialize set of external dependencies.
+TOOLS = {
+    'Cal3D'     : SetupCal3D,
+    'Corona'    : SetupCorona,
+    'FreeType'  : SetupFreeType,
+    'OpenGL'    : SetupOpenGL,
+    'PyrBase'   : SetupPyrBase,
+    'NSPR'      : SetupNSPR,
+    'SDL'       : SetupSDL,
+    'wxWindows' : SetupWxWindows }
+Export('TOOLS')
 
+
+# Create base environment.
 base_env = Environment(ENV = os.environ)
-base_env.Append(CPPPATH = [Dir('src/base')],
-                LIBPATH = [Dir('src/base')])
 
-if sys.platform == 'cygwin':
+if base_env['PLATFORM'] == 'cygwin':
     base_env.Append(CCFLAGS = ['-DWIN32', '-D_WIN32', '-DCYGWIN'],
-                    CPPPATH = [Dir('third-party/include')],
-                    LIBPATH = [Dir('third-party/lib')])
+                    CPPPATH = ['#/third-party/include'],
+                    LIBPATH = ['#/third-party/lib'])
 
 Export('base_env')
 
+
+# Process subdirectories.
 SConscript(dirs = ['src'])

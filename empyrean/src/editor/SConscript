@@ -1,0 +1,14 @@
+Import('base_env TOOLS')
+
+SOURCES = [
+    'Editor.cpp',
+    'Main.cpp',
+    'MainFrame.cpp',
+    'MapView.cpp',
+    'RectangleTool.cpp']
+
+env = base_env.Copy()
+for t in Split('PyrBase wxWindows'):
+    TOOLS[t](env)
+
+env.Program('#/build/editor', SOURCES)

@@ -1,5 +1,4 @@
-Import('base_env')
-Import('SetupCal3D SetupCorona SetupFreeType SetupNSPR SetupSDL SetupGL')
+Import('base_env TOOLS')
 
 SOURCES = [
     'Application.cpp',
@@ -26,10 +25,7 @@ SOURCES = [
 # SOURCES.append('extgl.c')
 
 env = base_env.Copy()
-tools = [SetupCal3D, SetupCorona, SetupFreeType, SetupNSPR, SetupSDL, SetupGL]
-for t in tools:
-    t(env)
-
-env.Prepend(LIBS = ['base'])
+for t in Split('PyrBase Cal3D Corona FreeType NSPR OpenGL SDL'):
+    TOOLS[t](env)
 
 env.Program('#/build/client', SOURCES)

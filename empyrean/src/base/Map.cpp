@@ -1,5 +1,5 @@
-#include <SDL_opengl.h>
 #include "Map.h"
+#include "OpenGL.h"
 
 
 namespace pyr {
