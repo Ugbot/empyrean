@@ -14,3 +14,8 @@ monsters sketched out and modeled and animated...
 AI
 and a way to attach things to cal3d models, like weapons and stuff
 fix phui focus model
+HUD for gamestate
+python scripting for entities
+MD5 / challenge password authentication system
+server-side resource management.  client downloads resource files.
+good general logging framework for both client and server
