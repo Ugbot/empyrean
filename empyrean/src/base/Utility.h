@@ -21,6 +21,24 @@ namespace pyr {
     /**
      * From Loki (Modern C++ Design).  Used to generate an empty,
      * unique type based on another.
+     *
+     * Since this is a pretty confusing type, here is why it is
+     * useful: Two functions cannot have the same signature.  The
+     * signature does not include the return type, so if there is ...
+     *
+     * template<typename T>
+     * T* foo() { ... }
+     *
+     * ... foo<int> and foo<char> have the same signature.  The
+     * solution is to add an empty parameter that has no name and has
+     * a default value (and so doesn't have to be specified by the
+     * user).
+     *
+     * template<typename T>
+     * T* foo(Type2Type<T> = Type2Type<T>()) {
+     * }
+     *
+     * Now foo<int> and foo<char> have different signatures.
      */
     template<typename T>
     struct Type2Type {
