@@ -7,8 +7,8 @@
  *
  * -----------------------------------------------------------------
  * File:          $RCSfile: VecOps.h,v $
- * Date modified: $Date: 2003-07-22 03:31:48 $
- * Version:       $Revision: 1.1 $
+ * Date modified: $Date: 2003-11-09 11:57:39 $
+ * Version:       $Revision: 1.2 $
  * -----------------------------------------------------------------
  *
  *********************************************************** ggt-head end */
@@ -35,9 +35,9 @@
 #ifndef _GMTL_VEC_OPS_H_
 #define _GMTL_VEC_OPS_H_
 
-#include "gmtl/Defines.h"
-#include "gmtl/Math.h"
-#include "gmtl/Vec.h"
+#include <gmtl/Defines.h>
+#include <gmtl/Math.h>
+#include <gmtl/Vec.h>
 
 namespace gmtl
 {
@@ -46,9 +46,9 @@ namespace gmtl
  * @name Vector/Point Operations
  * @{
  */
-   
+
 // --- Basic VEC types operations -- //
-  
+
 /**
  * Negates v1.  The result = -v1.
  *
@@ -248,7 +248,7 @@ VecBase<DATA_TYPE, SIZE> operator /(const VecBase<DATA_TYPE, SIZE>& v1,
 
 /** @ingroup Ops
  *  @name Vector Operations
- * @{ 
+ * @{
  */
 
 /**
@@ -313,8 +313,8 @@ DATA_TYPE lengthSquared(const Vec<DATA_TYPE, SIZE>& v1)
  * vector is already of length 1.0, nothing is done. For convenience, the
  * original length of the vector is returned.
  *
- * @post length(v1) == 1.0
- *
+ * @post length(v1) == 1.0 unless length(v1) is originally 0.0, in which case it is unchanged
+ * 
  * @param v1   the vector to normalize
  *
  * @return  the length of v1 before it was normalized
@@ -355,6 +355,7 @@ bool isNormalized( const Vec<DATA_TYPE, SIZE>& v1,
  * Computes the cross product between v1 and v2 and returns the result. Note
  * that this only applies to 3-dimensional vectors.
  *
+ * @pre  v1 and v2 must be 3-D vectors
  * @post result = v1 x v2
  *
  * @param v1   the first vector
@@ -376,6 +377,7 @@ Vec<DATA_TYPE,3> cross(const Vec<DATA_TYPE, 3>& v1, const Vec<DATA_TYPE, 3>& v2)
  * existing Vec to store the result. Note that this only applies to
  * 3-dimensional vectors.
  *
+ * @pre v1 and v2 are 3-D vectors
  * @post result = v1 x v2
  *
  * @param result  filled with the result of the cross product between v1 and v2
@@ -394,6 +396,23 @@ Vec<DATA_TYPE,3>& cross( Vec<DATA_TYPE,3>& result, const Vec<DATA_TYPE, 3>& v1,
    return result;
 }
 
+/**
+ * Reflect a vector about a normal.
+ * @param result     the vector to store the result i
+ * @param vec        the original vector that we want to reflect
+ * @param normal     the normal vector
+ *
+ * @post result contains the reflected vector
+*/
+template<class DATA_TYPE, unsigned SIZE>
+VecBase<DATA_TYPE, SIZE>& reflect( VecBase<DATA_TYPE, SIZE>& result, const
+                           VecBase<DATA_TYPE, SIZE>& vec,
+                           const Vec<DATA_TYPE, SIZE>& normal )
+{
+   result = vec - DATA_TYPE( 2.0 ) * dot( (Vec<DATA_TYPE, SIZE>)vec, normal ) * normal;
+   return result;
+}
+
 /** @} */
 
 /** @ingroup Interp
@@ -403,7 +422,7 @@ Vec<DATA_TYPE,3>& cross( Vec<DATA_TYPE,3>& result, const Vec<DATA_TYPE, 3>& v1,
 
 /**
  * Linearly interpolates between to vectors.
- * 
+ *
  * @pre  lerpVal is a value between 0 and 1 that interpolates between from and to.
  * @post undefined if lerpVal < 0 or lerpVal > 1
  *
@@ -417,7 +436,7 @@ Vec<DATA_TYPE,3>& cross( Vec<DATA_TYPE,3>& result, const Vec<DATA_TYPE, 3>& v1,
 template <typename DATA_TYPE, unsigned SIZE>
 VecBase<DATA_TYPE, SIZE>& lerp( VecBase<DATA_TYPE, SIZE>& result,
                                 const DATA_TYPE& lerpVal,
-                                const VecBase<DATA_TYPE, SIZE>& from, 
+                                const VecBase<DATA_TYPE, SIZE>& from,
                                 const VecBase<DATA_TYPE, SIZE>& to )
 {
    /// @todo metaprogramming...
@@ -434,11 +453,11 @@ VecBase<DATA_TYPE, SIZE>& lerp( VecBase<DATA_TYPE, SIZE>& result,
  * @{
  */
 
-       
+
 // --- VEC comparisons -- //
 
 /**
- * Compares v1 and v2 to see if they are exactly the same with zero tolerance.
+ * Compares v1 and v2 to see if they are exactly the same.
  *
  * @param v1   the first vector
  * @param v2   the second vector
@@ -492,7 +511,7 @@ inline bool operator!=(const VecBase<DATA_TYPE, SIZE>& v1,
  * @param v2   the second vector
  * @param eps  the epsilon tolerance value
  *
- * @return  true if v1 equals v2; false if they differ
+ * @return  true if v1 equals v2 within the tolerance; false if they differ
  */
 template<class DATA_TYPE, unsigned SIZE>
 inline bool isEqual(const VecBase<DATA_TYPE, SIZE>& v1,

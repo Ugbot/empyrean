@@ -7,8 +7,8 @@
  *
  * -----------------------------------------------------------------
  * File:          $RCSfile: Version.h,v $
- * Date modified: $Date: 2003-07-22 03:31:48 $
- * Version:       $Revision: 1.1 $
+ * Date modified: $Date: 2003-11-09 11:57:39 $
+ * Version:       $Revision: 1.2 $
  * -----------------------------------------------------------------
  *
  *********************************************************** ggt-head end */
@@ -50,8 +50,8 @@
  */
 // The major/minor/patch version (up to 3 digits each).
 #define GMTL_VERSION_MAJOR    0
-#define GMTL_VERSION_MINOR    1
-#define GMTL_VERSION_PATCH    12
+#define GMTL_VERSION_MINOR    2
+#define GMTL_VERSION_PATCH    1
 
 //--------------------------------------------------------------------------
 //--------------------------------------------------------------------------
@@ -137,7 +137,10 @@
 //--------------------------------------------------------------------------
 namespace gmtl
 {
-   const char* version = GMTL_XSTR(GMTL_VERSION_STRING);
+   inline const char* getVersion()
+   {
+      return GMTL_XSTR(GMTL_VERSION_STRING);
+   }
 } // end namespace gmtl
 
 //--------------------------------------------------------------------------

@@ -7,8 +7,8 @@
  *
  * -----------------------------------------------------------------
  * File:          $RCSfile: QuatOps.h,v $
- * Date modified: $Date: 2003-07-22 03:31:48 $
- * Version:       $Revision: 1.1 $
+ * Date modified: $Date: 2003-11-09 11:57:39 $
+ * Version:       $Revision: 1.2 $
  * -----------------------------------------------------------------
  *
  *********************************************************** ggt-head end */
@@ -35,8 +35,8 @@
 #ifndef _GMTL_QUAT_OPS_H_
 #define _GMTL_QUAT_OPS_H_
 
-#include "gmtl/Math.h"
-#include "gmtl/Quat.h"
+#include <gmtl/Math.h>
+#include <gmtl/Quat.h>
 
 namespace gmtl
 {
@@ -78,10 +78,10 @@ namespace gmtl
 
       // Here is the same, only expanded... (grassman product)
       Quat<DATA_TYPE> temporary; // avoid aliasing problems...
-      temporary[Xelt] = q1[Welt]*q2[Xelt] + q1[Xelt]*q2[Welt] + q1[Yelt]*q2[Zelt] - q1[Zelt]*q2[Yelt];
-      temporary[Yelt] = q1[Welt]*q2[Yelt] + q1[Yelt]*q2[Welt] + q1[Zelt]*q2[Xelt] - q1[Xelt]*q2[Zelt];
-      temporary[Zelt] = q1[Welt]*q2[Zelt] + q1[Zelt]*q2[Welt] + q1[Xelt]*q2[Yelt] - q1[Yelt]*q2[Xelt];
-      temporary[Welt] = q1[Welt]*q2[Welt] - q1[Xelt]*q2[Xelt] - q1[Yelt]*q2[Yelt] - q1[Zelt]*q2[Zelt];
+      temporary[Xelt] = q2[Welt]*q1[Xelt] + q2[Xelt]*q1[Welt] + q2[Yelt]*q1[Zelt] - q2[Zelt]*q1[Yelt];
+      temporary[Yelt] = q2[Welt]*q1[Yelt] + q2[Yelt]*q1[Welt] + q2[Zelt]*q1[Xelt] - q2[Xelt]*q1[Zelt];
+      temporary[Zelt] = q2[Welt]*q1[Zelt] + q2[Zelt]*q1[Welt] + q2[Xelt]*q1[Yelt] - q2[Yelt]*q1[Xelt];
+      temporary[Welt] = q2[Welt]*q1[Welt] - q2[Xelt]*q1[Xelt] - q2[Yelt]*q1[Yelt] - q2[Zelt]*q1[Zelt];
 
       // use a temporary, in case q1 or q2 is the same as self.
       result[Xelt] = temporary[Xelt];
@@ -105,10 +105,10 @@ namespace gmtl
       // (grassman product - see mult() for discussion)
       // don't normalize, because it might not be rotation arithmetic we're doing
       // (only rotation quats have unit length)
-      return Quat<DATA_TYPE>( q1[Welt]*q2[Xelt] + q1[Xelt]*q2[Welt] + q1[Yelt]*q2[Zelt] - q1[Zelt]*q2[Yelt],
-                              q1[Welt]*q2[Yelt] + q1[Yelt]*q2[Welt] + q1[Zelt]*q2[Xelt] - q1[Xelt]*q2[Zelt],
-                              q1[Welt]*q2[Zelt] + q1[Zelt]*q2[Welt] + q1[Xelt]*q2[Yelt] - q1[Yelt]*q2[Xelt],
-                              q1[Welt]*q2[Welt] - q1[Xelt]*q2[Xelt] - q1[Yelt]*q2[Yelt] - q1[Zelt]*q2[Zelt] );
+      return Quat<DATA_TYPE>( q2[Welt]*q1[Xelt] + q2[Xelt]*q1[Welt] + q2[Yelt]*q1[Zelt] - q2[Zelt]*q1[Yelt],
+                              q2[Welt]*q1[Yelt] + q2[Yelt]*q1[Welt] + q2[Zelt]*q1[Xelt] - q2[Xelt]*q1[Zelt],
+                              q2[Welt]*q1[Zelt] + q2[Zelt]*q1[Welt] + q2[Xelt]*q1[Yelt] - q2[Yelt]*q1[Xelt],
+                              q2[Welt]*q1[Welt] - q2[Xelt]*q1[Xelt] - q2[Yelt]*q1[Yelt] - q2[Zelt]*q1[Zelt] );
    }
 
    /** quaternion postmult
@@ -124,7 +124,7 @@ namespace gmtl
    /** Vector negation - negate each element in the quaternion vector.
     * the negative of a rotation quaternion is geometrically equivelent
     * to the original. there exist 2 quats for every possible rotation.
-    * @post returns the negation of the given quat.
+    * @return returns the negation of the given quat.
     */
    template <typename DATA_TYPE>
    Quat<DATA_TYPE>& negate( Quat<DATA_TYPE>& result )
@@ -139,7 +139,7 @@ namespace gmtl
    /** Vector negation - (operator-) return a temporary that is the negative of the given quat.
     * the negative of a rotation quaternion is geometrically equivelent
     * to the original. there exist 2 quats for every possible rotation.
-    * @post returns the negation of the given quat
+    * @return returns the negation of the given quat
     */
    template <typename DATA_TYPE>
    Quat<DATA_TYPE> operator-( const Quat<DATA_TYPE>& quat )
@@ -311,7 +311,7 @@ namespace gmtl
    /** vector dot product between two quaternions.
     *  get the lengthSquared between two quat vectors...
     *  @post N(q) = x1*x2 + y1*y2 + z1*z2 + w1*w2
-    *  @post result = x1*x2 + y1*y2 + z1*z2 + w1*w2
+    *  @return dot product of q1 and q2
     *  @see Quat
     */
    template <typename DATA_TYPE>
@@ -372,13 +372,13 @@ namespace gmtl
    }
 
    /**
-    * Determines if the given vector is normalized within the given tolerance. The
-    * vector is normalized if its lengthSquared is 1.
+    * Determines if the given quaternion is normalized within the given tolerance. The
+    * quaternion is normalized if its lengthSquared is 1.
     *
-    * @param v1      the vector to test
+    * @param q1      the quaternion to test
     * @param eps     the epsilon tolerance
     *
-    * @return  true if the vector is normalized, false otherwise
+    * @return  true if the quaternion is normalized, false otherwise
     */
    template< typename DATA_TYPE >
    bool isNormalized( const Quat<DATA_TYPE>& q1, const DATA_TYPE eps = (DATA_TYPE)0.0001f )
@@ -504,6 +504,8 @@ namespace gmtl
    /** spherical linear interpolation between two rotation quaternions.
     *  t is a value between 0 and 1 that interpolates between from and to.
     * @pre no aliasing problems to worry about ("result" can be "from" or "to" param).
+    * @param adjustSign - If true, then slerp will operate by adjusting the sign of the slerp to take shortest path
+    *
     * References:
     * <ul>
     * <li> From Adv Anim and Rendering Tech. Pg 364
@@ -511,7 +513,7 @@ namespace gmtl
     * @see Quat
     */
    template <typename DATA_TYPE>
-   Quat<DATA_TYPE>& slerp( Quat<DATA_TYPE>& result, const DATA_TYPE t, const Quat<DATA_TYPE>& from, const Quat<DATA_TYPE>& to)
+   Quat<DATA_TYPE>& slerp( Quat<DATA_TYPE>& result, const DATA_TYPE t, const Quat<DATA_TYPE>& from, const Quat<DATA_TYPE>& to, bool adjustSign=true)
    {
       const Quat<DATA_TYPE>& p = from; // just an alias to match q
 
@@ -520,7 +522,7 @@ namespace gmtl
 
       // adjust signs (if necessary)
       Quat<DATA_TYPE> q;
-      if (cosom < (DATA_TYPE)0.0)
+      if (adjustSign && (cosom < (DATA_TYPE)0.0))
       {
          cosom = -cosom;
          q[0] = -to[0];   // Reverse all signs

@@ -7,8 +7,8 @@
  *
  * -----------------------------------------------------------------
  * File:          $RCSfile: Containment.h,v $
- * Date modified: $Date: 2003-07-22 03:31:48 $
- * Version:       $Revision: 1.1 $
+ * Date modified: $Date: 2003-11-09 11:57:39 $
+ * Version:       $Revision: 1.2 $
  * -----------------------------------------------------------------
  *
  *********************************************************** ggt-head end */
@@ -36,6 +36,7 @@
 #define _GMTL_CONTAINMENT_H_
 
 // new stuff
+#include <vector>
 #include <gmtl/Sphere.h>
 #include <gmtl/AABox.h>
 #include <gmtl/VecOps.h>
@@ -180,7 +181,7 @@ void makeVolume( Sphere<DATA_TYPE>& container,
 
    // Implementation based on the Sphere Centered at Average of Points algorithm
    // found in "3D Game Engine Design" by Devud G, Eberly (pg. 27)
-   std::vector< Point<DATA_TYPE, 3> >::const_iterator itr = pts.begin();
+   typename std::vector< Point<DATA_TYPE, 3> >::const_iterator itr = pts.begin();
 
    // compute the average of the points as the center
    Point<DATA_TYPE, 3> sum = *itr;
@@ -454,6 +455,30 @@ void extendVolume(AABox<DATA_TYPE>& container,
    // Just extend by the corners of the box
    extendVolume(container, box.getMin());
    extendVolume(container, box.getMax());
+}
+
+/**
+ * Creates an AABox that tightly encloses the given Sphere.
+ *
+ * @param box     set to the box
+ */
+template< class DATA_TYPE >
+void makeVolume(AABox<DATA_TYPE>& box, const Sphere<DATA_TYPE>& sph)
+{
+   const gmtl::Point<DATA_TYPE, 3>& center = sph.getCenter();
+   const DATA_TYPE& radius = sph.getRadius();
+
+   // Calculate the min and max points for the box
+   gmtl::Point<DATA_TYPE, 3> min_pt(center[0] - radius,
+                                    center[1] - radius,
+                                    center[2] - radius);
+   gmtl::Point<DATA_TYPE, 3> max_pt(center[0] + radius,
+                                    center[1] + radius,
+                                    center[2] + radius);
+
+   box.setMin(min_pt);
+   box.setMax(max_pt);
+   box.setEmpty(radius == DATA_TYPE(0));
 }
 
 /*

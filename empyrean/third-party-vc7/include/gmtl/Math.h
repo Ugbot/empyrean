@@ -7,8 +7,8 @@
  *
  * -----------------------------------------------------------------
  * File:          $RCSfile: Math.h,v $
- * Date modified: $Date: 2003-07-22 03:31:48 $
- * Version:       $Revision: 1.1 $
+ * Date modified: $Date: 2003-11-09 11:57:39 $
+ * Version:       $Revision: 1.2 $
  * -----------------------------------------------------------------
  *
  *********************************************************** ggt-head end */
@@ -44,7 +44,7 @@ namespace gmtl
 {
 
 /** Base class for Rotation orders
- *  @ingroup Defines 
+ *  @ingroup Defines
  * @see XYZ, ZYX, ZXY
  */
 struct RotationOrderBase { enum { IS_ROTORDER = 1 }; };
@@ -64,7 +64,7 @@ struct ZXY : public RotationOrderBase { enum { ID = 2 }; };
 namespace Math
 {
    /** @ingroup Math
-    *  @name Mathematical constants 
+    *  @name Mathematical constants
     *  @{
     */
    const float PI = 3.14159265358979323846f; //3.14159265358979323846264338327950288419716939937510;
@@ -114,9 +114,23 @@ inline double floor( double fValue )
 }
 //----------------------------------------------------------------------------
 template <typename T>
-inline T sign( int iValue )
+inline int sign( T iValue )
 {
-    return ( iValue > ((T)0) ? ((T)+1) : ( iValue < ((T)0) ? ((T)-1) : ((T)0) ) );
+   if (iValue > T(0))
+   {
+      return 1;
+   }
+   else
+   {
+      if (iValue < T(0))
+      {
+         return -1;
+      }
+      else
+      {
+         return 0;
+      }
+   }
 }
 //----------------------------------------------------------------------------
 /**
@@ -350,6 +364,16 @@ inline double sqrt( double fValue )
 }
 
 //----------------------------------------------------------------------------
+/**
+ * Seeds the pseudorandom number generator with the given seed.
+ *
+ * @param seed  the seed for the pseudorandom number generator.
+ */
+inline void seedRandom(unsigned int seed)
+{
+   ::srand(seed);
+}
+
 /** get a random number between 0 and 1
  * @post returns number between 0 and 1
  */
@@ -502,6 +526,39 @@ inline void lerp( T& result, const U& lerp, const T& a, const T& b )
     result = ((U)a) + (((U)size) * lerp);
 }
 /** @} */
+
+/**
+ * Uses the quadratic formula to compute the 2 roots of the given 2nd degree
+ * polynomial in the form of Ax^2 + Bx + C.
+ *
+ * @param r1   set to the first root
+ * @param r2   set to the second root
+ * @param a    the coefficient to x^2
+ * @param b    the coefficient to x^1
+ * @param c    the coefficient to x^0
+ *
+ * @return  true if both r1 and r2 are real; false otherwise
+ */
+template <class T>
+inline bool quadraticFormula(T& r1, T& r2, const T& a, const T& b, const T& c)
+{
+   const T q = b*b - T(4)*a*c;
+
+   // the result has real roots
+   if (q >= 0)
+   {
+      const T sq = gmtl::Math::sqrt(q);
+      const T d = T(1) / (T(2) * a);
+      r1 = (-b + sq) * d;
+      r2 = (-b - sq) * d;
+      return true;
+   }
+   // the result has complex roots
+   else
+   {
+      return false;
+   }
+}
 
 } // end namespace Math
 } // end namespace gmtl

@@ -7,8 +7,8 @@
  *
  * -----------------------------------------------------------------
  * File:          $RCSfile: SphereOps.h,v $
- * Date modified: $Date: 2003-07-22 03:31:48 $
- * Version:       $Revision: 1.1 $
+ * Date modified: $Date: 2003-11-09 11:57:39 $
+ * Version:       $Revision: 1.2 $
  * -----------------------------------------------------------------
  *
  *********************************************************** ggt-head end */
@@ -47,8 +47,7 @@ namespace gmtl
  */
 
 /**
- * Compare two spheres to see if they are EXACTLY the same. In other words, this
- * comparison is done with zero tolerance.
+ * Compare two spheres to see if they are EXACTLY the same. 
  *
  * @param s1      the first sphere to compare
  * @param s2      the second sphere to compare
@@ -62,8 +61,7 @@ inline bool operator==( const Sphere<DATA_TYPE>& s1, const Sphere<DATA_TYPE>& s2
 }
 
 /**
- * Compare two spheres to see if they are not EXACTLY the same. In other words,
- * this comparison is done with zero tolerance.
+ * Compare two spheres to see if they are not EXACTLY the same. 
  *
  * @param s1      the first sphere to compare
  * @param s2      the second sphere to compare
@@ -85,7 +83,7 @@ inline bool operator!=( const Sphere<DATA_TYPE>& s1, const Sphere<DATA_TYPE>& s2
  *
  * @pre eps must be >= 0
  *
- * @return  true if they are equal, false otherwise
+ * @return  true if they are equal within a tolerance, false otherwise
  */
 template< class DATA_TYPE >
 inline bool isEqual( const Sphere<DATA_TYPE>& s1, const Sphere<DATA_TYPE>& s2, const DATA_TYPE& eps )

@@ -7,8 +7,8 @@
  *
  * -----------------------------------------------------------------
  * File:          $RCSfile: Intersection.h,v $
- * Date modified: $Date: 2003-07-22 03:31:48 $
- * Version:       $Revision: 1.1 $
+ * Date modified: $Date: 2003-11-09 11:57:39 $
+ * Version:       $Revision: 1.2 $
  * -----------------------------------------------------------------
  *
  *********************************************************** ggt-head end */
@@ -35,11 +35,17 @@
 #ifndef _GMTL_INTERSECTION_H_
 #define _GMTL_INTERSECTION_H_
 
+#include <algorithm>
 #include <gmtl/AABox.h>
 #include <gmtl/Point.h>
+#include <gmtl/Sphere.h>
 #include <gmtl/Vec.h>
+#include <gmtl/Plane.h>
 #include <gmtl/VecOps.h>
 #include <gmtl/Math.h>
+#include <gmtl/Ray.h>
+#include <gmtl/LineSeg.h>
+#include <gmtl/Tri.h>
 
 namespace gmtl
 {
@@ -47,8 +53,8 @@ namespace gmtl
     * Tests if the given AABoxes intersect with each other. Sharing an edge IS
     * considered intersection by this algorithm.
     *
-    * @param box1    the first box to test
-    * @param box2    the second box to test
+    * @param box1    the first AA box to test
+    * @param box2    the second AA box to test
     *
     * @return  true if the boxes intersect; false otherwise
     */
@@ -75,7 +81,7 @@ namespace gmtl
     * @param box    the box to test
     * @param point  the point to test
     *
-    * @return  true if the items intersect; false otherwise
+    * @return  true if the point is within the box's bounds; false otherwise
     */
    template<class DATA_TYPE>
    bool intersect( const AABox<DATA_TYPE>& box, const Point<DATA_TYPE, 3>& point )
@@ -96,7 +102,7 @@ namespace gmtl
    /**
     * Tests if the given AABoxes intersect if moved along the given paths. Using
     * the AABox sweep test, the normalized time of the first and last points of
-    * contact.
+    * contact are found.
     *
     * @param box1          the first box to test
     * @param path1         the path the first box should travel along
@@ -105,7 +111,7 @@ namespace gmtl
     * @param firstContact  set to the normalized time of the first point of contact
     * @param secondContact set to the normalized time of the second point of contact
     *
-    * @return  true if the items intersect; false otherwise
+    * @return  true if the boxes intersect at any time; false otherwise
     */
    template<class DATA_TYPE>
    bool intersect( const AABox<DATA_TYPE>& box1, const Vec<DATA_TYPE, 3>& path1,
@@ -165,6 +171,225 @@ namespace gmtl
       // occurred before the second overlap time
       return firstContact <= secondContact;
    }
+
+   /**
+    * Tests if the given Spheres intersect if moved along the given paths. Using
+    * the Sphere sweep test, the normalized time of the first and last points of
+    * contact are found.
+    *
+    * @param sph1          the first sphere to test
+    * @param path1         the path the first sphere should travel along
+    * @param sph2          the second sphere to test
+    * @param path2         the path the second sphere should travel along
+    * @param firstContact  set to the normalized time of the first point of contact
+    * @param secondContact set to the normalized time of the second point of contact
+    *
+    * @return  true if the spheres intersect; false otherwise
+    */
+   template<class DATA_TYPE>
+   bool intersect(const Sphere<DATA_TYPE>& sph1, const Vec<DATA_TYPE, 3>& path1,
+                  const Sphere<DATA_TYPE>& sph2, const Vec<DATA_TYPE, 3>& path2,
+                  DATA_TYPE& firstContact, DATA_TYPE& secondContact)
+   {
+      // Algorithm taken from Gamasutra's article, "Simple Intersection Test for
+      // Games" - http://www.gamasutra.com/features/19991018/Gomez_2.htm
+      //
+      // This algorithm is solved from the frame of reference of sph1
+
+      // Get the relative path (in normalized time)
+      const Vec<DATA_TYPE, 3> path = path2 - path1;
+
+      // Get the vector from sph1's starting point to sph2's starting point
+      const Vec<DATA_TYPE, 3> start_offset = sph2.getCenter() - sph1.getCenter();
+
+      // Compute the sum of the radii
+      const DATA_TYPE radius_sum = sph1.getRadius() + sph2.getRadius();
+
+      // u*u coefficient
+      const DATA_TYPE a = dot(path, path);
+
+      // u coefficient
+      const DATA_TYPE b = DATA_TYPE(2) * dot(path, start_offset);
+
+      // constant term
+      const DATA_TYPE c = dot(start_offset, start_offset) - radius_sum * radius_sum;
+
+      // Check if they're already overlapping
+      if (dot(start_offset, start_offset) <= radius_sum * radius_sum)
+      {
+         firstContact = secondContact = DATA_TYPE(0);
+         return true;
+      }
+
+      // Find the first and last points of intersection
+      if (Math::quadraticFormula(firstContact, secondContact, a, b, c))
+      {
+         // Swap first and second contacts if necessary
+         if (firstContact > secondContact)
+         {
+            std::swap(firstContact, secondContact);
+            return true;
+         }
+      }
+
+      return false;
+   }
+
+   /**
+    * Tests if the given AABox and Sphere intersect with each other. On an edge
+    * IS considered intersection by this algorithm.
+    *
+    * @param box  the box to test
+    * @param sph  the sphere to test
+    *
+    * @return  true if the items intersect; false otherwise
+    */
+   template<class DATA_TYPE>
+   bool intersect(const AABox<DATA_TYPE>& box, const Sphere<DATA_TYPE>& sph)
+   {
+      DATA_TYPE dist_sqr = DATA_TYPE(0);
+
+      // Compute the square of the distance from the sphere to the box
+      for (int i=0; i<3; ++i)
+      {
+         if (sph.getCenter()[i] < box.getMin()[i])
+         {
+            DATA_TYPE s = sph.getCenter()[i] - box.getMin()[i];
+            dist_sqr += s*s;
+         }
+         else if (sph.getCenter()[i] > box.getMax()[i])
+         {
+            DATA_TYPE s = sph.getCenter()[i] - box.getMax()[i];
+            dist_sqr += s*s;
+         }
+      }
+
+      return dist_sqr <= (sph.getRadius()*sph.getRadius());
+   }
+
+   /**
+    * Tests if the given AABox and Sphere intersect with each other. On an edge
+    * IS considered intersection by this algorithm.
+    *
+    * @param sph  the sphere to test
+    * @param box  the box to test
+    *
+    * @return  true if the items intersect; false otherwise
+    */
+   template<class DATA_TYPE>
+   bool intersect(const Sphere<DATA_TYPE>& sph, const AABox<DATA_TYPE>& box)
+   {
+      return intersect(box, sph);
+   }
+
+   /**
+    * Tests if the given plane and ray intersect with each other.
+    *
+    *  @param ray - the Ray
+    *  @param plane - the Plane
+    *  @param t - an indicator of intersection position
+    *  @post t gives you the intersection point: isect_point = ray.origin + ray.dir * t 
+    *
+    *  @return true if the ray intersects the plane, false otherwise
+    */
+   template<class DATA_TYPE>
+   bool intersect( const Plane<DATA_TYPE>& plane, const Ray<DATA_TYPE>& ray, DATA_TYPE& t )
+   {
+      Vec<DATA_TYPE, 3> N( plane.getNormal() );
+      t = dot( N, N * plane.getOffset() - ray.getOrigin() ) / dot( N, ray.getDir() );
+      return (DATA_TYPE)0 <= t && t <= (DATA_TYPE)1.0; 
+   }
+
+   /**
+    * Tests if the given triangle and ray intersect with each other.
+    *
+    *  @param tri - the triangle (ccw ordering)
+    *  @param ray - the ray
+    *  @param u,v - tangent space u/v coordinates of the intersection
+    *  @param t - an indicator of the intersection location
+    *  @post t gives you the intersection point:
+    *         isect = ray.dir * t + ray.origin
+    *  @return true if the ray intersects the triangle.
+    *  @see from http://www.acm.org/jgt/papers/MollerTrumbore97/code.html
+    */
+   template<class DATA_TYPE>
+   bool intersect( const Tri<DATA_TYPE>& tri, const Ray<DATA_TYPE>& ray, 
+   						   float& u, float& v, float& t )
+   {
+	   const float EPSILON = (DATA_TYPE)0.00001;
+	   Vec<DATA_TYPE, 3> edge1, edge2, tvec, pvec, qvec;
+      float det,inv_det;
+
+      /* find vectors for two edges sharing vert0 */
+      edge1 = tri[1] - tri[0];
+      edge2 = tri[2] - tri[0];
+
+      /* begin calculating determinant - also used to calculate U parameter */
+      gmtl::cross( pvec, ray.getDir(), edge2 );
+
+      /* if determinant is near zero, ray lies in plane of triangle */
+      det = gmtl::dot( edge1, pvec );
+
+      if (det < EPSILON)
+         return false;
+
+      /* calculate distance from vert0 to ray origin */
+      tvec = ray.getOrigin() - tri[0];
+
+      /* calculate U parameter and test bounds */
+      u = gmtl::dot( tvec, pvec );
+      if (u < 0.0 || u > det)
+         return false;
+
+      /* prepare to test V parameter */
+      gmtl::cross( qvec, tvec, edge1 );
+
+      /* calculate V parameter and test bounds */
+      v = gmtl::dot( ray.getDir(), qvec );
+      if (v < 0.0 || u + v > det)
+         return false;
+
+      /* calculate t, scale parameters, ray intersects triangle */
+      t = gmtl::dot( edge2, qvec );
+      inv_det = ((DATA_TYPE)1.0) / det;
+      t *= inv_det;
+      u *= inv_det;
+      v *= inv_det;
+      
+      // test if t is within the ray boundary (when t >= 0)
+      return t >= (DATA_TYPE)0;
+   }
+
+   /**
+    * Tests if the given triangle and line segment intersect with each other.
+    *
+    *  @param tri - the triangle (ccw ordering)
+    *  @param lineseg - the line segment
+    *  @param u,v - tangent space u/v coordinates of the intersection
+    *  @param t - an indicator of the intersection point
+    *  @post t gives you the intersection point:
+    *         isect = lineseg.getDir() * t + lineseg.getOrigin()
+    *
+    *  @return true if the line segment intersects the triangle.
+    */
+   template<class DATA_TYPE>
+   bool intersect( const Tri<DATA_TYPE>& tri, const LineSeg<DATA_TYPE>& lineseg, 
+   						   float& u, float& v, float& t )
+   {
+      const DATA_TYPE eps = (DATA_TYPE)0.0001010101;
+      DATA_TYPE l = length( lineseg.getDir() );
+      if (eps < l)
+      {
+         Ray<DATA_TYPE> temp( lineseg.getOrigin(), lineseg.getDir() / l );
+         bool result = intersect( tri, temp, u, v, t );
+         t /= lineseg.getLength(); // need to normalize the result
+         return result && t <= (DATA_TYPE)1.0;
+      }
+      else 
+         return false;
+   }
 }
+
+   
 
 #endif

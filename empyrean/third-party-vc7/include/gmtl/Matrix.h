@@ -7,8 +7,8 @@
  *
  * -----------------------------------------------------------------
  * File:          $RCSfile: Matrix.h,v $
- * Date modified: $Date: 2003-07-22 03:31:48 $
- * Version:       $Revision: 1.1 $
+ * Date modified: $Date: 2003-11-09 11:57:39 $
+ * Version:       $Revision: 1.2 $
  * -----------------------------------------------------------------
  *
  *********************************************************** ggt-head end */
@@ -82,6 +82,30 @@ public:
       Rows = ROWS, Cols = COLS
    };
 
+   /** Helper class for Matrix op[].
+   * This class encapsulates the row that the user is accessing
+   * and implements a new op[] that passes the column to use
+   */
+   class RowAccessor
+   {
+   public:
+      RowAccessor(Matrix<DATA_TYPE,ROWS,COLS>* mat, const unsigned row)
+         : mMat(mat), mRow(row)
+      {
+         gmtlASSERT(row < ROWS);
+         gmtlASSERT(NULL != mat);
+      }
+
+      DATA_TYPE& operator[](const unsigned column)
+      {
+         gmtlASSERT(column < COLS);
+         return (*mMat)(mRow,column);
+      }
+
+      Matrix<DATA_TYPE,ROWS,COLS>*  mMat;
+      unsigned                      mRow;    /** The row being accessed */
+   };
+
    /** describes the xforms that this matrix has been through. */
    enum XformState
    {
@@ -117,6 +141,7 @@ public:
    }
 
    /** element wise setter for 2x2.
+    * @note variable names specify the row,column number to put the data into
     *  @todo needs mp!!
     */
    void set( DATA_TYPE v00, DATA_TYPE v01,
@@ -302,18 +327,19 @@ public:
    }
 
    /** bracket operator */
-   DATA_TYPE& operator[]( const unsigned i )
+   RowAccessor operator[]( const unsigned row )
    {
-      gmtlASSERT( i < (ROWS*COLS) );
-      return mData[i];
+      return RowAccessor(this, row);
    }
 
-   /** bracket operator */
+   /*
+   // racket operator
    const DATA_TYPE& operator[]( const unsigned i ) const
    {
       gmtlASSERT( i < (ROWS*COLS) );
       return mData[i];
    }
+   */
 
    /** Get a DATA_TYPE pointer to the matrix data
     * RETVAL: Returns a ptr to the head of the matrix data

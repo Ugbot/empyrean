@@ -7,8 +7,8 @@
  *
  * -----------------------------------------------------------------
  * File:          $RCSfile: AABoxOps.h,v $
- * Date modified: $Date: 2003-07-22 03:31:48 $
- * Version:       $Revision: 1.1 $
+ * Date modified: $Date: 2003-11-09 11:57:39 $
+ * Version:       $Revision: 1.2 $
  * -----------------------------------------------------------------
  *
  *********************************************************** ggt-head end */
@@ -87,7 +87,7 @@ inline bool operator!=( const AABox<DATA_TYPE>& b1, const AABox<DATA_TYPE>& b2 )
  *
  * @pre eps must be >= 0
  *
- * @return  true if they are equal, false otherwise
+ * @return  true if their points are within the given tolerance of each other, false otherwise
  */
 template< class DATA_TYPE >
 inline bool isEqual( const AABox<DATA_TYPE>& b1, const AABox<DATA_TYPE>& b2, const DATA_TYPE& eps )

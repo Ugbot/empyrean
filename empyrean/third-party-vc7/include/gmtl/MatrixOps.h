@@ -7,8 +7,8 @@
  *
  * -----------------------------------------------------------------
  * File:          $RCSfile: MatrixOps.h,v $
- * Date modified: $Date: 2003-07-22 03:31:48 $
- * Version:       $Revision: 1.1 $
+ * Date modified: $Date: 2003-11-09 11:57:39 $
+ * Version:       $Revision: 1.2 $
  * -----------------------------------------------------------------
  *
  *********************************************************** ggt-head end */
@@ -49,7 +49,7 @@ namespace gmtl
  */
 
    /** Make identity matrix out the matrix.
-    * make sure every elt is 0.
+    * @post Every element is 0 except the matrix's diagonal, whose elements are 1.
     */
    template <typename DATA_TYPE, unsigned ROWS, unsigned COLS>
    inline Matrix<DATA_TYPE, ROWS, COLS>& identity( Matrix<DATA_TYPE, ROWS, COLS>& result )
@@ -74,7 +74,7 @@ namespace gmtl
 
 
    /** zero out the matrix.
-    * make sure every elt is 0.
+    * @post every element is 0.
     */
    template <typename DATA_TYPE, unsigned ROWS, unsigned COLS>
    inline Matrix<DATA_TYPE, ROWS, COLS>& zero( Matrix<DATA_TYPE, ROWS, COLS>& result )
@@ -90,7 +90,7 @@ namespace gmtl
       {
          for (unsigned int x = 0; x < ROWS*COLS; ++x)
          {
-            result[x] = (DATA_TYPE)0;
+            result.mData[x] = (DATA_TYPE)0;
          }
       }
       return result;
@@ -215,7 +215,7 @@ namespace gmtl
    inline Matrix<DATA_TYPE, ROWS, COLS>& mult( Matrix<DATA_TYPE, ROWS, COLS>& result, const Matrix<DATA_TYPE, ROWS, COLS>& mat, float scalar )
    {
       for (unsigned i = 0; i < ROWS * COLS; ++i)
-         result[i] = mat[i] * scalar;
+         result.mData[i] = mat.mData[i] * scalar;
       return result;
    }
 
@@ -227,7 +227,7 @@ namespace gmtl
    inline Matrix<DATA_TYPE, ROWS, COLS>& mult( Matrix<DATA_TYPE, ROWS, COLS>& result, DATA_TYPE scalar )
    {
       for (unsigned i = 0; i < ROWS * COLS; ++i)
-         result[i] *= scalar;
+         result.mData[i] *= scalar;
       return result;
    }
 
@@ -350,7 +350,7 @@ namespace gmtl
 
          if ( gmtl::Math::abs( pivot) <= 1e-20)
          {
-            std::cerr << "*** pivot = %f in mat_inv. ***\n";
+            std::cerr << "*** pivot = " << pivot << " in mat_inv. ***\n";
             result.setError();
             return result;
          }
@@ -430,18 +430,23 @@ namespace gmtl
 
 /** @} */
 
-/** @ingroup Compare 
+/** @ingroup Compare
  * @name Matrix Comparitors
  * @{
  */
 
-   /** Compare two mats */
+   /** Tests 2 matrices for equality
+    *  @param lhs    The first matrix
+    *  @param rhs    The second matrix
+    *  @pre Both matrices must be of the same size.
+    *  @return true if the matrices have the same element values; false otherwise
+    */
    template <typename DATA_TYPE, unsigned ROWS, unsigned COLS>
    inline bool operator==( const Matrix<DATA_TYPE, ROWS, COLS>& lhs, const Matrix<DATA_TYPE, ROWS, COLS>& rhs )
    {
       for (unsigned int i = 0; i < ROWS*COLS; ++i)
       {
-         if (lhs[i] != rhs[i])
+         if (lhs.mData[i] != rhs.mData[i])
          {
             return false;
          }
@@ -456,15 +461,25 @@ namespace gmtl
       */
    }
 
+   /** Tests 2 matrices for inequality
+    *  @param lhs    The first matrix
+    *  @param rhs    The second matrix
+    *  @pre Both matrices must be of the same size.
+    *  @return false if the matrices differ on any element value; true otherwise
+    */
    template <typename DATA_TYPE, unsigned ROWS, unsigned COLS>
    inline bool operator!=( const Matrix<DATA_TYPE, ROWS, COLS>& lhs, const Matrix<DATA_TYPE, ROWS, COLS>& rhs )
    {
       return bool( !(lhs == rhs) );
    }
 
-   /** Compare two vectors with a tolerance
-   * @pre eps must be >= 0
-   */
+   /** Tests 2 matrices for equality within a tolerance
+    *  @param lhs    The first matrix
+    *  @param rhs    The second matrix
+    *  @param eps    The tolerance value
+    *  @pre Both matrices must be of the same size.
+    *  @return true if the matrices' elements are within the tolerance value of each other; false otherwise
+    */
    template <typename DATA_TYPE, unsigned ROWS, unsigned COLS>
    inline bool isEqual( const Matrix<DATA_TYPE, ROWS, COLS>& lhs, const Matrix<DATA_TYPE, ROWS, COLS>& rhs, const DATA_TYPE& eps = (DATA_TYPE)0 )
    {
@@ -472,7 +487,7 @@ namespace gmtl
 
       for (unsigned int i = 0; i < ROWS*COLS; ++i)
       {
-         if (!Math::isEqual( lhs[i], rhs[i], eps ))
+         if (!Math::isEqual( lhs.mData[i], rhs.mData[i], eps ))
             return false;
       }
       return true;

@@ -7,8 +7,8 @@
  *
  * -----------------------------------------------------------------
  * File:          $RCSfile: LineSegOps.h,v $
- * Date modified: $Date: 2003-07-22 03:31:48 $
- * Version:       $Revision: 1.1 $
+ * Date modified: $Date: 2003-11-09 11:57:39 $
+ * Version:       $Revision: 1.2 $
  * -----------------------------------------------------------------
  *
  *********************************************************** ggt-head end */
@@ -68,13 +68,12 @@ template< class DATA_TYPE >
 inline DATA_TYPE distance( const LineSeg<DATA_TYPE>& lineseg,
                            const Point<DATA_TYPE, 3>& pt )
 {
-   return ( pt - findNearestPt( lineseg, pt ) );
+   return gmtl::length( pt - findNearestPt( lineseg, pt ) );
 }
 
 //--- LineSeg Comparitor ---//
 /**
- * Compare two line segments to see if they are EXACTLY the same. In other
- * words, this comparison is done with zero tolerance.
+ * Compare two line segments to see if they are EXACTLY the same.
  *
  * @param ls1     the first lineseg to compare
  * @param ls2     the second lineseg to compare
@@ -88,8 +87,7 @@ inline bool operator==( const LineSeg<DATA_TYPE>& ls1, const LineSeg<DATA_TYPE>&
 }
 
 /**
- * Compare two line segments to see if they are not EXACTLY the same. In other
- * words, this comparison is done with zero tolerance.
+ * Compare two line segments to see if they are not EXACTLY the same.
  *
  * @param ls1     the first lineseg to compare
  * @param ls2     the second lineseg to compare
@@ -109,11 +107,11 @@ inline bool operator!=( const LineSeg<DATA_TYPE>& ls1,
  *
  * @param ls1     the first lineseg to compare
  * @param ls2     the second lineseg to compare
- * @param pre     the tolerance value to use
+ * @param eps     the tolerance value to use
  *
  * @pre eps must be >= 0
  *
- * @return  true if they are equal, false otherwise
+ * @return  true if they are equal within the tolerance, false otherwise
  */
 template< class DATA_TYPE >
 inline bool isEqual( const LineSeg<DATA_TYPE>& ls1,

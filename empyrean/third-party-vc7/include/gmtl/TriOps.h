@@ -7,8 +7,8 @@
  *
  * -----------------------------------------------------------------
  * File:          $RCSfile: TriOps.h,v $
- * Date modified: $Date: 2003-07-22 03:31:48 $
- * Version:       $Revision: 1.1 $
+ * Date modified: $Date: 2003-11-09 11:57:39 $
+ * Version:       $Revision: 1.2 $
  * -----------------------------------------------------------------
  *
  *********************************************************** ggt-head end */
@@ -80,8 +80,7 @@ Vec<DATA_TYPE, 3> normal( const Tri<DATA_TYPE>& tri )
  */
 
 /**
- * Compare two triangles to see if they are EXACTLY the same. In other words,
- * this comparison is done with zero tolerance.
+ * Compare two triangles to see if they are EXACTLY the same.
  *
  * @param tri1    the first triangle to compare
  * @param tri2    the second triangle to compare
@@ -97,8 +96,7 @@ bool operator==( const Tri<DATA_TYPE>& tri1, const Tri<DATA_TYPE>& tri2 )
 }
 
 /**
- * Compare two triangle to see if they are not EXACTLY the same. In other words,
- * this comparison is done with zero tolerance.
+ * Compare two triangle to see if they are not EXACTLY the same.
  *
  * @param tri1    the first triangle to compare
  * @param tri2    the second triangle to compare
@@ -120,7 +118,7 @@ bool operator!=( const Tri<DATA_TYPE>& tri1, const Tri<DATA_TYPE>& tri2 )
  *
  * @pre  eps must be >= 0
  *
- * @return  true if they are equal, false otherwise
+ * @return  true if they are equal within the tolerance, false otherwise
  */
 template< class DATA_TYPE >
 bool isEqual( const Tri<DATA_TYPE>& tri1, const Tri<DATA_TYPE>& tri2,

@@ -7,8 +7,8 @@
  *
  * -----------------------------------------------------------------
  * File:          $RCSfile: AABox.h,v $
- * Date modified: $Date: 2003-07-22 03:31:48 $
- * Version:       $Revision: 1.1 $
+ * Date modified: $Date: 2003-11-09 11:57:39 $
+ * Version:       $Revision: 1.2 $
  * -----------------------------------------------------------------
  *
  *********************************************************** ggt-head end */
@@ -104,7 +104,7 @@ namespace gmtl
       }
 
       /**
-       * Tests if this box is empty.
+       * Tests if this box occupies no space.
        *
        * @return  true if the box is empty, false otherwise
        */

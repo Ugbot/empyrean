@@ -7,8 +7,8 @@
  *
  * -----------------------------------------------------------------
  * File:          $RCSfile: Point.h,v $
- * Date modified: $Date: 2003-07-22 03:31:48 $
- * Version:       $Revision: 1.1 $
+ * Date modified: $Date: 2003-11-09 11:57:39 $
+ * Version:       $Revision: 1.2 $
  * -----------------------------------------------------------------
  *
  *********************************************************** ggt-head end */
@@ -70,7 +70,7 @@ public:
    Point()
    {
       for (unsigned i = 0; i < SIZE; ++i)
-         mData[i] = (DATA_TYPE)0;
+         this->mData[i] = (DATA_TYPE)0;
    }
 
    /** @name Value constructors
@@ -83,6 +83,10 @@ public:
    Point(const VecBase<DATA_TYPE, SIZE>& rVec)
       : BaseType(rVec)
    {;}
+
+   /** 
+    * Construct a 2-D point with 2 given values
+    */
    Point(const DATA_TYPE& val0,const DATA_TYPE& val1)
    : BaseType(val0, val1)
    {
@@ -90,6 +94,9 @@ public:
       gmtlASSERT( SIZE == 2 && "out of bounds element access in Point" );
    }
 
+   /** 
+    * Construct a 3-D point with 2 given values
+    */
    Point(const DATA_TYPE& val0,const DATA_TYPE& val1,const DATA_TYPE& val2)
    : BaseType(val0, val1, val2)
    {
@@ -97,6 +104,9 @@ public:
       gmtlASSERT( SIZE == 3 && "out of bounds element access in Point" );
    }
 
+   /** 
+    * Construct a 4-D point with 2 given values
+    */
    Point(const DATA_TYPE& val0,const DATA_TYPE& val1,const DATA_TYPE& val2,const DATA_TYPE& val3)
    : BaseType(val0, val1, val2, val3)
    {
@@ -108,8 +118,13 @@ public:
 };
 
 // --- helper types --- //
+typedef Point<int,2> Point2i;
+typedef Point<float,2> Point2f;
+typedef Point<double,2> Point2d;
+typedef Point<int, 3> Point3i;
 typedef Point<float,3> Point3f;
 typedef Point<double,3> Point3d;
+typedef Point<int, 4> Point4i;
 typedef Point<float,4> Point4f;
 typedef Point<double,4> Point4d;
 
