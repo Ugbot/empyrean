@@ -1,10 +1,2 @@
 Import('*')
-Install(env, Split("""
-    new.png
-    open.png
-    save.png
-    tool_rect.png
-    tool_translate.png
-    view_translate.png
-    view_zoom.png
-"""))
+InstallResources(env)

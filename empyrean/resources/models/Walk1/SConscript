@@ -1,8 +1,2 @@
 Import('*')
-
-Install(env, Split("""
-    walk1.caf
-    walk1.cfg
-    walk1.cmf
-    walk1.csf
-"""))
+InstallResources(env)

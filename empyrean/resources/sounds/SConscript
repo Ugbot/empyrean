@@ -1,4 +1,3 @@
 Import('*')
-Install(env, Split("""
-    attack.wav
-"""))
+InstallResources(env)
+

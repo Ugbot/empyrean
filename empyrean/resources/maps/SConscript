@@ -1,12 +1,2 @@
 Import('*')
-
-Install(env, Split("""
-    CLOUD2.JPG
-    Mountains.jpg
-    map1.mtl
-    map1.obj
-    map1.obj.meta
-    map2.mtl
-    map2.obj
-    map2.obj.meta
-"""))
+InstallResources(env)

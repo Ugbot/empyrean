@@ -3,6 +3,28 @@ from os.path import join
 from glob import glob
 from types import ListType
 
+
+EXTENSIONS = Split("""
+    jpg
+    JPG
+    png
+    ttf
+    TXT
+    obj
+    mtl
+    meta
+    wav
+    
+    cal3d
+    caf
+    cfg
+    cmf
+    crf
+    csf
+    raw
+""")
+
+
 base_env = Environment(ENV=os.environ)
 base_env['BUILDERS']['ConvertImage'] = Builder(
     action='corconvert $SOURCE $TARGET')
@@ -18,12 +40,22 @@ def Install(env, files):
     if type(files) is not ListType:
         files = [files]
     for f in files:
-        env.Install(env['DEST'].Dir(Here()), f)
+        env.Install(env['DEST'].Dir(os.path.join(os.path.dirname(f), Here())),
+                    f)
 
 def ConvertImage(env, target, source):
     env.ConvertImage(env['DEST'].Dir(Here()).File(target), source)
 
-Export('Install ConvertImage')
+def FindResources():
+    result = []
+    for e in EXTENSIONS:
+        result.extend(glob('*.%s' % e))
+    return result
+
+def InstallResources(env):
+    Install(env, FindResources())
+
+Export('Install ConvertImage FindResources InstallResources')
 
 tdirs = ['../build']
 if base_env.get('PLATFORM') == 'cygwin':
