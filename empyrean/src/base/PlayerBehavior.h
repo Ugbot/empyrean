@@ -12,8 +12,7 @@ namespace pyr {
     public:
         PYR_BEHAVIOR_NAME("player");
 
-        PlayerBehavior(const std::string& /*resource*/) {
-        }
+        PlayerBehavior(const std::string& resource);
 
         void update(Entity* entity, float dt, const Map* map);
 

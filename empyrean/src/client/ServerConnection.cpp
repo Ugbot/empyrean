@@ -35,7 +35,7 @@ namespace pyr {
     ServerConnection::Status ServerConnection::getStatus() {
         return _status;
     }
-    
+
     bool ServerConnection::loginFailed() {
         return _loginFailed;
     }
@@ -43,12 +43,12 @@ namespace pyr {
     const std::string& ServerConnection::getError() {
         return _error;
     }
-    
+
     void ServerConnection::update() {
         if (_connectionMaker) {
             ServerConnectionThread::Status status = _connectionMaker->getStatus();
             if (status == ServerConnectionThread::CONNECT_SUCCEEDED) {
-            
+
                 _connection = new Connection(_connectionMaker->getSocket());
                 _connection->definePacketHandler(this, &ServerConnection::handleLoginResponse);
                 _connection->definePacketHandler(this, &ServerConnection::handleLobby);
@@ -58,6 +58,7 @@ namespace pyr {
                 _connection->definePacketHandler(this, &ServerConnection::handleEntityAdded);
                 _connection->definePacketHandler(this, &ServerConnection::handleEntityRemoved);
                 _connection->definePacketHandler(this, &ServerConnection::handleEntityUpdated);
+                _connection->definePacketHandler(this, &ServerConnection::handleAppearance);
                 
                 _connectionMaker = 0;
                 _connectionThread = 0;
@@ -188,6 +189,8 @@ namespace pyr {
         if (entity) {
             the<Scene>().removeEntity(p->id());
             delete entity;
+        } else {
+            PYR_LOG() << "Received remove entity packet for nonexistent entity " << p->id();
         }
     }
 
@@ -196,6 +199,26 @@ namespace pyr {
         if (entity) {
             entity->setPos(p->pos());
             entity->setVel(p->vel());
+        } else {
+            PYR_LOG() << "Received update entity packet for nonexistent entity " << p->id();
+        }
+    }
+
+    void ServerConnection::handleAppearance(Connection*, AppearancePacket* p) {
+        Entity* entity = the<Scene>().getEntity(p->id());
+        if (entity) {
+            Appearance* appearance = entity->getAppearance();
+            switch (p->code()) {
+                case AP_COMMAND:         appearance->sendCommand(p->str()); break;
+                case AP_ANIMATION:       appearance->beginAnimation(p->str()); break;
+                case AP_ANIMATION_CYCLE: appearance->beginAnimationCycle(p->str()); break;
+                default:
+                    PYR_LOG() << "Unknown code in appearance packet:";
+                    p->log();
+                    break;
+            }
+        } else {
+            PYR_LOG() << "Received appearance packet for nonexistent entity " << p->id();
         }
     }
 

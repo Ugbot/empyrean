@@ -13,15 +13,9 @@ namespace pyr {
         {
         }
 
-        void draw() const {
-            getClientAppearance()->draw();
-        }
-
         /// Override update() so we can update the appearance.
-        void update(float dt, const Map* map) {
-            Entity::update(dt, map);
-            getClientAppearance()->update(dt);
-        }
+        void update(float dt, const Map* map);
+        void draw() const;
 
     private:
         /// We specified the appearance, so we know what type it is.

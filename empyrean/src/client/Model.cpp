@@ -36,10 +36,15 @@ namespace pyr {
      */
     class CoreModel : public RefCounted {
         typedef std::map<std::string,CoreModel*> InstanceMap;
+        
+        /// This static data kind of scares me.
         static InstanceMap _instances;
 
         CalCoreModel _coreModel;
         float _scale;
+
+        // The names of each animation in order.  Use this to map names to ids.
+        std::vector<std::string> _names;
 
         CoreModel(const std::string& id) {
             _coreModel.create(id);
@@ -97,12 +102,14 @@ namespace pyr {
             vector<string> meshes;
             vector<string> materials;
 
+            _names.clear();
+
             for (size_t i = 0; i < modelRoot->getChildCount(); ++i) {
                 XMLNode* child = modelRoot->getChild(i);
                 if (child->getName() == "skeleton") {
                     skeleton = child->getAttr("file");
                 } else if (child->getName() == "animation") {
-                    // Utilize name in some way.
+                    _names.push_back(child->getAttr("name"));
                     animations.push_back(child->getAttr("file"));
                 } else if (child->getName() == "mesh") {
                     meshes.push_back(child->getAttr("file"));
@@ -282,6 +289,15 @@ namespace pyr {
         float getScale() const {
             return _scale;
         }
+        
+        int getAnimationID(const std::string& name) {
+            for (size_t i = 0; i < _names.size(); ++i) {
+                if (_names[i] == name) {
+                    return static_cast<int>(i);
+                }
+            }
+            return -1;
+        }
     };
 
     CoreModel::InstanceMap CoreModel::_instances;
@@ -295,7 +311,7 @@ namespace pyr {
             _model.attachMesh(i);
 
         _model.setMaterialSet(0);
-        
+
         _scale = _coreModel->getScale();
     }
 
@@ -315,4 +331,27 @@ namespace pyr {
         PYR_PROFILE_BLOCK("Model::update");
         _model.update(timedelta);
     }
-};
+
+    void Model::blendCycle(const std::string& animation, float weight, float delay) {
+        int id = _coreModel->getAnimationID(animation);
+        if (id != -1) {
+            if (_lastCycle != -1) {
+                _model.getMixer()->clearCycle(_lastCycle, 0.1f);
+            }
+            _lastCycle = id;
+            _model.getMixer()->blendCycle(id, weight, delay);
+        } else {
+            PYR_LOG() << "WARNING: animation '" << animation << "' does not map to an id";
+        }
+    }
+
+    void Model::executeAction(const std::string& animation, float weight, float delayIn, float delayOut) {
+        int id = _coreModel->getAnimationID(animation);
+        if (id != -1) {
+            _model.getMixer()->executeAction(id, delayIn, delayOut /*, weight*/);
+        } else {
+            PYR_LOG() << "WARNING: animation '" << animation << "' does not map to an id";
+        }
+    }
+
+}

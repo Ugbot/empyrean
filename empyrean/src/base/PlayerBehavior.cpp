@@ -7,6 +7,11 @@
 
 namespace pyr {
 
+    PlayerBehavior::PlayerBehavior(const std::string& /*resource*/) {
+        // We would like to be able to start in some sort of animation.
+        //beginAnimationCycle("idle");
+    }
+
     void PlayerBehavior::update(Entity* entity, float dt, const Map* map) {
         // Default behavior.
         Vec2f& pos = entity->getPos();
@@ -43,23 +48,28 @@ namespace pyr {
 
         if (event == "Begin Right") {
             entity->getVel()[0] = speed;
+            sendAppearanceCommand(entity, "Begin Left");
+            beginAnimationCycle(entity, "walk");
         }
-                
+
         if (event == "Begin Left") {
             entity->getVel()[0] = -speed;
+            sendAppearanceCommand(entity, "Begin Right");
+            beginAnimationCycle(entity, "walk");
         }
-             
+
         if (event == "End Right" || event == "End Left") {
             entity->getVel()[0] = 0;
+            beginAnimationCycle(entity, "idle");
         }
-                
+
         if (event == "Jump") {
             if (_jumping < 2) {
                 entity->getVel()[1] = jumpSpeed;
                 ++_jumping;
             }
         }
-                
+
         if (event == "Attack") {
         }
     }

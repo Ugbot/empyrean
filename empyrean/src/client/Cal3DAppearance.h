@@ -31,6 +31,7 @@ namespace pyr {
     private:
         std::string _resource;
         ScopedPtr<Model> _model;
+        Zeroed<float> _direction;
     };
 
 }

@@ -4,6 +4,7 @@ SOURCES = Split("""
     AppearanceFactory.cpp
     Application.cpp
     Cal3DAppearance.cpp
+    ClientEntity.cpp
     Configuration.cpp
     CreditsState.cpp
     GameEntity.cpp

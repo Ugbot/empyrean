@@ -10,12 +10,18 @@ namespace pyr {
     }
 
     void Cal3DAppearance::sendCommand(const std::string& command) {
+        if (command == "Begin Left") {
+            _direction = 90;
+        } else if (command == "Begin Right") {
+            _direction = -90;
+        }
     }
 
     void Cal3DAppearance::beginAnimation(const std::string& animation) {
     }
 
     void Cal3DAppearance::beginAnimationCycle(const std::string& animation) {
+        _model->blendCycle(animation, 1.0f, 0.1f);
     }
 
     void Cal3DAppearance::update(float dt) {
@@ -23,11 +29,10 @@ namespace pyr {
     }
 
     void Cal3DAppearance::draw() {
-
         // Render player model.
         glPushMatrix();
         glEnable(GL_DEPTH_TEST);
-        //glRotatef(_direction + 180, 0, 1, 0);
+        glRotatef(_direction + 180, 0, 1, 0);
         glRotatef(90, 1, 0, 0);
         glScalef(1, 1, -1);
         DefaultRenderer().draw(_model.get());

@@ -3,7 +3,6 @@
 
 #include <map>
 #include "ClientEntity.h"
-#include "Collider.h"
 #include "Utility.h"
 #include "Types.h"
 
@@ -24,9 +23,8 @@ namespace pyr {
 
         GameEntity();
 
-        void draw();
         void update(float dt, const Map* terrain);
-        
+
     private:
         typedef void (GameEntity::*StateHandler)(float dt);
         StateHandler _state;
@@ -34,7 +32,6 @@ namespace pyr {
         void changeState(StateHandler* newstate);
 
         void phaseOutAnimation(Animation name);
-        void correctDirection(float xvel);
 
         void startAttackState();
         void updateAttackState(float dt);
@@ -51,9 +48,6 @@ namespace pyr {
         void startWalkState();
         void updateWalkState(float dt);
 
-        /// Data from last collision detection test.  Used for debug drawing.
-        CollisionData _lastCD;
-
         // Jumping animation information
         bool _jumpStart;
         float _jumpStartTime;
@@ -62,9 +56,6 @@ namespace pyr {
         bool _attackStart;
         float _attackingStartTime;
         float _origDirection;
-
-        // Character Information
-        float _direction;
     };
 
 }

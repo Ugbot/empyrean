@@ -18,6 +18,7 @@
 
 namespace pyr {
 
+    class AppearancePacket;
     class EntityAddedPacket;
     class EntityRemovedPacket;
     class EntityUpdatedPacket;
@@ -51,7 +52,7 @@ namespace pyr {
         
         bool hasJoinGameResponse() { return _hasJoinGameResponse; }
         u16 getJoinGameResponse()  { return _joinGameResponse; }
-        
+
         bool hasNewCharacterResponse() { return _hasNewCharacterResponse; }
         u16 getNewCharacterResponse()  { return _newCharacterResponse; }
         
@@ -80,7 +81,7 @@ namespace pyr {
          *           false otherwise
          */
         bool sendPacket(Packet* p);
-    
+
         void handleLoginResponse(Connection*, LoginResponsePacket* p);
         void handleLobby(Connection*, LobbyPacket* p);
         void handleJoinGameResponse(Connection*, JoinGameResponsePacket* p);
@@ -90,6 +91,7 @@ namespace pyr {
         void handleEntityAdded(Connection*, EntityAddedPacket* p);
         void handleEntityRemoved(Connection*, EntityRemovedPacket* p);
         void handleEntityUpdated(Connection*, EntityUpdatedPacket* p);
+        void handleAppearance(Connection*, AppearancePacket* p);
     
         Inited<Status, DISCONNECTED> _status;
         

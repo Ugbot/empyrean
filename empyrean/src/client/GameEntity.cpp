@@ -20,79 +20,13 @@ namespace pyr {
     GameEntity::GameEntity()
         : ClientEntity(0, 0)
     {
-        _direction = 90;
-
         // initialize other values
         _jumpStart = false;
         _attackStart = false;
         startStandState();
     }
 
-    void GameEntity::draw() {
-        #if 0
-        // Render player model.
-        glPushMatrix();
-        glEnable(GL_DEPTH_TEST);
-        glRotatef(_direction + 180, 0, 1, 0);
-        glRotatef(90, 1, 0, 0);
-        glScalef(1, 1, -1);
-        _renderer->draw(_model);
-        glDisable(GL_DEPTH_TEST);
-        glPopMatrix();
-        #endif
-
-/*
-        // Render player bounding box [debugging].
-
-        glBegin(GL_LINE_LOOP);
-        glVertex2f(-width/2,0);
-        glVertex2f(width/2,0);
-        glVertex2f(width/2,height);
-        glVertex2f(-width/2,height);
-        glEnd();
-
-        // Render last collision data [debugging].
-        glColor3f(1, 0, 0);
-        glBegin(GL_LINES);
-        for (size_t i = 0; i < _lastCD.interesting.size(); ++i) {
-            glVertex(_lastCD.interesting[i].v1 - getPos());
-            glVertex(_lastCD.interesting[i].v2 - getPos());
-        }
-        glEnd();
-
-        glColor3f(0, 1, 0);
-        glBegin(GL_POINTS);
-        for (size_t i = 0; i < _lastCD.points.size(); ++i) {
-            glVertex(_lastCD.points[i] - getPos());
-        }
-        glEnd();*/
-    }
-
     void GameEntity::update(float dt, const Map* terrain) {
-#if 0
-        // Provide client-side estimation of server physics model.
-        Vec2f origPos = getPos();
-
-        getPos() += getVel() * dt;
-        getVel()[1] += constants::GRAVITY * dt;             // gravity
-        if(getVel()[1] < -constants::TERMINAL_VELOCITY) {                // terminal velocity
-            getVel()[1] = -constants::TERMINAL_VELOCITY;
-        }
-
-        // For testing to see if jumping is done
-        Vec2f precollideposition = getPos();
-        Vec2f precollidevelocity = getVel();
-
-        _lastCD = collide(dt, origPos, getPos(), getVel(), getBounds(), terrain);
-
-        // If you are higher than you once were so you were forced up and you were falling
-        // (before the collision) This means that you hit a surface below you so therefore
-        // reset jumping
-        if((precollideposition[1]-getPos()[1]) < 0 && precollidevelocity[1] < FALLING_SPEED) {
-             _jumping = 0;
-        }
-#endif
-
         if (_state) {
             (this->*_state)(dt);
         }
@@ -103,7 +37,7 @@ namespace pyr {
         if(_attackStart) {
             return false; // already attacking can't attack right now
         }
-        
+
         _attackStart = true;
         return true;
     }
@@ -113,21 +47,12 @@ namespace pyr {
         //_model->getModel().getMixer()->clearCycle((int) name, 0.1f);
     }
 
-    void GameEntity::correctDirection(float xvel) {
-        if (xvel > 0) {
-            _direction = 90;
-        } else if (xvel < 0) {
-            _direction = -90;
-        }
-    }
-
     // Attack state transition in
     void GameEntity::startAttackState() {
         //_model->getModel().getMixer()->executeAction(ATTACKING, 0.1f, 0.1f);
         _attackingStartTime = 0;
-        _origDirection = _direction;
+        //_origDirection = _direction;
         _state = &GameEntity::updateAttackState;
-        
     }
 
     // Attack state
@@ -157,10 +82,10 @@ namespace pyr {
             }
         }
         */
-        
+
         //correctDirection(xvel);
     }
-    
+
     // Jump state transition in
     void GameEntity::startJumpState() {
         //_model->getModel().getMixer()->blendCycle(JUMPING, 1.0f, 0.1f);
@@ -223,7 +148,7 @@ namespace pyr {
             phaseOutAnimation(JUMPSTART);
             startJumpState();
         }
-        correctDirection(xvel);
+        //correctDirection(xvel);
     }
 
     // Stand state transition in
@@ -279,7 +204,7 @@ namespace pyr {
             phaseOutAnimation(WALKING);
             startStandState();
         } 
-        correctDirection(xvel);
+        //correctDirection(xvel);
     }
 
 }
