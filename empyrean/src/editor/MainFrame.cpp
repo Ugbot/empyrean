@@ -5,6 +5,7 @@
 #include "ObstructionTool.h"
 #include "MapFile.h"
 #include "MapElement.h"
+#include "MapTree.h"
 
 namespace pyr {
 
@@ -17,7 +18,6 @@ namespace pyr {
         ID_TOOL_OBSTRUCTION,
     };
 
-
     BEGIN_EVENT_TABLE(MainFrame, wxFrame)
         EVT_MENU(wxID_EXIT, MainFrame::onExit)
         EVT_MENU(wxID_UNDO, MainFrame::onUndo)
@@ -29,6 +29,23 @@ namespace pyr {
         EVT_GRID_CELL_CHANGE(MainFrame::onChangeGrid)
     END_EVENT_TABLE()
     
+    const Map* MainFrame::getMap() const {
+        return _map.get();
+    }
+
+    void MainFrame::handleCommand(::pyr::Command* cmd) {
+        CommandContext context(_mapTree, _mapView, this, _map.get());
+
+        clearList(_redoList);
+        _undoList.push(cmd);
+        cmd->perform(&context);
+    }
+
+    void MainFrame::updateTree() {
+
+        _mapTree->update(_map.get());
+    }
+
     MainFrame::MainFrame()
         : wxFrame(0, -1, "pyrEdit", wxDefaultPosition, wxSize(640, 480))
         , _map(new Map)
@@ -46,10 +63,15 @@ namespace pyr {
         e->addVert(gmtl::Vec2f(1, 0), gmtl::Vec2f(1, 0), gmtl::Vec4f(1, 1, 1, 1));
         e->addVert(gmtl::Vec2f(1, 1), gmtl::Vec2f(1, 1), gmtl::Vec4f(1, 1, 1, 1));
         e->addVert(gmtl::Vec2f(0, 1), gmtl::Vec2f(0, 1), gmtl::Vec4f(1, 1, 1, 1));
+        e->addVert(gmtl::Vec2f(-1, 0), gmtl::Vec2f(-1, 0), gmtl::Vec4f(0, 0, 0, 1));
+        e->addVert(gmtl::Vec2f(-1, 1), gmtl::Vec2f(-1, 1), gmtl::Vec4f(0, 0, 0, 1));
         e->addTri(0, 1, 2);
         e->addTri(0, 2, 3);
+        e->addTri(0, 3, 5);
+        e->addTri(0, 4, 5);
         mapRoot->children.push_back(e);
         //mapRoot->pos = gmtl::Vec2f(-1, 0);
+        updateTree();
     }
 
     MainFrame::~MainFrame() {
@@ -57,18 +79,6 @@ namespace pyr {
         clearList(_redoList);
     }
 
-    const Map* MainFrame::getMap() const {
-        return _map.get();
-    }
-
-    void MainFrame::handleCommand(::pyr::Command* cmd) {
-        clearList(_redoList);
-        _undoList.push(cmd);
-        bool refresh = cmd->perform(_map.get());
-        if (refresh) {
-            _mapView->Refresh();
-        }
-    }
     void MainFrame::createMenu() {
         wxMenu* fileMenu = new wxMenu;
         fileMenu->Append(wxID_NEW,    "&New");
@@ -149,7 +159,7 @@ namespace pyr {
             _splitter, -1, wxDefaultPosition, wxDefaultSize,
             wxSP_3D | wxSP_LIVE_UPDATE | wxCLIP_CHILDREN);
         
-        _mapTree = new wxTreeCtrl(split2, -1, wxDefaultPosition, wxDefaultSize, wxTR_DEFAULT_STYLE | wxTR_HIDE_ROOT);
+        _mapTree = new MapTree(split2);
         wxTreeItemId root = _mapTree->AddRoot("Root");
         _mapTree->AppendItem(root, "Map");
         _mapTree->AppendItem(root, "Imports");
@@ -213,10 +223,8 @@ namespace pyr {
             ::pyr::Command* c = _undoList.top();
             _undoList.pop();
             _redoList.push(c);
-            bool refresh = c->undo(_map.get());
-            if (refresh) {
-                _mapView->Refresh();
-            }
+            CommandContext context(_mapTree, _mapView, this, _map.get());
+            c->undo(&context);
         }
     }
 
@@ -225,10 +233,8 @@ namespace pyr {
             pyr::Command* c = _redoList.top();
             _redoList.pop();
             _undoList.push(c);
-            bool refresh = c->perform(_map.get());
-            if (refresh) {
-                _mapView->Refresh();
-            }
+            CommandContext context(_mapTree, _mapView, this, _map.get());
+            c->perform(&context);
         }
     }
 

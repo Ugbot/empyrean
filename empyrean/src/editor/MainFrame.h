@@ -9,23 +9,25 @@
 namespace pyr {
 
     class MapView;
-
+    class MapTree;
 
     // HACK THE MAINFRAME
     class MainFrame : public wxFrame, public CommandReciever {
         friend class Tool;
     public:
-        MainFrame();
-        ~MainFrame();
-        
+
         const Map* getMap() const;
 
         virtual void handleCommand(::pyr::Command* cmd);
+        void updateTree();
+
+        MainFrame();
+        ~MainFrame();
 
     protected:
         // contents
         wxSplitterWindow* _splitter;
-        wxTreeCtrl* _mapTree;
+        MapTree* _mapTree;
         MapView* _mapView;
         wxGrid* _propertiesGrid;
 
@@ -34,7 +36,7 @@ namespace pyr {
         void createToolBars();
         void createContents();
         void createStatusBar();
-        
+       
         // events
         void onExit(wxCommandEvent&);
         void onUndo(wxCommandEvent&);

@@ -16,8 +16,17 @@ namespace pyr {
         virtual void visitGroup(GroupElement* e);
 
     private:
+        /**
+         * The TreeView we are updating.
+         */
         wxTreeCtrl* _treeView;
+
+        /** 
+         * Explicit stack of where we are in the tree, since we can't outright
+         * recurse, and thereby keep such a list implicitly.
+         */
         std::stack<wxTreeItemId> _parentId;
+
     };
 
 }

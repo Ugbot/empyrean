@@ -14,5 +14,7 @@ namespace pyr {
 
 }
 
+DECLARE_APP(pyr::Editor);
+
 
 #endif
