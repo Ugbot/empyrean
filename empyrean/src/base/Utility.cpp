@@ -119,6 +119,7 @@ namespace pyr {
     }
 
     bool fileExists(const string& path) {
+        // On Linux, this succeeds for directories.  o_O
         FILE* file = fopen(path.c_str(), "rb");
         if (file) {
             fclose(file);

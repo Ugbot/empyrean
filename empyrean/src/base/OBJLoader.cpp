@@ -79,6 +79,7 @@ namespace pyr {
                     } else if (command == "map_Kd") {
                         string texture;
                         if (ss >> texture) {
+                            PYR_LOG() << "Material referencing texture: " << texture;
                             current.texture = texture;
                         }
                     }
@@ -107,7 +108,10 @@ namespace pyr {
 
             MaterialPtr m = new Material;
             m->diffuse = om->diffuse;
-            m->texture = ph.findFile(om->texture);
+            if (!om->texture.empty()) {
+                m->texture = ph.findFile(om->texture);
+                PYR_LOG() << "Texture found at: " << m->texture;
+            }
             return m;
         }
 
@@ -115,7 +119,7 @@ namespace pyr {
         vector<OBJMaterial> _materials;
     };
 
-    
+
     vector<string> splitVertexString(const string& s) {
         /// @todo These asserts should be run-time checks.
 
@@ -194,7 +198,7 @@ namespace pyr {
         Map* map = new Map;
 
         GeometryElementPtr currentGeometry = new GeometryElement;
-        
+
         string line;
         while (getline(file, line)) {
             stringstream ss(line);
@@ -204,7 +208,10 @@ namespace pyr {
                 if (command == "mtllib") {
                     string mtlfile;
                     while (ss >> mtlfile) {
-                        mtllib.loadFrom(ph.findFile(mtlfile));
+                        std::string found = ph.findFile(mtlfile);
+                        PYR_LOG() << "Map referencing material library " << mtlfile
+                                  << " found at: " << found;
+                        mtllib.loadFrom(found);
                     }
                 } else if (command == "usemtl") {
                     string material;

@@ -13,7 +13,7 @@
     #include <stdio.h>
 
     void pyr::error(const std::string& message) {
-        fputs(message.c_str(), stderr);
+        fprintf(stderr, "%s\n", message.c_str());
     }
 
 #endif
