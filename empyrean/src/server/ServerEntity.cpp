@@ -8,7 +8,6 @@ namespace pyr {
         Vec2f origPos = _pos;       // Save original position
 
         _pos += _vel * dt;
-        _pos[1] = std::max(0.0f, _pos[1]); // collision detection
         _vel[1] -= 9.81f * dt;             // gravity
 
         float height = 1.9f;

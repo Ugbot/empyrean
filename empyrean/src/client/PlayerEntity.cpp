@@ -32,7 +32,7 @@ namespace pyr {
         _renderer->draw(_model);
         glDisable(GL_DEPTH_TEST);
         glPopMatrix();
-
+        /*
         // Render player bounding box [debugging].
         float height = 1.9f;
         float width = 0.3f;
@@ -58,7 +58,7 @@ namespace pyr {
         for (size_t i = 0; i < _lastCD.points.size(); ++i) {
             glVertex(_lastCD.points[i] - getPos());
         }
-        glEnd();
+        glEnd();*/
     }
 
     void PlayerEntity::update(float dt, const Map* terrain) {
