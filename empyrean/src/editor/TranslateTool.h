@@ -9,10 +9,6 @@ namespace pyr {
 
     class TranslateTool : public Tool {
     public:
-        TranslateTool(MainFrame* frame)
-            : Tool(frame)
-        {
-        }
     };
 
 }

@@ -221,6 +221,12 @@
 			<File
 				RelativePath="..\..\src\editor\TranslateTool.h">
 			</File>
+			<File
+				RelativePath="..\..\src\editor\TranslateViewTool.h">
+			</File>
+			<File
+				RelativePath="..\..\src\editor\ZoomViewTool.h">
+			</File>
 		</Filter>
 	</Files>
 	<Globals>

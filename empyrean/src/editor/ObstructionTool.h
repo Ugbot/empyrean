@@ -6,8 +6,6 @@
 namespace pyr {
     class ObstructionTool : public Tool {
     public:
-        ObstructionTool(MainFrame* mf);
-
         virtual bool onLeftDown(ToolEvent& event);
         virtual void onRender();
 

@@ -1,26 +1,24 @@
-#include "wx.h"
-#include "Tool.h"
+#include "Editor.h"
 #include "MainFrame.h"
+#include "Tool.h"
+#include "wx.h"
 
 namespace pyr {
-    Tool::Tool(MainFrame* mf)
-        : _mainFrame(mf)
-    {}
 
-    MainFrame* Tool::getMainFrame() const {
-        return _mainFrame;
+    MainFrame* Tool::getMainFrame() {
+        return Editor::getMainFrame();
     }
 
-    MapView* Tool::getMapView() const {
-        return _mainFrame->_mapView;
+    MapView* Tool::getMapView() {
+        return getMainFrame()->getMapView();
     }
 
-    const Map* Tool::getMap() const {
-        return _mainFrame->getMap();
+    const Map* Tool::getMap() {
+        return getMainFrame()->getMap();
     }
 
     void Tool::setPropertiesGrid(std::map<std::string, std::string>& properties) {
-        wxGrid* grid = _mainFrame->_propertiesGrid;
+        wxGrid* grid = getMainFrame()->getPropertiesGrid();
 
         grid->BeginBatch();
         grid->ClearGrid();

@@ -7,11 +7,6 @@
 #include "AddObstructionSegmentCommand.h"
 
 namespace pyr {
-    ObstructionTool::ObstructionTool(MainFrame* mf)
-        : Tool(mf)
-    {
-    }
-
     bool ObstructionTool::onLeftDown(ToolEvent& event) {
         if (event.ctrl) {
             // TODO: make sure there's no point already close by?

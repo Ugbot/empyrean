@@ -13,16 +13,16 @@ namespace pyr {
 
     // HACK THE MAINFRAME
     class MainFrame : public wxFrame, public CommandReciever {
-        friend class Tool;
     public:
-
-        const Map* getMap() const;
-        
-        virtual void handleCommand(pyr::Command* cmd);
-        void updateTree();
-
         MainFrame();
         ~MainFrame();
+
+        const Map* getMap() const;
+        MapView* getMapView() const;
+        wxGrid* getPropertiesGrid() const;
+        
+        void handleCommand(pyr::Command* cmd);
+        void updateTree();
 
     private:
         void createMenu();
@@ -34,8 +34,16 @@ namespace pyr {
         void onExit(wxCommandEvent&);
         void onUndo(wxCommandEvent&);
         void onRedo(wxCommandEvent&);
-        void onUseImageTool(wxCommandEvent&);
+        
+        // view tool selection
+        void onUseTranslateViewTool(wxCommandEvent&);
+        void onUseZoomViewTool(wxCommandEvent&);
+        
+        // tool selection
+        void onUseTranslateTool(wxCommandEvent&);
+        void onUseRectangleTool(wxCommandEvent&);
         void onUseObstructionTool(wxCommandEvent&);
+        
         void onBeginEditGrid(wxGridEvent& event);
         void onChangeGrid(wxGridEvent& event);
         void onSelectTreeNode(wxTreeEvent& event);

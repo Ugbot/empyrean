@@ -21,7 +21,7 @@ namespace pyr {
         private:                            \
             name(const name& n);            \
             void operator=(const name& n);  \
-            static void destroy();          \
+            static void delete_instance();  \
             static name* _instance;         \
             static bool _deleted;
             
@@ -36,11 +36,11 @@ namespace pyr {
             PYR_ASSERT(!_deleted, "Used singleton after it was deleted!");  \
             if (!_instance) {                                               \
                 _instance = new name;                                       \
-                atexit(destroy);                                            \
+                atexit(delete_instance);                                    \
             }                                                               \
             return *_instance;                                              \
         }                                                                   \
-        void name::destroy() {                                              \
+        void name::delete_instance() {                                      \
             delete _instance;                                               \
             _instance = 0;                                                  \
             _deleted = true;                                                \

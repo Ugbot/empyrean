@@ -40,7 +40,6 @@ namespace pyr {
      */
     class Tool {
     public:
-        Tool(MainFrame* mf);  // necessary -_-
         virtual ~Tool() { }
         
         virtual bool onMouseMove(ToolEvent&) { return false; }
@@ -51,14 +50,11 @@ namespace pyr {
         virtual void onRender(){}
 
     protected:
-        MainFrame* getMainFrame() const;
-        MapView* getMapView() const;
-        const Map* getMap() const;
+        static MainFrame* getMainFrame();
+        static MapView* getMapView();
+        static const Map* getMap();
 
         void setPropertiesGrid(std::map<std::string, std::string>& properties);
-
-    private:
-        MainFrame* _mainFrame;
     };
 
 }

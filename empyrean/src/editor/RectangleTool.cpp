@@ -16,9 +16,8 @@
 
 namespace pyr {
 
-    RectangleTool::RectangleTool(MainFrame* mf)
-        : Tool(mf)
-        , _x(0)
+    RectangleTool::RectangleTool()
+        : _x(0)
         , _y(0)
         , _x2(0)
         , _y2(0)
