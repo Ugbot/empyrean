@@ -29,7 +29,7 @@ namespace pyr {
         PlayerEntity(Model* model, Renderer* renderer);
 
         void draw();
-        void update(float dt);
+        void update(float dt, const Map* terrain);
 
     private:
         typedef void (PlayerEntity::*StateHandler)(float dt);

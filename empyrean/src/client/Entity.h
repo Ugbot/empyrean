@@ -5,15 +5,16 @@
 #include <gmtl/Vec.h>
 #include "Types.h"
 
-
 namespace pyr {
+
+    class Map;
 
     class Entity {
     public:
         virtual ~Entity() { }
     
         virtual void draw() { }
-        virtual void update(float dt) { }
+        virtual void update(float dt, const Map* terrain) { }
         
         gmtl::Vec2f& getPos()               { return _pos; }
         const gmtl::Vec2f& getPos() const   { return _pos; }
