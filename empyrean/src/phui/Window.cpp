@@ -24,11 +24,12 @@
  *
  * -----------------------------------------------------------------
  * File:          $RCSfile: Window.cpp,v $
- * Date modified: $Date: 2003-09-19 13:26:20 $
- * Version:       $Revision: 1.2 $
+ * Date modified: $Date: 2003-09-21 19:37:55 $
+ * Version:       $Revision: 1.3 $
  * -----------------------------------------------------------------
  *
  ************************************************************** phui-cpr-end */
+#include <algorithm>
 #include "OpenGL.h"
 #include "Window.h"
 

@@ -24,248 +24,206 @@
  *
  * -----------------------------------------------------------------
  * File:          $RCSfile: WidgetContainer.cpp,v $
- * Date modified: $Date: 2003-09-19 13:26:20 $
- * Version:       $Revision: 1.6 $
+ * Date modified: $Date: 2003-09-21 19:37:55 $
+ * Version:       $Revision: 1.7 $
  * -----------------------------------------------------------------
  *
  ************************************************************** phui-cpr-end */
-#include <algorithm>
-#include <functional>
-
-#include "OpenGL.h"
-
 #include "EmptyConstraint.h"
+#include "OpenGL.h"
 #include "WidgetContainer.h"
 
-namespace phui
-{
-   WidgetContainer::WidgetContainer()
-   {
-      LayoutConstraintPtr constraint(new EmptyConstraint());
-      mLayoutManager = new LayoutManager(this, constraint);
-   }
+namespace phui {
 
-   WidgetContainer::WidgetContainer(LayoutManagerPtr manager)
-      : mLayoutManager(manager)
-   {
-   }
+    WidgetContainer::WidgetContainer(LayoutManagerPtr manager)
+        : mLayoutManager(manager)
+    {
+        if (!manager) {
+            manager = new LayoutManager(this, new EmptyConstraint());
+        }
+        mLayoutManager = manager;
+    }
 
-   WidgetContainer::~WidgetContainer()
-   {
-      while (!mWidgets.empty())
-      {
-         remove(mWidgets[0]);
-      }
-   }
+    WidgetContainer::~WidgetContainer() {
+        while (!mWidgets.empty()) {
+            remove(mWidgets[0]);
+        }
+    }
 
-   void WidgetContainer::add(WidgetPtr widget)
-   {
-      // First remove the widget from its old parent
-      if (widget->getParent())
-      {
-         widget->getParent()->remove(widget);
-      }
-      // Now add the widget to this container
-      mWidgets.push_back(widget);
-      widget->setParent(this);
-      mLayoutManager->add(widget->getPosition(), widget->getSize());
-   }
+    void WidgetContainer::add(WidgetPtr widget) {
+        // First remove the widget from its old parent.
+        if (widget->getParent()) {
+            widget->getParent()->remove(widget);
+        }
+        
+        // Now add the widget to this container.
+        mWidgets.push_back(widget);
+        widget->setParent(this);
+        mLayoutManager->add(widget->getPosition(), widget->getSize());
+    }
 
-   void WidgetContainer::remove(WidgetPtr widget)
-   {
-      for (size_t i = 0; i < mWidgets.size(); ++i)
-      {
-         if (mWidgets[i] == widget)
-         {
-            mWidgets.erase(mWidgets.begin() + i);
-            widget->setParent(0);
-            mLayoutManager->remove(widget->getPosition());
-         }
-      }
-   }
-
-   WidgetPtr WidgetContainer::getWidget(unsigned int idx)
-   {
-      if (idx < getNumChildren())
-      {
-         return mWidgets[idx];
-      }
-      else
-      {
-         return WidgetPtr();
-      }
-   }
-
-   size_t WidgetContainer::getNumChildren()
-   {
-      return mWidgets.size();
-   }
-
-   void WidgetContainer::draw()
-   {
-      // Check to see if the current setup is valid
-      if (!mLayoutManager->isValid())
-      {
-         mLayoutManager->resize();
-      }
-      // draw all children to this widget
-      // draw them backwards so it's from the back to the front, visually
-      for (size_t i = 0; i < mWidgets.size(); ++i)
-      {
-         WidgetPtr wgt = mWidgets[i];
-
-         // only draw if the widget is visible
-         if (wgt->isVisible())
-         {
-            glPushMatrix();
-            glTranslate(wgt->getPosition());
-            wgt->draw();
-            glPopMatrix();
-         }
-      }
-   }
-   
-   void WidgetContainer::update(float dt)
-   {
-      for (size_t i = 0; i < mWidgets.size(); ++i)
-      {
-         mWidgets[i]->update(dt);
-      }
-   }
-
-   void WidgetContainer::setLayoutManager(LayoutManagerPtr manager)
-   {
-      mLayoutManager = manager;
-   }
-
-   void WidgetContainer::onKeyDown(InputKey key, InputModifiers modifiers)
-   {
-      WidgetContainerPtr kungFuDeathGrip = this;
-
-      if (WidgetPtr focus = getFocus())
-      {
-         focus->onKeyDown(key, modifiers);
-      }
-   }
-
-   void WidgetContainer::onKeyUp(InputKey key, InputModifiers modifiers)
-   {
-      WidgetContainerPtr kungFuDeathGrip = this;
-
-      if (WidgetPtr focus = getFocus())
-      {
-         focus->onKeyUp(key, modifiers);
-      }
-   }
-
-   void WidgetContainer::onMouseDown(InputButton button, const Point& p)
-   {
-      WidgetContainerPtr kungFuDeathGrip = this;
-
-      // mouse down always releases widget capture
-      // why?  -- aegis
-      WidgetPtr null;
-      capture(null);
-
-      if (WidgetPtr widget = getWidgetAt(p))
-      {
-         // we'll want to simply ignore this event if widget is disabled
-         if(widget->isEnabled())
-         {
-            focus(widget);
-            capture(widget);
-            widget->onMouseDown(button, p - widget->getPosition());
-         }
-      }
-   }
-
-   void WidgetContainer::onMouseUp(InputButton button, const Point& p)
-   {
-      WidgetContainerPtr kungFuDeathGrip = this;
-
-      if (WidgetPtr widget = getMouseWidget(p))
-      {
-         // we'll want to simply ignore this event if widget is disabled
-         if (widget->isEnabled()) 
-         {
-            widget->onMouseUp(button, p - widget->getPosition());
-            WidgetPtr null;
-            capture(null);
-         }
-      }
-   }
-
-   void WidgetContainer::onMouseMove(const Point& p)
-   {
-      WidgetContainerPtr kungFuDeathGrip = this;
-
-      if (WidgetPtr widget = getMouseWidget(p))
-      {
-         // we'll want to simply ignore this event if widget is disabled
-         if (widget->isEnabled())
-         {
-            widget->onMouseMove(p - widget->getPosition());
-         }
-      }
-   }
-
-   void WidgetContainer::focus(WidgetPtr widget)
-   {
-      if (!widget->isFocusable())
-      {
-         return;
-      }
-   
-      // Bring the widget to the end of the list.
-      for (int i = 0; i < int(mWidgets.size()) - 1; ++i)
-      {
-         if (mWidgets[i] == widget)
-         {
-            std::swap(mWidgets[i], mWidgets[i + 1]);
-            break;
-         }
-      }
-   }
-
-   WidgetPtr WidgetContainer::getFocus()
-   {
-      WidgetPtr null;
-      return (mWidgets.empty() ? null : mWidgets.back());
-   }
-
-   void WidgetContainer::capture(WidgetPtr widget)
-   {
-      mCapturedWidget = widget;
-   }
-
-   WidgetPtr WidgetContainer::getCapture()
-   {
-      return mCapturedWidget;
-   }
-
-   WidgetPtr WidgetContainer::getWidgetAt(const Point& p)
-   {
-      for (int i = int(mWidgets.size() - 1); i >= 0; --i)
-      {
-         WidgetPtr wgt = mWidgets[i];
-
-         // Make sure the widget is visible
-         if (wgt->isVisible())
-         {
-            // Check if this widget contains the given point
-            if (wgt->contains(p - wgt->getPosition()))
-            {
-               return mWidgets[i];
+    void WidgetContainer::remove(WidgetPtr widget) {
+        for (size_t i = 0; i < mWidgets.size(); ++i) {
+            if (mWidgets[i] == widget) {
+                mWidgets.erase(mWidgets.begin() + i);
+                widget->setParent(0);
+                mLayoutManager->remove(widget->getPosition());
             }
-         }
-      }
-      WidgetPtr null;
-      return null;
-   }
+        }
+    }
 
-   WidgetPtr WidgetContainer::getMouseWidget(const Point& p)
-   {
-      WidgetPtr widget = getCapture();
-      return (widget ? widget : getWidgetAt(p));
-   }
+    WidgetPtr WidgetContainer::getWidget(size_t idx) {
+        return mWidgets[idx];
+    }
+
+    size_t WidgetContainer::getNumChildren() {
+        return mWidgets.size();
+    }
+
+    void WidgetContainer::draw() {
+        // Check to see if the current setup is valid
+        if (!mLayoutManager->isValid()) {
+            mLayoutManager->resize();
+        }
+      
+        // Draw all children.  Draw backwards so it's from the back to the
+        // front, visually.
+        for (size_t i = 0; i < mWidgets.size(); ++i) {
+            drawWidget(mWidgets[i]);
+        }
+      
+        if (mModalWidget) {
+            drawWidget(mModalWidget);
+        }
+    }
+   
+    void WidgetContainer::update(float dt) {
+        for (size_t i = 0; i < mWidgets.size(); ++i) {
+            mWidgets[i]->update(dt);
+        }
+    }
+
+    void WidgetContainer::setLayoutManager(LayoutManagerPtr manager) {
+        mLayoutManager = manager;
+    }
+
+    void WidgetContainer::onKeyDown(InputKey key, InputModifiers modifiers) {
+        WidgetContainerPtr kungFuDeathGrip = this;
+        if (WidgetPtr focus = getFocus()) {
+            focus->onKeyDown(key, modifiers);
+        }
+    }
+
+    void WidgetContainer::onKeyUp(InputKey key, InputModifiers modifiers) {
+        WidgetContainerPtr kungFuDeathGrip = this;
+        if (WidgetPtr focus = getFocus()) {
+            focus->onKeyUp(key, modifiers);
+        }
+    }
+
+    void WidgetContainer::onMouseDown(InputButton button, const Point& p) {
+        WidgetContainerPtr kungFuDeathGrip = this;
+
+        // OnMouseDown always releases capture.
+        capture(0);
+
+        if (WidgetPtr widget = getMouseWidget(p)) {
+            // we'll want to simply ignore this event if widget is disabled
+            if (widget->isEnabled()) {
+                focus(widget);
+                capture(widget);
+                widget->onMouseDown(button, p - widget->getPosition());
+            }
+        }
+    }
+
+    void WidgetContainer::onMouseUp(InputButton button, const Point& p) {
+        WidgetContainerPtr kungFuDeathGrip = this;
+
+        if (WidgetPtr widget = getMouseWidget(p)) {
+            // we'll want to simply ignore this event if widget is disabled
+            if (widget->isEnabled()) {
+                widget->onMouseUp(button, p - widget->getPosition());
+                capture(0);
+            }
+        }
+    }
+
+    void WidgetContainer::onMouseMove(const Point& p) {
+        WidgetContainerPtr kungFuDeathGrip = this;
+
+        if (WidgetPtr widget = getMouseWidget(p)) {
+            // we'll want to simply ignore this event if widget is disabled
+            if (widget->isEnabled()) {
+                widget->onMouseMove(p - widget->getPosition());
+            }
+        }
+    }
+
+    void WidgetContainer::focus(WidgetPtr widget) {
+        if (!widget->isFocusable()) {
+            return;
+        }
+   
+        // Bring the widget to the end of the list.
+        for (int i = 0; i < int(mWidgets.size()) - 1; ++i) {
+            if (mWidgets[i] == widget) {
+                std::swap(mWidgets[i], mWidgets[i + 1]);
+            }
+        }
+    }
+
+    WidgetPtr WidgetContainer::getFocus() {
+        if (mModalWidget) {
+            return mModalWidget;
+        }
+        
+        WidgetPtr null;
+        return (mWidgets.empty() ? null : mWidgets.back());
+    }
+
+    void WidgetContainer::capture(WidgetPtr widget) {
+        mCapturedWidget = widget;
+    }
+
+    WidgetPtr WidgetContainer::getCapture() {
+        return mCapturedWidget;
+    }
+   
+    void WidgetContainer::setModal(WidgetPtr dialog) {
+        mModalWidget = dialog;
+    }
+
+    WidgetPtr WidgetContainer::getWidgetAt(const Point& p) {
+        for (int i = int(mWidgets.size() - 1); i >= 0; --i) {
+            WidgetPtr wgt = mWidgets[i];
+
+            // Make sure the widget is visible
+            if (wgt->isVisible()) {
+                // Check if this widget contains the given point
+                if (wgt->contains(p - wgt->getPosition())) {
+                    return mWidgets[i];
+                }
+            }
+        }
+        return 0;
+    }
+
+    WidgetPtr WidgetContainer::getMouseWidget(const Point& p) {
+        if (mModalWidget) {
+            return mModalWidget;
+        }
+    
+        WidgetPtr widget = getCapture();
+        return (widget ? widget : getWidgetAt(p));
+    }
+   
+    void WidgetContainer::drawWidget(WidgetPtr widget) {
+        if (widget->isVisible()) {
+            glPushMatrix();
+            glTranslate(widget->getPosition());
+            widget->draw();
+            glPopMatrix();
+        }
+    }
 }

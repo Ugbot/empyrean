@@ -14,6 +14,12 @@ namespace pyr {
         MainScreen(MenuState* state)
             : MenuScreen(state)
         {
+            createMainScreen();
+            createConnectWindow();
+        }
+        
+    private:
+        void createMainScreen() {
             phui::PicturePtr background = new phui::Picture("images/title/title_composite.png");
             background->setPositionAndSize(0, 0, 1024, 768);
             
@@ -22,7 +28,7 @@ namespace pyr {
             buttons->show();
         
             phui::ButtonPtr connect = new phui::Button("Connect to Server");
-            connect->addListener(this, &MainScreen::onConnect);
+            connect->addListener(this, &MainScreen::onConnectToServer);
             connect->setPositionAndSize(0, 0, 224, 80);
             
             phui::ButtonPtr options = new phui::Button("Options");
@@ -40,9 +46,24 @@ namespace pyr {
             add(buttons);
         }
         
-    private:
-        void onConnect(const phui::ActionEvent&) {
-            getState()->onMainConnect();
+        void createConnectWindow() {
+            phui::ButtonPtr connect = new phui::Button("Connect");
+            connect->addListener(this, MainScreen::onConnect);
+            connect->setPositionAndSize(0, 0, 424, 220);
+            
+            phui::ButtonPtr cancel  = new phui::Button("Cancel");
+            cancel->addListener(this, MainScreen::onCancel);
+            cancel->setPositionAndSize(0, 220, 424, 220);
+        
+            _connectWindow = new phui::Window("Connect to Server");
+            _connectWindow->show();
+            _connectWindow->setPositionAndSize(300, 250, 424, 440);
+            _connectWindow->add(connect);
+            _connectWindow->add(cancel);
+        }
+    
+        void onConnectToServer(const phui::ActionEvent&) {
+            setModal(_connectWindow);
         }
         
         void onOptions(const phui::ActionEvent&) {
@@ -52,6 +73,17 @@ namespace pyr {
         void onQuit(const phui::ActionEvent&) {
             getState()->onMainQuit();
         }
+        
+        void onConnect(const phui::ActionEvent&) {
+            endModal();
+            getState()->onMainConnect();
+        }
+        
+        void onCancel(const phui::ActionEvent&) {
+            endModal();
+        }
+        
+        phui::WindowPtr _connectWindow;
     };
     
 }

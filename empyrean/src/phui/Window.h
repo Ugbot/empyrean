@@ -24,8 +24,8 @@
  *
  * -----------------------------------------------------------------
  * File:          $RCSfile: Window.h,v $
- * Date modified: $Date: 2003-09-19 13:26:20 $
- * Version:       $Revision: 1.2 $
+ * Date modified: $Date: 2003-09-21 19:37:55 $
+ * Version:       $Revision: 1.3 $
  * -----------------------------------------------------------------
  *
  ************************************************************** phui-cpr-end */
@@ -33,10 +33,7 @@
 #define PHUI_WINDOW_H
 
 #include <string>
-#include <iostream>
 #include <list>
-#include <algorithm>
-#include "LayoutManager.h"
 #include "WidgetContainer.h"
 #include "WindowListener.h"
 

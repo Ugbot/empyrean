@@ -24,8 +24,8 @@
  *
  * -----------------------------------------------------------------
  * File:          $RCSfile: Widget.h,v $
- * Date modified: $Date: 2003-09-19 13:26:20 $
- * Version:       $Revision: 1.5 $
+ * Date modified: $Date: 2003-09-21 19:37:55 $
+ * Version:       $Revision: 1.6 $
  * -----------------------------------------------------------------
  *
  ************************************************************** phui-cpr-end */
@@ -40,7 +40,6 @@
 #include "RefCounted.h"
 #include "RefPtr.h"
 #include "Size.h"
-#include "Utility.h"
 
 namespace phui
 {
