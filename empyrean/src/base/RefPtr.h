@@ -118,6 +118,8 @@ namespace pyr {
         }
 
         RefDerivedSafe<T>* get() const {
+            PYR_ASSERT(!_ptr || _ptr->getRefCount() > 0,
+                       "Dereferencing pointer with refCount <= 0");
             return reinterpret_cast<RefDerivedSafe<T>*>(_ptr.get());
         }
 

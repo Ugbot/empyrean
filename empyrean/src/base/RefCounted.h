@@ -60,6 +60,10 @@ namespace pyr {
                 delete this;
             }
         }
+        
+        int getRefCount() const {
+            return _refCount;
+        }
 
     private:
         // Copying a RefCounted object must be done manually.  Otherwise
