@@ -1,7 +1,6 @@
 #ifndef PYR_UTILITY_H
 #define PYR_UTILITY_H
 
-
 namespace pyr {
 
     /**
@@ -78,12 +77,19 @@ namespace pyr {
         T* get() const {
             return _array;
         }
+
+        const T& operator [](unsigned int idx) const {
+            return _array[idx];
+        }
+
+        T& operator [](unsigned int idx) {
+            return _array[idx];
+        }
     
     private:
         T* _array;
     };
 
 }
-
 
 #endif
