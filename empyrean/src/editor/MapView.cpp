@@ -3,6 +3,7 @@
 #include "Tool.h"
 #include "MainFrame.h"
 #include "RectangleTool.h"
+#include "Texture.h"
 
 namespace pyr {
 
@@ -26,6 +27,10 @@ namespace pyr {
         typedef RectangleTool DefaultTool;
 
         _tool = new DefaultTool(_mainFrame);
+
+        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+        _testTex = TexManager::instance().loadTex("images\\pointer.png");
     }
 
     MapView::~MapView() {
@@ -88,6 +93,9 @@ namespace pyr {
         te.cmd = _mainFrame;
         te.x = float(e.GetX()) / size.x *  2 - 1;
         te.y = float(e.GetY()) / size.y * -2 + 1;
+        te.leftButton = e.LeftIsDown();
+        te.rightButton = e.RightIsDown();
+        te.middleButton = e.MiddleIsDown();
         te.shift = e.ShiftDown();
         te.ctrl = e.ControlDown();
         te.alt = e.AltDown();
@@ -111,25 +119,24 @@ namespace pyr {
         }
     }
     
-#if 1
     void MapView::draw() {
 
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         const MapFile* map = getMap();
 
-        for (std::vector<MapFile::Image>::const_iterator
-            iter = map->_terrain.images.begin();
-            iter != map->_terrain.images.end();
+        glEnable(GL_TEXTURE_2D);
+        glEnable(GL_BLEND);
+        glBindTexture(GL_TEXTURE_2D, _testTex->getHandle());
+        glColor4f(1, 1, 1, 1);
+
+        for (std::vector<MapFile::Rect>::const_iterator
+            iter = map->_terrain.rects.begin();
+            iter != map->_terrain.rects.end();
             iter++) {
-            // glBindTexture
-            glColor4f(1, 1, 1, 1);
-            glBegin(GL_QUADS);
-            glVertex2f(iter->x, iter->y);
-            glVertex2f(iter->x + iter->width, iter->y);
-            glVertex2f(iter->x + iter->width, iter->y + iter->height);
-            glVertex2f(iter->x, iter->y + iter->height);
-            glEnd();
+            drawRect(&*iter);
         }
+
+        glDisable(GL_TEXTURE_2D);
 
         // TODO: templates, obstructions, entities, et cetera
 
@@ -150,50 +157,16 @@ namespace pyr {
 
         _tool->onRender();
     }
-#else
-    void MapView::draw() {
-        glClearColor(0, 0, 0, 0);
-        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-        glMatrixMode(GL_PROJECTION);
-        glLoadIdentity();
-        glOrtho(-1, 1, -1, 1, 1, -1);
-          
-        glMatrixMode(GL_MODELVIEW);
-        glLoadIdentity();
-          
-        // alpha blending
-        glEnable(GL_BLEND);
-        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-        
-        // point smoothing
-        glEnable(GL_POINT_SMOOTH);
-        glPointSize(4);
-        
-        // line smoothing
-        glEnable(GL_LINE_SMOOTH);
-        glLineWidth(2);
-        
-        glColor3f(1, 1, 1);
-        glBegin(GL_POINTS);
-        for (unsigned i = 0; i < 100; ++i) {
-            float x = float(rand()) / RAND_MAX;
-            float y = float(rand()) / RAND_MAX;
-            glVertex2f(2 * x - 1, 2 * y - 1);
-        }
+    void MapView::drawRect(const MapFile::Rect* rect) {
+        Texture* t = TexManager::instance().loadTex(rect->name);
+
+        glBindTexture(GL_TEXTURE_2D, t->getHandle());
+        glBegin(GL_QUADS);
+        glTexCoord2f(0, 1); glVertex2f(rect->x, rect->y);
+        glTexCoord2f(1, 1); glVertex2f(rect->x + rect->width, rect->y);
+        glTexCoord2f(1, 0); glVertex2f(rect->x + rect->width, rect->y + rect->height);
+        glTexCoord2f(0, 0); glVertex2f(rect->x, rect->y + rect->height);
         glEnd();
-        
-        glBegin(GL_LINE_STRIP);
-        glColor3f(1, 1, 1); glVertex2f( 0,  0);
-        glColor3f(1, 0, 0); glVertex2f( 1,  0);
-        glColor3f(1, 1, 0); glVertex2f( 0,  1);
-        glColor3f(0, 1, 0); glVertex2f(-1,  0);
-        glColor3f(0, 0, 1); glVertex2f( 0, -1);
-        glColor3f(1, 0, 0); glVertex2f( 1,  0);
-        glEnd();
-        
-        glColor3f(0.5f, 0.5f, 0.5f);
-        map->draw();
     }
-#endif
 }

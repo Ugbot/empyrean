@@ -11,15 +11,15 @@ namespace pyr {
     
     class MapFile;
 
-    class AddImageCommand : public Command {
+    class AddRectCommand : public Command {
     public:
-        AddImageCommand(float x, float y, float width, float height, const std::string& fileName = "");
+        AddRectCommand(float x, float y, float width, float height, const std::string& fileName = "");
         
         virtual bool perform(MapFile* map);
         virtual bool undo(MapFile* map);
 
     private:
-        MapFile::Image _image;
+        MapFile::Rect _image;
     };
 }
 

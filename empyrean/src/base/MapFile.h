@@ -28,7 +28,7 @@ namespace pyr {
      */
     class MapFile {
     public:
-        struct Image {
+        struct Rect {
             std::string name;
             float x, y;
             float width, height;
@@ -36,10 +36,10 @@ namespace pyr {
 
             // TODO: u/v
 
-            Image() : x(0), y(0), width(0), height(0), z(0){}
+            Rect() : x(0), y(0), width(0), height(0), z(0){}
 
             // It'd be awfully nice if C++ offered a way to do this automatically. >_>
-            Image(float _x, float _y, float _w, float _h, const std::string& _name = "", int _z = 0)
+            Rect(float _x, float _y, float _w, float _h, const std::string& _name = "", int _z = 0)
                 : x(_x)
                 , y(_y)
                 , width(_w)
@@ -51,7 +51,7 @@ namespace pyr {
 
         struct Template {
             std::string name;
-            std::vector<Image> rectangles;
+            std::vector<Rect> rectangles;
         };
 
         struct Obstruction {
@@ -106,7 +106,7 @@ namespace pyr {
     
         std::map<std::string, std::string> _metaData;
         struct Terrain {
-            std::vector<Image>    images;
+            std::vector<Rect>     rects;
             std::vector<Template> templates;
         } _terrain;
 

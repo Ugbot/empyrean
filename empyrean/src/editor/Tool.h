@@ -15,9 +15,18 @@ namespace pyr {
         CommandReciever* cmd;
         float x;
         float y;
+        bool leftButton;
+        bool rightButton;
+        bool middleButton;
         bool shift;
         bool ctrl;
         bool alt;
+    };
+
+    struct GridEvent {
+        CommandReciever* cmd;
+        std::string name;
+        std::string value;
     };
 
     /**
@@ -37,13 +46,13 @@ namespace pyr {
         virtual bool onMouseMove(ToolEvent&) { return false; }
         virtual bool onLeftDown(ToolEvent&)  { return false; }
         virtual bool onLeftUp(ToolEvent&)    { return false; }
-        virtual bool onPropertiesChanged(const std::string& name, const std::string& value) { return false; }
+        virtual bool onPropertiesChanged(GridEvent&) { return false; }
 
         virtual void onRender(){}
 
     protected:
         MainFrame* getMainFrame() const;
-        //MapView* getMapView() const;
+        MapView* getMapView() const;
         const MapFile* getMap() const;
 
         void setPropertiesGrid(std::map<std::string, std::string>& properties);

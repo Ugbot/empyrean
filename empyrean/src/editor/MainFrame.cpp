@@ -51,7 +51,7 @@ namespace pyr {
         _undoList.push(cmd);
         bool refresh = cmd->perform(_map);
         if (refresh) {
-            Refresh();
+            _mapView->Refresh();
         }
     }
     void MainFrame::createMenu() {
@@ -140,7 +140,7 @@ namespace pyr {
         _mapTree->AppendItem(root, "Part 2");
 
         _propertiesGrid = new wxGrid(split2, -1);
-        _propertiesGrid->CreateGrid(1, 2);
+        _propertiesGrid->CreateGrid(0, 2);
         _propertiesGrid->SetRowLabelSize(0);
         _propertiesGrid->SetColLabelSize(0);
 
@@ -182,9 +182,15 @@ namespace pyr {
     void MainFrame::onChangeGrid(wxGridEvent& event) {
         int row = event.GetRow();
  
-        _mapView->getTool()->onPropertiesChanged(
-            _propertiesGrid->GetCellValue(row, 0).c_str(),
-            _propertiesGrid->GetCellValue(row, 1).c_str());
+        GridEvent e;
+        e.cmd = this;
+        e.name = _propertiesGrid->GetCellValue(row, 0).c_str();
+        e.value = _propertiesGrid->GetCellValue(row, 1).c_str();
+
+        bool result = _mapView->getTool()->onPropertiesChanged(e);
+        if (result) {
+            _mapView->Refresh();
+        }
     }
 
     void MainFrame::undo() {
@@ -194,7 +200,7 @@ namespace pyr {
             _redoList.push(c);
             bool refresh = c->undo(_map);
             if (refresh) {
-                Refresh();
+                _mapView->Refresh();
             }
         }
     }
@@ -206,7 +212,7 @@ namespace pyr {
             _undoList.push(c);
             bool refresh = c->perform(_map);
             if (refresh) {
-                Refresh();
+                _mapView->Refresh();
             }
         }
     }

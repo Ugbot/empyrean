@@ -11,6 +11,10 @@ namespace pyr {
         return _mainFrame;
     }
 
+    MapView* Tool::getMapView() const {
+        return _mainFrame->_mapView;
+    }
+
     const MapFile* Tool::getMap() const {
         return _mainFrame->getMap();
     }
@@ -25,7 +29,7 @@ namespace pyr {
         int delta = properties.size() - grid->GetRows();
         if (delta > 0) {
             grid->AppendRows(delta);
-        } else {
+        } else if (delta < 0) {
             grid->DeleteRows(0, -delta);
         }
 
@@ -40,6 +44,8 @@ namespace pyr {
             grid->SetReadOnly(i, 0, true);
             i++;
         }
+
+        grid->AutoSizeColumn(0);
         grid->EndBatch();
     }
 }

@@ -52,7 +52,6 @@ namespace pyr {
         void clearList(std::stack<::pyr::Command*>& list); // deletes and clears
 
         MapFile* _map;
-        //std::string _oldGridValue;  // hack, because wxGrid doesn't give us the old value of a cell when it changes. :(
         
         DECLARE_EVENT_TABLE()
     };

@@ -34,9 +34,10 @@
 				Name="VCCustomBuildTool"/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="wxmswd.lib opengl32.lib comctl32.lib rpcrt4.lib ws2_32.lib tiffd.lib pngd.lib zlibd.lib jpegd.lib ../base/Debug/base.lib "
+				AdditionalDependencies="wxmswd.lib opengl32.lib comctl32.lib rpcrt4.lib ws2_32.lib tiffd.lib pngd.lib zlibd.lib jpegd.lib ../base/Debug/base.lib corona.lib"
 				OutputFile="../bin/$(OutDir)/editor.exe"
 				LinkIncremental="2"
+				AdditionalLibraryDirectories="../../third-party-vc7/lib"
 				GenerateDebugInformation="TRUE"
 				ProgramDatabaseFile="$(OutDir)/editor.pdb"
 				SubSystem="2"
@@ -82,9 +83,10 @@
 				Name="VCCustomBuildTool"/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="wxmsw.lib opengl32.lib comctl32.lib rpcrt4.lib ws2_32.lib jpeg.lib png.lib tiff.lib zlib.lib"
+				AdditionalDependencies="wxmsw.lib opengl32.lib comctl32.lib rpcrt4.lib ws2_32.lib jpeg.lib png.lib tiff.lib zlib.lib corona.lib"
 				OutputFile="../bin/$(OutDir)/editor.exe"
 				LinkIncremental="1"
+				AdditionalLibraryDirectories="../../third-party-vc7/lib"
 				GenerateDebugInformation="TRUE"
 				SubSystem="2"
 				OptimizeReferences="2"
@@ -144,6 +146,12 @@
 				RelativePath="..\..\src\editor\RectangleTool.h">
 			</File>
 			<File
+				RelativePath="..\..\src\editor\Texture.cpp">
+			</File>
+			<File
+				RelativePath="..\..\src\editor\Texture.h">
+			</File>
+			<File
 				RelativePath="..\..\src\editor\Tool.cpp">
 			</File>
 			<File
@@ -167,12 +175,6 @@
 			Name="commands"
 			Filter="">
 			<File
-				RelativePath="..\..\src\editor\AddImageCommand.cpp">
-			</File>
-			<File
-				RelativePath="..\..\src\editor\AddImageCommand.h">
-			</File>
-			<File
 				RelativePath="..\..\src\editor\AddObstructionPointCommand.cpp">
 			</File>
 			<File
@@ -183,6 +185,18 @@
 			</File>
 			<File
 				RelativePath="..\..\src\editor\AddObstructionSegmentCommand.h">
+			</File>
+			<File
+				RelativePath="..\..\src\editor\AddRectCommand.cpp">
+			</File>
+			<File
+				RelativePath="..\..\src\editor\AddRectCommand.h">
+			</File>
+			<File
+				RelativePath="..\..\src\editor\ChangeRectPropertiesCommand.cpp">
+			</File>
+			<File
+				RelativePath="..\..\src\editor\ChangeRectPropertiesCommand.h">
 			</File>
 			<File
 				RelativePath="..\..\src\editor\Command.h">

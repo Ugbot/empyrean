@@ -13,8 +13,8 @@ namespace pyr {
             glVertex2f(r.x2, r.y2);
             glVertex2f(r.x2, r.y1);
         }*/
-        for (unsigned i = 0; i < _terrain.images.size(); i++) {
-            Image& img = _terrain.images[i];
+        for (unsigned i = 0; i < _terrain.rects.size(); i++) {
+            Rect& img = _terrain.rects[i];
             glVertex2f(img.x, img.y);
             glVertex2f(img.x + img.width, img.y);
             glVertex2f(img.x + img.width, img.y + img.height);
