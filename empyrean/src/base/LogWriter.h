@@ -10,6 +10,9 @@
 
 namespace pyr {
 
+    class XMLNode;
+
+
     /**
      * Used to write lines into a log.
      */
@@ -64,6 +67,9 @@ namespace pyr {
         void write(const string& message);
     };
 #endif
+
+
+    LogWriterPtr createLogWriter(XMLNode* definition);
 
 }
 

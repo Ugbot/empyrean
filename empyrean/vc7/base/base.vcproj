@@ -145,6 +145,12 @@
 				RelativePath="..\..\src\base\Log.h">
 			</File>
 			<File
+				RelativePath="..\..\src\base\LogWriter.cpp">
+			</File>
+			<File
+				RelativePath="..\..\src\base\LogWriter.h">
+			</File>
+			<File
 				RelativePath="..\..\src\base\LokiTypeInfo.h">
 			</File>
 			<File

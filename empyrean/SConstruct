@@ -20,7 +20,8 @@ opts.AddOptions(
     BoolOption('nowarn', 'Disable all warnings', 0),
     BoolOption('warningsAsErrors', 'Treat warnings as errors', 0),
     BoolOption('saveTemps', 'Save temporary files, such as preprocessor output', 0),
-    PathOption('boostIncludes', 'Directory containing boost header files', '/usr/local/include/boost-1_31'))
+    PathOption('boostIncludes', 'Directory containing boost header files', '/usr/local/include/boost-1_31'),
+    BoolOption('withCallStack', 'Enable CallStack support', 1))
 
 # Create base environment.
 env = Environment(ENV=os.environ, options=opts)
@@ -67,10 +68,11 @@ if env['saveTemps']:
 
 # Autoconfiguration.
 conf = env.Configure()
-if conf.CheckHeader('execinfo.h'):
-    env.Append(CPPDEFINES=['HAVE_EXECINFO_H'])
-if conf.CheckHeader('unwind.h'):
-    env.Append(CPPDEFINES=['HAVE_UNWIND_H'])
+if env['withCallStack']:
+    if conf.CheckHeader('execinfo.h'):
+        env.Append(CPPDEFINES=['HAVE_EXECINFO_H'])
+    if conf.CheckHeader('unwind.h'):
+        env.Append(CPPDEFINES=['HAVE_UNWIND_H'])
 
 Export('env')
 

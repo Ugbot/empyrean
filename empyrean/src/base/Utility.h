@@ -2,9 +2,9 @@
 #define PYR_UTILITY_H
 
 
-#include <string>
 #include <vector>
 #include "Debug.h"
+#include "Types.h"
 
 // I have no idea where these are #defined, but they are.
 #if defined(_MSC_VER) && MSC_VER <= 1300
@@ -145,11 +145,11 @@ namespace pyr {
     // They are also perfect candidates for going into their own string header.
 
 
-    std::string itos(int i);
+    string itos(int i);
 
 
     /// Returns the string, stripped of leading and trailing whitespace
-    std::string trimString(const std::string& s);
+    string trimString(const string& s);
 
     /**
      * Splits the string based on the passed delimiters, and returns the
@@ -158,9 +158,9 @@ namespace pyr {
      * @param s          The string to split.
      * @param delimiters A list of characters to use as token delimiters.
      */
-    std::vector<std::string> splitString(
-        const std::string& s,
-        const std::string& delimiters=" \n\r\t");
+    std::vector<string> splitString(
+        const string& s,
+        const string& delimiters=" \n\r\t");
 
     /** Returns the path passed, stripped of the extension.  The period is also removed.
      * ie. stripExtension("image.png") == "image"
@@ -168,42 +168,42 @@ namespace pyr {
      * If there is no extension in the file at all, the string is returned unaltered.
      *
      */
-    std::string stripExtension(const std::string& s);
+    string stripExtension(const string& s);
 
     /** Returns the extension of the file path passed.  The period is included.
      * ie. getExtension("image.png") == ".png"
      *
      * If there is no extension in the string at all, nothing is returned.
      */
-    std::string getExtension(const std::string& s);
+    string getExtension(const string& s);
 
     /** Returns the directory which contains the file in the path specified.
      * ie. getPath("images/intro/intro1.png") == "images/intro/"
      *
      * If there are no slashes in the path, nothing is returned.
      */
-    std::string getPath(const std::string& s);
+    string getPath(const string& s);
 
     /** Returns the filename from the path specified.
      * ie. getFilename("images/intro/intro1.png") == "intro1.png"
      *
      * If there are no slashes in the path, the string is returned unaltered.
      */
-    std::string getFilename(const std::string& s);
+    string getFilename(const string& s);
 
     /**
      * Returns a joining of the two paths into one, by inserting a slash
      * if necessary.
      */
-    std::string joinPath(const std::string& s1, const std::string& s2);
+    string joinPath(const string& s1, const string& s2);
 
     /// Returns true iff the path exists.
-    bool fileExists(const std::string& path);
+    bool fileExists(const string& path);
 
     /** Does the printf thing; returns a string.
      * (it rhymes!)
      */
-    std::string va(const char* s, ...);
+    string va(const char* s, ...);
 
     /** Round a number to the nearest integer (0.5 rounded up) */
     int round(float num);
@@ -211,7 +211,7 @@ namespace pyr {
     /** Get the sign of the number */
     int sgn(float num);
     
-    inline std::string str(const std::string& s) {
+    inline string str(const string& s) {
         return s;
     }
 }

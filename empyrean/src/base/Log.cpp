@@ -59,6 +59,10 @@ namespace pyr {
         _threadData->spaces.resize(size - INDENT_SIZE);
     }
 
+    const string& Logger::getName() const {
+        return _name;
+    }
+
     bool Logger::enabled(LogLevel level) {
         return level >= _actualLevel;
     }
@@ -123,7 +127,7 @@ namespace pyr {
     }
 
     Logger& Logger::getChild(const string& name) {
-        if (name == "") {
+        if (name.empty()) {
             return *this;
         }
 
@@ -132,10 +136,15 @@ namespace pyr {
             ? name
             : name.substr(0, dot));
 
-        Logger* child = _children[childName];
-        if (!child) {
-            child = new Logger(childName, this);
-            _children[childName] = child;
+        Logger* child;
+        if (childName.empty()) {
+            child = this;
+        } else {
+            child = _children[childName];
+            if (!child) {
+                child = new Logger(childName, this);
+                _children[childName] = child;
+            }
         }
 
         return child->getChild(dot == string::npos
@@ -174,76 +183,114 @@ namespace pyr {
 	    else PYR_LOG(_logLogger, ERROR) << "Invalid logger level: " << level;
 	}
 
-	void setLoggerWriters(Logger& logger, const WriterMap& map,
-			      const string& writers
+        LogWriterPtr getWriter(
+            const WriterMap& writerMap,
+            const string& writer
+        ) {
+            WriterMap::const_iterator i = writerMap.find(writer);
+            if (i == writerMap.end()) {
+                return 0;
+            } else {
+                return i->second;
+            }
+        }
+
+	void setLoggerWriters(
+            Logger& logger,
+            const WriterMap& map,
+            const string& writers
 	) {
+            std::vector<string> writerNames = splitString(writers, " ,\t");
+            std::vector<LogWriterPtr> writerList;
+
+            for (size_t i = 0; i < writerNames.size(); ++i) {
+                string name = writerNames[i];
+                LogWriterPtr writer = getWriter(map, name);
+                if (writer) {
+                    writerList.push_back(writer);
+                } else {
+                    PYR_LOG(_logLogger, WARN)
+                        << "Can't find writer '" << name << "' for logger '"
+                        << logger.getName() << "'";
+                }
+            }
+
+            logger.clearAllWriters();
+            for (size_t i = 0; i < writerList.size(); ++i) {
+                logger.addWriter(writerList[i]);
+            }
 	}
+    }
+
+    void initializeDefaults(const string& logFile) {
+        LogWriterPtr writer;
+        if (FILE* file = fopen(logFile.c_str(), "w")) {
+            writer = new FileWriter(file);
+        } else {
+            PYR_LOG(_logLogger, ERROR) << "Error opening log file: "
+                                       << logFile;
+            writer = new StreamWriter(&std::cout, false);
+        }
+
+        Logger& logger = Logger::get("");
+        logger.clearAllWriters();
+        logger.addWriter(writer);
+
+        PYR_LOG(_logLogger, WARN) << "Using default log configuration.";
     }
 
     void initializeLog(const string& logFile, const string& configFile) {
+        WriterMap writerMap;
+        ScopedPtr<XMLNode> root;
+
 	try {
-	    WriterMap writerMap;
-	    
-	    ScopedPtr<XMLNode> root(parseXMLFile(configFile));
-	    if (root->getName() != "LogConfiguration") {
-		PYR_LOG(_logLogger, ERROR) << "Invalid log configuration file root node name: " << root->getName();
-	    }
-	    for (size_t i = 0; i < root->getChildCount(); ++i) {
-		XMLNode* child = root->getChild(i);
+            root = parseXMLFile(configFile);
+            if (!root) {
+                return initializeDefaults(logFile);
+            }
+        }
+        catch (const XMLParseError&) {
+            return initializeDefaults(logFile);
+        }
 
-		// Is it an appender specification?
-		if (child->getName() == "Writer") {
-		    
-		}
+        if (root->getName() != "LogConfiguration") {
+            PYR_LOG(_logLogger, ERROR) << "Invalid log configuration file root node name: " << root->getName();
+            return initializeDefaults(logFile);
+        }
 
-		// Is it a logger specification?
-		if (child->getName() == "Logger") {
-		    if (child->hasAttr("name")) {
-			Logger& logger = Logger::get(child->getAttr("name"));
-			if (child->hasAttr("level")) {
-			    setLoggerLevel(logger, child->getAttr("level"));
-			}
-			if (child->hasAttr("writers")) {
-			    setLoggerWriters(logger, writerMap, child->getAttr("appenders"));
-			}
-		    } else {
-			_logLogger.log(ERROR, "Logger node has no name attribute.");
-		    }
-		} else if (child->getName() == "Writer") {
-		    
-		}
-	    }
-	}
-	catch (const XMLParseError&) {
-	    // File didn't exist or was invalid XML, so set up a reasonable
-	    // configuration.
-	    FILE* file = fopen(logFile.c_str(), "w");
-	    if (!file) {
-		PYR_LOG(_logLogger, ERROR) << "Error opening log file: "
-					   << logFile;
-	    } else {
-		Logger& logger = Logger::get("");
-		logger.clearAllWriters();
-		logger.addWriter(new FileWriter(file));
-	    }
+        for (size_t i = 0; i < root->getChildCount(); ++i) {
+            XMLNode* child = root->getChild(i);
+
+            // Is it a writer specification?
+            if (child->getName() == "Writer") {
+                if (child->hasAttr("name") && child->hasAttr("type")) {
+                    string name = child->getAttr("name");
+                    LogWriterPtr writer = createLogWriter(child);
+                    if (writer) {
+                        writerMap[name] = writer;
+                    } else {
+                        PYR_LOG(_logLogger, WARN) << "Could not create writer: " << name;
+                    }
+                } else {
+                    _logLogger.log(ERROR, "Writer node has no name and/or no type.");
+                }
+            }
+
+            // Is it a logger specification?
+            if (child->getName() == "Logger") {
+                if (child->hasAttr("name")) {
+                    Logger& logger = Logger::get(child->getAttr("name"));
+                    if (child->hasAttr("level")) {
+                        setLoggerLevel(logger, child->getAttr("level"));
+                    }
+                    if (child->hasAttr("writers")) {
+                        setLoggerWriters(logger, writerMap, child->getAttr("writers"));
+                    }
+                } else {
+                    _logLogger.log(ERROR, "Logger node has no name attribute.");
+                }
+            }
 	}
     }
-
-#if 0
-
-    void Log::open(const std::string& filename) {
-#if defined(WIN32) && defined(PYR_LOG_TO_STDOUT)
-        AllocConsole();
-
-#ifndef __CYGWIN__
-        // See http://www.flipcode.com/cgi-bin/msg.cgi?showThread=00003996&forum=general&id=-1
-        FILE* out = _fdopen(_open_osfhandle((intptr_t)GetStdHandle(STD_OUTPUT_HANDLE), _O_TEXT), "w");
-        FILE* err = _fdopen(_open_osfhandle((intptr_t)GetStdHandle(STD_ERROR_HANDLE),  _O_TEXT), "w");
-        if (out) *stdout = *out;
-        if (err) *stderr = *err;
-#endif
-#endif
-#endif
-
 
 }

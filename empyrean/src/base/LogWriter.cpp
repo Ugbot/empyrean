@@ -4,7 +4,9 @@
 #include <fcntl.h>
 #endif
 
+#include "Log.h"
 #include "LogWriter.h"
+#include "XMLParser.h"
 
 
 namespace pyr {
@@ -46,16 +48,74 @@ namespace pyr {
 #endif
 
 
-#if 0
-    LogWriterPtr createLogWriter(const string& name, const string& argument) {
-        if (name == "stdout") {
-            return new StreamWriter(&cout, false);
-        } else if (name == "stderr") {
-            return new StreamWriter(&cerr, false);
-        } else if (name == "file") {
-            FILE* file = fopen(argument.c_str(), "w");
-            return (file ? return new FileWriter(file) : 0);
-        } else if (name == "win32debug") {
+    /**
+     * Decorates a LogWriter that outputs to the console.  In Win32,
+     * this allocates a console if necessary.
+     */
+    class ConsoleDecorator : public LogWriter {
+    public:
+        ConsoleDecorator(LogWriterPtr writer)
+        : _writer(writer) {
+          #if defined(WIN32) && !defined(_CONSOLE)
+            AllocConsole();
+
+           #ifndef __CYGWIN__
+            // See http://www.flipcode.com/cgi-bin/msg.cgi?showThread=00003996&forum=general&id=-1
+            FILE* out = _fdopen(_open_osfhandle((intptr_t)GetStdHandle(STD_OUTPUT_HANDLE), _O_TEXT), "w");
+            FILE* err = _fdopen(_open_osfhandle((intptr_t)GetStdHandle(STD_ERROR_HANDLE),  _O_TEXT), "w");
+            if (out) *stdout = *out;
+            if (err) *stderr = *err;
+           #endif
+
+          #endif
+        }
+
+    protected:
+        ~ConsoleDecorator() {
+          #if defined(WIN32) && !defined(_CONSOLE)
+            FreeConsole();
+          #endif
+        }
+
+        void write(const string& message) {
+            return _writer->write(message);
+        }
+
+    private:
+        LogWriterPtr _writer;
+    };
+
+
+    namespace {
+        Logger& _logger = Logger::get("pyr.LogWriter");
+    }
+
+
+    LogWriterPtr createLogWriter(XMLNode* definition) {
+        PYR_ASSERT(definition, "Null LogWriter definition given.");
+        if (!definition->hasAttr("type")) {
+            return 0;
+        }
+
+        std::string name = definition->getAttr("name");
+        std::string type = definition->getAttr("type");
+        if (type == "stdout") {
+            return new ConsoleDecorator(new StreamWriter(&std::cout, false));
+        } else if (type == "stderr") {
+            return new ConsoleDecorator(new StreamWriter(&std::cerr, false));
+        } else if (type == "file") {
+            if (definition->hasAttr("filename")) {
+                string filename = definition->getAttr("filename");
+                FILE* file = fopen(filename.c_str(), "w");
+                if (file) {
+                    return new FileWriter(file);
+                } else {
+                    PYR_LOG(_logger, ERROR) << "Could not open log file: " << filename;
+                }
+            } else {
+                PYR_LOG(_logger, WARN) << "Writer '" << name << "' has no filename attribute.";
+            }
+        } else if (type == "win32debug") {
 #ifdef WIN32
             return new Win32DebugWriter;
 #endif
@@ -63,6 +123,5 @@ namespace pyr {
 
         return 0;
     }
-#endif
 
 }

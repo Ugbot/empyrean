@@ -47,6 +47,8 @@ namespace pyr {
         // These don't necessarily have to be in the Logger class.
         static void indent();
         static void unindent();
+
+        const string& getName() const;
         
         bool enabled(LogLevel level);
         void log(LogLevel level, const string& message);
