@@ -3,6 +3,7 @@
 
 
 #include "Debug.h"
+#include "Utility.h"
 
 
 namespace pyr {
@@ -12,12 +13,10 @@ namespace pyr {
     class RefPtr {
     public:
         RefPtr(T* ptr = 0) {
-            _ptr = 0;
             *this = ptr;
         }
 
         RefPtr(const RefPtr<T>& ptr) {
-            _ptr = 0;
             *this = ptr;
         }
 
@@ -77,7 +76,7 @@ namespace pyr {
         }
 
     private:
-        T* _ptr;
+        Zeroed<T*> _ptr;
     };
     
     

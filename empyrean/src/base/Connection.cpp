@@ -1,3 +1,4 @@
+#include <algorithm>
 #include "ByteBuffer.h"
 #include "Connection.h"
 #include "Packet.h"
@@ -22,8 +23,8 @@ namespace pyr {
     }
     
     Connection::~Connection() {
-        for_each(_unhandledPackets.begin(), _unhandledPackets.end(),
-                 delete_function<Packet>);
+        std::for_each(_unhandledPackets.begin(), _unhandledPackets.end(),
+                      &delete_function<Packet>);
     }
     
     void Connection::clearHandlers() {
