@@ -38,3 +38,10 @@ scene culling
 OpenGL state manager (push, pop, ensure)
 investigate gltext ugliness
 add more characters to phui text fields
+make it so getting a login/newgame/newchar error doesn't disconnect you
+quitting the GameState should go back to lobby
+scale textures to lower res when using smaller resolution
+support configuration changes (and save them)
+implement GUI for the server (configuration and database access)
+reduce latency of network operation (condition variable to interrupt sleep
+    when packet is recieved?)
