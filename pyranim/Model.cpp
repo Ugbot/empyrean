@@ -1,6 +1,7 @@
 #include <cassert>
 #include <algorithm>
 #include <stdio.h>
+#include "Anim.h"
 #include "Model.h"
 #include "View.h"
 #include "Skeleton.h"
@@ -13,8 +14,13 @@ Model::Model() {
 }
 
 Model::~Model() {
+    //printf("Leaked views: %d\n", (int) m_views.size()); fflush(stdout);
     for(int i = 0; i < (int) m_views.size(); i ++) {
         delete m_views[i];
+    }
+    //printf("Leaked anims: %d\n", (int) m_anims.size()); fflush(stdout);
+    for(int i = 0; i < (int) m_anims.size(); i ++) {
+        delete m_anims[i];
     }
     delete m_skeleton;
 }
@@ -35,12 +41,13 @@ bool Model::loadSkeleton(const char *filename) {
 }
 
 void Model::addUndoListener(UndoListener *listener) {
-    assert(0); // XXX - Implement me.
+    printf("Model::addUndoListener\n"); fflush(stdout);
+    //assert(0); // XXX - Implement me.
 }
 
-void Model::removeUndoListener(UndoListener *listener) {
+/*void Model::removeUndoListener(UndoListener *listener) {
     assert(0); // XXX - Implement me.
-}
+}*/
 
 bool Model::modified() const {
     assert(0); // XXX - Implement me.
@@ -48,35 +55,42 @@ bool Model::modified() const {
 }
 
 void Model::pushUndoToken(const char *name) {
-    assert(0); // XXX - Implement me.
+    printf("Model::pushUndoToken\n"); fflush(stdout);
+    //assert(0); // XXX - Implement me.
 }
 
 bool Model::canUndo() const {
-    assert(0); // XXX - Implement me.
-    return false;
+    printf("Model::canUndo\n"); fflush(stdout);
+    //assert(0); // XXX - Implement me.
+    return true;
 }
 
 bool Model::canRedo() const {
-    assert(0); // XXX - Implement me.
-    return false;
+    printf("Model::canRedo\n"); fflush(stdout);
+    //assert(0); // XXX - Implement me.
+    return true;
 }
 
 const char *Model::getUndoName() const {
-    assert(0); // XXX - Implement me.
+    printf("Model::getUndoName\n"); fflush(stdout);
+    //assert(0); // XXX - Implement me.
     return NULL;
 }
 
 const char *Model::getRedoName() const {
-    assert(0); // XXX - Implement me.
+    printf("Model::getRedoName\n"); fflush(stdout);
+    //assert(0); // XXX - Implement me.
     return NULL;
 }
 
 void Model::undo() {
-    assert(0); // XXX - Implement me.
+    printf("Model::undo\n"); fflush(stdout);
+    //assert(0); // XXX - Implement me.
 }
 
 void Model::redo() {
-    assert(0); // XXX - Implement me.
+    printf("Model::redo\n"); fflush(stdout);
+    //assert(0); // XXX - Implement me.
 }
 
 View *Model::newView() {
@@ -86,6 +100,7 @@ View *Model::newView() {
 }
 
 bool Model::freeView(View *view) {
+    printf("Model::freeView called\n"); fflush(stdout);
     ViewVector::iterator vi = find(m_views.begin(), m_views.end(), view);
     if(vi != m_views.end()) {
         delete (*vi);
@@ -100,18 +115,23 @@ void Model::setTime(float time) {
 }
 
 int Model::getNumAnims() {
-    assert(0); // XXX - Implement me.
-    return 0;
+    return (int) m_anims.size();
 }
 
 Anim *Model::getAnim(int index) {
-    assert(0); // XXX - Implement me.
-    return NULL;
+    if(index < 0 || index >= (int) m_anims.size()) return NULL;
+    return m_anims[index];
 }
 
 Anim *Model::loadAnim(const char *filename) {
-    assert(0); // XXX - Implement me.
-    return NULL;
+    Anim *anim = new Anim(this);
+    if(!anim->load(filename)) {
+        m_errorString = anim->getErrorString();
+        delete anim;
+        return NULL;
+    }
+    m_anims.push_back(anim);
+    return anim;
 }
 
 Anim *Model::newAnim() {
@@ -119,9 +139,17 @@ Anim *Model::newAnim() {
     return NULL;
 }
 
-bool Model::freeAnim(Anim *anim) {
+void Model::setCurrentAnim(Anim *anim) {
+    assert(anim->getModel() == this);
     assert(0); // XXX - Implement me.
-    return false;
+}
+
+bool Model::freeAnim(Anim *anim) {
+    AnimVector::iterator avi = find(m_anims.begin(), m_anims.end(), anim);
+    if(avi == m_anims.end()) return false;
+    delete (*avi);
+    m_anims.erase(avi);
+    return true;
 }
 
 void Model::getKeyInfo(KeyInfo &info) {

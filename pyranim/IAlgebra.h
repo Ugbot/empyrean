@@ -901,10 +901,10 @@ inline double magnitude(const IQuat &q) {
 
 // Returns the conjugate of a quaternion.
 inline IQuat conjugate(const IQuat &q) {
-    return IQuat( q[0],
+    return IQuat(-q[0],
                  -q[1],
                  -q[2],
-                 -q[3]);
+                  q[3]);
 }
 
 #endif

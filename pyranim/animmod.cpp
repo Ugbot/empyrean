@@ -59,6 +59,29 @@ private:
     StatusListenerImpl& operator=(const StatusListenerImpl &);
 };
 
+class UndoListenerImpl : public UndoListener {
+public:
+    UndoListenerImpl(PyObject *obj) {
+        m_obj = obj;
+        Py_INCREF(m_obj);
+    }
+    virtual ~UndoListenerImpl() {
+        Py_DECREF(m_obj);
+    }
+    virtual void notify() {
+        if(PyObject_CallFunction(m_obj, NULL) == 0) {
+            printf("UndoListenerImpl CallFunction failed.\n");
+            fflush(stdout);
+        }
+    }
+protected:
+    PyObject *m_obj;
+private:
+    // Not implemented:
+    UndoListenerImpl(const UndoListenerImpl &);
+    UndoListenerImpl& operator=(const UndoListenerImpl &);
+};
+
 
 /*** Model declarations. */
 
@@ -213,6 +236,8 @@ static PyObject *s_anim_getAttr(PyObject *self, char *name);
 static PyObject *s_anim_setCurrent        (PyObject *self, PyObject *args);
 static PyObject *s_anim_addAnimListener   (PyObject *self, PyObject *args);
 //static PyObject *s_anim_removeAnimListener(PyObject *self, PyObject *args);
+static PyObject *s_anim_modified          (PyObject *self, PyObject *args);
+static PyObject *s_anim_getBoneIDs        (PyObject *self, PyObject *args);
 static PyObject *s_anim_getKeyTimes       (PyObject *self, PyObject *args);
 static PyObject *s_anim_getKeyInfoAtTime  (PyObject *self, PyObject *args);
 static PyObject *s_anim_removeKey         (PyObject *self, PyObject *args);
@@ -220,6 +245,7 @@ static PyObject *s_anim_addKey            (PyObject *self, PyObject *args);
 
 struct AnimModAnim {
     PyObject_HEAD
+    Anim *m_anim;
 };
 
 static PyTypeObject s_animType = {
@@ -245,6 +271,8 @@ static PyMethodDef s_animMethods[] = {
     {"setCurrent"        , (PyCFunction)s_anim_setCurrent,         MV, ""},
     {"addAnimListener"   , (PyCFunction)s_anim_addAnimListener,    MV, ""},
     //{"removeAnimListener", (PyCFunction)s_anim_removeAnimListener, MV, ""},
+    {"modified"          , (PyCFunction)s_anim_modified,           MV, ""},
+    {"getBoneIDs"        , (PyCFunction)s_anim_getBoneIDs,         MV, ""},
     {"getKeyTimes"       , (PyCFunction)s_anim_getKeyTimes,        MV, ""},
     {"getKeyInfoAtTime"  , (PyCFunction)s_anim_getKeyInfoAtTime,   MV, ""},
     {"removeKey"         , (PyCFunction)s_anim_removeKey,          MV, ""},
@@ -252,7 +280,7 @@ static PyMethodDef s_animMethods[] = {
 };
 #undef MV
 
-/*** Mechanism to kill views after model is freed. */
+/*** Mechanism to kill views when model is freed. */
 
 typedef std::vector<AnimModView *> ViewVector;
 typedef std::map<AnimModModel *, ViewVector > ModelViewMap;
@@ -279,6 +307,7 @@ static void s_addView(AnimModModel *model, AnimModView *view) {
 }
 
 static void s_removeView(AnimModView *view) {
+    if(view->m_view == 0) return;
     ModelViewMap::iterator mvmi;
     for(mvmi = s_modelViewMap.begin(); mvmi != s_modelViewMap.end(); ++ mvmi) {
         ViewVector &vv = (*mvmi).second;
@@ -290,7 +319,72 @@ static void s_removeView(AnimModView *view) {
             }
         }
     }
-    s_freeView(view);
+    printf("Warning: couldn't find view in models (%s:%d)\n", __FILE__, __LINE__); fflush(stdout);
+    //s_freeView(view);
+}
+
+/*** Mechanism to kill anims when model is freed. */
+
+typedef std::vector<AnimModAnim *> AnimVector;
+typedef std::map<AnimModModel *, AnimVector > ModelAnimMap;
+static ModelAnimMap s_modelAnimMap;
+
+static void s_freeAnim(AnimModAnim *a) {
+    if(!(a->m_anim->getModel()->freeAnim(a->m_anim))) {
+        printf("Warning: couldn't free anim (%s:%d)\n", __FILE__, __LINE__);
+        fflush(stdout);
+    }
+}
+
+static void s_freeAnims(AnimModModel *model) {
+    AnimVector v = s_modelAnimMap[model];
+    s_modelAnimMap.erase(s_modelAnimMap.find(model));
+    for(int i = 0; i < (int) v.size(); i ++) {
+        s_freeAnim(v[i]);
+        v[i]->m_anim = 0;
+    }
+}
+
+static void s_addAnim(AnimModModel *model, AnimModAnim *anim) {
+    s_modelAnimMap[model].push_back(anim);
+}
+
+static void s_removeAnim(AnimModAnim *anim) {
+    if(anim->m_anim == 0) return;
+    ModelAnimMap::iterator mami;
+    for(mami = s_modelAnimMap.begin(); mami != s_modelAnimMap.end(); ++ mami) {
+        AnimVector &av = (*mami).second;
+        AnimVector::iterator avi;
+        for(avi = av.begin(); avi != av.end(); ++ avi) {
+            if(*avi == anim) {
+                av.erase(avi);
+                return;
+            }
+        }
+    }
+    printf("Warning: couldn't find anim in models (%s:%d)\n", __FILE__, __LINE__); fflush(stdout);
+    //s_freeAnim(anim);
+}
+
+// Returns the python object associated with the given model and animation,
+// creating a new object if necessary.  Object is returned with preincremented
+// reference count.
+static AnimModAnim *s_getAnim(AnimModModel *model, Anim *anim) {
+    if(s_modelAnimMap.find(model) != s_modelAnimMap.end()) {
+        AnimVector &av = s_modelAnimMap[model];
+        AnimVector::iterator avi;
+        for(avi = av.begin(); avi != av.end(); ++ avi) {
+            if((*avi)->m_anim == anim) {
+                Py_INCREF((PyObject *) *avi);
+                return *avi;
+            }
+        }
+    }
+    // If anim not found, make a new python object and add it to the list.
+    AnimModAnim *ama = PyObject_New(AnimModAnim, &s_animType);;
+    ama->m_anim = anim;
+    s_addAnim(model, ama);
+    return ama;
 }
 
 /*** Model implementation. */
@@ -319,8 +413,10 @@ static PyObject *s_model_new(PyObject *self, PyObject *args) {
 static void s_model_dealloc(PyObject *self) {
     AnimModModel *m = (AnimModModel *) self;
     s_freeViews(m);
+    s_freeAnims(m);
     delete m->m_model;
     PyObject_Del(self);
+    printf("freed model object (%s:%d)\n", __FILE__, __LINE__); fflush(stdout);
 }
 
 static PyObject *s_model_getAttr(PyObject *self, char *name) {
@@ -360,7 +456,19 @@ static PyObject *s_model_loadSkeleton(PyObject *self, PyObject *args) {
 }
 
 static PyObject *s_model_addUndoListener(PyObject *self, PyObject *args) {
-    return NULL;  // XXX - Implement me.
+    PyObject *obj;
+    if(!PyArg_ParseTuple(args, "O:view_addUndoListener", &obj)) {
+        return NULL;
+    }
+    if(!PyCallable_Check(obj)) {
+        PyErr_Format(PyExc_ValueError, "listener is not a callable object.");
+        return NULL;
+    }
+    AnimModModel *m = s_castModel(self, "self");
+    if(!m) return NULL;
+    m->m_model->addUndoListener(new UndoListenerImpl(obj));
+    Py_INCREF(Py_None);
+    return Py_None;
 }
 
 /*static PyObject *s_model_removeUndoListener(PyObject *self, PyObject *args) {
@@ -368,35 +476,87 @@ static PyObject *s_model_addUndoListener(PyObject *self, PyObject *args) {
 }*/
 
 static PyObject *s_model_modified(PyObject *self, PyObject *args) {
-    return NULL;  // XXX - Implement me.
+    if(!PyArg_ParseTuple(args, ":model_modified")) {
+        return NULL;
+    }
+    AnimModModel *m = s_castModel(self, "self");
+    if(!m) return NULL;
+    int modified = (m->m_model->modified() ? 1 : 0);
+    return Py_BuildValue("i", modified);
 }
 
 static PyObject *s_model_pushUndoToken(PyObject *self, PyObject *args) {
-    return NULL;  // XXX - Implement me.
+    char *name;
+    if(!PyArg_ParseTuple(args, "s:model_pushUndoToken", &name)) {
+        return NULL;
+    }
+    AnimModModel *m = s_castModel(self, "self");
+    if(!m) return NULL;
+    m->m_model->pushUndoToken(name);
+    Py_INCREF(Py_None);
+    return Py_None;
 }
 
 static PyObject *s_model_canUndo(PyObject *self, PyObject *args) {
-    return NULL;  // XXX - Implement me.
+    if(!PyArg_ParseTuple(args, ":model_canUndo")) {
+        return NULL;
+    }
+    AnimModModel *m = s_castModel(self, "self");
+    if(!m) return NULL;
+    int canUndo = (m->m_model->canUndo() ? 1 : 0);
+    return Py_BuildValue("i", canUndo);
 }
 
 static PyObject *s_model_canRedo(PyObject *self, PyObject *args) {
-    return NULL;  // XXX - Implement me.
+    if(!PyArg_ParseTuple(args, ":model_canRedo")) {
+        return NULL;
+    }
+    AnimModModel *m = s_castModel(self, "self");
+    if(!m) return NULL;
+    int canRedo = (m->m_model->canRedo() ? 1 : 0);
+    return Py_BuildValue("i", canRedo);
 }
 
 static PyObject *s_model_getUndoName(PyObject *self, PyObject *args) {
-    return NULL;  // XXX - Implement me.
+    if(!PyArg_ParseTuple(args, ":model_getUndoName")) {
+        return NULL;
+    }
+    AnimModModel *m = s_castModel(self, "self");
+    if(!m) return NULL;
+    const char *undoName = m->m_model->getUndoName();
+    return Py_BuildValue("s", undoName);
 }
 
 static PyObject *s_model_getRedoName(PyObject *self, PyObject *args) {
-    return NULL;  // XXX - Implement me.
+    if(!PyArg_ParseTuple(args, ":model_getRedoName")) {
+        return NULL;
+    }
+    AnimModModel *m = s_castModel(self, "self");
+    if(!m) return NULL;
+    const char *redoName = m->m_model->getRedoName();
+    return Py_BuildValue("s", redoName);
 }
 
 static PyObject *s_model_undo(PyObject *self, PyObject *args) {
-    return NULL;  // XXX - Implement me.
+    if(!PyArg_ParseTuple(args, ":model_undo")) {
+        return NULL;
+    }
+    AnimModModel *m = s_castModel(self, "self");
+    if(!m) return NULL;
+    m->m_model->undo();
+    Py_INCREF(Py_None);
+    return Py_None;
 }
 
 static PyObject *s_model_redo(PyObject *self, PyObject *args) {
-    return NULL;  // XXX - Implement me.
+    if(!PyArg_ParseTuple(args, ":model_redo")) {
+        return NULL;
+    }
+    AnimModModel *m = s_castModel(self, "self");
+    if(!m) return NULL;
+    m->m_model->redo();
+    Py_INCREF(Py_None);
+    return Py_None;
 }
 
 static PyObject *s_model_newView(PyObject *self, PyObject *args) {
@@ -410,15 +570,45 @@ static PyObject *s_model_newView(PyObject *self, PyObject *args) {
 }
 
 static PyObject *s_model_getNumAnims(PyObject *self, PyObject *args) {
-    return NULL;  // XXX - Implement me.
+    if(!PyArg_ParseTuple(args, ":model_getNumAnims")) {
+        return NULL;
+    }
+    AnimModModel *m = s_castModel(self, "self");
+    if(!m) return NULL;
+    return Py_BuildValue("i", m->m_model->getNumAnims());
 }
 
 static PyObject *s_model_getAnim(PyObject *self, PyObject *args) {
-    return NULL;  // XXX - Implement me.
+    int index;
+    if(!PyArg_ParseTuple(args, "i:model_getAnim", &index)) {
+        return NULL;
+    }
+    AnimModModel *amm = s_castModel(self, "self");
+    if(!amm) return NULL;
+    Anim *anim = amm->m_model->getAnim(index);
+    if(anim == NULL) {
+        Py_INCREF(Py_None);
+        return Py_None;
+    }
+    AnimModAnim *ama = s_getAnim(amm, anim);
+    return (PyObject *) ama;
 }
 
 static PyObject *s_model_loadAnim(PyObject *self, PyObject *args) {
-    return NULL;  // XXX - Implement me.
+    char *filename;
+    if(!PyArg_ParseTuple(args, "s:model_loadAnim", &filename)) {
+        return NULL;
+    }
+    AnimModModel *m = s_castModel(self, "self");
+    if(!m) return NULL;
+    Anim *anim = m->m_model->loadAnim(filename);
+    if(anim == NULL) {
+        PyErr_Format(PyExc_IOError, "Couldn't load anim file '%s': %s",
+                     filename, m->m_model->getErrorString());
+        return NULL;
+    }
+    AnimModAnim *ama = s_getAnim(m, anim);
+    return (PyObject *) ama;
 }
 
 static PyObject *s_model_newAnim(PyObject *self, PyObject *args) {
@@ -469,6 +659,7 @@ static void s_view_dealloc(PyObject *self) {
     AnimModView *v = (AnimModView *) self;
     s_removeView(v);
     PyObject_Del(self);
+    printf("freed view (%s:%d)\n", __FILE__, __LINE__); fflush(stdout);
 }
 
 static PyObject *s_view_getAttr(PyObject *self, char *name) {
@@ -710,8 +901,19 @@ static PyObject *s_view_setToolMode    (PyObject *self, PyObject *args) {
     return (PyObject *) m;
 }*/
 
+static AnimModAnim *s_castAnim(PyObject *obj, const char *param) {
+    if(!PyObject_TypeCheck(obj, &s_animType)) {
+        PyErr_Format(PyExc_ValueError, "'%s' is not a Anim object.", param);
+        return NULL;
+    }
+    return (AnimModAnim *) obj;
+}
+
 static void s_anim_dealloc(PyObject *self) {
+    AnimModAnim *ama = (AnimModAnim *) self;
+    s_removeAnim(ama);
     PyObject_Del(self);
+    printf("freed anim (%s:%d)\n", __FILE__, __LINE__); fflush(stdout);
 }
 
 static PyObject *s_anim_getAttr(PyObject *self, char *name) {
@@ -730,8 +932,47 @@ static PyObject *s_anim_addAnimListener   (PyObject *self, PyObject *args) {
     return NULL; // XXX - Implement me.
 }*/
 
+static PyObject *s_anim_modified          (PyObject *self, PyObject *args) {
+    if(!PyArg_ParseTuple(args, ":anim_modified")) {
+        return NULL;
+    }
+    AnimModAnim *a = s_castAnim(self, "self");
+    if(!a) return NULL;
+    int modified = (a->m_anim->modified() ? 1 : 0);
+    return Py_BuildValue("i", modified);
+}
+
+static PyObject *s_anim_getBoneIDs        (PyObject *self, PyObject *args) {
+    if(!PyArg_ParseTuple(args, ":getBoneIDs")) {
+        return NULL;
+    }
+    AnimModAnim *a = s_castAnim(self, "self");
+    if(!a) return NULL;
+    IntVector ids;
+    a->m_anim->getBoneIDs(ids);
+    PyObject *idsObj = PyList_New(ids.size());
+    for(int i = 0; i < (int) ids.size(); i ++) {
+        PyList_SET_ITEM(idsObj, i, PyInt_FromLong((long) ids[i]));
+    }
+    return idsObj;
+}
+
 static PyObject *s_anim_getKeyTimes       (PyObject *self, PyObject *args) {
-    return NULL; // XXX - Implement me.
+    int boneID;
+    float startTime=0.0f, endTime=-1.0f;
+    if(!PyArg_ParseTuple(args, "i|ff:getKeyTimes", &boneID,
+                         &startTime, &endTime)) {
+        return NULL;
+    }
+    AnimModAnim *a = s_castAnim(self, "self");
+    if(!a) return NULL;
+    FloatVector times;
+    a->m_anim->getKeyTimes(boneID, times, startTime, endTime);
+    PyObject *timesObj = PyList_New(times.size());
+    for(int i = 0; i < (int) times.size(); i ++) {
+        PyList_SET_ITEM(timesObj, i, PyFloat_FromDouble((double) times[i]));
+    }
+    return timesObj;
 }
 
 static PyObject *s_anim_getKeyInfoAtTime  (PyObject *self, PyObject *args) {

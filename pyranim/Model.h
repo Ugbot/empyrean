@@ -39,7 +39,7 @@ public:
     bool loadMesh(const char *filename);
     bool loadSkeleton(const char *filename);
     void addUndoListener(UndoListener *listener);
-    void removeUndoListener(UndoListener *listener);
+    //void removeUndoListener(UndoListener *listener);
     bool modified() const;
     void pushUndoToken(const char *name);
     bool canUndo() const;
@@ -55,6 +55,7 @@ public:
     Anim *getAnim(int index);
     Anim *loadAnim(const char *filename);
     Anim *newAnim();
+    void setCurrentAnim(Anim *anim);
     bool freeAnim(Anim *anim);
     void getKeyInfo(KeyInfo &info);
     int getNumJoints();
@@ -73,6 +74,8 @@ protected:
     std::vector<JointInfo> m_joints;
     typedef std::vector<View *> ViewVector;
     ViewVector m_views;
+    typedef std::vector<Anim *> AnimVector;
+    AnimVector m_anims;
 
     void recalcJoints();
     void recalcJointChain();

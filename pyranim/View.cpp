@@ -283,7 +283,7 @@ void View::navMouseDown(int x, int y) {
     double deltaY = y - (m_height / 2.0);
     double dist = sqrt(deltaX * deltaX + deltaY * deltaY);
     dist /= (m_width < m_height ? m_width : m_height);
-    if(dist * 2.0 > NAV_CIRCLE_RAD) {
+    if(dist * 2.0 < NAV_CIRCLE_RAD) {
         m_navMode = NAV_ROTATING;
         m_navPrevX = x;
         m_navPrevY = y;
@@ -473,7 +473,7 @@ void View::rotWidgetChanged(RotWidget *widget, const IQuat &quat, bool final) {
     }
     
     IVector trans = ji.m_trans;
-    IQuat q = ji.m_quat * compQuat;
+    //IQuat q = ji.m_quat * compQuat;
     m_model->setJointRotTrans(m_selectedJoint,
                               quat * conjugate(compQuat),
                               trans);

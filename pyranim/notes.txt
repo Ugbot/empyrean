@@ -67,6 +67,7 @@ model.setTime(time)
 model.getNumAnims()
 model.getAnim(index)
 model.loadAnim(filename)
+  - Returns new animation index.
 
 model.newAnim()
   - Creates a new animation object.
@@ -80,8 +81,11 @@ anim.setCurrent()
 anim.addAnimListener(listener)
   - Adds an animation listener to the update notification list.
 
-anim.removeAnimListener(listener)
+#anim.removeAnimListener(listener)
   - Removes an animation listener from the update notification list.
+
+anim.modified()
+  - Returns true if the animation was modified.
 
 anim.getKeyTimes(boneID)
 anim.getKeyInfoAtTime(boneID, time)

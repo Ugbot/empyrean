@@ -15,7 +15,14 @@ class PyrFrame(wxFrame):
         wxFrame.__init__(self, None, -1, 'PyrAnim', size=(500,500),
                          style=wxDEFAULT_FRAME_STYLE |
                          wxNO_FULL_REPAINT_ON_RESIZE)
+        # Initialize model.
         self.model = animmod.Model()
+        
+        def undoHandler(self=self):
+            self.__updateUndo()
+        self.model.addUndoListener(undoHandler)
+
+        # Initialize views.
         self.views = []
 
         def statusHandler(text, self=self):
@@ -39,11 +46,30 @@ class PyrFrame(wxFrame):
         menu.Append(menuID, 'Open &Mesh...', 'Open Mesh')
         EVT_MENU(self, menuID, self.OnFileOpenMesh)
 
+        menuID = wxNewId()
+        menu.Append(menuID, 'Open &Anim...', 'Open Animation')
+        EVT_MENU(self, menuID, self.OnFileOpenAnim)
+
         menu.AppendSeparator()
 
         menuID = wxNewId()
         menu.Append(menuID, 'E&xit', 'Exit Program')
         EVT_MENU(self, menuID, self.OnFileExit)
+
+        menu = wxMenu()
+        menuBar.Append(menu, '&Edit')
+
+        menuID = wxNewId()
+        menuItem = wxMenuItem(menu, menuID, '&Undo...\tCtrl+Z', 'Undo')
+        menu.AppendItem(menuItem)
+        EVT_MENU(self, menuID, self.OnEditUndo)
+        self.undoMenuItem = menuItem
+
+        menuID = wxNewId()
+        menuItem = wxMenuItem(menu, menuID, '&Redo...\tCtrl+Y', 'Redo')
+        menu.AppendItem(menuItem)
+        EVT_MENU(self, menuID, self.OnEditRedo)
+        self.redoMenuItem = menuItem
 
         self.SetMenuBar(menuBar)
         self.CreateStatusBar()
@@ -70,14 +96,42 @@ class PyrFrame(wxFrame):
         if len(sys.argv) > 1:
             self.model.loadSkeleton(sys.argv[1])
 
+        self.__updateUndo()
+
+
     def OnFileOpenSkeleton(self, event):
-        self.model.loadSkeleton('walk1.csf')
+        self.model.loadSkeleton('c:/src/pyrdata/walk1.csf')
 
     def OnFileOpenMesh(self, event):
-        self.model.loadMesh('walk1.cmf')
+        self.model.loadMesh('c:/src/pyrdata/walk1.cmf')
+
+    def OnFileOpenAnim(self, event):
+        anim = self.model.loadAnim('c:/src/pyrdata/walk1.caf')
 
     def OnFileExit(self, event):
         self.Close()
+
+    def OnEditUndo(self, event):
+        self.model.undo()
+
+    def OnEditRedo(self, event):
+        self.model.redo()
+
+    def __updateUndo(self):
+        print "updateUndo"
+        sys.stdout.flush()
+        self.undoMenuItem.Enable(self.model.canUndo())
+        self.redoMenuItem.Enable(self.model.canRedo())
+        undoName = self.model.getUndoName()
+        if undoName:
+            self.undoMenuItem.SetText('&Undo %s...\tCtrl+Z' % undoName)
+        else:
+            self.undoMenuItem.SetText('&Undo...\tCtrl+Z')
+        redoName = self.model.getRedoName()
+        if redoName:
+            self.redoMenuItem.SetText("&Redo %s...\tCtrl+Y" % undoName)
+        else:
+            self.redoMenuItem.SetText("&Redo...\tCtrl+Y")
 
     def __setTool(self, tool):
         for view in self.views:
@@ -190,9 +244,21 @@ class PyrApp(wxApp):
         frame.Show()
         return true
 
-def main():
+def main2():
     app = PyrApp(0)
     app.MainLoop()
+
+def main():
+    DIR = 'c:/src/pyrdata/'
+    model = animmod.Model()
+    model.loadSkeleton(DIR + 'walk1.csf')
+    anim = model.loadAnim(DIR + 'walk1.caf')
+    boneIDs = anim.getBoneIDs()
+    print boneIDs
+    for i in range(len(boneIDs)):
+        times = anim.getKeyTimes(i)
+        print times
+
 
 if __name__ == '__main__':
     main()
