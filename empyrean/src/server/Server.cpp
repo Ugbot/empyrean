@@ -24,6 +24,9 @@ namespace pyr {
     bool Server::OnInit() {
         PYR_BEGIN_EXCEPTION_TRAP()
         
+            // Prepare the log file
+            the<Log>().open(getStartDirectory(argc, argv) + "/server.log");
+        
             setStartDirectory(argc, argv);
             try {
                 the<Configuration>().load();
@@ -32,9 +35,6 @@ namespace pyr {
                 // show a warning or something
             }
 
-			// Prepare the log file
-			the<Log>().open("server.log");
-        
             wxInitAllImageHandlers();
             
             _frame = new ServerFrame();

@@ -23,4 +23,22 @@ env = base_env.Copy()
 for t in Split('PyrBase NSPR Corona wxWindows OpenGL'):
     TOOLS[t](env)
 
-env.Program('#/build/editor', SOURCES)
+if env['PLATFORM'] == 'cygwin':
+    def CygwinRES(env):
+        import SCons.Builder
+        env['RC'] = 'windres'
+        env['RCFLAGS'] = ''
+        env['RCINCFLAGS'] = '$( ${_concat(RCINCPREFIX, CPPPATH, RCINCSUFFIX, __env__, RDirs)} $)'
+        env['RCINCPREFIX'] = '--include-dir '
+        env['RCINCSUFFIX'] = ''
+        env['RCCOM'] = '$RC $RCINCFLAGS $RCFLAGS -i $SOURCE -o $TARGET'
+        CScan = env.get_scanner('.c')
+        if CScan:
+            CScan.add_skey('.rc')
+        env['BUILDERS']['RES'] = SCons.Builder.Builder(action='$RCCOM')
+
+    CygwinRES(env)
+    SOURCES.append(env.RES('editor.res.o', 'editor.rc'))
+
+editor = env.Program('#/build/editor', SOURCES)
+Alias('editor', editor)

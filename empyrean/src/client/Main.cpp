@@ -15,16 +15,18 @@
 
 namespace pyr {
 
-    void runClient() {
+    void runClient(int argc, char* argv[]) {
         PYR_PROFILE_BLOCK("main");
-        
+
         try {
-            the<Log>().open("client.log");
+            the<Log>().open(getStartDirectory(argc, argv) + "/client.log");
         }
         catch (const LogFileOpenFailure&) {
             // Could not open log file.  That's okay, defer any problems until later.
         }
         
+        setStartDirectory(argc, argv);
+
         try {
             the<Configuration>().load();
         }
@@ -155,11 +157,9 @@ namespace pyr {
 
 /// main() needs to be defined with argc and argv so SDL works right.
 int main(int argc, char* argv[]) {
-    pyr::setStartDirectory(argc, argv);
-
     PYR_BEGIN_EXCEPTION_TRAP()
 
-        pyr::runClient();
+        pyr::runClient(argc, argv);
         pyr::Profiler::dump();
         return EXIT_SUCCESS;
     
@@ -172,12 +172,12 @@ int main(int argc, char* argv[]) {
 
 #if defined(WIN32) && !defined(_CONSOLE)
 
+    #ifdef __CYGWIN__
+    extern "C" int __argc;
+    extern "C" char* __argv[];
+    #endif
+
     int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
-        #ifdef CYGWIN
-            /// @todo parse lpCommandStr
-            int __argc = 1;
-            char* __argv[] = {"client"};
-        #endif
         return main(__argc, __argv);
     }
     

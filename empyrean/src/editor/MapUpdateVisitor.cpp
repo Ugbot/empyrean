@@ -13,7 +13,7 @@ namespace pyr {
     {}
 
     void MapUpdateVisitor::visitGeometry(GeometryElement* e) {
-        std::string tex(e->texture);
+        std::string tex(e->material ? e->material->texture : "");
         gmtl::Vec2f newPos(e->pos);
 
         if (_property == "x") {

@@ -3,6 +3,9 @@ from os.path import join
 from glob import glob
 from types import ListType
 
+import dumbdbm
+SConsignFile(dbm_module=dumbdbm)
+
 TARGET = ARGUMENTS.get('TARGET', '.')
 Default(TARGET)
 

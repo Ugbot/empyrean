@@ -3,6 +3,8 @@ import os
 import string
 import SCons.Errors
 
+import dumbdbm
+SConsignFile(dbm_module=dumbdbm)
 
 Default('build')
 
@@ -143,7 +145,7 @@ Export('TOOLS')
 base_env = Environment(ENV = os.environ)
 
 if base_env['PLATFORM'] == 'cygwin':
-    base_env.Append(CPPDEFINES = ['WIN32', '_WIN32', 'CYGWIN', 'NOMINMAX'],
+    base_env.Append(CPPDEFINES = ['WIN32', '_WIN32', 'NOMINMAX'],
                     CPPPATH = ['#/third-party-cygwin/include'],
                     LIBPATH = ['#/third-party-cygwin/lib'])
 

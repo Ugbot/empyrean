@@ -11,7 +11,7 @@ namespace pyr {
         glPushMatrix();
         glTranslate(e->pos);
 
-        for (unsigned i = 0; i < e->children.size(); i++) {
+        for (size_t i = 0; i < e->children.size(); i++) {
             e->children[i]->handleVisitor(*this);
         }
 
@@ -19,11 +19,14 @@ namespace pyr {
     }
 
     void MapRenderer::visitGeometry(GeometryElement* e) {
-        Texture* tex;
-        
         try {
-            tex = Texture::create(e->texture); // I hope this isn't as slow as it looks
-            tex->bind();
+            if (e->material) {
+                // I hope this isn't as slow as it looks
+                Texture* tex = Texture::create(e->material->texture);
+                tex->bind();
+            } else {
+                Texture::unbind();
+            }
         } catch (const std::runtime_error&) {
             Texture::unbind();
         }
@@ -34,7 +37,7 @@ namespace pyr {
         const GeometryElement::VertList& v = e->vertices;
 
         glBegin(GL_TRIANGLES);
-        for (unsigned i = 0; i < e->tris.size(); i++) {
+        for (size_t i = 0; i < e->tris.size(); i++) {
             const GeometryElement::Triangle& t = e->tris[i];
 
             for (unsigned j = 0; j < 3; j++) {

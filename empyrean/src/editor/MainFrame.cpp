@@ -52,7 +52,8 @@ namespace pyr {
         // Test code, to get a map
         GroupElementPtr mapRoot = _map.getRoot();
         GeometryElement* e = new GeometryElement;
-        e->texture = "images/pointer.png";
+        e->material = new Material();
+        e->material->texture = "images/pointer.png";
         e->addVert(gmtl::Vec2f(0, 0), gmtl::Vec2f(0, 0), gmtl::Vec4f(1, 1, 1, 1));
         e->addVert(gmtl::Vec2f(1, 0), gmtl::Vec2f(1, 0), gmtl::Vec4f(1, 1, 1, 1));
         e->addVert(gmtl::Vec2f(1, 1), gmtl::Vec2f(1, 1), gmtl::Vec4f(1, 1, 1, 1));

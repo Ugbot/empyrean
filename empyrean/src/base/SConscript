@@ -7,7 +7,6 @@ SOURCES = Split("""
     Error.cpp
     GLUtility.cpp
     Log.cpp
-    Map.cpp
     MapElement.cpp
     MapRenderer.cpp
     NSPRUtility.cpp

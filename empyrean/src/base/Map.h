@@ -12,9 +12,13 @@ namespace pyr {
 
     class Map {
     public:
-        Map();
+        Map() {
+            _root = new GroupElement;
+        }
 
-        GroupElementPtr getRoot() const;
+        GroupElementPtr getRoot() const {
+            return _root;
+        }
         
     private:
         // The root should always be a GroupElement.  It's rather convenient
