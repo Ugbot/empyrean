@@ -69,12 +69,9 @@ namespace pyr {
     }
     
     void Thread::threadRoutine() {
-        try {
-            _object->run();
-        }
-        catch (const std::exception& e) {
-            error("Caught exception: " + std::string(e.what()));
-        }
+        PYR_BEGIN_EXCEPTION_TRAP()
+        _object->run();
+        PYR_END_EXCEPTION_TRAP()
         PR_AtomicSet(&_stopped, 1);
     }
     

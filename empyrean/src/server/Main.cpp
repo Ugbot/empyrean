@@ -15,7 +15,7 @@ namespace pyr {
 
         int port = Configuration::instance().getServerPort();
         ListenerThread* listener = new ListenerThread(port);
-        ScopedPtr<Thread> thread(new Thread(listener));
+        ScopedPtr<Thread> thread(new Thread(listener, PR_PRIORITY_HIGH));
         
         float last = getNow();
         for (;;) {
@@ -34,24 +34,6 @@ namespace pyr {
         }
     }
 }
-
-
-/*
-int main() {
-    try {
-        pyr::runServer();
-        return EXIT_SUCCESS;
-    }
-    catch (const std::exception& e) {
-        pyr::error("Caught exception: " + std::string(e.what()));
-    }
-//    catch (...) {
-//        pyr::error("Caught unknown exception");
-//    }
-    
-    return EXIT_FAILURE;
-}
-*/
 
 
 IMPLEMENT_APP(pyr::Server)

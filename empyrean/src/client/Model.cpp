@@ -130,7 +130,7 @@ namespace pyr {
                     if (result==-1) throw CalException();
                 }
             }
-            catch (CalException) {
+            catch (const CalException&) {
                 std::stringstream ss;
                 ss << "CoreModel::loadConfigFile " << fname << "(" << curline << "): " << CalError::getLastErrorText() << std::endl;
                 throw std::runtime_error(ss.str().c_str());

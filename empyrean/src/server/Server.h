@@ -3,22 +3,29 @@
 
 
 #include <string>
+#include "Utility.h"
 #include "wx.h"
 
 
 namespace pyr {
 
     class ServerFrame;
+    class Thread;
 
     class Server : public wxApp {
     public:
         Server();
 
         bool OnInit();
+        
         void log(const std::string& s);
+        bool isRunning();
+        void start();
+        void stop();
 
     private:
         ServerFrame* _frame;
+        ScopedPtr<Thread> _serverThread;
     };
 
 }

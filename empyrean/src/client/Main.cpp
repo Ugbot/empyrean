@@ -150,7 +150,7 @@ namespace pyr {
 
 
 /**
- * main() needs to be defined like this so SDL works right.
+ * main() needs to be defined with argc and argv so SDL works right.
  */
 int main(int /*argc*/, char* /*argv*/[]) {
 
@@ -158,18 +158,13 @@ int main(int /*argc*/, char* /*argv*/[]) {
     setStartDirectory();
 #endif
 
-    try {
+    PYR_BEGIN_EXCEPTION_TRAP()
+
         pyr::runClient();
         pyr::Profiler::dump();
         return EXIT_SUCCESS;
-    }
-    catch (const std::exception& e) {
-        pyr::error(e.what());
-        pyr::Profiler::dump();
-    }
-//    catch (...) {
-//        pyr::error("Unknown exception");
-//    }
+    
+    PYR_END_EXCEPTION_TRAP()
     
     pyr::Profiler::dump();
     return EXIT_FAILURE;

@@ -155,6 +155,12 @@
 				RelativePath="..\..\src\server\ServerFrame.h">
 			</File>
 			<File
+				RelativePath="..\..\src\server\ServerThread.cpp">
+			</File>
+			<File
+				RelativePath="..\..\src\server\ServerThread.h">
+			</File>
+			<File
 				RelativePath="..\..\src\server\UIDGenerator.h">
 			</File>
 			<File

@@ -21,6 +21,9 @@ namespace pyr {
         
         void onStart();
         void onStop();
+        void onRestart();
+        void onExit();
+        void onUpdateUI(wxUpdateUIEvent& evt);
         
         wxHtmlWindow* _contents;
     
