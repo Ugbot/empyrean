@@ -12,6 +12,7 @@ namespace pyr {
             "Caphriel3.jpg",
             "ninja1.jpg",
             "Robot3.jpg",
+            "levelOneColor.jpg",
         };
 
         for (size_t i = 0; i < sizeof(images) / sizeof(*images); ++i) {
