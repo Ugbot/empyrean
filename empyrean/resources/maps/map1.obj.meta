@@ -12,4 +12,13 @@
   <node name="Particle1" position="13.8006 -1.08461e-007 2.48131">
     <property key="particles" value="true"/>
   </node>
+  <node name="enemy1" position="-21.8569 -1.21669e-007 2.78345">
+    <property key="enemy" value="true"/>
+  </node>
+  <node name="enemy2" position="-18.5329 -5.75171e-007 13.1584">
+    <property key="enemy" value="true"/>
+  </node>
+  <node name="enemy3" position="0.10172 5.00473e-008 -1.14495">
+    <property key="enemy" value="true"/>
+  </node>
 </map-metadata>

@@ -30,8 +30,9 @@ namespace pyr {
             if (elt->properties["enemy"] == "true") {
                 ServerEntity* entity = new ServerEntity(
                     _idGenerator.reserve(),
-                    "models/Walk1/walk1.cfg");
-                // Add AI.
+                    "models/Walk1/walk1.cfg",
+                    new DumbBehavior());
+                entity->setPos(elt->pos);
                 addEntity(entity);
             }
         }
