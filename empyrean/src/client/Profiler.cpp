@@ -50,6 +50,9 @@ namespace pyr {
     }
 
     void Profiler::dump() {
+        if (!_totalTime)    // hack to evade division by zero.  Besides, if _totalTime is zero, then there's nothing to report anyway.
+            return;
+
         ofstream file("profile.html");
         
         file << "<table border=1><tr><th>Process</th><th>Time</th><th>%</th><th>Time+children</th><th>%</th></tr>" << endl;
