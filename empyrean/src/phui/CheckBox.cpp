@@ -22,8 +22,8 @@
  *
  * -----------------------------------------------------------------
  * File:          $RCSfile: CheckBox.cpp,v $
- * Date modified: $Date: 2004-06-05 02:23:23 $
- * Version:       $Revision: 1.5 $
+ * Date modified: $Date: 2004-09-17 17:00:46 $
+ * Version:       $Revision: 1.6 $
  * -----------------------------------------------------------------
  *
  ************************************************************** phui-cpr-end */
@@ -41,20 +41,16 @@ namespace phui
    {
       const int width  = getSize().getWidth();
       const int height = getSize().getHeight();
-      
+
+    // Width and height of the actual checkbox.
       const int SIZE = 50;
-      
+
       int x = SIZE / 20;
       int y = (height - SIZE) / 2;
 
       glColor(getBackgroundColor());
-      glBegin(GL_TRIANGLE_FAN);
-      glVertex2i(0,     0     );
-      glVertex2i(width, 0     );
-      glVertex2i(width, height);
-      glVertex2i(0,     height);
-      glEnd();
-      
+      glRecti(0, 0, width, height);
+
       glColor(getForegroundColor());
       glBegin(GL_LINE_LOOP);
       glVertex2i(x,        y);
@@ -72,7 +68,7 @@ namespace phui
          glVertex2i(x,        y + SIZE);
          glEnd();
       }
-      
+
       glPushMatrix();
       glTranslatef(
         float(2 * x + SIZE),
@@ -92,12 +88,12 @@ namespace phui
    {
       return mIsChecked;
    }
-   
+
    void CheckBox::setText(const std::string& text)
    {
       mText = text;
    }
-   
+
    const std::string& CheckBox::getText() const
    {
       return mText;

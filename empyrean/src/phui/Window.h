@@ -22,8 +22,8 @@
  *
  * -----------------------------------------------------------------
  * File:          $RCSfile: Window.h,v $
- * Date modified: $Date: 2004-06-05 02:23:23 $
- * Version:       $Revision: 1.6 $
+ * Date modified: $Date: 2004-09-17 17:00:47 $
+ * Version:       $Revision: 1.7 $
  * -----------------------------------------------------------------
  *
  ************************************************************** phui-cpr-end */
@@ -55,7 +55,6 @@ namespace phui {
         }
 
     private:
-        /// The title of the window.
         std::string mTitle;
     };
 
