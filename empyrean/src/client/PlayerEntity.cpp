@@ -66,7 +66,6 @@ namespace pyr {
         Vec2f origPos = getPos();
 
         getPos() += getVel() * dt;
-        getPos()[1] = std::max(getPos()[1], 0.0f);
         getVel()[1] -= 9.81f * dt;
 
         float height = 1.9f;
