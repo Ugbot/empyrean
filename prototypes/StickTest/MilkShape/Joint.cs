@@ -45,11 +45,13 @@ namespace StickTest.MilkShape
                 case 1:
                     if (time+td>keys[nextkey].time)
                     {
+                        if (keys.Length==1) return;
+
                         double _t=keys[nextkey].time-time;
 
                         cur+=delta*_t;                  // get the rest of this keyframe added in
 
-                            td-=keys[nextkey].time-time;    // adjust time delta to add other keyframes
+                        td-=keys[nextkey].time-time;    // adjust time delta to add other keyframes
                         time=keys[nextkey].time;
 
                         NextKey++;
@@ -70,11 +72,16 @@ namespace StickTest.MilkShape
                 nextkey=value;
                 if (nextkey>=keys.Length)
                 {
-                    time=0;
+                    time=1;
                     nextkey=0;
                 }
 
-                delta=(keys[nextkey].v-cur)*(1/(keys[nextkey].time-time));
+                if (time==keys[nextkey].time)
+                {
+                    delta=keys[nextkey].v;
+                }
+                else
+                    delta=(keys[nextkey].v-cur)*(1/(keys[nextkey].time-time));
             }
         }
 

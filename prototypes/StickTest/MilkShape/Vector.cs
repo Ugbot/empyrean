@@ -43,7 +43,7 @@ namespace StickTest.MilkShape
 
         public double Dot(Vector b)
         {
-            return x*b.x+y*b.y+z*b.z;
+            return x*b.x + y*b.y + z*b.z;
         }
 
         public static double Dot(Vector a,Vector b)

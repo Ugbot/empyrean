@@ -106,6 +106,16 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "Texture.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "Texture.resx"
+                    DependentUpon = "Texture.cs"
+                    BuildAction = "EmbeddedResource"
+                />
+                <File
                     RelPath = "MilkShape\Joint.cs"
                     SubType = "Code"
                     BuildAction = "Compile"

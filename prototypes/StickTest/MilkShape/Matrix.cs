@@ -263,7 +263,7 @@ namespace StickTest.MilkShape
             return v;
         }
 
-        public override bool Equals(object o)
+/*       public override bool Equals(object o)
         {
             Matrix m=(Matrix)o;
             for (int i=0; i<width*height; i++)
@@ -271,7 +271,7 @@ namespace StickTest.MilkShape
                     return false;
             return true;
         }
-
+*/
         public override string ToString()
         {
             string s="";
