@@ -65,13 +65,10 @@ def SetupAudiere(env):
 
 # Maybe this tool should really be called BoostPython.  Oh well.
 def SetupBoost(env):
-    if env['PLATFORM'] == 'cygwin':
-        env.Append(CPPDEFINES=['BOOST_PYTHON_STATIC_LIB',
-                               'BOOST_PYTHON_STATIC_MODULE'],
-                   CPPPATH=['/usr/local/include/boost-1_31'],
-                   LIBS=['boost_python-gcc'])
-    else:
-        env.Append(LIBS=['boost_python-gcc'])
+    env.Append(CPPDEFINES=['BOOST_PYTHON_STATIC_LIB',
+                           'BOOST_PYTHON_STATIC_MODULE'],
+               CPPPATH=['/usr/local/include/boost-1_31'],
+               LIBS=['boost_python-gcc'])
 
 def SetupCal3D(env):
     env.Append(CXXFLAGS=['-DCAL3D_API='], LIBS=['cal3d', 'm'])
@@ -176,7 +173,8 @@ opts.AddOptions(
     BoolOption('opt',    'Build with optimizations', 0),
     BoolOption('distcc', 'Enable compiling with distcc', 0),
     BoolOption('nowarn', 'Disable all warnings', 0),
-    BoolOption('warningsAsErrors', 'Treat warnings as errors', 0))
+    BoolOption('warningsAsErrors', 'Treat warnings as errors', 0),
+    BoolOption('saveTemps', 'Save temporary files, such as preprocessor output', 0))
 
 # Create base environment.
 env = Environment(ENV=os.environ, options=opts)
@@ -224,6 +222,8 @@ if env.get('warningsAsErrors'):
         env.Append(CCFLAGS=['-Werror'])
     elif env['CXX'] == 'g++':
         env.Append(CXXFLAGS=['-Werror'])
+if env['saveTemps']:
+    env.Append(CCFLAGS=['-save-temps'])
 
 Export('env')
 
