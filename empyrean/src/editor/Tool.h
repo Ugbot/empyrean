@@ -20,8 +20,9 @@ namespace pyr {
         virtual bool onLeftDown(ToolEvent&)  { return false; }
         virtual bool onLeftUp(ToolEvent&)    { return false; }
 
-    private:
+        virtual void onRender(){}
 
+    private:
     };
 
 }

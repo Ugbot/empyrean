@@ -16,6 +16,9 @@ namespace pyr {
 
 
     BEGIN_EVENT_TABLE(MainFrame, wxFrame)
+        EVT_MENU(wxID_EXIT, MainFrame::onExit)
+        EVT_MENU(wxID_UNDO, MainFrame::onUndo)
+        EVT_MENU(wxID_REDO, MainFrame::onRedo)
     END_EVENT_TABLE()
     
     MainFrame::MainFrame()
@@ -118,4 +121,15 @@ namespace pyr {
         CreateStatusBar();
     }
 
+    void MainFrame::onExit(wxCommandEvent&) {
+        Close(true);
+    }
+
+    void MainFrame::onUndo(wxCommandEvent&) {
+        _mapView->undo();
+    }
+
+    void MainFrame::onRedo(wxCommandEvent&) {
+        _mapView->redo();
+    }
 }

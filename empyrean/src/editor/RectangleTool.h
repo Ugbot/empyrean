@@ -11,13 +11,17 @@ namespace pyr {
     public:
         RectangleTool();
     
-        bool onLeftDown(ToolEvent& te);
-        bool onLeftUp(ToolEvent& te);
+        virtual bool onMouseMove(ToolEvent& te);
+        virtual bool onLeftDown(ToolEvent& te);
+        virtual bool onLeftUp(ToolEvent& te);
+        virtual void onRender();
         
     private:
         bool _down;
         float _x;
         float _y;
+        float _x2;
+        float _y2;
     };
 
 }

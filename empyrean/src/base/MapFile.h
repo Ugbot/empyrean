@@ -10,6 +10,8 @@
 namespace pyr {
 
     /**
+     * The storage-friendly representation of a map.
+     *
      * Maps are comprised of a couple of disparate things.
      *
      * Images are just images.  The engine draws them, and that's about it.  There's no actual gameplay significance.
@@ -21,9 +23,10 @@ namespace pyr {
      * Triggers are invisible rectangles floating around space.  When they get touched, struck, or anything else we can
      *    forsee wanting, they can react by calling a script of some sort.
      *
-     * No scene graph?  Nope.  We could construct one at runtime if it really was important.  Or something.
+     * There is no scene graph currently.  Maybe there should be.
+     *
      */
-    class Map {
+    class MapFile {
     public:
         struct Image {
             std::string name;

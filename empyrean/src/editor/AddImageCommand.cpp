@@ -7,12 +7,12 @@ namespace pyr {
     {
     }
 
-    bool AddImageCommand::perform(Map* map) {
+    bool AddImageCommand::perform(MapFile* map) {
         map->_terrain.images.push_back(_image);
         return true;
     }
 
-    bool AddImageCommand::undo(Map* map) {
+    bool AddImageCommand::undo(MapFile* map) {
         // We assume that the undo/redo stack is never interrupted in any way
         // thus this is the only change we have to deal with. (all the others
         // that may throw this off have been undone)

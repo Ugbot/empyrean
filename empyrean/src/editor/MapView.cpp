@@ -30,7 +30,7 @@ namespace pyr {
     }
     
     
-    Map& MapView::getMap() {
+    MapFile& MapView::getMap() {
         return _map;
     }
     
@@ -122,6 +122,7 @@ namespace pyr {
         bool repaint = false;
         
         int button = e.GetButton();
+        
         if (button == -1) {
             repaint = _tool->onMouseMove(te);
         } else if (button == 1) {
@@ -137,7 +138,29 @@ namespace pyr {
         }
     }
     
-    
+#if 1
+    void MapView::draw() {
+
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+        for (std::vector<MapFile::Image>::iterator
+            iter = _map._terrain.images.begin();
+            iter != _map._terrain.images.end();
+            iter++) {
+            // glBindTexture
+            glColor4f(1, 1, 1, 1);
+            glBegin(GL_QUADS);
+            glVertex2f(iter->x, iter->y);
+            glVertex2f(iter->x + iter->width, iter->y);
+            glVertex2f(iter->x + iter->width, iter->y + iter->height);
+            glVertex2f(iter->x, iter->y + iter->height);
+            glEnd();
+        }
+
+        // TODO: templates, obstructions, entities, et cetera
+        _tool->onRender();
+    }
+#else
     void MapView::draw() {
         glClearColor(0, 0, 0, 0);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -179,9 +202,10 @@ namespace pyr {
         glColor3f(1, 0, 0); glVertex2f( 1,  0);
         glEnd();
         
-        glColor3f(1, 1, 1);
+        glColor3f(0.5f, 0.5f, 0.5f);
         _map.draw();
     }
+#endif
 
     void MapView::clearList(std::stack<Command*>& list) {
         while (!list.empty()) {

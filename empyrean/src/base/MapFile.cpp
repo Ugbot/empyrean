@@ -1,10 +1,10 @@
-#include "Map.h"
+#include "MapFile.h"
 #include "OpenGL.h"
 
 
 namespace pyr {
 
-    void Map::draw() {
+    void MapFile::draw() {
         glBegin(GL_QUADS);
         /*for (unsigned i = 0; i < _rectangles.size(); ++i) {
             Rectangle& r = _rectangles[i];

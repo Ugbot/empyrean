@@ -5,21 +5,21 @@
 #include <string>
 
 #include "Command.h"
-#include "Map.h"
+#include "MapFile.h"
 
 namespace pyr {
     
-    class Map;
+    class MapFile;
 
     class AddImageCommand : public Command {
     public:
         AddImageCommand(float x, float y, float width, float height, const std::string& fileName = "");
         
-        virtual bool perform(Map* map);
-        virtual bool undo(Map* map);
+        virtual bool perform(MapFile* map);
+        virtual bool undo(MapFile* map);
 
     private:
-        Map::Image _image;
+        MapFile::Image _image;
     };
 }
 

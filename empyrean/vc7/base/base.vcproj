@@ -132,13 +132,13 @@
 				RelativePath="..\..\src\base\LokiTypeInfo.h">
 			</File>
 			<File
-				RelativePath="..\..\src\base\Map.cpp">
-			</File>
-			<File
-				RelativePath="..\..\src\base\Map.h">
-			</File>
-			<File
 				RelativePath="..\..\src\base\MapElement.h">
+			</File>
+			<File
+				RelativePath="..\..\src\base\MapFile.cpp">
+			</File>
+			<File
+				RelativePath="..\..\src\base\MapFile.h">
 			</File>
 			<File
 				RelativePath="..\..\src\base\Mutex.h">
@@ -217,12 +217,6 @@
 			</File>
 			<File
 				RelativePath="..\..\src\base\XMLParser.h">
-			</File>
-			<File
-				RelativePath="..\..\src\base\aries.cpp">
-			</File>
-			<File
-				RelativePath="..\..\src\base\aries.h">
 			</File>
 			<File
 				RelativePath="..\..\src\base\extgl.c">

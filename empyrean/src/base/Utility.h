@@ -6,6 +6,16 @@
 #include <vector>
 #include "Debug.h"
 
+// I have no idea where these are #defined, but they are.
+// undefine biotch
+#if defined(_MSC_VER) && MSC_VER <= 1300
+#  if defined(min)
+#     undef min
+#  endif
+#  if defined(max)
+#     undef max
+#  endif
+#endif
 
 namespace pyr {
 

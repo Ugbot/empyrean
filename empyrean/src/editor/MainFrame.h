@@ -25,6 +25,11 @@ namespace pyr {
         wxSplitterWindow* _splitter;
         wxTreeCtrl* _mapTree;
         MapView* _mapView;
+
+        // events
+        void onExit(wxCommandEvent&);
+        void onUndo(wxCommandEvent&);
+        void onRedo(wxCommandEvent&);
         
         DECLARE_EVENT_TABLE()
     };

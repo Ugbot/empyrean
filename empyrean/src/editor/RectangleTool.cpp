@@ -1,8 +1,13 @@
-#include "Map.h"
+
+#include "MapFile.h"
 #include "RectangleTool.h"
 
 #include "Command.h"
 #include "AddImageCommand.h"
+
+#include "Utility.h"
+
+#include "OpenGL.h"
 
 namespace pyr {
 
@@ -10,6 +15,12 @@ namespace pyr {
         _down = false;
         _x = 0;
         _y = 0;
+    }
+
+    bool RectangleTool::onMouseMove(ToolEvent& te) {
+        _x2 = te.x;
+        _y2 = te.y;
+        return true;
     }
 
     bool RectangleTool::onLeftDown(ToolEvent& te) {
@@ -24,6 +35,8 @@ namespace pyr {
             return false;
         }
 
+        /*float x = (_x > te.x) ? te.x : _x;
+        float y = (_y > te.y) ? te.y : _y;*/
         float x = std::min(_x, te.x);
         float y = std::min(_y, te.y);
         float w = (_x > te.x) ? _x - te.x : te.x - _x;
@@ -35,4 +48,15 @@ namespace pyr {
         return true;
     }
 
+    void RectangleTool::onRender() {
+        if (_down) {
+            glColor4f(1, 1, 1, 1);
+            glBegin(GL_LINE_LOOP);
+            glVertex2f(_x, _y);
+            glVertex2f(_x2, _y);
+            glVertex2f(_x2, _y2);
+            glVertex2f(_x, _y2);
+            glEnd();
+        }
+    }
 }

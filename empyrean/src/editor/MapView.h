@@ -2,7 +2,7 @@
 #define PYR_MAP_VIEW_H
 
 
-#include "Map.h"
+#include "MapFile.h"
 #include "Tool.h"
 #include "Command.h"
 #include "Utility.h"
@@ -18,7 +18,7 @@ namespace pyr {
         MapView(wxWindow* parent, Tool* defaultTool);
         ~MapView();
 
-        Map& getMap();
+        MapFile& getMap();
         
         void setTool(Tool* tool);
         Tool* getTool() const;
@@ -35,7 +35,7 @@ namespace pyr {
         
         void draw();
        
-        Map _map;
+        MapFile _map;
         ScopedPtr<Tool> _tool;
 
         std::stack<Command*> _undoList;
