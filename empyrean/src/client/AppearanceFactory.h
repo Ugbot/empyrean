@@ -2,10 +2,13 @@
 #define PYR_APPEARANCE_FACTORY_H
 
 
+#include <string>
+
+
 namespace pyr {
 
     class Appearance;
-    
+
     /**
      * Instantiates an appearance from the type 'name'.  Returns a default
      * implementation of an appearance if the name isn't understood.

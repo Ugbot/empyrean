@@ -24,7 +24,7 @@ namespace pyr {
             _appearance = appearance;
         }
 
-        virtual ~Entity();
+        virtual ~Entity() { }
 
         void update(float dt, const Map* terrain);
 

@@ -20,7 +20,9 @@ const int FALLING_SPEED = 0;
 
 namespace pyr {
 
-    GameEntity::GameEntity(Model* model, Renderer* renderer) {
+    GameEntity::GameEntity(Model* model, Renderer* renderer)
+        : ClientEntity(0, 0)
+    {
         _model = model;
         _renderer = renderer;
         _direction = 90;

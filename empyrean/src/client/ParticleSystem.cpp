@@ -29,7 +29,8 @@ namespace pyr {
     }
 
     ParticleSystem::ParticleSystem() 
-        : _particleTex(Texture::create("images/particle.png"))
+        : ClientEntity(0, 0)
+        , _particleTex(Texture::create("images/particle.png"))
     {
     }
 

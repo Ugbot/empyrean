@@ -1,7 +1,8 @@
+#include "AppearanceFactory.h"
 #include "Connection.h"
+#include "GameEntity.h"
 #include "Model.h"
 #include "PacketTypes.h"
-#include "GameEntity.h"
 #include "Renderer.h"
 #include "Scene.h"
 #include "ServerConnection.h"
@@ -26,11 +27,11 @@ namespace pyr {
         _status = DISCONNECTED;
         _loginFailed = false;
     }
-    
+
     bool ServerConnection::isConnected() {
         return (_connection && !_connection->isClosed());
     }
-    
+
     ServerConnection::Status ServerConnection::getStatus() {
         return _status;
     }
@@ -172,9 +173,12 @@ namespace pyr {
     }
 
     void ServerConnection::handleEntityAdded(Connection*, EntityAddedPacket* p) {
-        GameEntity* entity = new GameEntity(
-            new Model(p->appearanceResource()),
-            new DefaultRenderer());
+        ClientEntity* entity = new ClientEntity(
+            instantiateBehavior(p->behavior(), p->behaviorResource()),
+            instantiateAppearance(p->appearance(), p->appearanceResource()));
+        //GameEntity* entity = new GameEntity(
+        //    new Model(p->appearanceResource()),
+        //    new DefaultRenderer());
         the<Scene>().addEntity(p->id(), entity);
     }
 

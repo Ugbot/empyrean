@@ -6,7 +6,8 @@
 namespace pyr {
 
     ParticleEmitter::ParticleEmitter(ParticleSystem* system)
-        : _system(system)
+        : ClientEntity(0, 0)
+        , _system(system)
         , _curColor(1, 1, 1, 1)
         , _velocity(0, 0)
         , _transformTime(0)

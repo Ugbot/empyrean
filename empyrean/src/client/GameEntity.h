@@ -30,7 +30,6 @@ namespace pyr {
      */
     class GameEntity : public ClientEntity {
     public:
-
         enum Animation {
             ATTACKING,
             JUMPING,

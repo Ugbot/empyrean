@@ -23,7 +23,7 @@ namespace pyr {
             throw std::runtime_error("Loading maps/map1.obj failed");
         }
 
-        addParticles(_map->getRoot());
+        //addParticles(_map->getRoot());
     }
     
     Scene::~Scene() {

@@ -14,7 +14,14 @@ namespace pyr {
     /// Represents a drawable, updateable object with a position and velocity.
     class ClientEntity : public Entity {
     public:
-        void draw() { }
+        ClientEntity(Behavior* behavior, Appearance* appearance)
+            : Entity(behavior, appearance)
+        {
+        }
+
+        void draw() {
+            getAppearance()->draw();
+        }
     };
 
 }
