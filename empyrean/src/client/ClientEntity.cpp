@@ -1,4 +1,5 @@
 #include "ClientEntity.h"
+#include "Environment.h"
 #include "GLUtility.h"
 #include "OpenGL.h"
 #include "Log.h"

@@ -49,7 +49,7 @@ namespace pyr {
          */
         virtual void handleVisitor(MapVisitor& v) = 0;
     };
-    typedef RefPtr<MapElement> MapElementPtr;
+    PYR_REF_PTR(MapElement);
 
 
     class VertexArray : public RefCounted {
@@ -61,7 +61,7 @@ namespace pyr {
         std::vector<Vec3f> normals;
         std::vector<Vec2f> texCoords;
     };
-    typedef RefPtr<VertexArray> VertexArrayPtr;
+    PYR_REF_PTR(VertexArray);
 
 
     class GeometryElement : public MapElement {
@@ -82,7 +82,7 @@ namespace pyr {
 
         virtual void handleVisitor(MapVisitor& v);
     };
-    typedef RefPtr<GeometryElement> GeometryElementPtr;
+    PYR_REF_PTR(GeometryElement);
 
 
     /// A MapElement with children.
@@ -96,7 +96,7 @@ namespace pyr {
     
         virtual void handleVisitor(MapVisitor& v);
     };
-    typedef RefPtr<GroupElement> GroupElementPtr;
+    PYR_REF_PTR(GroupElement);
 
 
     /// A MapElement that is just a placeholder or dummy.
@@ -104,7 +104,7 @@ namespace pyr {
     public:
         virtual void handleVisitor(MapVisitor& v);
     };
-    typedef RefPtr<DummyElement> DummyElementPtr;
+    PYR_REF_PTR(DummyElement);
 
 }
 

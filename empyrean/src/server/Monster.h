@@ -18,7 +18,7 @@ namespace pyr {
     private:
         // Nothing yet...
     };
-    typedef RefPtr<Monster> MonsterPtr;
+    PYR_REF_PTR(Monster);
 
 }
 

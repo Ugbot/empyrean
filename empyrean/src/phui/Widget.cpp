@@ -22,8 +22,8 @@
  *
  * -----------------------------------------------------------------
  * File:          $RCSfile: Widget.cpp,v $
- * Date modified: $Date: 2004-06-05 02:23:23 $
- * Version:       $Revision: 1.5 $
+ * Date modified: $Date: 2004-11-09 06:18:18 $
+ * Version:       $Revision: 1.6 $
  * -----------------------------------------------------------------
  *
  ************************************************************** phui-cpr-end */
@@ -249,7 +249,7 @@ namespace phui {
         const Widget* parent = getParent();
         const Widget* child = this;
         while (parent) {
-            if (parent->getFocus() != child) {
+            if (parent->getFocus().get() != child) {
                 return false;
             }
             child = parent;

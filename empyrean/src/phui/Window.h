@@ -22,8 +22,8 @@
  *
  * -----------------------------------------------------------------
  * File:          $RCSfile: Window.h,v $
- * Date modified: $Date: 2004-09-17 17:00:47 $
- * Version:       $Revision: 1.7 $
+ * Date modified: $Date: 2004-11-09 06:18:18 $
+ * Version:       $Revision: 1.8 $
  * -----------------------------------------------------------------
  *
  ************************************************************** phui-cpr-end */
@@ -57,8 +57,7 @@ namespace phui {
     private:
         std::string mTitle;
     };
-
-    typedef pyr::RefPtr<Window> WindowPtr;
+    PYR_REF_PTR(Window);
 }
 
 #endif

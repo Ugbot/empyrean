@@ -22,8 +22,8 @@
  *
  * -----------------------------------------------------------------
  * File:          $RCSfile: ListBox.h,v $
- * Date modified: $Date: 2004-06-05 02:23:23 $
- * Version:       $Revision: 1.4 $
+ * Date modified: $Date: 2004-11-09 06:18:18 $
+ * Version:       $Revision: 1.5 $
  * -----------------------------------------------------------------
  *
  ************************************************************** phui-cpr-end */
@@ -109,8 +109,7 @@ namespace phui
       typedef ListenerList::iterator ListenerIter;
       ListenerList mListeners;
    };
-
-   typedef pyr::RefPtr<ListBox> ListBoxPtr;
+   PYR_REF_PTR(ListBox);
 }
 
 #endif

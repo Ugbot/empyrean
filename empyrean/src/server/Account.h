@@ -35,7 +35,7 @@ namespace pyr {
 
         CharacterPtr _characters[4];
     };
-    typedef RefPtr<Account> AccountPtr;
+    PYR_REF_PTR(Account);
 
 }
 

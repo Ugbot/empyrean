@@ -24,7 +24,7 @@ namespace pyr {
     private:
         std::vector<Texture*> _images;
     };
-    typedef RefPtr<CutScene> CutScenePtr;
+    PYR_REF_PTR(CutScene);
 
 }
 

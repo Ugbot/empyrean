@@ -386,6 +386,9 @@
 				RelativePath="..\..\src\base\Entity.h">
 			</File>
 			<File
+				RelativePath="..\..\src\base\Environment.h">
+			</File>
+			<File
 				RelativePath="..\..\src\base\MonsterBehavior.cpp">
 			</File>
 			<File

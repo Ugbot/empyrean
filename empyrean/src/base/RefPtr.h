@@ -184,7 +184,7 @@ namespace pyr {
     
     
     #define PYR_REF_PTR(type)    \
-        typedef RefPtr<type> type##Ptr
+        typedef pyr::RefPtr<type> type##Ptr
 
 }
 

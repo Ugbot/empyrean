@@ -390,6 +390,8 @@ namespace pyr {
                 case SDLK_F5:
                     _scene.toggleCollision();
                     break;
+                default: // gcc is gay.
+                    break;
             }
         }
 

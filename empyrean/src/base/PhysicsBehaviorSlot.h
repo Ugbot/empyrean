@@ -28,7 +28,7 @@ namespace pyr {
         Zeroed<float> dynamicCoeffOfFriction;
         Inited<int,1> mass;
     };
-    typedef RefPtr<PhysicsBehaviorSlot> PhysicsBehaviorSlotPtr;
+    PYR_REF_PTR(PhysicsBehaviorSlot);
 
 }
 

@@ -2,6 +2,7 @@
 #include "ClientEntity.h"
 #include "Collider.h"
 #include "GLUtility.h"
+#include "Environment.h"
 #include "MapLoader.h"
 #include "MapRenderer.h"
 #include "ParticleEmitter.h"
@@ -111,7 +112,7 @@ namespace pyr {
 
         Environment env;
         env.map = _map.get();
-        env.entities = std::vector<const Entity*>(entityVector.begin(), entityVector.end());
+        env.entities = EntityList(entityVector.begin(), entityVector.end());
 
         // Update all entities behaviors
         for (EntityMap::iterator itr = _entities.begin();

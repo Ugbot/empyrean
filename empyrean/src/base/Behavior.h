@@ -16,7 +16,7 @@ namespace pyr {
 
     class Appearance;
     class Entity;
-    class Map;
+    class Environment;
 
 #define PYR_BEHAVIOR_NAME(name)             \
     std::string getName() {                 \
@@ -25,17 +25,6 @@ namespace pyr {
     static const char* getClassName() {     \
         return (name);                      \
     }
-
-
-    /**
-     * Represents the read-only surroundings of an entity, passed into
-     * Behavior's update() so it can use information from the map and
-     * nearby entities.
-     */
-    struct Environment {
-        const Map* map;
-        std::vector<const Entity*> entities;
-    };
 
 
     /**
@@ -49,7 +38,7 @@ namespace pyr {
     protected:
         virtual ~BehaviorSlot() { }
     };
-    typedef RefPtr<BehaviorSlot> BehaviorSlotPtr;
+    PYR_REF_PTR(BehaviorSlot);
 
 
     struct Action : public RefCounted {
@@ -71,8 +60,8 @@ namespace pyr {
         virtual ~Behavior() { }
 
     public:
-        virtual std::string getName() = 0;
-        virtual std::string getResource() = 0;
+        virtual string getName() = 0;
+        virtual string getResource() = 0;
         virtual void update(Entity* entity, float dt, const Environment& env) = 0;
 
         template<typename SlotT>

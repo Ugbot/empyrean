@@ -4,6 +4,7 @@
 
 #include <string>
 #include "RefCounted.h"
+#include "RefPtr.h"
 #include "VecMath.h"
 
 
@@ -25,7 +26,7 @@ namespace pyr {
         Vec2f texture_offset;
         Vec2f texture_scale;
     };
-    typedef RefPtr<Material> MaterialPtr;
+    PYR_REF_PTR(Material);
 
 }
 

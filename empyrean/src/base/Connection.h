@@ -42,7 +42,7 @@ namespace pyr {
     public:
         virtual void processPacket(Connection* c, Packet* p) = 0;
     };
-    typedef RefPtr<PacketHandler> PacketHandlerPtr;
+    PYR_REF_PTR(PacketHandler);
 
 
     /**

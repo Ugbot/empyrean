@@ -11,7 +11,7 @@
 namespace pyr {
 
     class CoreModel;
-    typedef RefPtr<CoreModel> CoreModelPtr;
+    PYR_REF_PTR(CoreModel);
 
     struct CalTexture {
         GLuint tex;

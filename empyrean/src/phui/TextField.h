@@ -22,8 +22,8 @@
  *
  * -----------------------------------------------------------------
  * File:          $RCSfile: TextField.h,v $
- * Date modified: $Date: 2004-06-05 02:23:23 $
- * Version:       $Revision: 1.8 $
+ * Date modified: $Date: 2004-11-09 06:18:18 $
+ * Version:       $Revision: 1.9 $
  * -----------------------------------------------------------------
  *
  ************************************************************** phui-cpr-end */
@@ -64,8 +64,7 @@ namespace phui
         /// Index of character of where cursor is at
         size_t mCursorCharacterPosition;
     };
-
-    typedef pyr::RefPtr<TextField> TextFieldPtr;
+    PYR_REF_PTR(TextField);
 }
 
 #endif

@@ -3,6 +3,7 @@
 #include "Collider.h"
 #include "CollisionBox.h"
 #include "Configuration.h"
+#include "Environment.h"
 #include "Game.h"
 #include "MapLoader.h"
 #include "PacketTypes.h"

@@ -22,8 +22,8 @@
  *
  * -----------------------------------------------------------------
  * File:          $RCSfile: ListSelectionListener.h,v $
- * Date modified: $Date: 2004-06-05 02:23:23 $
- * Version:       $Revision: 1.3 $
+ * Date modified: $Date: 2004-11-09 06:18:18 $
+ * Version:       $Revision: 1.4 $
  * -----------------------------------------------------------------
  *
  ************************************************************** phui-cpr-end */
@@ -94,8 +94,7 @@ namespace phui
        */
       virtual void onListSelection(const ListSelectionEvent& evt) = 0;
    };
-
-   typedef pyr::RefPtr<ListSelectionListener> ListSelectionListenerPtr;
+   PYR_REF_PTR(ListSelectionListener);
 }
 
 #endif

@@ -48,7 +48,7 @@ namespace pyr {
         u16 _id;
         GameStatisticsPtr _gameStats;
     };
-    typedef RefPtr<ServerEntity> ServerEntityPtr;
+    PYR_REF_PTR(ServerEntity);
     
 }
 

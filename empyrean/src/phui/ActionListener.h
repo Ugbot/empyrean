@@ -22,8 +22,8 @@
  *
  * -----------------------------------------------------------------
  * File:          $RCSfile: ActionListener.h,v $
- * Date modified: $Date: 2004-06-05 02:23:17 $
- * Version:       $Revision: 1.4 $
+ * Date modified: $Date: 2004-11-09 06:18:18 $
+ * Version:       $Revision: 1.5 $
  * -----------------------------------------------------------------
  *
  ************************************************************** phui-cpr-end */
@@ -84,7 +84,7 @@ namespace phui
        */
       virtual void onAction(const ActionEvent& evt) = 0;
    };
-   typedef pyr::RefPtr<ActionListener> ActionListenerPtr;
+   PYR_REF_PTR(ActionListener);
    
    
    template<typename T>

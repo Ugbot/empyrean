@@ -67,7 +67,7 @@ namespace pyr {
         Vec2f _vel;
         BoundingRectangle _bounds;
     };
-    typedef RefPtr<Entity> EntityPtr;
+    PYR_REF_PTR(Entity);
 
 }
 

@@ -1,4 +1,6 @@
+#include <boost/python/suite/indexing/vector_indexing_suite.hpp>
 #include "Entity.h"
+#include "Environment.h"
 #include "Map.h"
 #include "PhysicsBehaviorSlot.h"
 #include "PythonBehavior.h"
@@ -42,11 +44,11 @@ namespace pyr {
          * These are only to make BehaviorWrap instantiable.  They shouldn't
          * ever be called.
          */
-        std::string getName() {
+        string getName() {
             PYR_ASSERT(false, "Python called BehaviorWrap::getName().");
             return "";
         }
-        std::string getResource() {
+        string getResource() {
             PYR_ASSERT(false, "Python called BehaviorWrap::getResource().");
             return "";
         }
@@ -59,6 +61,7 @@ namespace pyr {
     private:
         PyObject* _self;
     };
+    PYR_REF_PTR(BehaviorWrap);
 
 
     void setPos(Entity* entity, const Vec2f& pos) {
@@ -75,6 +78,19 @@ namespace pyr {
         return entity->getVel();
     }
 
+    MapPtr getMap(const Environment& env) {
+        return env.map;
+    }
+
+    list getEntities(const Environment& env) {
+        list rv;
+        for (size_t i = 0; i < env.entities.size(); ++i) {
+            EntityPtr e = env.entities[i].get();
+            rv.append(e);
+        }
+        return rv;
+    }
+
     void bindBehavior() {
         class_<BehaviorSlot, BehaviorSlotPtr, noncopyable>("BehaviorSlot", no_init)
             .def(init<>())
@@ -89,25 +105,32 @@ namespace pyr {
             .def(init<>())
             ;
 
-        class_<Behavior, RefPtr<BehaviorWrap>, noncopyable>("Behavior", no_init)
+        class_<Behavior, BehaviorWrap, noncopyable>("Behavior", no_init)
             .def(init<>())
             .def("setSlot", &Behavior::setSlot)
             .def("addAction", &Behavior::addAction)
+            .add_property("name", &Behavior::getName)
             ;
+        register_ptr_to_python<BehaviorPtr>();
 
         class_<Map, MapPtr, noncopyable>("Map", no_init)
             ;
 
-        class_<Environment>("Environment", no_init)
-            .def_readonly("map",      &Environment::map)
-            .def_readonly("entities", &Environment::entities)
-            ;
-
         // Perhaps this should go into a bindEntity() function somewhere else.
         class_<Entity, EntityPtr, noncopyable>("Entity", no_init)
-            .add_property("behavior", &Entity::getBehavior)
+            .add_property("behavior",   &Entity::getBehavior)
+            //.add_property("appearance", &Entity::getAppearance)
             .add_property("pos", &getPos, &setPos)
             .add_property("vel", &getVel, &setVel)
+            ;
+
+        //class_<EntityList>("EntityList")
+        //    .def(vector_indexing_suite<EntityList>())
+        //    ;
+
+        class_<Environment>("Environment", no_init)
+            .add_property("map",      &getMap)
+            .add_property("entities", &getEntities)
             ;
     }
 

@@ -19,8 +19,7 @@ namespace phui {
          */
         virtual void layout(Widget* widget) = 0;
     };
-    
-    typedef pyr::RefPtr<Layout> LayoutPtr;
+    PYR_REF_PTR(Layout);
         
 }
 

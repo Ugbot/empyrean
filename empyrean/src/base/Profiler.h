@@ -69,13 +69,13 @@ namespace pyr {
     private:
         std::string _name;
     };
-    typedef RefPtr<ProfileBlock> ProfileBlockPtr;
+    PYR_REF_PTR(ProfileBlock);
 
     typedef std::map<std::string, ProfileBlockPtr> ProfileBlockMap;
 
 
     struct CallNode;
-    typedef RefPtr<CallNode> CallNodePtr;
+    PYR_REF_PTR(CallNode);
     typedef std::vector<CallNodePtr> CallNodeList;
 
     /// Facilitates construction of a tree of calls.

@@ -37,7 +37,7 @@ namespace pyr {
         Zeroed<int> _damageMult;
         Zeroed<int> _accuracy;
     };
-    typedef RefPtr<Weapon> WeaponPtr;
+    PYR_REF_PTR(Weapon);
 
     class WeaponPool {
         PYR_DECLARE_SINGLETON(WeaponPool);

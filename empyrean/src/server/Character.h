@@ -28,7 +28,7 @@ namespace pyr {
         Zeroed<int> _experience;
         Inited<int,1> _level;
     };
-    typedef RefPtr<Character> CharacterPtr;
+    PYR_REF_PTR(Character);
 
 }
 

@@ -1,10 +1,11 @@
 #ifndef PYR_CLIENT_ENTITY_H
 #define PYR_CLIENT_ENTITY_H
 
+#include <gltext.h>
 #include "ClientAppearance.h"
 #include "Entity.h"
+#include "Environment.h"
 #include "Utility.h"
-#include <gltext.h>
 
 namespace pyr {
 
@@ -47,7 +48,7 @@ namespace pyr {
             return checked_cast<ClientAppearance*>(getAppearance());
         }
     };
-    typedef RefPtr<ClientEntity> ClientEntityPtr;
+    PYR_REF_PTR(ClientEntity);
 
 }
 

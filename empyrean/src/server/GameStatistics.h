@@ -98,7 +98,7 @@ namespace pyr {
         //vector<Item*> _items;
         //vector<Accessories*> _accessories;
     };
-    typedef RefPtr<GameStatistics> GameStatisticsPtr;
+    PYR_REF_PTR(GameStatistics);
 
 }
 

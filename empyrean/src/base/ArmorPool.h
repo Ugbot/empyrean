@@ -34,7 +34,7 @@ namespace pyr {
         Zeroed<int> _defense;
         Zeroed<int> _damageDiv;
     };
-    typedef RefPtr<Armor> ArmorPtr;
+    PYR_REF_PTR(Armor);
 
     class ArmorPool {
         PYR_DECLARE_SINGLETON(ArmorPool);

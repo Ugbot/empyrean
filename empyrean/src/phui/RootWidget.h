@@ -22,8 +22,8 @@
  *
  * -----------------------------------------------------------------
  * File:          $RCSfile: RootWidget.h,v $
- * Date modified: $Date: 2004-06-26 17:02:53 $
- * Version:       $Revision: 1.6 $
+ * Date modified: $Date: 2004-11-09 06:18:18 $
+ * Version:       $Revision: 1.7 $
  * -----------------------------------------------------------------
  *
  ************************************************************** phui-cpr-end */
@@ -71,7 +71,7 @@ namespace phui {
         WidgetPtr mRoot;
         WidgetPtr mCapture;
     };
-    typedef pyr::RefPtr<RootWidget> RootWidgetPtr;
+    PYR_REF_PTR(RootWidget);
 
 }
 
