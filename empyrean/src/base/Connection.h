@@ -72,6 +72,9 @@ namespace pyr {
             _handlers[ti] = new HandlerT(handler, method);
         }
         
+        /// Empty the list of handlers.
+        void clearHandlers();
+        
         /**
          * Call handlers for all available packets in the incoming queue.
          * If a handler is not available for a packet type, put it in the

@@ -4,12 +4,12 @@
 
 #include <map>
 #include <vector>
+#include "ConnectionHolder.h"
 
 
 namespace pyr {
 
     class Account;
-    class Connection;
     class Game;
     class JoinGamePacket;
     class LoginPacket;
@@ -18,12 +18,11 @@ namespace pyr {
     class SayPacket;
 
     /// @note This class is designed to run within one thread.
-    class World {
+    class World : public ConnectionHolder {
     public:
         ~World();
 
         void update(float dt);
-        void addConnection(Connection* connection);
         
     private:
         struct ConnectionData {
@@ -33,12 +32,10 @@ namespace pyr {
 
         ConnectionData* getData(Connection* c);
         
-        void removeConnection(size_t index);
-        
-        void sendAll(Packet* p);
-        void sendAllBut(Connection* c, Packet* p);
-        
         Game* getGame(const std::string& name);
+        
+        void connectionAdded(Connection* connection);
+        void connectionRemoved(Connection* connection);
     
         void handleLogin(Connection* c, LoginPacket* p);
         void handleSay(Connection* c, SayPacket* p);
@@ -49,7 +46,6 @@ namespace pyr {
         void announceLogout(Connection* d);
         
     private:
-        std::vector<Connection*> _connections;
         std::vector<Game*> _games;
     };
 

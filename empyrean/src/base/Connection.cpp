@@ -30,6 +30,10 @@ namespace pyr {
         }
     }
     
+    void Connection::clearHandlers() {
+        _handlers.clear();
+    }
+    
     void Connection::processIncomingPackets() {
         std::queue<Packet*> packets(_reader->getPackets());
         while (!packets.empty()) {

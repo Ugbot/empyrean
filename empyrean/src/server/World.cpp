@@ -10,32 +10,17 @@
 namespace pyr {
 
     World::~World() {
-        // Delete the games and then the connections because the games
-        // hold references to connections.
+        clearConnections();
+    
         while (!_games.empty()) {
             delete _games[0];
             _games.erase(_games.begin());
         }
-
-        while (!_connections.empty()) {
-            removeConnection(0);
-        }
     }
     
     void World::update(float dt) {
-        // update connections
-        for (unsigned i = 0; i < _connections.size(); ++i) {
-            Connection* c = _connections[i];
-            
-            // if the connection is dead, it must be removed
-            if (c->isClosed()) {
-                removeConnection(i);
-                continue;
-            }
-            
-            c->processIncomingPackets();
-        }
-        
+        ConnectionHolder::update();
+    
         // update games
         for (unsigned i = 0; i < _games.size(); ++i) {
             Game* g = _games[i];
@@ -43,57 +28,8 @@ namespace pyr {
         }
     }
     
-    void World::addConnection(Connection* connection) {
-        logMessage("Connection from address " + connection->getPeerAddress());
-
-        ConnectionData* cd = new ConnectionData;
-        cd->loggedIn = false;
-        cd->account = 0;
-        connection->setOpaque(cd);
-
-        // set up packet handlers
-        connection->definePacketHandler(this, &World::handleLogin);
-        connection->definePacketHandler(this, &World::handleSay);
-        connection->definePacketHandler(this, &World::handleJoinGame);
-        connection->definePacketHandler(this, &World::handleNewCharacter);
-
-        // add the connection to the list of connections
-        _connections.push_back(connection);
-    }
-
     World::ConnectionData* World::getData(Connection* c) {
         return static_cast<ConnectionData*>(c->getOpaque());
-    }
-    
-    void World::removeConnection(unsigned index) {
-        Connection* connection = _connections[index];
-        
-        ConnectionData* cd = (ConnectionData*)connection->getOpaque();
-        
-        if (cd->loggedIn) {
-            announceLogout(connection);
-        }
-        
-        delete cd;
-        
-        _connections.erase(_connections.begin() + index);
-        delete connection;
-        
-        logMessage("Disconnected");
-    }
-    
-    void World::sendAll(Packet* p) {
-        for (size_t i = 0; i < _connections.size(); ++i) {
-            _connections[i]->sendPacket(p);
-        }
-    }
-    
-    void World::sendAllBut(Connection* c, Packet* p) {
-        for (size_t i = 0; i < _connections.size(); ++i) {
-            if (_connections[i] != c) {
-                _connections[i]->sendPacket(p);
-            }
-        }
     }
     
     Game* World::getGame(const std::string& name) {
@@ -109,6 +45,38 @@ namespace pyr {
         return "<i>" + s + "</i>";
     }
     
+    void World::connectionAdded(Connection* connection) {
+        logMessage("Connection from address " + italic(connection->getPeerAddress()));
+
+        // set up connection-specific data
+        ConnectionData* cd = new ConnectionData;
+        cd->loggedIn = false;
+        cd->account = 0;
+        connection->setOpaque(cd);
+
+        // set up packet handlers
+        connection->definePacketHandler(this, &World::handleLogin);
+        connection->definePacketHandler(this, &World::handleSay);
+        connection->definePacketHandler(this, &World::handleJoinGame);
+        connection->definePacketHandler(this, &World::handleNewCharacter);
+    }
+
+    void World::connectionRemoved(Connection* connection) {
+        ConnectionData* cd = getData(connection);
+        
+        if (cd->loggedIn) {
+            announceLogout(connection);
+        }
+        
+        delete cd;
+        
+        connection->clearHandlers();
+        
+        if (connection->isClosed()) {
+            logMessage(italic(connection->getPeerAddress()) + " disconnected");
+        }
+    }
+    
     void World::handleLogin(Connection* c, LoginPacket* p) {
         ConnectionData* cd = getData(c);
         if (cd->loggedIn) {
@@ -120,8 +88,8 @@ namespace pyr {
         /// @todo  test for invalid username
         /// @todo  test for already logged in
 
-        for (size_t i = 0; i < _connections.size(); ++i) {
-            ConnectionData* cdi = getData(_connections[i]);
+        for (size_t i = 0; i < getConnectionCount(); ++i) {
+            ConnectionData* cdi = getData(getConnection(i));
             if (cdi != cd && cdi->account->getUsername() == p->username()) {
                 c->sendPacket(new LoginResponsePacket(LR_ALREADY_LOGGED_IN));
                 logMessage(italic(p->username()) + " already logged in!");
@@ -193,24 +161,33 @@ namespace pyr {
         Game* game = getGame(p->name());
         if (p->newGame()) {
             if (game) {
+                // Error: game already started
                 c->sendPacket(new JoinGameResponsePacket(JGR_ALREADY_STARTED));
                 logMessage(italic(username) + ": game " + italic(p->name()) + " already started");
             } else {
+                // Success: game created
                 game = new Game(p->name(), p->password());
                 _games.push_back(game);
                 c->sendPacket(new JoinGameResponsePacket(JGR_JOINED));
                 logMessage(italic(username) + " created game " + italic(p->name()));
+                
+                giveConnection(c, game);
             }
         } else {
             if (!game) {
+                // Error: game doesn't exist
                 c->sendPacket(new JoinGameResponsePacket(JGR_NO_GAME));
                 logMessage(italic(username) + " tried to join nonexistant game " + italic(p->name()));
             } else if (game->getPassword() != p->password()) {
+                // Error: invalid password
                 c->sendPacket(new JoinGameResponsePacket(JGR_INVALID_PASSWORD));
                 logMessage(italic(username) + ": invalid password for game " + italic(p->name()));
             } else {
+                // Success: game joined
                 c->sendPacket(new JoinGameResponsePacket(JGR_JOINED));
                 logMessage(italic(username) + " joined game " + italic(p->name()));
+                
+                giveConnection(c, game);
             }
         }
     }

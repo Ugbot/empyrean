@@ -1,3 +1,4 @@
+#include "Connection.h"
 #include "Game.h"
 #include "ServerEntity.h"
 
@@ -10,6 +11,8 @@ namespace pyr {
     }
     
     Game::~Game() {
+        clearConnections();
+    
         while (!_entities.empty()) {
             delete _entities[0];
             _entities.erase(_entities.begin());
@@ -24,15 +27,17 @@ namespace pyr {
         return _password;
     }
 
-    void Game::addConnection(Connection* connection) {
-        _connections.push_back(connection);
-        _entities.push_back(new ServerEntity());
-    }
-
     void Game::update(float dt) {
         for (size_t i = 0; i < _entities.size(); ++i) {
             _entities[i]->update(dt);
         }
+    }
+    
+    void Game::connectionAdded(Connection* connection) {
+    }
+    
+    void Game::connectionRemoved(Connection* connection) {
+        connection->clearHandlers();
     }
     
 }

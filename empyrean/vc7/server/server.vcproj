@@ -135,6 +135,12 @@
 				RelativePath="..\..\src\server\Configuration.h">
 			</File>
 			<File
+				RelativePath="..\..\src\server\ConnectionHolder.cpp">
+			</File>
+			<File
+				RelativePath="..\..\src\server\ConnectionHolder.h">
+			</File>
+			<File
 				RelativePath="..\..\src\server\Database.cpp">
 			</File>
 			<File

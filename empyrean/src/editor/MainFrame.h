@@ -17,8 +17,8 @@ namespace pyr {
     public:
 
         const Map* getMap() const;
-
-        virtual void handleCommand(::pyr::Command* cmd);
+        
+        virtual void handleCommand(pyr::Command* cmd);
         void updateTree();
 
         MainFrame();

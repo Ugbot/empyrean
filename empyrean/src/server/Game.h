@@ -4,14 +4,14 @@
 
 #include <string>
 #include <vector>
+#include "ConnectionHolder.h"
 
 
 namespace pyr {
 
-    class Connection;
     class ServerEntity;
 
-    class Game {
+    class Game : public ConnectionHolder {
     public:
         Game(const std::string& name, const std::string& password);
         ~Game();
@@ -19,15 +19,15 @@ namespace pyr {
         const std::string& getName() const;
         const std::string& getPassword() const;
         
-        void addConnection(Connection* connection);
-            
         void update(float dt);
-    
+        
     private:
+        void connectionAdded(Connection* connection);
+        void connectionRemoved(Connection* connection);
+
         std::string _name;
         std::string _password;
         
-        std::vector<Connection*> _connections;
         std::vector<ServerEntity*> _entities;
     };
 
