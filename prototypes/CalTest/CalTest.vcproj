@@ -120,6 +120,9 @@
 				RelativePath="Texture.cpp">
 			</File>
 			<File
+				RelativePath="TriList.cpp">
+			</File>
+			<File
 				RelativePath="main.cpp">
 			</File>
 		</Filter>
@@ -137,6 +140,9 @@
 			</File>
 			<File
 				RelativePath="Texture.h">
+			</File>
+			<File
+				RelativePath="TriList.h">
 			</File>
 			<File
 				RelativePath="Vector.h">

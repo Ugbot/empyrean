@@ -166,6 +166,12 @@
 				RelativePath="..\..\src\client\Model.h">
 			</File>
 			<File
+				RelativePath="..\..\src\client\ParticleSystem.cpp">
+			</File>
+			<File
+				RelativePath="..\..\src\client\ParticleSystem.h">
+			</File>
+			<File
 				RelativePath="..\..\src\client\PlayerEntity.cpp">
 			</File>
 			<File
@@ -197,9 +203,6 @@
 			</File>
 			<File
 				RelativePath="..\..\src\client\Texture.h">
-			</File>
-			<File
-				RelativePath="..\..\src\client\Types.h">
 			</File>
 		</Filter>
 	</Files>

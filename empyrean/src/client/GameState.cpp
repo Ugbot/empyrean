@@ -10,6 +10,7 @@
 #include "Renderer.h"
 #include "Entity.h"
 #include "PlayerEntity.h"
+#include "ParticleSystem.h"
 #include "Texture.h"
 
 namespace pyr {
@@ -24,7 +25,7 @@ namespace pyr {
         _rotation = 0;
 
         _renderer = new CellShadeRenderer;
-        _renderer->useVertexArrays(true);
+        _renderer->useVertexArrays(false);
         _testModel = Model::create("paladin/paladin.cfg");
 
         _backdropTex = Texture::create("images/backdrop.jpg");
@@ -32,7 +33,13 @@ namespace pyr {
         Entity* player = new PlayerEntity(_testModel, _renderer, &_im);
         player->setPos( gmtl::Vec2f(200,290) );
 
+        _particles = new ParticleSystem;
+        _particles->setColor(Color(1,1,1,1));
+        _particles->setGravity(gmtl::Vec2f(0,10));
+        _particles->fadeToColor(Color(0,0,1,1),30);
+
         _entities.push_back(player);
+        _entities.push_back(_particles);
     }
 
     GameState::~GameState() {
@@ -56,9 +63,16 @@ namespace pyr {
 
         Renderer::begin2D();
         glEnable(GL_TEXTURE_2D);
+        glDisable(GL_BLEND);
 
         glClear(GL_DEPTH_BUFFER_BIT);
         _backdropTex->drawRectangle(0, 0, 400, 300);
+
+        {
+            float x = _inputX->getValue() * 400;
+            float y = _inputY->getValue() * 300;
+            _particles->setPos(gmtl::Vec2f(x,y));
+        }
 
         /*
         glDisable(GL_TEXTURE_2D);

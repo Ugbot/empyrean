@@ -134,6 +134,9 @@
 				RelativePath="..\..\src\base\Thread.h">
 			</File>
 			<File
+				RelativePath="..\..\src\base\Types.h">
+			</File>
+			<File
 				RelativePath="..\..\src\base\Utility.cpp">
 			</File>
 			<File

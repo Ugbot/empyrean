@@ -12,6 +12,7 @@ namespace pyr {
     class Renderer;
     class Model;
     class Entity;
+    class ParticleSystem;
     class Texture;
 
     class GameState : public State {
@@ -37,6 +38,8 @@ namespace pyr {
         Model* _testModel;
         Renderer* _renderer;
         Texture* _backdropTex;
+
+        ParticleSystem* _particles;
         
         std::vector<Entity*> _entities;
         

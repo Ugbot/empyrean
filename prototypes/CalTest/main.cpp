@@ -17,6 +17,7 @@
 #include "Vector.h"
 #include "Matrix.h"
 #include "Model.h"
+#include "TriList.h"
 
 // data
 SDL_Surface* screen;
@@ -26,9 +27,11 @@ GLuint shadetex;
 bool cellshade=true;
 bool outline=false;
 bool usevertexarrays=false;
+bool usetrilist=true;
 float lodlevel=1.0f;
 Vector<float> lightvec(1,0,1);
 std::map<std::string,GLuint> textures;
+std::vector<TriList> trilists;
 
 PFNGLACTIVETEXTUREARBPROC glActiveTexture;
 PFNGLCLIENTACTIVETEXTUREARBPROC glClientActiveTexture;
@@ -109,10 +112,10 @@ int main(int argc,char* args[])
 
     glEnable(GL_TEXTURE_2D);
     
-    glFrontFace(GL_CW);
+    //glFrontFace(GL_CW);
 
-    glEnable(GL_CULL_FACE);
-    glCullFace(GL_BACK);
+    //glEnable(GL_CULL_FACE);
+    //glCullFace(GL_BACK);
 
     unsigned int pixels[32];
     int i=0;
@@ -237,6 +240,16 @@ void Init()
     model.GetModel().getMixer()->blendCycle(0,1,4.0f);
     camera.x=camera.y=0; camera.z=-200;
     camera.rx=camera.ry=camera.rz=0;
+
+    try
+    {
+        trilists=LoadTriList("paladin_body.trilist");
+    }
+    catch (std::runtime_error)
+    {
+        usetrilist=false;
+        throw;
+    }
 }
 
 void Tick(int time)
@@ -485,6 +498,44 @@ void RenderOutline()
     glPopAttrib();
 }
 
+void RenderTriList()
+{
+    glEnable(GL_TEXTURE_2D);
+    CalRenderer* r=model.GetModel().getRenderer();
+    r->beginRendering();
+
+    for (unsigned int sub=0; sub<trilists.size(); sub++)
+    {
+        static float verts[30000][3];
+        static float normals[30000][3];
+        static float texcoords[30000][3];
+
+        r->selectMeshSubmesh(0,sub);
+
+        int nVerts     = r->getVertices(&verts[0][0]);
+        int nNormals   = r->getNormals(&normals[0][0]);
+        int nTexcoords = r->getTextureCoordinates(0,&texcoords[0][0]);
+
+        glBindTexture(GL_TEXTURE_2D,(GLuint)r->getMapUserData(0));
+
+        TriList& list=trilists[sub];
+
+        for (int i=0; i<list.size(); i++)
+        {
+            glBegin(GL_TRIANGLE_STRIP);
+            for (unsigned int j=0; j<list[i].size(); j++)
+            {
+                int n=list[i][j];
+                glTexCoord2fv(texcoords[n]);
+                glNormal3fv(normals[n]);
+                glVertex3fv(verts[n]);
+            }
+            glEnd();
+        }
+    }
+    r->endRendering();
+}
+
 void Render()
 {
     glLoadIdentity();
@@ -495,7 +546,9 @@ void Render()
 
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-    if (usevertexarrays)
+    if (usetrilist)
+        RenderTriList();
+    else if (usevertexarrays)
         RenderMesh();
     else
     {
