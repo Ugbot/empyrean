@@ -24,8 +24,8 @@
  *
  * -----------------------------------------------------------------
  * File:          $RCSfile: TextField.h,v $
- * Date modified: $Date: 2003-08-08 02:51:24 $
- * Version:       $Revision: 1.3 $
+ * Date modified: $Date: 2003-08-12 20:58:02 $
+ * Version:       $Revision: 1.4 $
  * -----------------------------------------------------------------
  *
  ************************************************************** phui-cpr-end */
@@ -44,16 +44,11 @@ namespace phui
    {
    public:
       /**
-       * Creates a new textfield with no text at (0,0) with size (0,0).
-       */
-      TextField();
-
-      /**
        * Creates a new button with the given text at (0,0) with size (0,0).
        *
        * @param text      the text for the button
        */
-      TextField(const std::string& text);
+      TextField(const std::string& text = "");
 
       /**
        * Draws this button with its text.

@@ -74,14 +74,14 @@ namespace {
 
                         texcoords2[i]=light;
                     }
-                    
+
                     glClientActiveTextureARB(GL_TEXTURE1_ARB);
                     glActiveTextureARB(GL_TEXTURE1_ARB);
                     glEnable(GL_TEXTURE_1D);
                     glEnableClientState(GL_TEXTURE_COORD_ARRAY);
                     glBindTexture(GL_TEXTURE_1D,shadetex);
                     glTexCoordPointer(1,GL_FLOAT,0,texcoords2);
-
+                    
                     glClientActiveTextureARB(GL_TEXTURE0_ARB);
                     glActiveTextureARB(GL_TEXTURE0_ARB);
 

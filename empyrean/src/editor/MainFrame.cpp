@@ -62,15 +62,30 @@ namespace pyr {
     void MainFrame::createToolBars() {
         #define PNG_BITMAP(name) wxBitmap(name, wxBITMAP_TYPE_PNG)
         
-        wxToolBar* toolbar = CreateToolBar(
-            wxNO_BORDER | wxTB_HORIZONTAL | wxTB_FLAT | wxTB_TEXT);
+        /// @todo depend on wxWindows 2.4.0.  these ifdefs suck.
+
+        int style = wxNO_BORDER | wxTB_HORIZONTAL | wxTB_FLAT;
+        #if wxVERSION_NUMBER >= 2400
+        style |= wxTB_TEXT;
+        #endif
+        wxToolBar* toolbar = CreateToolBar(style);
+
+        #if wxVERSION_NUMBER >= 2400
         toolbar->AddTool(wxID_NEW,  "New",  PNG_BITMAP("editorrc/new.png"));
         toolbar->AddTool(wxID_OPEN, "Open", PNG_BITMAP("editorrc/open.png"));
         toolbar->AddTool(wxID_SAVE, "Save", PNG_BITMAP("editorrc/save.png"));
         toolbar->AddSeparator();
         toolbar->AddTool(ID_TOOL_TRANSLATE, "Trans", PNG_BITMAP("editorrc/tool_translate.png"));
         toolbar->AddTool(ID_TOOL_RECTANGLE, "Rect",  PNG_BITMAP("editorrc/tool_rect.png"));
-        
+        #else
+        toolbar->AddTool(wxID_NEW, PNG_BITMAP("editorrc/new.png"));
+        toolbar->AddTool(wxID_OPEN, PNG_BITMAP("editorrc/open.png"));
+        toolbar->AddTool(wxID_SAVE, PNG_BITMAP("editorrc/save.png"));
+        toolbar->AddSeparator();
+        toolbar->AddTool(ID_TOOL_TRANSLATE, PNG_BITMAP("editorrc/tool_translate.png"));
+        toolbar->AddTool(ID_TOOL_RECTANGLE, PNG_BITMAP("editorrc/tool_rect.png"));
+        #endif
+
         // add more stuff
         
         toolbar->Realize();

@@ -83,8 +83,8 @@ namespace pyr {
                                                                         \
             body(PYR_ACCESS)                                            \
                                                                         \
-            void name::serialize(ByteBuffer& out) const;                \
-            static Packet* name::create(int size, const void* bytes);   \
+            void serialize(ByteBuffer& out) const;                      \
+            static Packet* create(int size, const void* bytes);         \
                                                                         \
         private:                                                        \
             body(PYR_CONTENTS)                                          \

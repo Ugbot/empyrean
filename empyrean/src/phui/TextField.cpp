@@ -24,8 +24,8 @@
  *
  * -----------------------------------------------------------------
  * File:          $RCSfile: TextField.cpp,v $
- * Date modified: $Date: 2003-08-08 02:51:24 $
- * Version:       $Revision: 1.3 $
+ * Date modified: $Date: 2003-08-12 20:58:02 $
+ * Version:       $Revision: 1.4 $
  * -----------------------------------------------------------------
  *
  ************************************************************** phui-cpr-end */
@@ -35,13 +35,12 @@
 
 namespace phui
 {
-   TextField::TextField()
-      : mText(""), mCursorScreenPosition(0), mCursorCharacterPosition(0)
-   {}
-
    TextField::TextField(const std::string& text)
-      : mText(text), mCursorScreenPosition(0), mCursorCharacterPosition(0)
-   {}
+      : mText(text)
+      , mCursorScreenPosition(0)
+      , mCursorCharacterPosition(0)
+   {
+   }
 
    void TextField::draw()
    {
@@ -141,13 +140,13 @@ namespace phui
       } else if(key == KEY_SPACE) {
          toAdd+=' ';
       } else if(key >= KEY_A && key <= KEY_Z) {
-         if (modifiers & MODIF_SHIFT)
+         if ((modifiers & MOD_SHIFT) || (modifiers & MOD_CAPS_LOCK))
          {
-            toAdd+=(char)(key-KEY_A)+'A';
+            toAdd += (char)(key-KEY_A)+'A';
          }
          else
          {
-            toAdd+=(char)(key-KEY_A)+'a';
+            toAdd += (char)(key-KEY_A)+'a';
          }
       } else if(key >= KEY_0 && key <= KEY_9) {
          toAdd+=(char)(key-KEY_0)+'0';

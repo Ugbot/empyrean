@@ -39,6 +39,10 @@ THE POSSIBILITY OF SUCH DAMAGE.
 #include <stdio.h>
 #include <string.h>
 
+#if defined(__sgi)
+#include <dlfcn.h>
+#endif
+
 #if !defined(_WIN32) && !defined(__CYGWIN__) && !defined(__MINGW32__)
 #include <GL/glx.h>
 #endif /* _WIN32 */
@@ -226,6 +230,8 @@ glSampleCoveragePROC glSampleCoverage = NULL;
 
 /* ARB_multitexture */
 
+#endif /* WIN32 */
+
 #ifdef GL_ARB_multitexture
 glActiveTextureARBPROC glActiveTextureARB = NULL;
 glClientActiveTextureARBPROC glClientActiveTextureARB = NULL;
@@ -262,8 +268,6 @@ glMultiTexCoord4ivARBPROC glMultiTexCoord4ivARB = NULL;
 glMultiTexCoord4sARBPROC glMultiTexCoord4sARB = NULL;
 glMultiTexCoord4svARBPROC glMultiTexCoord4svARB = NULL;
 #endif /* GL_ARB_multitexture */
-
-#endif /* WIN32 */
 
 /* ARB_transpose_matrix */
 
@@ -993,19 +997,44 @@ struct ExtensionTypes SupportedExtensions; /* deprecated, please do not use */
 void *extgl_GetProcAddress(char *name)
 {
 #if defined(_WIN32) || defined(__CYGWIN__) || defined(__MINGW32__)
+
     void *t = (void*)wglGetProcAddress(name);
     if (t == NULL)
     {
         extgl_error = 1;  
     }
     return t;
+
+#elif defined(__sgi)
+
+    void* lib = dlopen("libgl.so", RTLD_LAZY);
+    if (lib)
+    {
+        void* func = dlsym(lib, name);
+        if (!func)
+        {
+            printf("Function %s not found\n", name);
+            extgl_error = 1;
+        }
+        dlclose(lib);
+        return func;
+    }
+    else
+    {
+        printf("libgl.so not loaded\n");
+        extgl_error = 1;
+        return 0;
+    }
+    
 #else
+
     void *t = (void*)glXGetProcAddressARB((char*)name);
     if (t == NULL)
     {
         extgl_error = 1;
     }
     return t;
+
 #endif
 }
 
@@ -2069,7 +2098,6 @@ void extgl_InitEXTDrawRangeElements()
 
 void extgl_InitARBMultitexture()
 {
-#if defined(_WIN32) || defined(__CYGWIN__) || defined(__MINGW32__)
 #ifdef GL_ARB_multitexture
     if (!extgl_Extensions.ARB_multitexture)
         return;
@@ -2112,7 +2140,6 @@ void extgl_InitARBMultitexture()
     glMultiTexCoord4sARB = (glMultiTexCoord4sARBPROC) extgl_GetProcAddress("glMultiTexCoord4sARB");
     glMultiTexCoord4svARB = (glMultiTexCoord4svARBPROC) extgl_GetProcAddress("glMultiTexCoord4svARB");
 #endif /* GL_ARB_multitexture */
-#endif /* WIN32 */
 }
 
 void extgl_InitOpenGL1_2()

@@ -24,8 +24,8 @@
  *
  * -----------------------------------------------------------------
  * File:          $RCSfile: Input.h,v $
- * Date modified: $Date: 2003-08-08 02:51:24 $
- * Version:       $Revision: 1.2 $
+ * Date modified: $Date: 2003-08-12 20:58:02 $
+ * Version:       $Revision: 1.3 $
  * -----------------------------------------------------------------
  *
  ************************************************************** phui-cpr-end */
@@ -129,25 +129,22 @@ namespace phui
       KEY_UNKNOWN
    };
 
-   enum InputModifiers
+   enum
    {
-      MODIF_NONE,
-      MODIF_CTRL = 1,
-      MODIF_ALT = 2,
-      MODIF_SHIFT = 4,
+      MOD_NONE        = 0x00,
 
-      MODIF_UNKNOWN = 8
+      MOD_CTRL        = 0x01,
+      MOD_ALT         = 0x02,
+      MOD_SHIFT       = 0x04,
+
+      MOD_CAPS_LOCK   = 0x10,
+      MOD_NUM_LOCK    = 0x20,
+      MOD_SCROLL_LOCK = 0x40,
    };
 
-   enum InputLocks
-   {
-      ILOCK_NONE,
-      ILOCK_CAPS = 1,
-      ILOCK_NUM = 2,
-      ILOCK_SCROLL = 4,
+   // because they're ANDed and ORed together
+   typedef int InputModifiers;
 
-      ILOCK_UNKNOWN = 8
-   };
 }
 
 #endif

@@ -316,23 +316,23 @@ namespace pyr {
     
     void MenuState::onKeyPress(SDLKey key, bool down) {
         if (down) {
-            _screen->onKeyDown(SDLToPhuiKey(key));
+            _screen->genKeyDownEvent(SDLToPhuiKey(key));
         } else {
-            _screen->onKeyUp(SDLToPhuiKey(key));
+            _screen->genKeyUpEvent(SDLToPhuiKey(key));
         }
     }
     
     void MenuState::onMousePress(Uint8 button, bool down, int x, int y) {
         const Point p(x, y);
         if (down) {
-            _screen->onMouseDown(SDLToPhuiButton(button), p);
+            _screen->genMouseDownEvent(SDLToPhuiButton(button), p);
         } else {
-            _screen->onMouseUp(SDLToPhuiButton(button), p);
+            _screen->genMouseUpEvent(SDLToPhuiButton(button), p);
         }
     }
     
     void MenuState::onMouseMove(int x, int y) {
-        _screen->onMouseMove(Point(x, y));
+        _screen->genMouseMoveEvent(Point(x, y));
     }
     
     void MenuState::onErrorOK() {

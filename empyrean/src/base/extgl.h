@@ -2071,8 +2071,6 @@ typedef void (APIENTRY * glMultiTexCoord4ivARBPROC) (GLenum target, const GLint 
 typedef void (APIENTRY * glMultiTexCoord4sARBPROC) (GLenum target, GLshort s, GLshort t, GLshort r, GLshort q );
 typedef void (APIENTRY * glMultiTexCoord4svARBPROC) (GLenum target, const GLshort *v );
 
-#if defined(_WIN32) || defined(__CYGWIN__) || defined(__MINGW32__)
-
 extern glActiveTextureARBPROC glActiveTextureARB;
 extern glClientActiveTextureARBPROC glClientActiveTextureARB;
 extern glMultiTexCoord1dARBPROC glMultiTexCoord1dARB;
@@ -2107,45 +2105,6 @@ extern glMultiTexCoord4iARBPROC glMultiTexCoord4iARB;
 extern glMultiTexCoord4ivARBPROC glMultiTexCoord4ivARB;
 extern glMultiTexCoord4sARBPROC glMultiTexCoord4sARB;
 extern glMultiTexCoord4svARBPROC glMultiTexCoord4svARB;
-
-#else
-
-extern void APIENTRY glActiveTextureARB (GLenum texture );
-extern void APIENTRY glClientActiveTextureARB (GLenum texture );
-extern void APIENTRY glMultiTexCoord1dARB (GLenum target, GLdouble s );
-extern void APIENTRY glMultiTexCoord1dvARB (GLenum target, const GLdouble *v );
-extern void APIENTRY glMultiTexCoord1fARB (GLenum target, GLfloat s );
-extern void APIENTRY glMultiTexCoord1fvARB (GLenum target, const GLfloat *v );
-extern void APIENTRY glMultiTexCoord1iARB (GLenum target, GLint s );
-extern void APIENTRY glMultiTexCoord1ivARB (GLenum target, const GLint *v );
-extern void APIENTRY glMultiTexCoord1sARB (GLenum target, GLshort s );
-extern void APIENTRY glMultiTexCoord1svARB (GLenum target, const GLshort *v );
-extern void APIENTRY glMultiTexCoord2dARB (GLenum target, GLdouble s, GLdouble t );
-extern void APIENTRY glMultiTexCoord2dvARB (GLenum target, const GLdouble *v );
-extern void APIENTRY glMultiTexCoord2fARB (GLenum target, GLfloat s, GLfloat t );
-extern void APIENTRY glMultiTexCoord2fvARB (GLenum target, const GLfloat *v );
-extern void APIENTRY glMultiTexCoord2iARB (GLenum target, GLint s, GLint t );
-extern void APIENTRY glMultiTexCoord2ivARB (GLenum target, const GLint *v );
-extern void APIENTRY glMultiTexCoord2sARB (GLenum target, GLshort s, GLshort t );
-extern void APIENTRY glMultiTexCoord2svARB (GLenum target, const GLshort *v );
-extern void APIENTRY glMultiTexCoord3dARB (GLenum target, GLdouble s, GLdouble t, GLdouble r );
-extern void APIENTRY glMultiTexCoord3dvARB (GLenum target, const GLdouble *v );
-extern void APIENTRY glMultiTexCoord3fARB (GLenum target, GLfloat s, GLfloat t, GLfloat r );
-extern void APIENTRY glMultiTexCoord3fvARB (GLenum target, const GLfloat *v );
-extern void APIENTRY glMultiTexCoord3iARB (GLenum target, GLint s, GLint t, GLint r );
-extern void APIENTRY glMultiTexCoord3ivARB (GLenum target, const GLint *v );
-extern void APIENTRY glMultiTexCoord3sARB (GLenum target, GLshort s, GLshort t, GLshort r );
-extern void APIENTRY glMultiTexCoord3svARB (GLenum target, const GLshort *v );
-extern void APIENTRY glMultiTexCoord4dARB (GLenum target, GLdouble s, GLdouble t, GLdouble r, GLdouble q );
-extern void APIENTRY glMultiTexCoord4dvARB (GLenum target, const GLdouble *v );
-extern void APIENTRY glMultiTexCoord4fARB (GLenum target, GLfloat s, GLfloat t, GLfloat r, GLfloat q );
-extern void APIENTRY glMultiTexCoord4fvARB (GLenum target, const GLfloat *v );
-extern void APIENTRY glMultiTexCoord4iARB (GLenum target, GLint s, GLint t, GLint r, GLint q );
-extern void APIENTRY glMultiTexCoord4ivARB (GLenum target, const GLint *v );
-extern void APIENTRY glMultiTexCoord4sARB (GLenum target, GLshort s, GLshort t, GLshort r, GLshort q );
-extern void APIENTRY glMultiTexCoord4svARB (GLenum target, const GLshort *v );
-
-#endif /* WIN32 */
 
 #endif /* GL_ARB_multitexture */
 
@@ -5482,10 +5441,11 @@ struct WGLExtensionTypes
 
 #else /* No WIN32 */
 
+/*
 struct GLXExtensionTypes
 {
-
 };
+*/
 
 #endif /* WIN32 */
 

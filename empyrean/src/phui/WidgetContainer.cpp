@@ -24,8 +24,8 @@
  *
  * -----------------------------------------------------------------
  * File:          $RCSfile: WidgetContainer.cpp,v $
- * Date modified: $Date: 2003-08-11 23:19:57 $
- * Version:       $Revision: 1.4 $
+ * Date modified: $Date: 2003-08-12 20:58:02 $
+ * Version:       $Revision: 1.5 $
  * -----------------------------------------------------------------
  *
  ************************************************************** phui-cpr-end */
@@ -43,13 +43,12 @@ namespace phui
    {
       LayoutConstraintPtr constraint(new EmptyConstraint());
       mLayoutManager = new LayoutManager(this, constraint);
-      mModifiers = MODIF_NONE;
-      mLocks = ILOCK_NONE;
    }
 
    WidgetContainer::WidgetContainer(LayoutManagerPtr manager)
       : mLayoutManager(manager)
-   {}
+   {
+   }
 
    WidgetContainer::~WidgetContainer()
    {
@@ -139,71 +138,23 @@ namespace phui
       mLayoutManager = manager;
    }
 
-   void WidgetContainer::onKeyDown(InputKey key)
+   void WidgetContainer::onKeyDown(InputKey key, InputModifiers modifiers)
    {
-      if (key == KEY_CTRL)
-      {
-         mModifiers |= MODIF_CTRL;
-      }
-      else if (key == KEY_ALT)
-      {
-         mModifiers |= MODIF_ALT;
-      }
-      else if (key == KEY_SHIFT)
-      {
-         mModifiers |= MODIF_SHIFT;
-      }
-
-      if (key == KEY_CAPS_LOCK)
-      {
-         mLocks |= ILOCK_CAPS;
-      }
-      else if (key == KEY_NUM_LOCK)
-      {
-         mLocks |= ILOCK_NUM;
-      }
-      else if (key == KEY_SCROLL_LOCK)
-      {
-         mLocks |= ILOCK_SCROLL;
-      }
+      WidgetContainerPtr kungFuDeathGrip = this;
 
       if (WidgetPtr focus = getFocus())
       {
-         focus->onKeyDown(key, (InputModifiers)(mModifiers ^ ((mLocks & ILOCK_CAPS) ? MODIF_SHIFT : 0)));
+         focus->onKeyDown(key, modifiers);
       }
    }
 
-   void WidgetContainer::onKeyUp(InputKey key)
+   void WidgetContainer::onKeyUp(InputKey key, InputModifiers modifiers)
    {
-      if (key == KEY_CTRL)
-      {
-         mModifiers &= ~MODIF_CTRL;
-      }
-      else if (key == KEY_ALT)
-      {
-         mModifiers &= ~MODIF_ALT;
-      }
-      else if (key == KEY_SHIFT)
-      {
-         mModifiers &= ~MODIF_SHIFT;
-      }
-
-      if (key == KEY_CAPS_LOCK)
-      {
-         mLocks &= ~ILOCK_CAPS;
-      }
-      else if (key == KEY_NUM_LOCK)
-      {
-         mLocks &= ~ILOCK_NUM;
-      }
-      else if (key == KEY_SCROLL_LOCK)
-      {
-         mLocks &= ~ILOCK_SCROLL;
-      }
+      WidgetContainerPtr kungFuDeathGrip = this;
 
       if (WidgetPtr focus = getFocus())
       {
-         focus->onKeyUp(key, (InputModifiers)(mModifiers ^ ((mLocks & ILOCK_CAPS) ? MODIF_SHIFT : 0)));
+         focus->onKeyUp(key, modifiers);
       }
    }
 

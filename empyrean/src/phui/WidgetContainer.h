@@ -24,8 +24,8 @@
  *
  * -----------------------------------------------------------------
  * File:          $RCSfile: WidgetContainer.h,v $
- * Date modified: $Date: 2003-08-11 23:19:57 $
- * Version:       $Revision: 1.3 $
+ * Date modified: $Date: 2003-08-12 20:58:02 $
+ * Version:       $Revision: 1.4 $
  * -----------------------------------------------------------------
  *
  ************************************************************** phui-cpr-end */
@@ -103,8 +103,8 @@ namespace phui
        */
       void setLayoutManager(LayoutManagerPtr manager);
 
-      void onKeyDown(InputKey key);
-      void onKeyUp(InputKey key);
+      void onKeyDown(InputKey key, InputModifiers modifiers);
+      void onKeyUp(InputKey key, InputModifiers modifiers);
       void onMouseDown(InputButton button, const Point& p);
       void onMouseUp(InputButton button, const Point& p);
       void onMouseMove(const Point& p);
@@ -127,11 +127,7 @@ namespace phui
        */
       std::vector<WidgetPtr> mWidgets;
 
-      /// The layout manager
       LayoutManagerPtr mLayoutManager;
-
-      int mModifiers;
-      int mLocks;
 
       WidgetPtr mCapturedWidget;
    };

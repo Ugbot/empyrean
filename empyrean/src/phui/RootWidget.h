@@ -24,8 +24,8 @@
  *
  * -----------------------------------------------------------------
  * File:          $RCSfile: RootWidget.h,v $
- * Date modified: $Date: 2003-07-22 03:24:31 $
- * Version:       $Revision: 1.1 $
+ * Date modified: $Date: 2003-08-12 20:58:02 $
+ * Version:       $Revision: 1.2 $
  * -----------------------------------------------------------------
  *
  ************************************************************** phui-cpr-end */
@@ -57,7 +57,12 @@ namespace phui
        */
       void draw();
 
-      void onMouseMove(const Point& p);
+      // called from the outside world
+      void genKeyDownEvent(InputKey key);
+      void genKeyUpEvent(InputKey key);
+      void genMouseDownEvent(InputButton button, const Point& p);
+      void genMouseUpEvent(InputButton button, const Point& p);
+      void genMouseMoveEvent(const Point& p);
       
       bool isPointerVisible() const;
       void setPointerVisible(bool visible);
@@ -70,6 +75,8 @@ namespace phui
 
       Point mPointerPosition;
       bool mPointerVisible;
+
+      InputModifiers mModifiers;
    };
 
    typedef RefPtr<RootWidget> RootWidgetPtr;

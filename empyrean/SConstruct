@@ -34,7 +34,7 @@ def ParseConfig(env, command, options):
             elif arg[0:11] == '-Wl,-rpath,':
                 env.Append(LINKFLAGS = [arg])
             else:
-                env.Append(CXXFLAGS = [arg])
+                env.Append(CCFLAGS = [arg])
         else:
             # Must be a static library, add it to the libs
             # XXX think about this more...
@@ -42,10 +42,16 @@ def ParseConfig(env, command, options):
 
 
 def SetupCal3D(env):
-    env.Append(LIBS = ['cal3d'])
+    env.Append(LIBS = ['cal3d', 'm'])
 
 def SetupCorona(env):
-    ParseConfig(env, 'corona-config', ['--cxxflags', '--libs'])
+    try:
+        ParseConfig(env, 'corona-config', ['--cxxflags', '--libs'])
+    except SCons.Errors.UserError, e:
+        env.Append(LIBS = ['corona', 'jpeg', 'png', 'z'])
+
+def SetupExpat(env):
+    env.Append(LIBS = ['expat'])
 
 def SetupGLText(env):
     env.Append(LIBS = ['gltext'])
@@ -54,7 +60,7 @@ def SetupOpenGL(env):
     if env['PLATFORM'] == 'cygwin':
         env.Append(LIBS = ['glu32', 'opengl32'])
     else:
-        env.Append(LIBS = ['GLU', 'GL'])
+        env.Append(LIBS = ['GLU', 'GL', 'X11'])
 
 def SetupPHUI(env):
     env.Append(CPPPATH = ['#/src'],
@@ -75,7 +81,7 @@ def SetupNSPR(env):
         #        check uname's output?
         env.Append(
             CPPPATH = ['/usr/include/mozilla/nspr', '/usr/include/nspr'],
-            LIBS = ['nspr4'])
+            LIBS = ['nspr4', 'pthread'])
 
 def SetupSDL(env):
     if env['PLATFORM'] == 'cygwin':
@@ -95,6 +101,7 @@ def SetupWxWindows(env):
 TOOLS = {
     'Cal3D'     : SetupCal3D,
     'Corona'    : SetupCorona,
+    'Expat'     : SetupExpat,
     'GLText'    : SetupGLText,
     'OpenGL'    : SetupOpenGL,
     'PHUI'      : SetupPHUI,
@@ -112,9 +119,17 @@ if base_env['PLATFORM'] == 'cygwin':
     base_env.Append(CCFLAGS = ['-DWIN32', '-D_WIN32', '-DCYGWIN'],
                     CPPPATH = ['#/third-party-cygwin/include'],
                     LIBPATH = ['#/third-party-cygwin/lib'])
+
+if base_env['PLATFORM'] in ['cygwin', 'irix']:
     base_env['USE_EXTGL'] = 1
+    base_env.Append(CCFLAGS = ['-DPYR_USE_EXTGL'])
 else:
     base_env['USE_EXTGL'] = 0
+
+if base_env['PLATFORM'] == 'irix':
+    base_env.Append(
+        CPPPATH = string.split(os.environ['CPLUS_INCLUDE_PATH'], ':'),
+        LIBPATH = string.split(os.environ['LIBRARY_PATH'], ':'))
 
 # Process build options.
 if ARGUMENTS.get('dbg'):

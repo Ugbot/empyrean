@@ -24,8 +24,8 @@
  *
  * -----------------------------------------------------------------
  * File:          $RCSfile: RootWidget.cpp,v $
- * Date modified: $Date: 2003-08-08 04:55:49 $
- * Version:       $Revision: 1.3 $
+ * Date modified: $Date: 2003-08-12 20:58:02 $
+ * Version:       $Revision: 1.4 $
  * -----------------------------------------------------------------
  *
  ************************************************************** phui-cpr-end */
@@ -36,6 +36,7 @@ namespace phui
    RootWidget::RootWidget(int width, int height)
    {
       mPointerVisible = true;
+      mModifiers = MOD_NONE;
       setSize(width, height);
    }
 
@@ -85,10 +86,54 @@ namespace phui
       glPopMatrix();
    }
 
-   void RootWidget::onMouseMove(const Point& p)
+   InputModifiers getPlainMod(InputKey key) {
+      switch (key) {
+         case KEY_CTRL:  return MOD_CTRL;
+         case KEY_ALT:   return MOD_ALT;
+         case KEY_SHIFT: return MOD_SHIFT;
+         default:        return MOD_NONE;
+      }
+   }
+
+   InputModifiers getStickyMod(InputKey key) {
+      switch (key) {
+         case KEY_CAPS_LOCK:   return MOD_CAPS_LOCK;
+         case KEY_NUM_LOCK:    return MOD_NUM_LOCK;
+         case KEY_SCROLL_LOCK: return MOD_SCROLL_LOCK;
+         default:              return MOD_NONE;
+      }
+   }
+
+   void RootWidget::genKeyDownEvent(InputKey key)
+   {
+      mModifiers |= getPlainMod(key);
+      mModifiers ^= getStickyMod(key);
+
+      onKeyDown(key, mModifiers);
+   }
+
+   void RootWidget::genKeyUpEvent(InputKey key)
+   {
+      mModifiers &= ~getPlainMod(key);
+      mModifiers ^= getStickyMod(key);
+
+      onKeyUp(key, mModifiers);
+   }
+
+   void RootWidget::genMouseDownEvent(InputButton button, const Point& p)
+   {
+      onMouseDown(button, p);
+   }
+
+   void RootWidget::genMouseUpEvent(InputButton button, const Point& p)
+   {
+      onMouseUp(button, p);
+   }
+
+   void RootWidget::genMouseMoveEvent(const Point& p)
    {
       mPointerPosition = p;
-      WidgetContainer::onMouseMove(p);
+      onMouseMove(p);
    }
    
    bool RootWidget::isPointerVisible() const

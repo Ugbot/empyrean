@@ -1,26 +1,28 @@
 Import('base_env TOOLS')
 
-SOURCES = [
-    'Application.cpp',
-    'Configuration.cpp',
-    'GameState.cpp',
-    'InputManager.cpp',
-    'IntroState.cpp',
-    'Main.cpp',
-    'MenuState.cpp',
-    'Model.cpp',
-    'MultiTextureImage.cpp',
-    'OptionsState.cpp',
-    'ParticleEmitter.cpp',
-    'ParticleSystem.cpp',
-    'PlayerEntity.cpp',
-    'Profiler.cpp',
-    'Renderer.cpp',
-    'ResourceManager.cpp',
-    'Scene.cpp',
-    'SDLUtility.cpp',
-    'ServerConnection.cpp',
-    'Texture.cpp']
+SOURCES = Split("""
+    Application.cpp
+    Configuration.cpp
+    GameState.cpp
+    InputManager.cpp
+    IntroState.cpp
+    Main.cpp
+    MenuState.cpp
+    Model.cpp
+    MultiTextureImage.cpp
+    OptionsState.cpp
+    ParticleEmitter.cpp
+    ParticleSystem.cpp
+    PlayerEntity.cpp
+    Profiler.cpp
+    Renderer.cpp
+    ResourceManager.cpp
+    Scene.cpp
+    SDLUtility.cpp
+    ServerConnection.cpp
+    ServerConnectionThread.cpp
+    Texture.cpp
+""")
 
 env = base_env.Copy()
 for t in Split('PyrBase PHUI Cal3D Corona GLText NSPR OpenGL SDL'):

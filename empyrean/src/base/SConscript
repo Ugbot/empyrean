@@ -1,20 +1,22 @@
 Import('base_env TOOLS')
 
-SOURCES = [
-    'ByteBuffer.cpp',
-    'Canvas.cpp',
-    'Connection.cpp',
-    'Error.cpp',
-    'Map.cpp',
-    'NSPRUtility.cpp',
-    'PacketFactory.cpp',
-    'PacketTypes.cpp',
-    'ReaderThread.cpp',
-    'ServerSocket.cpp',
-    'Socket.cpp',
-    'Thread.cpp',
-    'Utility.cpp',
-    'WriterThread.cpp']
+SOURCES = Split("""
+    ByteBuffer.cpp
+    Canvas.cpp
+    Connection.cpp
+    Error.cpp
+    Map.cpp
+    NSPRUtility.cpp
+    PacketFactory.cpp
+    PacketTypes.cpp
+    ReaderThread.cpp
+    ServerSocket.cpp
+    Socket.cpp
+    Thread.cpp
+    Utility.cpp
+    WriterThread.cpp
+    XMLParser.cpp
+""")
 
 if base_env['USE_EXTGL']:
     SOURCES.append('extgl.c')

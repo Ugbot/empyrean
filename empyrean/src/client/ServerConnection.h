@@ -9,6 +9,12 @@
 #include "Thread.h"
 
 
+// Xlib defines this...
+#ifdef Status
+#undef Status
+#endif
+
+
 namespace pyr {
 
     class EntityAddedPacket;

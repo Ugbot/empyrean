@@ -13,7 +13,7 @@ SOURCES = [
     'World.cpp']
 
 env = base_env.Copy()
-for t in Split('PyrBase NSPR wxWindows'):
+for t in Split('PyrBase Expat NSPR wxWindows'):
     TOOLS[t](env)
 
 env.Program('#/build/server', SOURCES)
