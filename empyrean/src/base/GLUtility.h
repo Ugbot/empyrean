@@ -26,6 +26,10 @@ namespace pyr {
         glTexCoord2f(vec[0], vec[1]);
     }
 
+    inline void glColor(const Vec3f& vec) {
+        glColor3f(vec[0], vec[1], vec[2]);
+    }
+
     inline void glColor(const Vec4f& vec) {
         glColor4f(vec[0], vec[1], vec[2], vec[3]);
     }

@@ -39,8 +39,8 @@ namespace pyr {
     }
 
     vector<string> splitString(
-      const string& s,
-      const string& delimiters=" \n\r\t")
+        const string& s,
+        const string& delimiters)
     {
         vector<string> sv;
         string::size_type p = 0;

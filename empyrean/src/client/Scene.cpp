@@ -58,10 +58,14 @@ namespace pyr {
         
         glTranslatef(width / 2 - focusX, height / 2 - focusY, 0);
 
+        glEnable(GL_DEPTH_TEST);
+
         glColor3f(1, 1, 1);
         glPointSize(5);
         MapRenderer renderer;
         _map->handleVisitor(renderer);
+
+        glDisable(GL_DEPTH_TEST);
         
         glEnable(GL_TEXTURE_2D);
 

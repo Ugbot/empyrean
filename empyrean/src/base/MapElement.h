@@ -4,7 +4,6 @@
 
 #include <string>
 #include <vector>
-#include <gmtl/Vec.h>
 #include "Material.h"
 #include "PlanarMap.h"
 #include "RefCounted.h"
@@ -25,6 +24,8 @@ namespace pyr {
         ~MapElement() {}
 
     public:
+        std::string name;
+
         Vec2f pos;
 
         /**
@@ -36,18 +37,32 @@ namespace pyr {
     typedef RefPtr<MapElement> MapElementPtr;
 
 
+    class VertexArray : public RefCounted {
+    protected:
+        ~VertexArray() { }
+
+    public:
+        std::vector<Vec3f> positions;
+        std::vector<Vec3f> normals;
+        std::vector<Vec2f> texCoords;
+    };
+    typedef RefPtr<VertexArray> VertexArrayPtr;
+
+
     class GeometryElement : public MapElement {
     protected:
         ~GeometryElement() { }
 
     public:
-        typedef Vec3f Vertex;
-        typedef Vec3i Triangle;
+        struct Triangle {
+            Vec3i pos;
+            Vec3i n;
+            Vec3i tc;
+        };
 
-        //PlanarMap geometry;
         MaterialPtr material;
 
-        std::vector<Vertex> vertices;
+        VertexArrayPtr vertexArray;
         std::vector<Triangle> triangles;
 
         virtual void handleVisitor(MapVisitor& v);

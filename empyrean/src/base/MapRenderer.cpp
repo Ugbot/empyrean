@@ -19,6 +19,7 @@ namespace pyr {
     }
 
     void MapRenderer::visitGeometry(GeometryElement* e) {
+#if 0
         try {
             if (e->material) {
                 // I hope this isn't as slow as it looks
@@ -30,41 +31,44 @@ namespace pyr {
         } catch (const std::runtime_error&) {
             Texture::unbind();
         }
+#endif
 
         glPushMatrix();
         glTranslate(e->pos);
 
-        glBegin(GL_POINTS);
-        for (size_t i = 0; i < e->vertices.size(); ++i) {
-            glVertex(e->vertices[i]);
-        }
-        glEnd();
+        std::vector<Vec3f>& v = e->vertexArray->positions;
+        std::vector<Vec2f>& tc = e->vertexArray->texCoords;
+        std::vector<GeometryElement::Triangle>& tris = e->triangles;
+        MaterialPtr mtl = e->material;
 
-        for (size_t i = 0; i < e->triangles.size(); ++i) {
-            glBegin(GL_LINE_LOOP);
-            glVertex(e->vertices[e->triangles[i][0]]);
-            glVertex(e->vertices[e->triangles[i][1]]);
-            glVertex(e->vertices[e->triangles[i][2]]);
+        Texture* texture = 0;
+        if (!mtl->texture.empty()) {
+            texture = Texture::create(mtl->texture);
+        }
+
+        if (texture) {
+            glColor3f(1, 1, 1);
+            glEnable(GL_TEXTURE_2D);
+            texture->bind();
+            glBegin(GL_TRIANGLES);
+            for (size_t i = 0; i < tris.size(); ++i) {
+                glTexCoord(tc[tris[i].tc[0]]); glVertex(v[tris[i].pos[0]]);
+                glTexCoord(tc[tris[i].tc[1]]); glVertex(v[tris[i].pos[1]]);
+                glTexCoord(tc[tris[i].tc[2]]); glVertex(v[tris[i].pos[2]]);
+            }
+            glEnd();
+            glDisable(GL_TEXTURE_2D);
+        } else {
+            glColor(mtl->diffuse);
+            glDisable(GL_TEXTURE_2D);
+            glBegin(GL_TRIANGLES);
+            for (size_t i = 0; i < tris.size(); ++i) {
+                glVertex(v[tris[i].pos[0]]);
+                glVertex(v[tris[i].pos[1]]);
+                glVertex(v[tris[i].pos[2]]);
+            }
             glEnd();
         }
-
-        /*
-        const GeometryElement::VertList& v = e->vertices;
-
-        glBegin(GL_TRIANGLES);
-        for (size_t i = 0; i < e->tris.size(); i++) {
-            const GeometryElement::Triangle& t = e->tris[i];
-
-            for (unsigned j = 0; j < 3; j++) {
-                const unsigned idx = t.vert[j];
-
-                glTexCoord(v[idx].tex);
-                glColor(v[idx].col);
-                glVertex(v[idx].pos);
-            }
-        }
-        glEnd();
-        */
 
         glPopMatrix();
     }

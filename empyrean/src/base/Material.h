@@ -4,6 +4,7 @@
 
 #include <string>
 #include "RefCounted.h"
+#include "VecMath.h"
 
 
 namespace pyr {
@@ -13,6 +14,7 @@ namespace pyr {
         ~Material() { }
 
     public:
+        Vec3f diffuse;
         std::string texture;
     };
     typedef RefPtr<Material> MaterialPtr;

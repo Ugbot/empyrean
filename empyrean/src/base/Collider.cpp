@@ -27,8 +27,9 @@ namespace pyr {
         void visitGeometry(GeometryElement* e) {
             Vec2f oldPosition = _currentPosition;
             _currentPosition += e->pos;
+            Vec3f currentPos(_currentPosition[0], _currentPosition[1], 0);
 
-            std::vector<GeometryElement::Vertex>& v = e->vertices;
+            std::vector<Vec3f>& v = e->vertexArray->positions;
 
             for (size_t i = 0; i < e->triangles.size(); ++i) {
                 // Should only need 2, but in the case of numerical instability...
@@ -38,8 +39,8 @@ namespace pyr {
                 GeometryElement::Triangle& t = e->triangles[i];
                 // For each segment in the triangle...
                 for (int j = 0; j < 3; ++j) {
-                    Vec3f v1 = v[t[j]];
-                    Vec3f v2 = v[t[(j + 1) % 3]];
+                    Vec3f v1 = currentPos + v[t.pos[j]];
+                    Vec3f v2 = currentPos + v[t.pos[(j + 1) % 3]];
 
                     // Intersect each segment with the plane.
                     float dz = v2[2] - v1[2];
@@ -72,9 +73,7 @@ namespace pyr {
         }
 
         void add(const Vec2f& v1, const Vec2f& v2) {
-            _segments.push_back(Segment(
-                v1 + _currentPosition,
-                v2 + _currentPosition));
+            _segments.push_back(Segment(v1, v2));
         }
 
         Vec2f _currentPosition;
@@ -89,7 +88,7 @@ namespace pyr {
                             newPos + Vec2f(width / 2.0f, height));
 
         std::vector<Segment> segs;
-        SegmentExtractor extractor(segs, -15); /// @todo -15 is hard coded for the map we're using...
+        SegmentExtractor extractor(segs, 0);
         terrain->handleVisitor(extractor);
 
         CollisionData rv;

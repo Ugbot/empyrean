@@ -200,6 +200,9 @@
 				RelativePath="..\..\src\base\MapVisitor.h">
 			</File>
 			<File
+				RelativePath="..\..\src\base\Material.h">
+			</File>
+			<File
 				RelativePath="..\..\src\base\MultiTextureImage.cpp">
 			</File>
 			<File

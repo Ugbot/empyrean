@@ -22,6 +22,10 @@ namespace pyr {
             return _root;
         }
 
+        void addElement(MapElementPtr e) {
+            getRoot()->children.push_back(e);
+        }
+
         void handleVisitor(MapVisitor& visitor) const {
             getRoot()->handleVisitor(visitor);
         }
