@@ -18,14 +18,7 @@ namespace pyr {
     class Font {
     public:
 
-        enum Style {
-            plain = 0,
-            bold  = 1,
-            italic= 2,
-            bolditalic = bold | italic
-        };
-
-        Font(const std::string& face, int size, Style style = plain);
+        Font(const std::string& face, int size);
         ~Font();
 
         const gmtl::Vec2f& getPos() const;

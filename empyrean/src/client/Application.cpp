@@ -40,8 +40,8 @@ namespace pyr {
         _totalFadeTime = 0;
         _currentFadeTime = 0;
 
-        _font = new Font("fonts/arial.ttf", 16);
-        _font->setScale(400.0f / 1024.0f);
+        _font = new Font("fonts/Vera.ttf", 24);
+        _font->setScale(1);
         
         _pointer = Texture::create("images/pointer.png");
     }
@@ -79,8 +79,14 @@ namespace pyr {
             const Profiler::ProcessMap& pi = Profiler::getProfileInfo();
             float totaltime = Profiler::getTotalTime();
 
-            glPushMatrix();
-            glTranslatef(0,8,0);
+            glMatrixMode(GL_PROJECTION);
+            glLoadIdentity();
+            glOrtho(0, 1024, 768, 0, -1, 1);
+            
+            glMatrixMode(GL_MODELVIEW);
+            glLoadIdentity();
+            glTranslatef(0,24,0);
+            
             glEnable(GL_TEXTURE_2D);
 	    glEnable(GL_BLEND);
 	    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
@@ -88,12 +94,10 @@ namespace pyr {
             (*_font) << "FPS: " << _fps.getFPS() << "\n";
 
             for (Profiler::ProcessMap::const_iterator iter = pi.begin(); iter != pi.end(); iter++) {
-                glTranslatef(0,8,0);
+                glTranslatef(0,24,0);
                 int i = int(iter->second.time / totaltime * 100);
                 (*_font) << iter->first << ": " << i << "%\n";
             }
-
-            glPopMatrix();
         }
     }
     
@@ -118,12 +122,13 @@ namespace pyr {
     }
     
     void Application::onKeyPress(SDLKey key, bool down) {
-        if (_currentState) {
-            _currentState->onKeyPress(key, down);
-        }
-
         if (down && key == SDLK_F1) {
             _showCPUInfo = !_showCPUInfo;
+            return;
+        }
+
+        if (_currentState) {
+            _currentState->onKeyPress(key, down);
         }
     }
     

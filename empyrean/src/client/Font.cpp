@@ -7,7 +7,7 @@ namespace pyr {
     int Font::_refCount = 0;
     FT_Library Font::_library = 0;
 
-    Font::Font(const std::string& face,int size,Style style)
+    Font::Font(const std::string& face,int size)
         : _face(0)
         , _pos(0, 0)
         , _scale(1.0f)

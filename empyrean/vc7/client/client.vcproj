@@ -142,12 +142,6 @@
 				RelativePath="..\..\src\client\GLUtility.h">
 			</File>
 			<File
-				RelativePath="..\..\src\client\GameState.cpp">
-			</File>
-			<File
-				RelativePath="..\..\src\client\GameState.h">
-			</File>
-			<File
 				RelativePath="..\..\src\client\Image.h">
 			</File>
 			<File
@@ -160,19 +154,7 @@
 				RelativePath="..\..\src\client\InputManager.h">
 			</File>
 			<File
-				RelativePath="..\..\src\client\IntroState.cpp">
-			</File>
-			<File
-				RelativePath="..\..\src\client\IntroState.h">
-			</File>
-			<File
 				RelativePath="..\..\src\client\Main.cpp">
-			</File>
-			<File
-				RelativePath="..\..\src\client\MenuState.cpp">
-			</File>
-			<File
-				RelativePath="..\..\src\client\MenuState.h">
 			</File>
 			<File
 				RelativePath="..\..\src\client\Model.cpp">
@@ -241,9 +223,6 @@
 				RelativePath="..\..\src\client\ServerConnection.h">
 			</File>
 			<File
-				RelativePath="..\..\src\client\State.h">
-			</File>
-			<File
 				RelativePath="..\..\src\client\Texture.cpp">
 			</File>
 			<File
@@ -254,6 +233,37 @@
 			</File>
 			<File
 				RelativePath="..\..\src\client\TextureImage.h">
+			</File>
+		</Filter>
+		<Filter
+			Name="states"
+			Filter="">
+			<File
+				RelativePath="..\..\src\client\GameState.cpp">
+			</File>
+			<File
+				RelativePath="..\..\src\client\GameState.h">
+			</File>
+			<File
+				RelativePath="..\..\src\client\IntroState.cpp">
+			</File>
+			<File
+				RelativePath="..\..\src\client\IntroState.h">
+			</File>
+			<File
+				RelativePath="..\..\src\client\MenuState.cpp">
+			</File>
+			<File
+				RelativePath="..\..\src\client\MenuState.h">
+			</File>
+			<File
+				RelativePath="..\..\src\client\OptionsState.cpp">
+			</File>
+			<File
+				RelativePath="..\..\src\client\OptionsState.h">
+			</File>
+			<File
+				RelativePath="..\..\src\client\State.h">
 			</File>
 		</Filter>
 	</Files>

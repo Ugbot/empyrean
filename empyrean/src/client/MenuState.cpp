@@ -1,5 +1,6 @@
 #include "GameState.h"
 #include "MenuState.h"
+#include "OptionsState.h"
 #include "Texture.h"
 
 
@@ -48,7 +49,7 @@ namespace pyr {
             //invokeTransition<ConnectToServerState>();
             invokeTimedTransition<GameState>(1);
         } else if (ny < 0.66) {
-//            invokeTimedTransition<OptionsState>(1);
+            invokeTransition<OptionsState>();
         } else {
             quit();
         }

@@ -27,7 +27,7 @@ namespace pyr {
         _inputSpace  = &_im.getInput("Space");
         _inputQuit   = &_im.getInput("Escape");
 
-        _font = new Font("fonts/arial.ttf", 16);
+        _font = new Font("fonts/Vera.ttf", 16);
         _font->setScale(400.0f / 1024.0f);
 
         _player = new PlayerEntity(
@@ -79,8 +79,7 @@ namespace pyr {
         _player->setVel(gmtl::Vec2f(dx * 50, dy * 10));
 
         if (_inputQuit->getValue() >= 0.50f) {
-            quit();
-            //invokeTransition<MenuState>();
+            invokeTransition<MenuState>();
         }
     }
     
