@@ -9,6 +9,12 @@
 #define PYR_WX_H
 
 
+// extgl.h must be included before gl.h.
+// Perhaps this should be split out into a wxgl.h.   The server does
+// not depend on OpenGL.
+#include "OpenGL.h"
+
+
 // We need to include windows.h for wx-using code to behave properly on
 // Windows.  :(
 #ifdef _MSC_VER

@@ -24,7 +24,7 @@ namespace pyr {
         try {
             tex = Texture::create(e->texture); // I hope this isn't as slow as it looks
             tex->bind();
-        } catch (const std::runtime_error& err) {
+        } catch (const std::runtime_error&) {
             Texture::unbind();
         }
 

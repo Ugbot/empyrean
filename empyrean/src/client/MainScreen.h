@@ -4,6 +4,7 @@
 
 #include "MenuScreen.h"
 #include "MenuState.h"
+#include "Texture.h"
 
 
 namespace pyr {
@@ -13,17 +14,19 @@ namespace pyr {
         MainScreen(MenuState* state)
             : MenuScreen(state)
         {
+            _background = Texture::create("images/title/title_main.png");
+        
             phui::ButtonPtr connect = new phui::Button("Connect to Server");
             connect->addListener(this, &MainScreen::onConnect);
-            connect->setPositionAndSize(0, 0, 1024, 256);
+            connect->setPositionAndSize(0, 384, 1024, 128);
             
             phui::ButtonPtr options = new phui::Button("Options");
             options->addListener(this, &MainScreen::onOptions);
-            options->setPositionAndSize(0, 256, 1024, 256);
+            options->setPositionAndSize(0, 384 + 128, 1024, 128);
             
             phui::ButtonPtr quit = new phui::Button("Quit");
             quit->addListener(this, &MainScreen::onQuit);
-            quit->setPositionAndSize(0, 512, 1024, 256);
+            quit->setPositionAndSize(0, 384 + 256, 1024, 128);
 
             add(connect);
             add(options);
@@ -42,6 +45,8 @@ namespace pyr {
         void onQuit(const phui::ActionEvent&) {
             getState()->onMainQuit();
         }
+        
+        Texture* _background;
     };
     
 }
