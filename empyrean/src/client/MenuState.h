@@ -10,7 +10,6 @@ namespace pyr {
 
     class MenuScreen;
     class MainScreen;
-    class ConnectScreen;
     class ConnectingScreen;
     class JoinGameScreen;
     class JoiningGameScreen;
@@ -35,12 +34,10 @@ namespace pyr {
         
         void onErrorOK();
         
-        void onMainConnect();
         void onMainOptions();
         void onMainQuit();
         
         void onConnectConnect(const std::string& server, int port);
-        void onConnectCancel();
         
         void onConnectingConnected();
         void onConnectingCancel();
@@ -84,7 +81,6 @@ namespace pyr {
         RefPtr<MenuScreen> _screen;
         
         RefPtr<MainScreen>         _mainScreen;
-        RefPtr<ConnectScreen>      _connectScreen;
         RefPtr<ConnectingScreen>   _connectingScreen;
         RefPtr<JoinGameScreen>     _joinGameScreen;
         RefPtr<JoiningGameScreen>  _joiningGameScreen;

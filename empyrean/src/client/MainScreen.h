@@ -20,22 +20,24 @@ namespace pyr {
         
     private:
         void createMainScreen() {
-            phui::PicturePtr background = new phui::Picture("images/title/title_composite.png");
+            using namespace phui;
+    
+            PicturePtr background = new Picture("images/title/title_composite.png");
             background->setPositionAndSize(0, 0, 1024, 768);
             
-            phui::WindowPtr buttons = new phui::Window(
+            WindowPtr buttons = new Window(
                 "Empyrean",
-                new phui::BoxLayout(phui::BoxLayout::VERTICAL));
+                new BoxLayout(BoxLayout::VERTICAL));
             buttons->setPositionAndSize(400, 350, 224, 240);
             buttons->show();
         
-            phui::ButtonPtr connect = new phui::Button("Connect to Server");
+            ButtonPtr connect = new Button("Connect to Server");
             connect->addListener(this, MainScreen::onConnectToServer);
             
-            phui::ButtonPtr options = new phui::Button("Options");
+            ButtonPtr options = new Button("Options");
             options->addListener(this, MainScreen::onOptions);
             
-            phui::ButtonPtr quit = new phui::Button("Quit");
+            ButtonPtr quit = new Button("Quit");
             quit->addListener(this, MainScreen::onQuit);
 
             add(background);
@@ -46,17 +48,29 @@ namespace pyr {
         }
         
         void createConnectWindow() {
-            phui::ButtonPtr connect = new phui::Button("Connect");
+            using namespace phui;
+        
+            std::string server = Configuration::instance().getServer();
+            std::string port = itos(Configuration::instance().getPort());
+            _server = new TextField(server + ":" + port);
+            
+            WidgetContainerPtr serverPanel = new WidgetContainer(
+                new BoxLayout(BoxLayout::HORIZONTAL));
+            serverPanel->add(new Label("Server"));
+            serverPanel->add(_server);
+                        
+            ButtonPtr connect = new Button("Connect");
             connect->addListener(this, MainScreen::onConnect);
             
-            phui::ButtonPtr cancel  = new phui::Button("Cancel");
+            ButtonPtr cancel  = new Button("Cancel");
             cancel->addListener(this, MainScreen::onCancel);
         
-            _connectWindow = new phui::Window(
+            _connectWindow = new Window(
                 "Connect to Server",
-                new phui::BoxLayout(phui::BoxLayout::VERTICAL));
+                new BoxLayout(BoxLayout::VERTICAL));
             _connectWindow->show();
             _connectWindow->setPositionAndSize(300, 250, 424, 440);
+            _connectWindow->add(serverPanel);
             _connectWindow->add(connect);
             _connectWindow->add(cancel);
         }
@@ -74,8 +88,22 @@ namespace pyr {
         }
         
         void onConnect(const phui::ActionEvent&) {
+            std::vector<std::string> splits = splitString(
+                _server->getText(), ":");
+                
+            if (splits.empty()) {
+                // show message box
+                return;
+            }
+                            
+            int port = Configuration::instance().getPort();
+            std::string server = splits[0];
+            if (splits.size() > 1) {
+                port = atoi(splits[1].c_str());
+            }
+            
             endModal();
-            getState()->onMainConnect();
+            getState()->onConnectConnect(server, port);
         }
         
         void onCancel(const phui::ActionEvent&) {
@@ -83,6 +111,7 @@ namespace pyr {
         }
         
         phui::WindowPtr _connectWindow;
+        phui::TextFieldPtr _server;
     };
     
 }

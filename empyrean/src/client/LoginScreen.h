@@ -2,6 +2,7 @@
 #define PYR_LOGIN_SCREEN_H
 
 
+#include "Configuration.h"
 #include "MenuScreen.h"
 
 

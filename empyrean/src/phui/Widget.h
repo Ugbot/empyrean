@@ -24,8 +24,8 @@
  *
  * -----------------------------------------------------------------
  * File:          $RCSfile: Widget.h,v $
- * Date modified: $Date: 2003-09-23 00:36:30 $
- * Version:       $Revision: 1.8 $
+ * Date modified: $Date: 2003-09-23 09:24:56 $
+ * Version:       $Revision: 1.9 $
  * -----------------------------------------------------------------
  *
  ************************************************************** phui-cpr-end */
@@ -97,7 +97,7 @@ namespace phui
        *
        * @param size    the new size of the widget
        */
-      void setSize(const Size& size);
+      virtual void setSize(const Size& size);
       void setSize(int w, int h) { setSize(Size(w, h)); }
       
       void setPositionAndSize(const Rect& r)

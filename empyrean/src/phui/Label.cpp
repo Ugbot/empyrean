@@ -24,8 +24,8 @@
  *
  * -----------------------------------------------------------------
  * File:          $RCSfile: Label.cpp,v $
- * Date modified: $Date: 2003-09-23 00:36:30 $
- * Version:       $Revision: 1.3 $
+ * Date modified: $Date: 2003-09-23 09:24:56 $
+ * Version:       $Revision: 1.4 $
  * -----------------------------------------------------------------
  *
  ************************************************************** phui-cpr-end */
@@ -83,7 +83,7 @@ namespace phui
       {
          xLoc = 0;
       }
-      glTranslatef(GLfloat(xLoc), GLfloat(height - yLoc), 0.0f);
+      glTranslatef(GLfloat(xLoc), GLfloat(yLoc), 0.0f);
 
       renderer->render(mText.c_str());
 

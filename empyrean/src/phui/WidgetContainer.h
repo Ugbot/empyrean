@@ -24,8 +24,8 @@
  *
  * -----------------------------------------------------------------
  * File:          $RCSfile: WidgetContainer.h,v $
- * Date modified: $Date: 2003-09-23 08:32:34 $
- * Version:       $Revision: 1.9 $
+ * Date modified: $Date: 2003-09-23 09:24:56 $
+ * Version:       $Revision: 1.10 $
  * -----------------------------------------------------------------
  *
  ************************************************************** phui-cpr-end */
@@ -39,12 +39,14 @@
 namespace phui {
 
     /**
-     * Abstract widget specialization. This is the base class for all widgets
-     * implementations that may contain other widgets within them.
+     * This is the base class for all widget implementations
+     * that may contain other widgets within them.
      */
     class WidgetContainer : public Widget {
-    protected:
+    public:
         WidgetContainer(LayoutPtr layout = 0);
+
+    protected:
         ~WidgetContainer();
 
     public:
@@ -52,13 +54,9 @@ namespace phui {
         void remove(WidgetPtr widget);
 
         WidgetPtr getChild(size_t idx);
-
-        /// Gets the number of widgets in this container.
         size_t getNumChildren();
 
-        /// Draws this widget and all of its children.
         void draw();
-      
         void update(float dt);
 
         void onKeyDown(InputKey key, InputModifiers modifiers);
@@ -66,6 +64,9 @@ namespace phui {
         void onMouseDown(InputButton button, const Point& p);
         void onMouseUp(InputButton button, const Point& p);
         void onMouseMove(const Point& p);
+        
+        /// Overridden so we can do widget layout.
+        void setSize(const Size& size);
 
         void focus(WidgetPtr widget);
         WidgetPtr getFocus();

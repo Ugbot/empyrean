@@ -267,9 +267,6 @@
 				RelativePath="..\..\src\client\ConnectingScreen.h">
 			</File>
 			<File
-				RelativePath="..\..\src\client\ConnectScreen.h">
-			</File>
-			<File
 				RelativePath="..\..\src\client\JoinGameScreen.h">
 			</File>
 			<File

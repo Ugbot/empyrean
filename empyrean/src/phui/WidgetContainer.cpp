@@ -24,8 +24,8 @@
  *
  * -----------------------------------------------------------------
  * File:          $RCSfile: WidgetContainer.cpp,v $
- * Date modified: $Date: 2003-09-22 23:45:02 $
- * Version:       $Revision: 1.8 $
+ * Date modified: $Date: 2003-09-23 09:24:56 $
+ * Version:       $Revision: 1.9 $
  * -----------------------------------------------------------------
  *
  ************************************************************** phui-cpr-end */
@@ -150,6 +150,11 @@ namespace phui {
                 widget->onMouseMove(p - widget->getPosition());
             }
         }
+    }
+    
+    void WidgetContainer::setSize(const Size& size) {
+        Widget::setSize(size);
+        mLayout->layout(this);
     }
 
     void WidgetContainer::focus(WidgetPtr widget) {

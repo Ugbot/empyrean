@@ -24,8 +24,8 @@
  *
  * -----------------------------------------------------------------
  * File:          $RCSfile: RootWidget.cpp,v $
- * Date modified: $Date: 2003-08-13 03:44:31 $
- * Version:       $Revision: 1.5 $
+ * Date modified: $Date: 2003-09-23 09:24:56 $
+ * Version:       $Revision: 1.6 $
  * -----------------------------------------------------------------
  *
  ************************************************************** phui-cpr-end */
@@ -37,7 +37,7 @@ namespace phui
    {
       mPointerVisible = true;
       mModifiers = IMOD_NONE;
-      setSize(width, height);
+      setSize(Size(width, height));
    }
 
    void RootWidget::draw()

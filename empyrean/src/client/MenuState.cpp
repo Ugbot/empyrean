@@ -1,5 +1,4 @@
 #include <phui/SDLBridge.h>
-#include "ConnectScreen.h"
 #include "ConnectingScreen.h"
 #include "ErrorScreen.h"
 #include "GameState.h"
@@ -86,10 +85,6 @@ namespace pyr {
         _screen = _mainScreen;
     }
     
-    void MenuState::onMainConnect() {
-        _screen = _connectScreen;
-    }
-    
     void MenuState::onMainOptions() {
         invokeTransition<OptionsState>();
     }
@@ -101,10 +96,6 @@ namespace pyr {
     void MenuState::onConnectConnect(const std::string& server, int port) {
         ServerConnection::instance().beginConnecting(server, port);
         _screen = _connectingScreen;
-    }
-    
-    void MenuState::onConnectCancel() {
-        _screen = _mainScreen;
     }
     
     void MenuState::onConnectingConnected() {
@@ -211,7 +202,6 @@ namespace pyr {
 
     void MenuState::createInterface() {
         _mainScreen         = new MainScreen(this);
-        _connectScreen      = new ConnectScreen(this);
         _connectingScreen   = new ConnectingScreen(this);
         _joinGameScreen     = new JoinGameScreen(this);
         _joiningGameScreen  = new JoiningGameScreen(this);
