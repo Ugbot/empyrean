@@ -42,7 +42,7 @@ namespace pyr {
     #define PYR_SAY_PACKET(_)   \
         _(string)(TEXT_LENGTH, text)
         
-    enum {
+    enum LobbyPacketCode {
         LOBBY_LOGIN,
         LOBBY_LOGOUT,
         LOBBY_SAY,
@@ -84,7 +84,7 @@ namespace pyr {
         _(string)(24, name)
         
     // New Character Response codes
-    enum {
+    enum NewCharacterResponseCode {
         NCR_SUCCESS,    // success
         
         NCR_INVALID_NAME,
@@ -135,6 +135,19 @@ namespace pyr {
         _(field)(Vec2f, pos)             \
         _(field)(Vec2f, vel)
 
+    enum AppearancePacketCode {
+        AP_COMMAND,
+        AP_ANIMATION,
+        AP_ANIMATION_CYCLE,
+    };
+
+    // server -> client
+    #define PYR_APPEARANCE_PACKET_NAME AppearancePacket
+    #define PYR_APPEARANCE_PACKET(_)    \
+        _(field)(u16, id)               \
+        _(field)(u16, code)             \
+        _(string)(256, str)
+
 
     // PACKET LIST
     
@@ -152,7 +165,8 @@ namespace pyr {
         _(PYR_SET_PLAYER_PACKET)                \
         _(PYR_ENTITY_ADDED_PACKET)              \
         _(PYR_ENTITY_REMOVED_PACKET)            \
-        _(PYR_ENTITY_UPDATED_PACKET)
+        _(PYR_ENTITY_UPDATED_PACKET)            \
+        _(PYR_APPEARANCE_PACKET)
 
 
     // allocate packet IDs

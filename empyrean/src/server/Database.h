@@ -6,12 +6,17 @@
 #include <string>
 #include <vector>
 #include "Error.h"
+#include "RefCounted.h"
+#include "RefPtr.h"
 #include "Singleton.h"
 
 
 namespace pyr {
 
-    class Account {
+    class Account : public RefCounted {
+    protected:
+        ~Account() { }
+
     public:
         Account(const std::string& username, const std::string& password) {
             _username = username;
@@ -32,9 +37,13 @@ namespace pyr {
         std::string _username;
         std::string _password;
     };
+    typedef RefPtr<Account> AccountPtr;
     
     
-    class Character {
+    class Character : public RefCounted {
+    protected:
+        ~Character() { }
+
     public:
         Character(const std::string& name) {
             _name = name;
@@ -49,6 +58,7 @@ namespace pyr {
     private:
         std::string _name;
     };
+    typedef RefPtr<Character> CharacterPtr;
     
     
     PYR_DEFINE_RUNTIME_ERROR(DatabaseError);
@@ -58,7 +68,7 @@ namespace pyr {
         PYR_DECLARE_SINGLETON(Database)    
     
         Database() { }
-        ~Database();
+        ~Database() { }
         
     public:
         void clear();
@@ -66,15 +76,15 @@ namespace pyr {
         void load(const std::string& filename);
         void save(const std::string& filename) const;
     
-        void addAccount(Account* account);
-        Account* getAccount(const std::string& username) const;
+        void addAccount(AccountPtr account);
+        AccountPtr getAccount(const std::string& username) const;
         
-        void addCharacter(Character* character);
-        Character* getCharacter(const std::string& name) const;
+        void addCharacter(CharacterPtr character);
+        CharacterPtr getCharacter(const std::string& name) const;
     
     private:
-        std::vector<Account*>   _accounts;
-        std::vector<Character*> _characters;
+        std::vector<AccountPtr>   _accounts;
+        std::vector<CharacterPtr> _characters;
     };
 
 }

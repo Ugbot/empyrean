@@ -33,7 +33,10 @@ namespace pyr {
         size_t getConnectionCount();
         Connection* getConnection(size_t i);
         
+        /// ConnectionHolder takes ownership of Packet p and deletes it.
         void sendAll(Packet* p);
+
+        /// ConnectionHolder takes ownership of Packet p and deletes it.
         void sendAllBut(Connection* c, Packet* p);
         
         /**

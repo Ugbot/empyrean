@@ -26,7 +26,11 @@ namespace pyr {
 
         virtual ~Entity() { }
 
-        void update(float dt, const Map* map);
+        /**
+         * Updates the entity's behavior.  If you need to update something else,
+         * override this.
+         */
+        virtual void update(float dt, const Map* map);
 
         Behavior*   getBehavior()   const { return _behavior.get();   }
         Appearance* getAppearance() const { return _appearance.get(); }

@@ -1,9 +1,12 @@
 #ifndef PYR_SERVER_APPEARANCE_H
 #define PYR_SERVER_APPEARANCE_H
 
+#include <vector>
 #include "Appearance.h"
 
 namespace pyr {
+
+    class Packet;
 
     class ServerAppearance : public Appearance {
     public:
@@ -20,17 +23,28 @@ namespace pyr {
             return _resource.c_str();
         }
         
-        void update(float /*dt*/) {
-            // Send appearance commands to the client.
-        }
-
-        void draw() {
-            // Is there a way we can get rid of this method?
+        void sendCommand(const std::string& command) {
+            _commands.push_back(command);
         }
         
-    private:
+        void beginAnimation(const std::string& animation) {
+            _animations.push_back(animation);
+        }
+
+        void beginAnimationCycle(const std::string& animation) {
+            _animationCycles.push_back(animation);
+        }
+
+        void sendAppearanceChanges(u16 id, std::vector<Packet*>& packets);
+
+    protected:
         std::string _name;
         std::string _resource;
+
+    private:
+        std::vector<std::string> _commands;
+        std::vector<std::string> _animations;
+        std::vector<std::string> _animationCycles;
     };
 
 }

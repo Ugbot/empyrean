@@ -5,11 +5,11 @@
 #include <map>
 #include <vector>
 #include "ConnectionHolder.h"
+#include "Database.h"
 
 
 namespace pyr {
 
-    class Account;
     class Game;
     class JoinGamePacket;
     class LoginPacket;
@@ -32,7 +32,7 @@ namespace pyr {
     private:
         struct ConnectionData {
             bool loggedIn;
-            Account* account;
+            AccountPtr account;
         };
 
         static ConnectionData* getData(Connection* c);

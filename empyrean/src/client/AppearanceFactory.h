@@ -7,7 +7,7 @@
 
 namespace pyr {
 
-    class Appearance;
+    class ClientAppearance;
 
     /**
      * Instantiates an appearance from the type 'name'.  Returns a default
@@ -15,8 +15,8 @@ namespace pyr {
      *
      * This function will not return a null pointer.
      */
-    Appearance* instantiateAppearance(const std::string& name,
-                                      const std::string& resource = "");
+    ClientAppearance* instantiateAppearance(const std::string& name,
+                                            const std::string& resource = "");
 
 }
 

@@ -1,10 +1,10 @@
-#include "Appearance.h"
 #include "Cal3DAppearance.h"
+#include "ClientAppearance.h"
 
 
 namespace pyr {
 
-    class EmptyAppearance : public Appearance {
+    class EmptyAppearance : public ClientAppearance {
     public:
         EmptyAppearance(const std::string& /*resource*/) {
         }
@@ -22,9 +22,18 @@ namespace pyr {
 
         void draw() {
         }
+
+        void sendCommand(const std::string& command) {
+        }
+
+        void beginAnimation(const std::string& animation) {
+        }
+
+        void beginAnimationCycle(const std::string& animation) {
+        }
     };
 
-    Appearance* instantiateAppearance(const std::string& name, const std::string& resource) {
+    ClientAppearance* instantiateAppearance(const std::string& name, const std::string& resource) {
         if (name == "cal3d") {
             return new Cal3DAppearance(resource);
         } else {

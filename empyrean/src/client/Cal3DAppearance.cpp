@@ -9,6 +9,15 @@ namespace pyr {
         _model = new Model(_resource);
     }
 
+    void Cal3DAppearance::sendCommand(const std::string& command) {
+    }
+
+    void Cal3DAppearance::beginAnimation(const std::string& animation) {
+    }
+
+    void Cal3DAppearance::beginAnimationCycle(const std::string& animation) {
+    }
+
     void Cal3DAppearance::update(float dt) {
         _model->update(dt);
     }

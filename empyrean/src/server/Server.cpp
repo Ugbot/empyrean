@@ -90,7 +90,7 @@ namespace pyr {
             }
         }
 
-        Account* account = the<Database>().getAccount(p->username());
+        AccountPtr account = the<Database>().getAccount(p->username());
         if (p->newAccount()) {
             if (account) {
                 c->sendPacket(new LoginResponsePacket(LR_ACCOUNT_TAKEN));
@@ -201,7 +201,7 @@ namespace pyr {
             return;
         }
 
-        Character* character = the<Database>().getCharacter(p->name());
+        CharacterPtr character = the<Database>().getCharacter(p->name());
         if (character) {
             c->sendPacket(new NewCharacterResponsePacket(NCR_ALREADY_TAKEN));
             PYR_SERVER_LOG() << italic(username) << " tried to create character " << italic(p->name()) << ", but name was already taken";

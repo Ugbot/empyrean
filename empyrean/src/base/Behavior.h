@@ -7,6 +7,7 @@
 
 namespace pyr {
 
+    class Appearance;
     class Entity;
     class Map;
 
@@ -27,6 +28,14 @@ namespace pyr {
         virtual const std::string getName() = 0;
         virtual const std::string getResource() = 0;
         virtual void update(Entity* entity, float dt, const Map* map) = 0;
+
+    protected:
+        void sendAppearanceCommand(Entity* entity, const std::string& command);
+        void beginAnimationCycle(Entity* entity, const std::string& animation);
+        void beginAnimation(Entity* entity, const std::string& animation);
+
+    private:
+        static Appearance* getAppearance(Entity* entity);
     };
 
     /**

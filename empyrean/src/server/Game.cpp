@@ -33,7 +33,8 @@ namespace pyr {
                 ServerEntity* entity = new ServerEntity(
                     _idGenerator.reserve(),
                     instantiateBehavior("dumb"),
-                    new ServerAppearance("cal3d", "models/Walk1/walk1.cfg"));
+                    new ServerAppearance("cal3d", "models/Walk1/walk1.cfg"),
+                    0);
                 entity->setPos(elt->pos);
                 addEntity(entity);
             }
@@ -52,6 +53,14 @@ namespace pyr {
 
         for (size_t i = 0; i < _entities.size(); ++i) {
             _entities[i]->update(dt, _map.get());
+
+            // Send all appearance updates to all of the clients.
+            ServerAppearance* appearance = _entities[i]->getServerAppearance();
+            std::vector<Packet*> packets;
+            appearance->sendAppearanceChanges(_entities[i]->getID(), packets);
+            for (size_t i = 0; i < packets.size(); ++i) {
+                sendAll(packets[i]);
+            }
         }
 
         std::list<Entity*> list(_entities.begin(), _entities.end());
@@ -101,7 +110,8 @@ namespace pyr {
         ServerEntity* entity = new ServerEntity(
             _idGenerator.reserve(),
             pb,
-            new ServerAppearance("cal3d", "models/paladin/paladin.cal3d"));
+            new ServerAppearance("cal3d", "models/paladin/paladin.cal3d"),
+            0);
         entity->setPos(_startPosition);
         // Hardcoded for now.  Hardcoded in the client as well.
         float width  = 0.3f;

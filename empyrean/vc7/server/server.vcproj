@@ -180,6 +180,9 @@
 				RelativePath="..\..\src\server\ServerApp.h">
 			</File>
 			<File
+				RelativePath="..\..\src\server\ServerAppearance.cpp">
+			</File>
+			<File
 				RelativePath="..\..\src\server\ServerAppearance.h">
 			</File>
 			<File

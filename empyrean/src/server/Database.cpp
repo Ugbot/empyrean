@@ -26,18 +26,7 @@ namespace pyr {
     
     PYR_DEFINE_SINGLETON(Database)
 
-    Database::~Database() {
-        clear();
-    }
-    
     void Database::clear() {
-        for (size_t i = 0; i < _accounts.size(); ++i) {
-            delete _accounts[i];
-        }
-        for (size_t i = 0; i < _characters.size(); ++i) {
-            delete _characters[i];
-        }
-
         _accounts.clear();
         _characters.clear();
     }
@@ -53,8 +42,8 @@ namespace pyr {
             
             // Load into temporary lists so an exception doesn't mess up the
             // DB's state.
-            std::vector<Account*> accounts;
-            std::vector<Character*> characters;
+            std::vector<AccountPtr> accounts;
+            std::vector<CharacterPtr> characters;
             
             for (size_t i = 0; i < node->getChildCount(); ++i) {
                 XMLNode* subnode = node->getChild(i);
@@ -103,11 +92,11 @@ namespace pyr {
         fclose(file);
     }
 
-    void Database::addAccount(Account* account) {
+    void Database::addAccount(AccountPtr account) {
         _accounts.push_back(account);
     }
     
-    Account* Database::getAccount(const std::string& username) const {
+    AccountPtr Database::getAccount(const std::string& username) const {
         for (size_t i = 0; i < _accounts.size(); ++i) {
             if (_accounts[i]->getUsername() == username) {
                 return _accounts[i];
@@ -116,11 +105,11 @@ namespace pyr {
         return 0;
     }
     
-    void Database::addCharacter(Character* character) {
+    void Database::addCharacter(CharacterPtr character) {
         _characters.push_back(character);
     }
     
-    Character* Database::getCharacter(const std::string& name) const {
+    CharacterPtr Database::getCharacter(const std::string& name) const {
         for (size_t i = 0; i < _characters.size(); ++i) {
             if (_characters[i]->getName() == name) {
                 return _characters[i];

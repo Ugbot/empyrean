@@ -148,6 +148,9 @@
 				RelativePath="..\..\src\client\Cal3DAppearance.h">
 			</File>
 			<File
+				RelativePath="..\..\src\client\ClientAppearance.h">
+			</File>
+			<File
 				RelativePath="..\..\src\client\ClientEntity.h">
 			</File>
 			<File

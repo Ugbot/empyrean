@@ -14,8 +14,10 @@ namespace pyr {
         // It gets rid of the null pointer issue.
         virtual const char* getName() = 0;
         virtual const char* getResource() = 0;
-        virtual void update(float dt) = 0;
-        virtual void draw() = 0;
+
+        virtual void sendCommand(const std::string& command) = 0;
+        virtual void beginAnimation(const std::string& animation) = 0;
+        virtual void beginAnimationCycle(const std::string& animation) = 0;
     };
     
 }
