@@ -9,6 +9,7 @@
 #include "NSPRUtility.h"
 #include "OpenGL.h"
 #include "Profiler.h"
+#include "Renderer.h"
 #include "Texture.h"
 
 namespace pyr {
@@ -17,6 +18,7 @@ namespace pyr {
 
 
     PYR_DEFINE_SINGLETON(Application)
+
     
     Application::Application() {
         _currentState = new InitialState();
@@ -47,15 +49,11 @@ namespace pyr {
             _currentState->draw(0);
 
             if (_currentState->isPointerVisible()) {
-                glMatrixMode(GL_PROJECTION);
-                glLoadIdentity();
-                glOrtho(0, _width, _height, 0, -1, 1);
-
-                glMatrixMode(GL_MODELVIEW);
-                glLoadIdentity();
-
-                glColor4f(1, 1, 1, 1);
-                _pointer->drawRectangle(float(_lastX), float(_lastY));
+                beginPass(OrthoProjection(_width, _height));
+                drawTexture(
+                    Vec2f(float(_lastX), float(_lastY)),
+                    _pointer);
+                endPass();
             }
         }
         if (_fadingState && _totalFadeTime != 0) {
@@ -65,33 +63,16 @@ namespace pyr {
         if (_showCPUInfo) {
             PYR_PROFILE_BLOCK("displayProfile");
 
-            setOrthoProjection(1024, 768);
-
-            glEnable(GL_TEXTURE_2D);
-            glEnable(GL_BLEND);
-            glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-            glColor4f(1, 1, 1, 1);
-
-            /* Display profile blocks.
-
-            const ProfileBlockMap& bm = the<Profiler>().getBlockMap();
-            float totaltime           = the<Profiler>().getTotalTime();
-
-            GLTEXT_STREAM(_renderer) << "FPS: " << _fps.getFPS();
-
-            for (ProfileBlockMap::const_iterator iter = bm.begin(); iter != bm.end(); ++iter) {
-                glTranslatef(0,24,0);
-                int i = int(iter->second->total.time() / totaltime * 100);
-                GLTEXT_STREAM(_renderer) << iter->first << ": " << i << "%";
-            }
-            */
+            beginPass(OrthoProjection(1024, 768));
 
             // Display FPS & profile tree.
-            GLTEXT_STREAM(_renderer) << "FPS: " << _fps.getFPS();
+            PYR_TEXT_STREAM(_renderer, Vec2f(0, 0)) << "FPS: " << _fps.getFPS();
 
             if (_showCPUInfo == 2) {
-                renderCallTree(0, the<Profiler>().getLastCallTree());
+                renderCallTree(0, the<Profiler>().getLastCallTree(), Vec2f(0, 24));
             }
+
+            endPass();
         }
     }
 
@@ -172,32 +153,37 @@ namespace pyr {
         return (_currentState == 0);
     }
 
-    void Application::renderCallTree(CallNodePtr parent, const CallNodeList& callTree, float offset) {
-        float total = 0;
+    int Application::renderCallTree(
+        CallNodePtr parent,
+        const CallNodeList& callTree,
+        const Vec2f& offset)
+    {
+        static const float SPACING = 24;
+        static const float INDENT = 32;
+
+        int lines = 0;
+
+        float totalTime = 0;
         for (CallNodeList::const_iterator i = callTree.begin(); i != callTree.end(); ++i) {
             CallNodePtr cn = *i;
-            total += cn->block->getAverageTotalTime();
+            totalTime += cn->block->getAverageTotalTime();
         }
 
         for (CallNodeList::const_iterator i = callTree.begin(); i != callTree.end(); ++i) {
             CallNodePtr cn = *i;
 
-            glTranslatef(0, 24, 0);
-            
-            GLTEXT_STREAM(_renderer) << cn->block->getName();
-            
-            glPushMatrix();
-            glTranslatef(350 - offset, 0, 0);
-            GLTEXT_STREAM(_renderer) << std::setprecision(3)
-                << 100 * cn->block->getAverageTotalTime() / total << "%";
-            glPopMatrix();
+            float y = lines * SPACING;
 
-            const float INDENT = 32;
+            PYR_TEXT_STREAM(_renderer, offset + Vec2f(0, y))
+                << cn->block->getName();
+            PYR_TEXT_STREAM(_renderer, Vec2f(350, offset[1] + y))
+                << 100 * cn->block->getAverageTotalTime() / totalTime << "%";
+            ++lines;
 
-            glTranslatef(INDENT, 0, 0);
-            renderCallTree(cn, cn->children, offset + INDENT);
-            glTranslatef(-INDENT, 0, 0);
+            lines += renderCallTree(cn, cn->children, offset + Vec2f(INDENT, y + SPACING));
         }
+
+        return lines;
     }
 
     void Application::setMouseVelX(int X) {

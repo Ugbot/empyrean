@@ -103,6 +103,18 @@ namespace pyr {
         return _texHeight;
     }
 
+    float Texture::getRealWidth() const {
+        return _realWidth;
+    }
+
+    float Texture::getRealHeight() const {
+        return _realHeight;
+    }
+
+    bool Texture::hasAlpha() const {
+        return _hasAlpha;
+    }
+
     void Texture::createTexture(int width,int height,u32* pixeldata) {
         _width = width;
         _height = height;
@@ -133,6 +145,17 @@ namespace pyr {
 
         _realWidth  = float(real_width)  / _texWidth;
         _realHeight = float(real_height) / _texHeight;
+
+        // See if the texture has any non-opaque alpha information.
+        u8* pixels = reinterpret_cast<u8*>(pixeldata);
+        _hasAlpha = false;
+        for (int i = 0; i < width * height; ++i) {
+            if (pixels[3] < 255) {
+                _hasAlpha = true;
+                break;
+            }
+            pixels += 4;
+        }
 
         glGenTextures(1, &_texture);
         glBindTexture(GL_TEXTURE_2D, _texture);

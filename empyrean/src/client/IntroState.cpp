@@ -2,6 +2,7 @@
 #include "IntroState.h"
 #include "MenuState.h"
 #include "OpenGL.h"
+#include "Renderer.h"
 #include "Texture.h"
 
 
@@ -13,15 +14,9 @@ namespace pyr {
     }
 
     void IntroState::draw(float fade) {
-        glEnable(GL_TEXTURE_2D);
-        glEnable(GL_BLEND);
-        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-        
-        setOrthoProjection(1, 1);
-    
-        glClear(GL_COLOR_BUFFER_BIT);
-        glColor4f(1, 1, 1, 1 - fade);
-        _image->drawRectangle(0, 0, 1, 1);
+        beginPass(OrthoProjection(1, 1));
+        drawTexture(Vec2f(0, 0), Vec2f(1, 1), _image);
+        endPass();
     }
     
     void IntroState::onKeyPress(SDLKey key, bool down) {

@@ -7,6 +7,7 @@
 #include "Profiler.h"
 #include "ScopedPtr.h"
 #include "Singleton.h"
+#include "VecMath.h"
 
 namespace pyr {
 
@@ -50,7 +51,10 @@ namespace pyr {
         int getMousePosY();
 
     private:
-        void renderCallTree(CallNodePtr parent, const CallNodeList& callTree, float offset = 0);
+        int renderCallTree(
+            CallNodePtr parent,
+            const CallNodeList& callTree,
+            const Vec2f& offset);
 
         // dimensions of the window or screen
         Zeroed<int> _width;

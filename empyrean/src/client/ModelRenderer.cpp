@@ -31,12 +31,6 @@ namespace pyr {
         static Vec3f lightvec(0.5, 0.5, 1);
         normalize(lightvec);
 
-        glLightfv(GL_LIGHT1, GL_AMBIENT, ambient);
-        glLightfv(GL_LIGHT1, GL_DIFFUSE, diffuse);
-        glLightfv(GL_LIGHT1, GL_POSITION, lightvec.getData());
-        glEnable(GL_LIGHT1);
-
-        glEnable(GL_LIGHTING);
         glColor3f(1, 1, 1);
 
         int nMeshes = r->getMeshCount();
@@ -80,7 +74,6 @@ namespace pyr {
 
         glDisableClientState(GL_VERTEX_ARRAY);
         glDisableClientState(GL_NORMAL_ARRAY);
-        glDisable(GL_LIGHTING);
     }
 
 }
