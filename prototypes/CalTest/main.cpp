@@ -112,10 +112,10 @@ int main(int argc,char* args[])
 
     glEnable(GL_TEXTURE_2D);
     
-    //glFrontFace(GL_CW);
+    glFrontFace(GL_CW);
 
-    //glEnable(GL_CULL_FACE);
-    //glCullFace(GL_BACK);
+    glEnable(GL_CULL_FACE);
+    glCullFace(GL_BACK);
 
     unsigned int pixels[32];
     int i=0;
@@ -189,6 +189,10 @@ int main(int argc,char* args[])
 
                 case SDLK_v:
                     usevertexarrays=!usevertexarrays;
+                    break;
+
+                case SDLK_t:
+                    usetrilist=!usetrilist;
                     break;
 
                 case SDLK_RIGHTBRACKET:
@@ -501,8 +505,13 @@ void RenderOutline()
 void RenderTriList()
 {
     glEnable(GL_TEXTURE_2D);
+    glEnable(GL_LIGHTING);
     CalRenderer* r=model.GetModel().getRenderer();
     r->beginRendering();
+
+    glEnableClientState(GL_VERTEX_ARRAY);
+    glEnableClientState(GL_NORMAL_ARRAY);
+    glEnableClientState(GL_TEXTURE_COORD_ARRAY);
 
     for (unsigned int sub=0; sub<trilists.size(); sub++)
     {
@@ -516,23 +525,25 @@ void RenderTriList()
         int nNormals   = r->getNormals(&normals[0][0]);
         int nTexcoords = r->getTextureCoordinates(0,&texcoords[0][0]);
 
+        glVertexPointer(3,GL_FLOAT,0,&verts[0][0]);
+        glNormalPointer(GL_FLOAT,0,&normals[0][0]);
+        glTexCoordPointer(2,GL_FLOAT,0,&texcoords[0][0]);
+
         glBindTexture(GL_TEXTURE_2D,(GLuint)r->getMapUserData(0));
 
         TriList& list=trilists[sub];
 
-        for (int i=0; i<list.size(); i++)
+        for (unsigned int i=0; i<list.size(); i++)
         {
-            glBegin(GL_TRIANGLE_STRIP);
-            for (unsigned int j=0; j<list[i].size(); j++)
-            {
-                int n=list[i][j];
-                glTexCoord2fv(texcoords[n]);
-                glNormal3fv(normals[n]);
-                glVertex3fv(verts[n]);
-            }
-            glEnd();
+            int* p=&list[i][0];
+            glDrawElements(GL_TRIANGLE_STRIP,list[i].size(),GL_UNSIGNED_INT,p);
         }
     }
+
+    glDisableClientState(GL_VERTEX_ARRAY);
+    glDisableClientState(GL_NORMAL_ARRAY);
+    glDisableClientState(GL_TEXTURE_COORD_ARRAY);
+
     r->endRendering();
 }
 

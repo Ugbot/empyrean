@@ -5,6 +5,7 @@
 #include "extgl.h"
 #include "IntroState.h"
 #include "Profiler.h"
+#include "NSPRUtility.h"
 
 namespace pyr {
 
@@ -60,6 +61,8 @@ namespace pyr {
             float totaltime = Profiler::getTotalTime();
 
             glPushMatrix();
+            glTranslatef(0,8,0);
+            (*_font) << "FPS: " << _fps.getFPS() << "\n";
 
             for (Profiler::ProcessMap::const_iterator iter = pi.begin(); iter != pi.end(); iter++) {
                 glTranslatef(0,8,0);
@@ -87,6 +90,8 @@ namespace pyr {
                 _currentFadeTime = 0;
             }
         }
+
+        _fps.update(dt);
     }
     
     void Application::onKeyPress(SDLKey key, bool down) {

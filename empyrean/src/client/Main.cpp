@@ -8,7 +8,6 @@
 #include "Application.h"
 #include "Error.h"
 #include "extgl.h"
-#include "FPSCounter.h"
 #include "InputManager.h"
 #include "Profiler.h"
 #include "SDLUtility.h"
@@ -55,8 +54,6 @@ namespace pyr {
         // notify the app and the input manager of the window size
         app.resize(width, height);
         
-        pyr::FPSCounter counter;
-
         float last_time = getNow();
         while (!app.shouldQuit()) {
             bool should_quit = false;
@@ -113,14 +110,6 @@ namespace pyr {
                 {
                     PYR_PROFILE_BLOCK("PageFlip");
                     SDL_GL_SwapBuffers();
-                }
-
-                counter.update(dt);
-
-                if (counter.changed()) {
-                    char str[80];
-                    sprintf(str, "Empyrean - %dfps", counter.getFPS());
-                    SDL_WM_SetCaption(str, 0);
                 }
             }
             last_time = now;

@@ -5,6 +5,7 @@
 
 #include "Font.h"
 #include "Utility.h"
+#include "FPSCounter.h"
 
 namespace pyr {
 
@@ -59,6 +60,8 @@ namespace pyr {
         bool _showCPUInfo;
 
         Font* _font;
+
+        FPSCounter _fps;
     };
     
 }
