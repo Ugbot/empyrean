@@ -24,9 +24,8 @@ namespace pyr {
 
         void save(const std::string& fileName);
     private:
-        // The root should always be a GroupElement
-        // aegis - Why?  Does it matter?
-        // andy - It's rather convenient to be able to assume that the root has children. :)
+        // The root should always be a GroupElement.  It's rather convenient
+        // to be able to assume that the root has children.
         RefPtr<GroupElement> _root;
     };
 
