@@ -525,7 +525,6 @@ namespace pyr {
     }
     
     CallStack::~CallStack() {
-        delete _impl;
     }
     
     CallStack& CallStack::operator=(const CallStack& rhs) {

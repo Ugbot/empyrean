@@ -5,6 +5,7 @@
 #include <memory>
 #include <string>
 #include "Error.h"
+#include "ScopedPtr.h"
 
 
 namespace pyr {
@@ -25,7 +26,7 @@ namespace pyr {
         
     private:
         struct Impl;
-        Impl* _impl;
+        ScopedPtr<Impl> _impl;
     };
 
 }

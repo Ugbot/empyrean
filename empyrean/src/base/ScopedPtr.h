@@ -67,11 +67,11 @@ namespace pyr {
             return get();
         }
 
-        T& operator*() {
+        T& operator*() const {
             PYR_ASSERT(get() != 0, "Null ScopedPtr dereferenced");
             return *get();
         }
-
+        
         typedef ScopedPtr<T> this_type;
 
         /// Inspired by boost's smart_ptr facilities.
