@@ -25,6 +25,7 @@ namespace pyr {
         
         void handleCommand(pyr::Command* cmd);
         void updateTree();
+        void updatePropertyGrid();
 
     private:
         void createMenu();

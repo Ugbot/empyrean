@@ -53,7 +53,9 @@ namespace pyr {
                 event.cmd->handleCommand(new UpdateMapElementCommand(e, newPos));
             }
 
-            return !event.shift;
+            getMainFrame()->updatePropertyGrid();
+
+            return true;
         }
 
     private:

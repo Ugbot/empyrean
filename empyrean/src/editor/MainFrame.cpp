@@ -4,6 +4,7 @@
 #include "RectangleTool.h"
 #include "TranslateTool.h"
 #include "ObstructionTool.h"
+#include "TranslateViewTool.h"
 #include "MapFile.h"
 #include "MapElement.h"
 #include "MapTree.h"
@@ -66,7 +67,6 @@ namespace pyr {
         e->addTri(0, 3, 5);
         e->addTri(0, 4, 5);
         mapRoot->children.push_back(e);
-        //mapRoot->pos = gmtl::Vec2f(-1, 0);
         updateTree();
     }
 
@@ -101,6 +101,17 @@ namespace pyr {
 
     void MainFrame::updateTree() {
         _mapTree->update(_map.get());
+    }
+
+    void MainFrame::updatePropertyGrid() {
+        MapElement* e = getSelectedElement();
+        // assert(e)?
+        
+        if (e)
+        {
+            PropertyGridUpdater pgu(_propertiesGrid);
+            e->handleVisitor(pgu);
+        }
     }
 
     void MainFrame::createMenu() {
@@ -140,7 +151,7 @@ namespace pyr {
         menuBar->Append(helpMenu, "&Help");
         SetMenuBar(menuBar);
     }
-    
+
     void MainFrame::createToolBars() {
         #define PNG_BITMAP(name) wxBitmap(name, wxBITMAP_TYPE_PNG)
         
@@ -182,7 +193,7 @@ namespace pyr {
         
         #undef PNG_BITMAP
     }
-    
+
     void MainFrame::createContents() {
         // use wxCLIP_CHILDREN to avoid some flicker
         _splitter = new wxSplitterWindow(
@@ -211,7 +222,7 @@ namespace pyr {
         _splitter->SetMinimumPaneSize(MINIMUM_PANE_SIZE);
         _splitter->SplitVertically(split2, _mapView, DEFAULT_TREE_SIZE);
     }
-    
+
     void MainFrame::createStatusBar() {
         CreateStatusBar();
     }
@@ -229,6 +240,7 @@ namespace pyr {
     }
     
     void MainFrame::onUseTranslateViewTool(wxCommandEvent&) {
+        _mapView->setTool(new TranslateViewTool());
     }
 
     void MainFrame::onUseZoomViewTool(wxCommandEvent&) {
@@ -261,21 +273,15 @@ namespace pyr {
         MapUpdateVisitor muv(e.name, e.value);
         _mapTree->getSelection()->handleVisitor(&muv);
 
-        bool result = _mapView->getTool()->onPropertiesChanged(e);
+        bool result = true;
+            _mapView->getTool()->onPropertiesChanged(e);
         if (result) {
             _mapView->Refresh();
         }
     }
 
     void MainFrame::onSelectTreeNode(wxTreeEvent& event) {
-        TreeItemData* data = static_cast<TreeItemData*>(_mapTree->GetItemData(event.GetItem()));
-        wxASSERT(data != 0);
-
-        MapElement* e = data->element;
-        wxASSERT(e != 0);
-
-        PropertyGridUpdater pgu(_propertiesGrid);
-        e->handleVisitor(pgu);
+        updatePropertyGrid();
     }
 
     void MainFrame::undo() {
