@@ -18,9 +18,8 @@ namespace pyr {
     class ServerEntity : public Entity {
     public:
         ServerEntity(u16 id, Behavior* behavior, Appearance* appearance)
-            : Entity(behavior, appearance)
+            : Entity(behavior, appearance), _id(id)
         {
-            _id = id;
         }
 
         u16 getID() const {
