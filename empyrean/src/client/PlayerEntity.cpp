@@ -44,7 +44,7 @@ namespace pyr {
         _model->getModel().getMixer()->clearCycle(0, 0.0f);
         setVel(gmtl::Vec2f(0,0));
 
-        _state = PlayerEntity::updateStandState;
+        _state = &PlayerEntity::updateStandState;
     }
     
     void PlayerEntity::updateStandState(float dt) {
@@ -62,7 +62,7 @@ namespace pyr {
 
     void PlayerEntity::startWalkState() {
         _model->getModel().getMixer()->blendCycle(0, 1.0f, 5.0f);
-        _state = PlayerEntity::updateWalkState;
+        _state = &PlayerEntity::updateWalkState;
     }
 
     void PlayerEntity::updateWalkState(float dt) {

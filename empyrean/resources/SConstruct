@@ -1,3 +1,4 @@
+import os
 from os.path import join
 from glob import glob
 from types import ListType
@@ -5,7 +6,7 @@ from types import ListType
 TARGET = ARGUMENTS.get('TARGET', '.')
 Default(TARGET)
 
-env = Environment()
+env = Environment(ENV=os.environ)
 env['BUILDERS']['ConvertImage'] = Builder(action='corconvert $SOURCE $TARGET')
 
 def Root():

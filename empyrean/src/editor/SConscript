@@ -1,15 +1,19 @@
 Import('base_env TOOLS')
 
-SOURCES = [
-    'Editor.cpp',
-    'Main.cpp',
-    'MainFrame.cpp',
-    'MapTree.cpp',
-    'MapTreeUpdater.cpp',
-    'MapView.cpp',
-    'ObstructionTool.cpp',
-    'RectangleTool.cpp',
-    'Tool.cpp']
+SOURCES = Split("""
+    CreateMapElementCommand.cpp
+    Editor.cpp
+    Main.cpp
+    MainFrame.cpp
+    MapOutliner.cpp
+    MapTree.cpp
+    MapTreeUpdater.cpp
+    MapView.cpp
+    ObstructionTool.cpp
+    PropertyGridUpdater.cpp
+    RectangleTool.cpp
+    Tool.cpp
+""")
 
 env = base_env.Copy()
 for t in Split('PyrBase NSPR Corona wxWindows OpenGL'):

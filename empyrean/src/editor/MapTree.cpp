@@ -11,8 +11,7 @@
 
 namespace pyr {
 
-    static enum
-    {
+    enum {
         ID_FIRST = wxID_HIGHEST,
 
         // Context menu items

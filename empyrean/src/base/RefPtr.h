@@ -25,8 +25,8 @@ namespace pyr {
          * This templated constructor allows you to do automatic conversions
          * to smart pointers of base classes.
          */
-        template<typename T>
-        RefPtr(const RefPtr<T>& ptr) {
+        template<typename U>
+        RefPtr(const RefPtr<U>& ptr) {
             _ptr = ptr.get();
             if (_ptr) {
                 _ptr->ref();

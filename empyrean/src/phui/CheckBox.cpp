@@ -24,8 +24,8 @@
  *
  * -----------------------------------------------------------------
  * File:          $RCSfile: CheckBox.cpp,v $
- * Date modified: $Date: 2003-10-06 06:54:18 $
- * Version:       $Revision: 1.3 $
+ * Date modified: $Date: 2003-10-06 23:01:35 $
+ * Version:       $Revision: 1.4 $
  * -----------------------------------------------------------------
  *
  ************************************************************** phui-cpr-end */
@@ -80,7 +80,8 @@ namespace phui
         float(2 * x + SIZE),
         float((height - getFont()->getAscent()) / 2),
         0);
-      GLTEXT_STREAM(getFontRenderer()) << getText();
+      gltext::FontRendererPtr renderer = getFontRenderer();
+      GLTEXT_STREAM(renderer) << getText();
       glPopMatrix();
    }
 

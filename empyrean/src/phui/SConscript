@@ -1,25 +1,25 @@
 Import('base_env TOOLS')
 
 SOURCES = Split("""
-   Button.cpp
-   CheckBox.cpp
-   FlowLayout.cpp
-   Insets.cpp
-   Label.cpp
-   LayoutManager.cpp
-   ListBox.cpp
-   Rect.cpp
-   RootWidget.cpp
-   SDLBridge.cpp
-   Size.cpp
-   TextField.cpp
-   Version.cpp
-   WidgetContainer.cpp
-   Widget.cpp
-   Window.cpp
+    BoxLayout.cpp
+    Button.cpp
+    CheckBox.cpp
+    Insets.cpp
+    Label.cpp
+    ListBox.cpp
+    Picture.cpp
+    Rect.cpp
+    RootWidget.cpp
+    SDLBridge.cpp
+    Size.cpp
+    TextField.cpp
+    Version.cpp
+    WidgetContainer.cpp
+    Widget.cpp
+    Window.cpp
 """)
 
 env = base_env.Copy()
-TOOLS['PyrBase'](env)
-TOOLS['SDL'](env)
+for t in ['PyrBase', 'SDL', 'NSPR']:
+    TOOLS[t](env)
 env.Library('phui', SOURCES)

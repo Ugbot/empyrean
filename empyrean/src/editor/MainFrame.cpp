@@ -36,7 +36,7 @@ namespace pyr {
         return _map.get();
     }
 
-    void MainFrame::handleCommand(::pyr::Command* cmd) {
+    void MainFrame::handleCommand(pyr::Command* cmd) {
         CommandContext context(_mapTree, _mapView, this, _map.get());
 
         clearList(_redoList);
@@ -229,12 +229,13 @@ namespace pyr {
         MapElement* e = data->element;
         wxASSERT(e != 0);
 
-        e->handleVisitor(PropertyGridUpdater(_propertiesGrid));
+        PropertyGridUpdater pgu(_propertiesGrid);
+        e->handleVisitor(pgu);
     }
 
     void MainFrame::undo() {
         if (!_undoList.empty()) {
-            ::pyr::Command* c = _undoList.top();
+            pyr::Command* c = _undoList.top();
             _undoList.pop();
             _redoList.push(c);
             CommandContext context(_mapTree, _mapView, this, _map.get());

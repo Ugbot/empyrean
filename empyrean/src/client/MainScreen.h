@@ -33,13 +33,13 @@ namespace pyr {
             buttons->show();
         
             ButtonPtr connect = new Button("Connect to Server");
-            connect->addListener(this, MainScreen::onConnectToServer);
+            connect->addListener(this, &MainScreen::onConnectToServer);
             
             ButtonPtr options = new Button("Options");
-            options->addListener(this, MainScreen::onOptions);
+            options->addListener(this, &MainScreen::onOptions);
             
             ButtonPtr quit = new Button("Quit");
-            quit->addListener(this, MainScreen::onQuit);
+            quit->addListener(this, &MainScreen::onQuit);
 
             add(background);
             buttons->add(connect);
@@ -63,10 +63,10 @@ namespace pyr {
             
 
             ButtonPtr connect = new Button("Connect");
-            connect->addListener(this, MainScreen::onConnect);
+            connect->addListener(this, &MainScreen::onConnect);
             
             ButtonPtr cancel  = new Button("Cancel");
-            cancel->addListener(this, MainScreen::onCancel);
+            cancel->addListener(this, &MainScreen::onCancel);
         
             WidgetContainerPtr buttonPanel = new WidgetContainer(
                 new BoxLayout(BoxLayout::HORIZONTAL));

@@ -2,6 +2,7 @@
 #define PYR_MAP_ELEMENT_H
 
 
+#include <string>
 #include <vector>
 #include <gmtl/Vec.h>
 #include "RefCounted.h"
