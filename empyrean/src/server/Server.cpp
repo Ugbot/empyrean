@@ -50,7 +50,7 @@ namespace pyr {
             cd = new ServerConnectionData(*cd);
         } else {
             // Assign new data.
-            ServerConnectionData* cd = new ServerConnectionData;
+            cd = new ServerConnectionData;
             cd->loggedIn = false;
             cd->account = 0;
         }
