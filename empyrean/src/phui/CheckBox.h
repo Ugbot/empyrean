@@ -24,8 +24,8 @@
  *
  * -----------------------------------------------------------------
  * File:          $RCSfile: CheckBox.h,v $
- * Date modified: $Date: 2003-07-22 03:24:31 $
- * Version:       $Revision: 1.1 $
+ * Date modified: $Date: 2003-08-08 03:09:44 $
+ * Version:       $Revision: 1.2 $
  * -----------------------------------------------------------------
  *
  ************************************************************** phui-cpr-end */
@@ -40,20 +40,24 @@ namespace phui
    class CheckBox : public Widget
    {
    public:
-      CheckBox(bool checked = false);
+      CheckBox(const std::string& text, bool checked = false);
 
       void draw();
 
-      void check();
-      void uncheck();
+      void check()   { setChecked(true);  }
+      void uncheck() { setChecked(false); }
 
       void setChecked(bool checked);
       bool isChecked() const;
+      
+      void setText(const std::string& text);
+      const std::string& getText() const;
 
       void onMouseDown(InputButton button, const Point& p);
 
    private:
       bool mIsChecked;
+      std::string mText;
    };
 
    typedef RefPtr<CheckBox> CheckBoxPtr;

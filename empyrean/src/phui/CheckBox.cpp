@@ -24,8 +24,8 @@
  *
  * -----------------------------------------------------------------
  * File:          $RCSfile: CheckBox.cpp,v $
- * Date modified: $Date: 2003-07-22 03:24:31 $
- * Version:       $Revision: 1.1 $
+ * Date modified: $Date: 2003-08-08 03:09:44 $
+ * Version:       $Revision: 1.2 $
  * -----------------------------------------------------------------
  *
  ************************************************************** phui-cpr-end */
@@ -33,50 +33,47 @@
 
 namespace phui
 {
-   CheckBox::CheckBox(bool checked)
+   CheckBox::CheckBox(const std::string& text, bool checked)
    {
       mIsChecked = checked;
+      mText = text;
    }
 
    void CheckBox::draw()
    {
-      const Size& size = getSize();
-      const int width = size.getWidth();
-      const int height = size.getHeight();
+      const int width  = getSize().getWidth();
+      const int height = getSize().getHeight();
+      
+      const int SIZE = 50;
+      
+      int x = SIZE / 20;
+      int y = height / 2 - SIZE / 2;
 
       glColor(getBackgroundColor());
       glBegin(GL_TRIANGLE_FAN);
-      {
-         glVertex2i(0,     0     );
-         glVertex2i(width, 0     );
-         glVertex2i(width, height);
-         glVertex2i(0,     height);
-      }
+      glVertex2i(0,     0     );
+      glVertex2i(width, 0     );
+      glVertex2i(width, height);
+      glVertex2i(0,     height);
+      glEnd();
+      
+      glColor(getForegroundColor());
+      glBegin(GL_LINE_LOOP);
+      glVertex2i(x,        y);
+      glVertex2i(x + SIZE, y);
+      glVertex2i(x + SIZE, y + SIZE);
+      glVertex2i(x,        y + SIZE);
       glEnd();
 
       if (isChecked())
       {
-         glColor(getForegroundColor());
          glBegin(GL_LINES);
-         {
-            glVertex2i(0,     0);
-            glVertex2i(width, height);
-            glVertex2i(width, 0);
-            glVertex2i(0,     height);
-         }
+         glVertex2i(x,        y);
+         glVertex2i(x + SIZE, y + SIZE);
+         glVertex2i(x + SIZE, y);
+         glVertex2i(x,        y + SIZE);
          glEnd();
       }
-
-   }
-
-   void CheckBox::check()
-   {
-      setChecked(true);
-   }
-
-   void CheckBox::uncheck()
-   {
-      setChecked(false);
    }
 
    void CheckBox::setChecked(bool checked)

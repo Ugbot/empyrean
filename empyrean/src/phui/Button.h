@@ -24,8 +24,8 @@
  *
  * -----------------------------------------------------------------
  * File:          $RCSfile: Button.h,v $
- * Date modified: $Date: 2003-08-08 02:51:24 $
- * Version:       $Revision: 1.3 $
+ * Date modified: $Date: 2003-08-08 03:09:44 $
+ * Version:       $Revision: 1.4 $
  * -----------------------------------------------------------------
  *
  ************************************************************** phui-cpr-end */
@@ -40,9 +40,7 @@
 
 namespace phui
 {
-   /**
-    * A classic UI button widget.
-    */
+
    class Button : public Widget
    {
    public:
@@ -53,23 +51,9 @@ namespace phui
        */
       Button(const std::string& text = "");
 
-      /**
-       * Draws this button with its text.
-       */
       void draw();
 
-      /**
-       * Sets the text on this button to the given value.
-       *
-       * @param text      the text for this button
-       */
       void setText(const std::string& text);
-
-      /**
-       * Gets the text on this button.
-       *
-       * @return  the text for this button
-       */
       const std::string& getText() const;
 
       /**
@@ -137,7 +121,6 @@ namespace phui
       void fireActionEvent();
 
    private:
-      /// The text on this button.
       std::string mText;
 
       /// Button down state. True if the button appears down.

@@ -97,24 +97,27 @@ namespace pyr {
     
     void MenuState::createLoginScreen() {
         LabelPtr nameLabel = new Label("Name");
-        nameLabel->setPositionAndSize(0, 0, 512, 256);
+        nameLabel->setPositionAndSize(0, 0, 512, 192);
         
         _name = new TextField();
-        _name->setPositionAndSize(512, 0, 512, 256);
+        _name->setPositionAndSize(512, 0, 512, 192);
         
         LabelPtr passwordLabel = new Label("Password");
-        passwordLabel->setPositionAndSize(0, 256, 512, 256);
+        passwordLabel->setPositionAndSize(0, 192, 512, 192);
         
         _password = new TextField();
-        _password->setPositionAndSize(512, 256, 512, 256);
+        _password->setPositionAndSize(512, 192, 512, 192);
+        
+        _newuser = new CheckBox("New User");
+        _newuser->setPositionAndSize(0, 384, 1024, 192);
         
         _login = new Button("Login");
         _login->addMethodListener(this, &MenuState::onButtonPressed);
-        _login->setPositionAndSize(0, 512, 512, 256);
+        _login->setPositionAndSize(0, 576, 512, 192);
         
         _cancel = new Button("Cancel");
         _cancel->addMethodListener(this, &MenuState::onButtonPressed);
-        _cancel->setPositionAndSize(512, 512, 512, 256);
+        _cancel->setPositionAndSize(512, 576, 512, 192);
         
         _loginRoot = new RootWidget(
             Application::instance().getWidth(),
@@ -123,6 +126,7 @@ namespace pyr {
         _loginRoot->add(_name);
         _loginRoot->add(passwordLabel);
         _loginRoot->add(_password);
+        _loginRoot->add(_newuser);
         _loginRoot->add(_login);
         _loginRoot->add(_cancel);
     }
@@ -141,7 +145,7 @@ namespace pyr {
             ServerConnection::instance().login(
                 _name->getText(),
                 _password->getText(),
-                false);
+                _newuser->isChecked());
             invokeTransition<GameState>();
         } else if (e.getSource() == _cancel) {
             _root = _mainRoot;

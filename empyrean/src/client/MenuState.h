@@ -36,6 +36,7 @@ namespace pyr {
         phui::RootWidgetPtr _loginRoot;
         phui::TextFieldPtr _name;
         phui::TextFieldPtr _password;
+        phui::CheckBoxPtr  _newuser;
         phui::ButtonPtr    _login;
         phui::ButtonPtr    _cancel;
     };
