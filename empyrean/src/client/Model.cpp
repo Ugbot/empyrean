@@ -73,21 +73,22 @@ namespace pyr {
                 {
                     std::stringstream ss;
                     ss << "Unkown token \"" << line[0] << "\" on line " << curline << " in " << fname;
-                    throw std::exception(ss.str().c_str());
+                    throw std::runtime_error(ss.str().c_str());
                 }
 
                 curline++;
             }
 
+            int result;
             model.loadCoreSkeleton(path+skeleton);
             for (u32 i = 0; i < animations.size(); i++)
-                model.loadCoreAnimation(path+animations[i]);
+                result=model.loadCoreAnimation(path+animations[i]);
 
             for (u32 i = 0; i < meshes.size(); i++)
-                model.loadCoreMesh(path+meshes[i]);
+                result=model.loadCoreMesh(path+meshes[i]);
 
             for (u32 i = 0; i < materials.size(); i++)
-                model.loadCoreMaterial(path+materials[i]);
+                result=model.loadCoreMaterial(path+materials[i]);
 
             for (int i=0; i<model.getCoreMaterialCount(); i++) {
                 CalCoreMaterial& material=*model.getCoreMaterial(i);
@@ -109,32 +110,30 @@ namespace pyr {
         //! Temporary RAW texture loader.
         static u32 loadTexture(const string& fname) {
             ifstream file;
-            file.open(fname.c_str(),std::ios::in | std::ios::binary);
+            file.open(fname.c_str(), std::ios::in | std::ios::binary);
 
-            int w,h,d;
-            file.read((char*)&w,4);
-            file.read((char*)&h,4);
-            file.read((char*)&d,4);
+            int w, h, d;
+            file.read((char*)&w, 4);
+            file.read((char*)&h, 4);
+            file.read((char*)&d, 4);
 
-            u8* pixels=new u8[w*h*d];
-            u8* p=pixels+(h-1)*w*d;
+            ScopedArray<u8> pixels(new u8[w*h*d]);
+            u8* p=pixels.get() + (h-1)*w*d;
 
-            for (int i=0; i<h; i++) {
-                file.read((char*)p,w*d);
-                p-=w*d;
+            for (int i = 0; i < h; i++) {
+                file.read((char*)p, w * d);
+                p -= w * d;
             }
 
             file.close();
 
             u32 tex;
-            glPixelStorei(GL_UNPACK_ALIGNMENT,1);
-            glGenTextures(1,&tex);
-            glBindTexture(GL_TEXTURE_2D,tex);
-            glTexImage2D(GL_TEXTURE_2D,0,d==3?GL_RGB:GL_RGBA,w,h,0,d==3?GL_RGB:GL_RGBA,GL_UNSIGNED_BYTE,pixels);
-            glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_LINEAR);
-            glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_LINEAR);
-
-            delete[] pixels;
+            glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+            glGenTextures(1, &tex);
+            glBindTexture(GL_TEXTURE_2D, tex);
+            glTexImage2D(GL_TEXTURE_2D, 0, d==3 ? GL_RGB:GL_RGBA, w, h, 0, d==3 ? GL_RGB:GL_RGBA, GL_UNSIGNED_BYTE, pixels.get());
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
             return tex;
         }
@@ -148,7 +147,7 @@ namespace pyr {
         }
     };
 
-    Model* Model::create(const std::string& id) {
+    Model* Model::create(const string& id) {
         return ResourceManager::instance().get<Model*>(id);
     }
 

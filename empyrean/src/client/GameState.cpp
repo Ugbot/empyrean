@@ -27,20 +27,13 @@ namespace pyr {
     void GameState::draw(float fade) {
         PYR_PROFILE_BLOCK("Render");
 
-        _renderer->draw(*_testModel); // note to self: make draw accept a Model* so this looks nicer, as there won't be many (if any at all) models that aren't pointers.
-
         glDisable(GL_TEXTURE_2D);
         glDisable(GL_BLEND);
         
+        Renderer::begin2D();
         glClearColor(0, 0, 0, 0);
-        glClear(GL_COLOR_BUFFER_BIT);
-        
-        glMatrixMode(GL_PROJECTION);
-        glLoadIdentity();
-        gluOrtho2D(0, 4, 3, 0);
-        
-        glMatrixMode(GL_MODELVIEW);
-        glLoadIdentity();
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
         
         glPushMatrix();
             float x = _inputX->getValue() * 4;
@@ -67,6 +60,15 @@ namespace pyr {
             _entities[i]->draw();
             glPopMatrix();
         }
+
+        glPushMatrix();
+            glTranslatef(2,2,0);
+            glRotatef(90,0,-1,0);
+            glRotatef(90,1,0,0);
+            glEnable(GL_DEPTH_TEST);
+            _renderer->draw(_testModel);
+            glDisable(GL_DEPTH_TEST);
+        glPopMatrix();
     }
         
     void GameState::update(float dt) {
@@ -78,6 +80,8 @@ namespace pyr {
         if (_inputQuit->getValue() >= 0.50f) {
             invokeTimedTransition<MenuState>(1);
         }
+
+        _testModel->update(dt);
     }
     
     void GameState::onKeyPress(SDLKey key, bool down) {

@@ -109,12 +109,10 @@ namespace {
         shader.begin();
 
         int nMeshes=r.getMeshCount();
-        for (int curmesh=0; curmesh<nMeshes; curmesh++)
-        {
+        for (int curmesh=0; curmesh<nMeshes; curmesh++) {
             int nSubs=r.getSubmeshCount(curmesh);
 
-            for (int cursub=0; cursub<nSubs; cursub++)
-            {
+            for (int cursub=0; cursub<nSubs; cursub++) {
                 r.selectMeshSubmesh(curmesh,cursub);
 
                 static float verts[30000][3];
@@ -126,8 +124,7 @@ namespace {
                 static float texcoords[30000][2];
                 int nTexcoords=r.getTextureCoordinates(0,&texcoords[0][0]);
 
-                if (r.getMapCount() && nTexcoords>0)
-                {
+                if (r.getMapCount() && nTexcoords>0) {
                     u32 tex=(u32)r.getMapUserData(0);
                     shader.setTex(tex);
                 }
@@ -137,11 +134,9 @@ namespace {
 
                 // The only OpenGL call in this function.  Abstract into the Shader when it becomes beneficial to do so.
                 glBegin(GL_TRIANGLES);
-                for (int f = 0; f < nFaces; f++)
-                {
+                for (int f = 0; f < nFaces; f++) {
                     // Will the compiler unroll this?  Is it worth it?
-                    for (int i=0; i<3; i++)
-                    {
+                    for (int i=0; i<3; i++) {
                         int n = faces[f][i];
                         shader.drawVert(verts[n], normals[n], texcoords[n]);
                     }
@@ -157,6 +152,8 @@ namespace {
     //! Uses OpenGL hardware to shade the model in the traditional manner.
     struct DefaultShade {
 
+        static const float scale;
+
         inline void begin() {
             static float ambient[]=  { 0.5f, 0.5f, 0.5f, 1.0f };
             static float diffuse[]=  { 1,1,1,1 };
@@ -167,6 +164,8 @@ namespace {
             glLightfv(GL_LIGHT1,GL_POSITION,light);
             glEnable(GL_LIGHT1);
 
+            glScalef(scale,scale,scale);
+
             glEnable(GL_LIGHTING);
             glEnable(GL_TEXTURE_2D);
         }
@@ -174,6 +173,8 @@ namespace {
         inline void end() {
             glDisable(GL_LIGHTING);
             glDisable(GL_TEXTURE_2D);
+
+            glScalef(1/scale,1/scale,1/scale);
         }
 
         inline void drawVert(float* verts,float* normals,float* texcoords) {
@@ -187,6 +188,8 @@ namespace {
             glBindTexture(GL_TEXTURE_2D,tex);
         }
     };
+
+    const float DefaultShade::scale=0.01f;
 
     /** Cell shading algorithm outlined at http://nehe.gamedev.net/tutorials/lesson37.jpg
      *
@@ -265,8 +268,30 @@ namespace {
 
 namespace pyr {
 
-    void DefaultRenderer::draw(Model& m) {
-        renderMesh(m,DefaultShade());
+    void Renderer::begin2D() {
+        glMatrixMode(GL_PROJECTION);
+        glLoadIdentity();
+        gluOrtho2D(0, 4, 3, 0);
+        
+        glMatrixMode(GL_MODELVIEW);
+        glLoadIdentity();
+
+        glDisable(GL_DEPTH_TEST);
+    }
+
+    void Renderer::end2D() {
+        glMatrixMode(GL_PROJECTION);
+        glLoadIdentity();
+        gluPerspective(45,4.0/3.0,0.1,800);
+
+        glMatrixMode(GL_MODELVIEW);
+        glLoadIdentity();
+
+        glEnable(GL_DEPTH_TEST);
+    }
+
+    void DefaultRenderer::draw(Model* m) {
+        renderMesh(*m,DefaultShade());
         //renderMesh(m);
     }
 
@@ -296,7 +321,7 @@ namespace pyr {
             throw std::exception("CellShadeRenderer requires the GL_ARB_multitexture extension.");
     }
 
-    void CellShadeRenderer::draw(Model& m) {
-        renderMesh(m,CellShade(_shadeTex.handle));
+    void CellShadeRenderer::draw(Model* m) {
+        renderMesh(*m,CellShade(_shadeTex.handle));
     }
 };

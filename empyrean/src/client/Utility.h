@@ -10,9 +10,6 @@
 
 namespace pyr {
 
-    using std::string;
-    using std::vector;
-
     inline void glTranslate(const gmtl::Vec2f& vec) {
         glTranslatef(vec[0], vec[1], 0);
     }
@@ -106,14 +103,14 @@ namespace pyr {
     };
 
     //! Returns the string, stripped of leading and trailing whitespace
-    string trimString(const string& s);
+    std::string trimString(const std::string& s);
 
     /** Splits the string based on the passed delimiters, and returns the substrings as an array.
      *
      * @param s          The string to split.
      * @param delimiters A list of characters to use as token delimiters.
      */
-    vector<string> splitString(const string& s, const string& delimiters=" \n\r\t");
+    std::vector<std::string> splitString(const std::string& s, const std::string& delimiters=" \n\r\t");
 }
 
 #endif

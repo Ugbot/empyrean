@@ -6,16 +6,23 @@
 namespace pyr {
     class Model;
 
-    struct Renderer
+    class Renderer
     {
+    public:
         virtual ~Renderer(){}
-        virtual void draw(Model&)=0;
+        virtual void draw(Model*)=0;
+
+        static void begin2D();
+        static void end2D();
+
+        static void begin3D() { end2D();   }
+        static void end3D()   { begin2D(); }
     };
 
     class DefaultRenderer : public Renderer
     {
     public:
-        virtual void draw(Model& m);
+        virtual void draw(Model* m);
     };
 
     class CellShadeRenderer : public Renderer
@@ -26,9 +33,10 @@ namespace pyr {
             ~ShadeTex();
         } _shadeTex;
     public:
+
         CellShadeRenderer();
 
-        virtual void draw(Model& m);
+        virtual void draw(Model* m);
     };
 };
 
