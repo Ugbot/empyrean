@@ -24,8 +24,8 @@
  *
  * -----------------------------------------------------------------
  * File:          $RCSfile: Button.cpp,v $
- * Date modified: $Date: 2003-09-19 13:26:20 $
- * Version:       $Revision: 1.8 $
+ * Date modified: $Date: 2003-09-19 13:32:26 $
+ * Version:       $Revision: 1.9 $
  * -----------------------------------------------------------------
  *
  ************************************************************** phui-cpr-end */
@@ -100,27 +100,28 @@ namespace phui
          glColor(in);  glVertex(llIn);
       glEnd();
 
-      // draw text
-      glColor(getForegroundColor());
-
       gltext::FontPtr font = getFont();
       gltext::FontRendererPtr renderer = getFontRenderer();
       float labelWidth = float(renderer->getWidth(mText.c_str()));
       float fontHeight = float(font->getAscent() + font->getDescent());
-
-      //Lets store the Matrix so we don't piss anyone off
-      glPushMatrix();
-
       //These checks see if the button Label fits inside the
       //button.  If not start in the lower left-hand corner of
       //the button and render the text.
       float xLoc = std::max((width  - labelWidth) / 2.0f, 0.0f);
       float yLoc = std::max((height - fontHeight) / 2.0f, 0.0f);
-      glTranslatef(xLoc, yLoc, 0.0f);
-      
-      renderer->render(mText.c_str());
 
-      //Lets restore the Matrix
+      // draw text shadow
+      glColor(BLACK);
+      glPushMatrix();
+      glTranslatef(xLoc + 2.0f, yLoc + 2.0f, 0.0f);
+      renderer->render(mText.c_str());
+      glPopMatrix();
+
+      // draw text
+      glColor(getForegroundColor());
+      glPushMatrix();
+      glTranslatef(xLoc, yLoc, 0.0f);
+      renderer->render(mText.c_str());
       glPopMatrix();
 
       if (hasFocus())
