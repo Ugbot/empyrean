@@ -15,6 +15,8 @@ namespace pyr {
     /// @note This class is designed to run within one thread.
     class World {
     public:
+        ~World();
+
         void update(float dt);
         void addConnection(Connection* connection);
         
