@@ -28,13 +28,13 @@ namespace pyr {
         glEnable(GL_DEPTH_TEST);
 
         glPushMatrix();
-        glRotatef(_time * 43, 1, 0, 0);
-        glRotatef(_time * 47, 0, 1, 0);
-        glRotatef(_time * 53, 0, 0, 1);
-    
+        glRotatef(_time * 43 / 200, 1, 0, 0);
+        //glRotatef(_time * 47 / 200, 0, 1, 0);
+        //glRotatef(_time * 53 / 200, 0, 0, 1);
+
         MapRenderer m;
         _map->handleVisitor(m);
-        
+
         glPopMatrix();
     }
 

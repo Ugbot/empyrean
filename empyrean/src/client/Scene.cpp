@@ -58,7 +58,24 @@ namespace pyr {
         glEnable(GL_TEXTURE_2D);
 
         glEnable(GL_LIGHTING);
-        glEnable(GL_LIGHT0);
+        //glEnable(GL_LIGHT0);
+
+        glEnable(GL_LIGHT1);
+        if (_focus) {
+            glPointSize(5);
+            glBegin(GL_POINTS);
+            glVertex3f(focusX, focusY, -2);
+            glEnd();
+
+            float pos[4] = {focusX, focusY, -1, 1};
+            float diffuse[4] = {1,0,0,1};
+            float specular[4] = {1,0,0,1};
+            float ambient[4] = {1,1,1,1};
+            glLightfv(GL_LIGHT1, GL_POSITION, pos);
+            glLightfv(GL_LIGHT1, GL_SPECULAR, specular);
+            glLightfv(GL_LIGHT1, GL_DIFFUSE, diffuse);
+            glLightfv(GL_LIGHT1, GL_AMBIENT, ambient);
+        }
 
         EntityMap::iterator itr = _entities.begin();
         for (; itr != _entities.end(); ++itr) {
