@@ -124,8 +124,9 @@ namespace pyr {
                 cd->account->getUsername(),
                 0,
                 p->text()));
-            logMessage(cd->account->getUsername() + " says: " + p->text());
         }
+
+        logMessage(cd->account->getUsername() + " says: " + p->text());
     }
 
 }
