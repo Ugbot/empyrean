@@ -71,6 +71,7 @@ base_env = Environment(
 
 base_env['CCFLAGS'] += "-Isrc/base -I/usr/include/mozilla/nspr"
 base_env['LIBS'] = ["cal3d", "corona"]
+ParseConfig(base_env, 'freetype-config', Split('--cflags --libs'))
 
 Export('base_env SetupSDL SetupGL')
 

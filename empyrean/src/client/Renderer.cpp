@@ -1,3 +1,4 @@
+#include <stdexcept>
 #include <cal3d/cal3d.h>
 #include <gmtl/Vec.h>
 #include <gmtl/Matrix.h>

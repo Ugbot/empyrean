@@ -2,13 +2,20 @@ Import('base_env SetupSDL SetupGL')
 
 SOURCES = [
     'Application.cpp',
+    'Font.cpp',
     'GameState.cpp',
     'InputManager.cpp',
     'IntroState.cpp',
     'Main.cpp',
     'MenuState.cpp',
     'Model.cpp',
+    'ParticleEmitter.cpp',
+    'ParticleSystem.cpp',
+    'PlayerEntity.cpp',
+    'Profiler.cpp',
     'Renderer.cpp',
+    'ResourceManager.cpp',
+    'ServerConnection.cpp',
     'Texture.cpp']
 
 env = base_env.Copy()
