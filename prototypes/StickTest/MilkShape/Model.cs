@@ -10,7 +10,6 @@ namespace StickTest.MilkShape
         public int flags;
         public double x,y,z,u,v;
         public int jointidx;
-        public Joint joint;
 
         public Vertex(){}
         public Vertex(int f,double X,double Y,double Z,double U,double V,int j)
@@ -19,7 +18,6 @@ namespace StickTest.MilkShape
             x=X;    y=Y;    z=Z;
             u=U;    v=V;
             jointidx=j;
-            joint=null;
         }
     }
 
@@ -94,19 +92,6 @@ namespace StickTest.MilkShape
         public Mesh[] meshes;
         public Material[] materials;
         public Joint[] joints;              // SMOKIN UP YO
-        public Joint rootbone;
-
-        /// <summary>
-        /// Animates the model
-        /// </summary>
-        /// <param name="t">The number of seconds to animate</param>
-        public void Animate(double t)
-        {
-            foreach (Joint j in joints)
-            {
-                j.Animate(t);
-            }
-        }
 
         internal Model(){}
 

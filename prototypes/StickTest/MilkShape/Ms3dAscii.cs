@@ -196,26 +196,6 @@ namespace StickTest.MilkShape
             for (int i=0; i<model.joints.Length; i++)
                 model.joints[i]=PassJoint(tokens,ref idx);
 
-            // Reconstruct the bone heirarchy
-            if (model.joints.Length>0)
-            {
-                model.rootbone=model.joints[0];
-                for (int i=1; i<model.joints.Length; i++)
-                {
-                    for (int j=i-1; j>=0; j--)
-                    {
-                        if (model.joints[i].parentname==model.joints[j].name)
-                            model.joints[j].children.Add(model.joints[i]);
-                    }
-                }
-            }
-
-            // link verts to bones
-            foreach (Mesh m in model.meshes)
-                foreach (Vertex v in m.vertices)
-                    if (v.jointidx!=-1)
-                        v.joint=model.joints[v.jointidx];
-
             return model;
         }
 	}

@@ -18,6 +18,9 @@ namespace StickTest
         Form form;
         OpenGLControl gl;
         Model model;
+        AnimState animstate;
+        AnimState a2;
+
         Vector[][] transformedvertices;
         Texture backdrop;
         Tex1D shadetex;
@@ -59,20 +62,8 @@ namespace StickTest
             GL.glMatrixMode(GL.GL_PROJECTION);
             GL.glLoadIdentity();
             GL.gluPerspective(45,1.0*xres/yres,0.1,800);
-            //GL.gluOrtho2D(-380,380,10,-100);
             GL.glMatrixMode(GL.GL_MODELVIEW);
             GL.glLoadIdentity();
-
-            /*float[] ambient= new float[] { 0.5f, 0.5f, 0.5f, 1.0f };
-            float[] diffuse= new float[] { 1,1,1,1 };
-            float[] lightpos=new float[] { 0,0,2,1 };
-
-            GL.glLightfv(GL.GL_LIGHT1,GL.GL_AMBIENT,ambient);
-            GL.glLightfv(GL.GL_LIGHT1,GL.GL_DIFFUSE,diffuse);
-            GL.glLightfv(GL.GL_LIGHT1,GL.GL_POSITION,lightpos);
-            GL.glEnable(GL.GL_LIGHTING);
-            GL.glEnable(GL.GL_LIGHT1);
-            GL.glPointSize(10);*/
 
             GL.glEnable(GL.GL_COLOR_MATERIAL);
 
@@ -104,22 +95,12 @@ namespace StickTest
             InitGL();
 
             model=Ms3dAscii.Load(s);
-
-            transformedvertices=new Vector[model.meshes.Length][];
-            for (int i=0; i<transformedvertices.Length; i++)
-                transformedvertices[i]=new Vector[model.meshes[i].vertices.Length];
-            for (int i=0; i<model.meshes.Length; i++)
-                for (int j=0; j<model.meshes[i].vertices.Length; j++)
-                {
-                    Vertex v=model.meshes[i].vertices[j];
-
-                    transformedvertices[i][j]=new Vector(v.x,v.y,v.z);
-                }
-            UndeformJoint(model.rootbone, Matrix.identity);
+            animstate=new AnimState(model);
+            a2=new AnimState(model);
         }
 
 
-        void Draw(Mesh mesh,int idx)
+        void Draw(Mesh mesh,Vector[] verts)
         {
             /*
              * By far, not the most effective way to do this.
@@ -145,7 +126,7 @@ namespace StickTest
                 for (int i=0; i<3; i++)
                 {
                     Normal n=mesh.normals[tri.n[i]];
-                    Vector v=transformedvertices[idx][tri.i[i]];
+                    Vector v=verts[tri.i[i]];
 
                     Vector normal=m*new Vector(n.x,n.y,n.z);
                     double light=lightvec.Dot(normal); // say it alound "light vec dot dot normal" :D
@@ -159,72 +140,6 @@ namespace StickTest
             GL.glEnd();
 
             GL.glDisable(GL.GL_TEXTURE_1D);
-        }
-
-        void UndeformJoint(Joint j, Matrix parentm)
-        {
-            if (j==null)
-                return;
-
-            Matrix invTrans = Matrix.TranslationMatrix(-j.Position.Base.x,-j.Position.Base.y,-j.Position.Base.z);
-            Matrix invRot = Matrix.RotationMatrix(j.Direction.Base.x,j.Direction.Base.y,j.Direction.Base.z);
-            invRot.Transpose();
-            Matrix m = invRot * invTrans * parentm;
-
-            for (int i=0; i<model.meshes.Length; i++)
-            {
-                Mesh mesh=model.meshes[i];
-
-                for (int k=0; k<mesh.vertices.Length; k++)
-                {
-                    if (mesh.vertices[k].joint==j)
-                    {
-                        Vertex v=mesh.vertices[k];
-                        Vector vec = m*new Vector(v.x,v.y,v.z);
-                        v.x=vec.x;
-                        v.y=vec.y;
-                        v.z=vec.z;
-                    }
-                }
-            }
-
-            foreach (Joint k in j.children)
-            {
-                UndeformJoint(k,m);
-            }
-        }
-
-        void DeformJoint(Joint j,Matrix parentm)
-        {
-            if (j==null)
-                return;
-
-            Matrix m=
-                parentm *
-                Matrix.TranslationMatrix(j.Position.Base.x,j.Position.Base.y,j.Position.Base.z) *
-                Matrix.RotationMatrix(j.Direction.Base.x,j.Direction.Base.y,j.Direction.Base.z) *
-                Matrix.TranslationMatrix(j.Position.Current.x, j.Position.Current.y, j.Position.Current.z) *
-                Matrix.RotationMatrix(j.Direction.Current.x, j.Direction.Current.y, j.Direction.Current.z);
-
-
-            for (int i=0; i<model.meshes.Length; i++)
-            {
-                Mesh mesh=model.meshes[i];
-
-                for (int k=0; k<mesh.vertices.Length; k++)
-                {
-                    if (mesh.vertices[k].joint==j)
-                    {
-                        Vertex v=mesh.vertices[k];
-                        transformedvertices[i][k]=m*new Vector(v.x,v.y,v.z);
-                    }
-                }
-            }
-
-            foreach (Joint k in j.children)
-            {
-                DeformJoint(k,m);
-            }
         }
 
         void Set2D()
@@ -264,6 +179,7 @@ namespace StickTest
 
             GL.glBindTexture(GL.GL_TEXTURE_2D,0);
 
+
             GL.glTranslated(x,y,z);
             GL.glTranslated(modelpos.x,modelpos.y,modelpos.z);
             GL.glRotated(xangle,0,1,0);
@@ -272,7 +188,17 @@ namespace StickTest
 
             int i=0;
             foreach (Mesh m in model.meshes)
-                Draw(m,i++);
+                Draw(m,animstate.GetVerts(i++));
+
+            GL.glLoadIdentity();
+            GL.glTranslated(x,y,z);
+            GL.glRotated(xangle,0,1,0);
+            GL.glRotated(yangle,1,0,0);
+            GL.glRotated(zangle,0,0,1);
+            i=0;
+            foreach (Mesh m in model.meshes)
+                Draw(m,a2.GetVerts(i++));
+
                 
             gl.Context.SwapBuffer();
         }
@@ -285,8 +211,7 @@ namespace StickTest
             {
                 time+=inc;
                 while (time>30) time-=30;
-                model.Animate(inc);
-                DeformJoint(model.rootbone,Matrix.identity);
+                animstate.Animate(inc);
 
                 modelpos.x+=vel;
                 if (modelpos.x>endx) modelpos.x=startx;
@@ -355,25 +280,6 @@ namespace StickTest
 
         public static void Main(string[] args)
         {
-/*            if (args.Length==0)
-            {
-                Matrix.Test();
-                return;
-            }*/
-
-            /*Matrix m1 = Matrix.RotationMatrix(1.5, 0, 0);
-            Matrix m2 = Matrix.RotationMatrix(0, 1.5, 0);
-            Vector v1 = new Vector(1, 0, 0);
-            Vector v2 = (m1 * m2) * v1;
-            Vector v3 = m1 * (m2 * v1);
-            
-            Console.WriteLine(m1);
-            Console.WriteLine(m2);
-            Console.WriteLine(v1);
-            Console.WriteLine(v2);
-            Console.WriteLine(v3);*/
-            //Console.WriteLine(m4);
-
             string s=args.Length>0?args[0]:"walk.ms3d.txt";
             new MainClass(s).Execute();
         }
