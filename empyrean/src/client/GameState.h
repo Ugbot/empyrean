@@ -4,7 +4,6 @@
 #include <gltext.h>
 #include <vector>
 #include "InputManager.h"
-#include "PlayerEntity.h"
 #include "State.h"
 
 namespace pyr {
@@ -30,8 +29,6 @@ namespace pyr {
         Input* _inputQuit;
         
         gltext::FontRendererPtr _renderer;
-        
-        PlayerEntity* _player;
     };
 
 }

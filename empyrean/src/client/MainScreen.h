@@ -30,7 +30,7 @@ namespace pyr {
             WindowPtr buttons = new Window(
                 "Empyrean",
                 new BoxLayout(BoxLayout::VERTICAL));
-            buttons->setPositionAndSize(400, 350, 224, 240);
+            buttons->setPositionAndSize(400, 350, 224, 280);
             buttons->show();
         
             ButtonPtr connect = new Button("Connect to Server");
@@ -39,12 +39,16 @@ namespace pyr {
             ButtonPtr options = new Button("Options");
             options->addListener(this, &MainScreen::onOptions);
             
+            ButtonPtr credits = new Button("Credits");
+            credits->addListener(this, &MainScreen::onCredits);
+            
             ButtonPtr quit = new Button("Quit");
             quit->addListener(this, &MainScreen::onQuit);
 
             add(background);
             buttons->add(connect);
             buttons->add(options);
+            buttons->add(credits);
             buttons->add(quit);
             add(buttons);
         }
@@ -103,6 +107,10 @@ namespace pyr {
             // or not Empyrean is fullscreen.  For now just modify client.cfg.
             
             //getState()->onMainOptions();
+        }
+        
+        void onCredits(const phui::ActionEvent&) {
+            getState()->onMainCredits();
         }
         
         void onQuit(const phui::ActionEvent&) {

@@ -233,6 +233,12 @@
 			Name="states"
 			Filter="">
 			<File
+				RelativePath="..\..\src\client\CreditsState.cpp">
+			</File>
+			<File
+				RelativePath="..\..\src\client\CreditsState.h">
+			</File>
+			<File
 				RelativePath="..\..\src\client\GameState.cpp">
 			</File>
 			<File
@@ -249,6 +255,9 @@
 			</File>
 			<File
 				RelativePath="..\..\src\client\MenuState.h">
+			</File>
+			<File
+				RelativePath="..\..\src\client\State.cpp">
 			</File>
 			<File
 				RelativePath="..\..\src\client\State.h">

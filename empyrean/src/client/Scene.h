@@ -12,7 +12,6 @@ namespace pyr {
 
     class Entity;
     class Texture;
-    class Map;
 
     class Scene {
         PYR_DECLARE_SINGLETON(Scene)
@@ -35,7 +34,6 @@ namespace pyr {
         
         Texture* _backdrop;
         EntityMap _entities;
-        ScopedPtr<Map> _map;
     };
 
 }

@@ -1,4 +1,5 @@
 #include <phui/SDLBridge.h>
+#include "CreditsState.h"
 #include "ConnectingScreen.h"
 #include "ErrorScreen.h"
 #include "GameState.h"
@@ -32,14 +33,9 @@ namespace pyr {
         glDisable(GL_TEXTURE_2D);
         glEnable(GL_BLEND);
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+        
+        setOrthoProjection(1, 1);
     
-        glMatrixMode(GL_PROJECTION);
-        glLoadIdentity();
-        gluOrtho2D(0, 1, 1, 0);
-        
-        glMatrixMode(GL_MODELVIEW);
-        glLoadIdentity();
-        
         glColor4f(0, 0, 0, 1 - fade);
         glBegin(GL_TRIANGLE_FAN);
         glVertex2f(0, 0);
@@ -87,6 +83,10 @@ namespace pyr {
     
     void MenuState::onErrorOK() {
         _screen = _mainScreen;
+    }
+    
+    void MenuState::onMainCredits() {
+        invokeTransition<CreditsState>();
     }
     
     void MenuState::onMainQuit() {

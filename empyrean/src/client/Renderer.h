@@ -6,8 +6,7 @@
 namespace pyr {
     class Model;
 
-    class Renderer
-    {
+    class Renderer {
     protected:
         template <class Shader>
         static void renderMesh(Model& model,Shader shader);
@@ -17,8 +16,7 @@ namespace pyr {
         virtual void useVertexArrays(bool)=0;
     };
 
-    class DefaultRenderer : public Renderer
-    {
+    class DefaultRenderer : public Renderer {
         bool _useVertexArrays;
     public:
         DefaultRenderer();
@@ -27,8 +25,7 @@ namespace pyr {
         virtual void useVertexArrays(bool b);
     };
 
-    class CellShadeRenderer : public Renderer
-    {
+    class CellShadeRenderer : public Renderer {
         struct ShadeTex {
             u32 handle;
             ShadeTex();

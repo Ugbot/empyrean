@@ -15,14 +15,9 @@ namespace pyr {
         glEnable(GL_TEXTURE_2D);
         glEnable(GL_BLEND);
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+        
+        setOrthoProjection(1, 1);
     
-        glMatrixMode(GL_PROJECTION);
-        glLoadIdentity();
-        gluOrtho2D(0, 1, 1, 0);
-        
-        glMatrixMode(GL_MODELVIEW);
-        glLoadIdentity();
-        
         glClear(GL_COLOR_BUFFER_BIT);
         glColor4f(1, 1, 1, 1 - fade);
         _image->drawRectangle(0, 0, 1, 1);

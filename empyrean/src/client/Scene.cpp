@@ -1,6 +1,5 @@
 #include "Entity.h"
 #include "GLUtility.h"
-#include "MapFile.h"
 #include "Scene.h"
 #include "Renderer.h"
 #include "Texture.h"
@@ -11,12 +10,8 @@ namespace pyr {
 
     PYR_DEFINE_SINGLETON(Scene)
 
-    Scene::Scene() 
-        : _backdrop(Texture::create("images/stars.tga"))
-    {
-        //_map = new MapFile;
-        //_map->_terrain.images.push_back(MapFile::Image(0, 220, 400, 80));
-        //_map->addRectangle(0, 220, 400, 300);
+    Scene::Scene() {
+        _backdrop = Texture::create("images/stars.tga");
     }
     
     Scene::~Scene() {
@@ -40,8 +35,6 @@ namespace pyr {
 
         glClear(GL_DEPTH_BUFFER_BIT);
         _backdrop->drawRectangle(0, 0, 400, 300);
-
-        //_map->draw();
         
         glTranslatef(200, 150, 0);
 

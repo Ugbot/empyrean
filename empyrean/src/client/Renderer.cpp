@@ -12,8 +12,7 @@
 #include "Texture.h"
 #include "Types.h"
 
-namespace {
-    using namespace pyr;
+namespace pyr {
 
     /** Render a mesh using OpenGL vertex arrays.
      *
@@ -123,9 +122,8 @@ namespace {
         glDisableClientState(GL_NORMAL_ARRAY);
         glDisable(GL_LIGHTING);
     }
-}
 
-namespace pyr {
+
     /** Main model rendering function
      *
      * The ideal to shoot for is to have this function completely bereft of OpenGL calls.
@@ -193,7 +191,7 @@ namespace pyr {
 
         static const float scale;
 
-        inline void begin() {
+        static void begin() {
             static float ambient[]=  { 0.5f, 0.5f, 0.5f, 1.0f };
             static float diffuse[]=  { 1,1,1,1 };
             static float light[]= {1,0,0};
@@ -207,18 +205,18 @@ namespace pyr {
             glEnable(GL_TEXTURE_2D);
         }
 
-        inline void end() {
+        static void end() {
             glDisable(GL_LIGHTING);
             glDisable(GL_TEXTURE_2D);
         }
 
-        inline void drawVert(float* verts,float* normals,float* texcoords) {
+        static void drawVert(float* verts,float* normals,float* texcoords) {
             glTexCoord2fv(texcoords);
             glNormal3fv(normals);
             glVertex3fv(verts);
         }
 
-        inline void setTex(u32 tex)
+        static void setTex(u32 tex)
         {
             //PYR_ASSERT(tex,"DefaultShade::tex must not be 0!");
             glBindTexture(GL_TEXTURE_2D,tex);
@@ -260,7 +258,7 @@ namespace pyr {
             glEnable(GL_TEXTURE_2D);
         }
 
-        inline void end() {
+        static void end() {
             glActiveTextureARB(GL_TEXTURE1_ARB);
             Texture::unbind();
             glDisable(GL_TEXTURE_1D);
@@ -280,30 +278,27 @@ namespace pyr {
             glVertex3fv(verts);
         }
 
-        inline void setTex(u32 tex)
+        static void setTex(u32 tex)
         {
             //PYR_ASSERT(tex,"CellShade::tex must not be 0!");
             glBindTexture(GL_TEXTURE_2D,tex);
         }
     };
 
-}
-
-namespace pyr {
 
     DefaultRenderer::DefaultRenderer() {
-        _useVertexArrays=false;
+        _useVertexArrays = true;
     }
 
     void DefaultRenderer::draw(Model* m) {
         if (_useVertexArrays)
-            ::renderMesh(*m);
+            pyr::renderMesh(*m);
         else
             renderMesh(*m,DefaultShade());
     }
 
     void DefaultRenderer::useVertexArrays(bool b) {
-        _useVertexArrays=b;
+        _useVertexArrays = b;
     }
 
     CellShadeRenderer::ShadeTex::ShadeTex() {
@@ -330,12 +325,12 @@ namespace pyr {
         }
 #endif
         
-        _useVertexArrays=false;
+        _useVertexArrays = true;
     }
 
     void CellShadeRenderer::draw(Model* m) {
         if (_useVertexArrays)
-            ::renderMesh(*m, true, _shadeTex.handle);
+            pyr::renderMesh(*m, true, _shadeTex.handle);
         else
             renderMesh(*m, CellShade(_shadeTex.handle));
     }

@@ -2,6 +2,7 @@
 #define PYR_SERVER_ENTITY_H
 
 
+#include <algorithm>
 #include <gmtl/Vec.h>
 #include <gmtl/VecOps.h>
 #include "Types.h"
@@ -31,7 +32,8 @@ namespace pyr {
     
         void update(float dt) {
             _pos += _vel * dt;
-            _vel[1] -= 9.81f * dt;
+            //_pos[1] = std::max(0.0f, _pos[1]);
+            //_vel[1] -= 9.81f * dt;
         }
         
     private:

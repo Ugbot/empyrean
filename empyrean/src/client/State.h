@@ -51,6 +51,8 @@ namespace pyr {
             Application::instance().invokeTransition(0);
         }
         
+        void setOrthoProjection(float width, float height);
+        
         void showPointer() { _pointerVisible = true;  }
         void hidePointer() { _pointerVisible = false; }
                

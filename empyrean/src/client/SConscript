@@ -3,6 +3,7 @@ Import('base_env TOOLS')
 SOURCES = Split("""
     Application.cpp
     Configuration.cpp
+    CreditsState.cpp
     GameState.cpp
     InputManager.cpp
     IntroState.cpp
@@ -18,6 +19,7 @@ SOURCES = Split("""
     SDLUtility.cpp
     ServerConnection.cpp
     ServerConnectionThread.cpp
+    State.cpp
 """)
 
 env = base_env.Copy()

@@ -33,26 +33,13 @@ namespace pyr {
         if (!_renderer) {
             throw std::runtime_error("Error opening fonts/Vera.ttf");
         }
-
-        //_player = new PlayerEntity(
-        //    new Model("models/paladin/paladin.cfg"),
-        //    new DefaultRenderer(),
-        //    &_im);
-        //Scene::instance().addEntity(0, _player);
-        
-        // assume already logged in
     }
 
     void GameState::draw(float fade) {
         PYR_PROFILE_BLOCK("GameState::draw");
         
-        glMatrixMode(GL_PROJECTION);
-        glLoadIdentity();
         Application& a = Application::instance();
-        gluOrtho2D(0, a.getWidth(), a.getHeight(), 0);
-        
-        glMatrixMode(GL_MODELVIEW);
-        glLoadIdentity();
+        setOrthoProjection(float(a.getWidth()), float(a.getHeight()));
         
         /*
         glEnable(GL_TEXTURE_2D);
@@ -77,8 +64,7 @@ namespace pyr {
 
         float dx = _inputRight->getValue() - _inputLeft->getValue();
         float dy = 1 - _inputSpace->getValue() * 2;
-        //sc.setVelocity(gmtl::Vec2f(dx * 50, dy * 10));
-        //_player->setVel(gmtl::Vec2f(dx * 50, dy * 10));
+        sc.setVelocity(gmtl::Vec2f(dx * 50, dy * 10));
 
         if (_inputQuit->getValue() >= 0.50f) {
             ServerConnection::instance().disconnect();
