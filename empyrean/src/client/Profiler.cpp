@@ -39,10 +39,8 @@ namespace pyr {
         float t = now - _lastTime;
         float tps = now - _startTime;
 
-        _proc->running.time += t;
-        _proc->running.timePlusChildren += tps;
-        _proc->lastFrame.time += t;
-        _proc->lastFrame.timePlusChildren += tps;
+        _proc->time += t;
+        _proc->timePlusChildren += tps;
         _procHistory.pop();
 
         _totalTime += now - _lastTime;
