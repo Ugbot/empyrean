@@ -90,8 +90,7 @@ base_env.Append(CPPPATH = [Dir('src/base')],
                 LIBPATH = [Dir('src/base')])
 
 if sys.platform == 'cygwin':
-    base_env.Append(CCFLAGS = ['-DCOR_CALL=', '-DWIN32', '-D_WIN32',
-                               '-DCYGWIN'],
+    base_env.Append(CCFLAGS = ['-DWIN32', '-D_WIN32', '-DCYGWIN'],
                     CPPPATH = [Dir('third-party/include')],
                     LIBPATH = [Dir('third-party/lib')])
 

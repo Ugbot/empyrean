@@ -39,10 +39,8 @@ commands before you build:
 Next, you need Corona (<http://corona.sf.net/>) and Audiere
 (<http://audiere.sf.net/>).  Download the Win32 binary releases and
 put the libraries and include files into the third-party directory,
-just like NSPR.  However, this time you have to put both corona.lib
-and corona.dll into lib, renaming corona.lib to libcorona.a.  (NOTE:
-Right now, you don't need Audiere.  But you definitely will
-eventually.)
+just like NSPR.  (NOTE: Right now, you don't need Audiere.  But you
+definitely will eventually.)
 
 FINALLY, you can cd back into the empyrean module, run SCons, and
 watch as all of the executables are compiled into the 'build' directory.
