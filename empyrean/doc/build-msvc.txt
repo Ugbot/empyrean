@@ -1,0 +1,23 @@
+How to build Empyrean with Microsoft Visual Studio.
+----
+
+
+Note: The only supported version of MSVS is VS.NET 2003 (VC7.1).
+
+
+Get wxWindows.  Download the latest wxWindows source code release from
+http://www.wxwindows.org/.  Open the .dsw file in VS.NET 2003 and
+modify include/wx/msw/setup.h so that the OpenGL flag is enabled.
+Just search through the file for OpenGL.  Modify your compiler
+directories so wxWindows can be found.  (Tools | Options | VC++
+Directories or something like that...)
+
+The other third-party dependencies are checked into CVS, so you do not
+need to worry about them.
+
+
+After downloading Empyrean from CVS, open empyrean.sln and build
+away.  Let me know if something doesn't work.
+
+
+aegis@users.sourceforge.net
