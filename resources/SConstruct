@@ -6,12 +6,16 @@ Default(TARGET)
 
 DIRS = Split("""
    images
+   models
+   models/paladin
 """)
 
 WILD = Split("""
    *.png
    *.jpg
    *.jpeg
+   *.raw
+   *.caf *.cfg *.cmf *.crf *.csf
 """)
 
 env = Environment()

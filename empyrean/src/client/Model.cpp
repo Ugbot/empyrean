@@ -108,15 +108,31 @@ namespace pyr {
             }
 
             int result;
-            model.loadCoreSkeleton(path+skeleton);
-            for (u32 i = 0; i < animations.size(); i++)
-                result=model.loadCoreAnimation(path+animations[i]);
 
-            for (u32 i = 0; i < meshes.size(); i++)
-                result=model.loadCoreMesh(path+meshes[i]);
+            try {
+                result=model.loadCoreSkeleton(path+skeleton);
+                if (!result)        throw skeleton;
 
-            for (u32 i = 0; i < materials.size(); i++)
-                result=model.loadCoreMaterial(path+materials[i]);
+                for (u32 i = 0; i < animations.size(); i++) {
+                    result=model.loadCoreAnimation(path+animations[i]);
+                    if (result==-1) throw animations[i];
+                }
+
+                for (u32 i = 0; i < meshes.size(); i++) {
+                    result=model.loadCoreMesh(path+meshes[i]);
+                    if (result==-1) throw meshes[i];
+                }
+
+                for (u32 i = 0; i < materials.size(); i++) {
+                    result=model.loadCoreMaterial(path+materials[i]);
+                    if (result==-1) throw materials[i];
+                }
+            }
+            catch (const std::string& fname) {
+                std::stringstream ss;
+                ss << "CoreModel::loadConfigFile: Unable to load " << path << fname;
+                throw std::runtime_error(ss.str().c_str());
+            }
 
             for (int i=0; i<model.getCoreMaterialCount(); i++) {
                 CalCoreMaterial& material=*model.getCoreMaterial(i);
@@ -128,8 +144,7 @@ namespace pyr {
                 }
             }
 
-            for (int i=0; i<model.getCoreMaterialCount(); i++)
-            {
+            for (int i=0; i<model.getCoreMaterialCount(); i++) {
                 model.createCoreMaterialThread(i);
                 model.setCoreMaterialId(i,0,i);
             }
