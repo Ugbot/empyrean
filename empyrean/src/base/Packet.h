@@ -8,6 +8,7 @@
 #include "RefCounted.h"
 #include "RefPtr.h"
 #include "Types.h"
+#include "Utility.h"
 
 
 namespace pyr {
@@ -82,9 +83,6 @@ namespace pyr {
     #define PYR_CLONE(_)     PYR_CLONE_     ## _
     #define PYR_CONTENTS(_)  PYR_CONTENTS_  ## _
     #define PYR_WRITE_LOG(_) PYR_LOG_       ## _
-
-    /// Nice utility function to stringize the expansion of the argument.
-    #define PYR_STR(name) #name
 
     #define PYR_DECLARE_PACKET(name, id, body)                          \
         class name : public Packet {                                    \

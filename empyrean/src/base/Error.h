@@ -6,11 +6,12 @@
 #include <string>
 
 
-// PYR_EXCEPTION_TRAP defines a block of code that catches all
-// exceptions and converts them into fatal errors.  An exception
-// trap is usually placed around callbacks or entry points, such
-// as wxWindows event handlers or main().
-
+/**
+ * PYR_EXCEPTION_TRAP defines a block of code that catches all
+ * exceptions and converts them into fatal errors.  An exception
+ * trap is usually placed around callbacks or entry points, such
+ * as wxWindows event handlers or main().
+ */
 #define PYR_EXCEPTION_TRAP(block) {                 \
     try {                                           \
         block                                       \

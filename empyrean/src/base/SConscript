@@ -4,6 +4,7 @@ SOURCES = Split("""
     ArmorPool.cpp
     Behavior.cpp
     ByteBuffer.cpp
+    CallStack.cpp
     Canvas.cpp
     Collider.cpp
     CollisionBox.cpp

@@ -64,6 +64,11 @@ if env.get('warningsAsErrors'):
 if env['saveTemps']:
     env.Append(CCFLAGS=['-save-temps'])
 
+# Autoconfiguration.
+conf = env.Configure()
+if conf.CheckHeader('unwind.h'):
+    env.Append(CPPDEFINES=['HAVE_UNWIND_H'])
+
 Export('env')
 
 # Process subdirectories.

@@ -13,6 +13,8 @@ namespace pyr {
 
     class CallStack {
     public:
+        static bool isSupported();
+
         CallStack();
         CallStack(const CallStack& rhs);
         ~CallStack();

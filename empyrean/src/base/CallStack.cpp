@@ -14,7 +14,7 @@
 namespace pyr {
 
     const int MAX_STACK_LENGTH = 16;
-    
+   
 
     PYR_DEFINE_RUNTIME_ERROR(Win32Error);
     
@@ -274,6 +274,10 @@ namespace pyr {
         DWORD64 stack[MAX_STACK_LENGTH];
         Zeroed<size_t> stackLength;
         
+        static bool isSupported() {
+            return true;
+        }
+        
         void get() {
             requireProcessHandle();
             
@@ -388,6 +392,123 @@ namespace pyr {
         }
     };
 
+}
+
+#elif defined(HAVE_EXECINFO_H)
+
+#include <execinfo.h>
+
+namespace pyr {
+
+    const int MAX_STACK_LENGTH = 16;
+
+    struct CallStack::Impl {
+        void* array[MAX_STACK_LENGTH];
+        int length;
+
+        void get() {
+            length = backtrace(array, MAX_STACK_LENGTH);
+        }
+
+        std::string asString() const {
+            char** symbols = backtrace_symbols(array, length);
+            if (symbols) {
+                std::string rv;
+                for (int i = 0; i < length; ++i) {
+                    rv += symbols[i];
+                    rv += '\n';
+                }
+                return rv;
+            } else {
+                return "";
+            }
+        }
+    };
+
+}
+
+#elif defined(HAVE_UNWIND_H)
+
+#include <unwind.h>
+
+namespace pyr {
+
+    const int MAX_STACK_LENGTH = 16;
+
+    struct CallStack::Impl {
+        _Unwind_Ptr stack[MAX_STACK_LENGTH];
+        int length;
+
+        static bool isSupported() {
+            return true;
+        }
+
+        Impl() {
+            length = 0;
+        }
+
+        void get() {
+            length = 0;
+            _Unwind_Backtrace(staticTrace, this);
+        }
+
+        std::string asString() const {
+            std::ostringstream os;
+            for (int i = 0; i < length; ++i) {
+                os << stack[i] << '\n';
+            }
+            return os.str();
+        }
+
+        _Unwind_Reason_Code trace(_Unwind_Context* ctx) {
+            if (length < MAX_STACK_LENGTH) {
+                stack[length++] = _Unwind_GetIP(ctx);
+                return _URC_CONTINUE_UNWIND;
+            } else {
+                return _URC_END_OF_STACK;
+            }
+        }
+
+        static _Unwind_Reason_Code staticTrace(
+            _Unwind_Context* ctx, void* opaque
+        ) {
+            Impl* This = static_cast<Impl*>(opaque);
+            return This->trace(ctx);
+        }
+    };
+
+}
+
+#else    // NULL IMPLEMENTATION
+
+namespace pyr {
+
+    struct CallStack::Impl {
+        static bool isSupported() {
+            return false;
+        }
+
+        void get() {
+        }
+
+        std::string asString() const {
+            return "";
+        }
+    };
+
+}
+
+#endif
+
+
+// CallStack common class implementation...  defers most of the work
+// to Impl.
+
+namespace pyr {
+
+    bool CallStack::isSupported() {
+        return Impl::isSupported();
+    }
 
     CallStack::CallStack() {
         _impl = new Impl;
@@ -396,7 +517,6 @@ namespace pyr {
     
     CallStack::CallStack(const CallStack& rhs) {
         _impl = new Impl(*rhs._impl);
-        _impl->get();
     }
     
     CallStack::~CallStack() {
@@ -404,12 +524,9 @@ namespace pyr {
     }
     
     CallStack& CallStack::operator=(const CallStack& rhs) {
-        if (&rhs == this) {
-            return *this;
+        if (&rhs != this) {
+            *_impl = *rhs._impl;
         }
-        
-        *_impl = *rhs._impl;
-        
         return *this;
     }
     
@@ -418,22 +535,3 @@ namespace pyr {
     }
 
 }
-
-#else
-
-// NO IMPLEMENTATION
-// This is okay for now, since only the MSVC leak checker needs the CallStack.
-
-namespace pyr {
-    CallStack::CallStack() {
-    }
-    
-    CallStack::~CallStack() {
-    }
-    
-    std::string CallStack::asString() const {
-        return "";
-    }
-}
-
-#endif

@@ -11,8 +11,8 @@
 
 #if defined(DEBUG) || defined(_DEBUG)
 
-    #ifdef _MSC_VER
-
+    #if defined(_MSC_VER)
+    
         #ifndef STRICT
             #define STRICT
         #endif
@@ -25,10 +25,34 @@
 
         #include <windows.h>
 
-        void pyr::showMessageBox(const char* text, const char* caption) {
-            MessageBoxA(NULL, text, caption, MB_OK);
+        void pyr::showAssertMessage(
+            const char* condition,
+            const char* label,
+            const char* file,
+            const char* line
+        ) {
+            std::ostringstream os;
+            os << "Label: " << label
+               << "\nExpression: " << condition
+               << "\nFile: " << file
+               << "\nLine: " << line
+               << "\n\nCallStack:\n" << CallStack().asString();
+            
+            MessageBoxA(NULL, os.str().c_str(), "Empyrean: Assertion Failed", MB_OK);
         }
-
+        
+    #else
+    
+        void pyr::showAssertMessage(
+            const char* condition,
+            const char* label,
+            const char* file,
+            const char* line
+        ) {
+            if (CallStack::isSupported()) {
+                printf("Call Stack:\n%s\n", CallStack().asString().c_str());
+            }
+        }
 
     #endif
 
