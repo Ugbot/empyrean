@@ -30,12 +30,6 @@ namespace pyr {
         typedef std::map<u16, ClientEntity*> EntityMap;
         void collideWithOthers(EntityMap entities);
 
-        u16& getJumping()                    { return _jumping; }
-        const u16& getJumping()     const    { return _jumping; }
-
-        bool jump();
-        bool attack();
-        
     private:
         typedef void (GameEntity::*StateHandler)(float dt);
         StateHandler _state;

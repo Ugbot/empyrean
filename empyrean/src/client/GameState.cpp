@@ -61,8 +61,7 @@ namespace pyr {
                 glColor3f(1, 1, 1);
                 GLTEXT_STREAM(_renderer)
                     << "Position: " << entity->getPos() << "\n"
-                    << "Velocity: " << entity->getVel() << "\n"
-                    << "Jumping: " << entity->getJumping();
+                    << "Velocity: " << entity->getVel();
                 glPopMatrix();
             }
         }
@@ -147,22 +146,12 @@ namespace pyr {
 
         // jump!
         if (_inputJoyJump->getDelta() > gmtl::GMTL_EPSILON) {
-            GameEntity* gentity = dynamic_cast<GameEntity*>(the<Scene>().getFocus());
-            if(gentity) {
-                if(gentity->jump()) {
-                    sc.sendEvent("Jump");
-                }
-            }
+            sc.sendEvent("Jump");
         }
         
         // attack!
         if (_inputJoyAttack->getDelta() > gmtl::GMTL_EPSILON) {
-            GameEntity* gentity = dynamic_cast<GameEntity*>(the<Scene>().getFocus());
-            if(gentity) {
-                if(gentity->attack()) {
-                    sc.sendEvent("Attack");
-                }
-            }
+            sc.sendEvent("Attack");
         }
 
         // Start

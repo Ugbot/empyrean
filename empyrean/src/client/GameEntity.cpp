@@ -3,6 +3,7 @@
 #include <cal3d/cal3d.h>
 
 #include "Collider.h"
+#include "Constants.h"
 #include "GLUtility.h"
 #include "Input.h"
 #include "InputManager.h"
@@ -14,8 +15,6 @@
 #include "VecMath.h"
 #include "Log.h"
 
-const int FALLING_SPEED = 0;
-
 namespace pyr {
 
     GameEntity::GameEntity()
@@ -26,8 +25,6 @@ namespace pyr {
         // initialize other values
         _jumpStart = false;
         _attackStart = false;
-        //getHeight() = 1.9f;
-        //getWidth() = 0.3f;
         startStandState();
     }
 
@@ -46,8 +43,6 @@ namespace pyr {
 
 /*
         // Render player bounding box [debugging].
-        float height = 1.9f;
-        float width = 0.3f;
 
         glBegin(GL_LINE_LOOP);
         glVertex2f(-width/2,0);
@@ -83,23 +78,25 @@ namespace pyr {
         Vec2f origPos = getPos();
 
         getPos() += getVel() * dt;
-        getVel()[1] -= 9.81f * dt;             // gravity
-        if(getVel()[1] < -56) {                // terminal velocity
-            getVel()[1] = -56;
+        getVel()[1] += constants::GRAVITY * dt;             // gravity
+        if(getVel()[1] < -constants::TERMINAL_VELOCITY) {                // terminal velocity
+            getVel()[1] = -constants::TERMINAL_VELOCITY;
         }
 
+#if 0
         // For testing to see if jumping is done
         Vec2f precollideposition = getPos();
         Vec2f precollidevelocity = getVel();
 
-        //_lastCD = collide(dt, origPos, getPos(), getVel(), getWidth(), getHeight(), terrain);
+        _lastCD = collide(dt, origPos, getPos(), getVel(), getBounds(), terrain);
 
         // If you are higher than you once were so you were forced up and you were falling
         // (before the collision) This means that you hit a surface below you so therefore
         // reset jumping
         if((precollideposition[1]-getPos()[1]) < 0 && precollidevelocity[1] < FALLING_SPEED) {
-             getJumping() = 0;
+             _jumping = 0;
         }
+#endif
 
         if (_state) {
             (this->*_state)(dt);
@@ -122,6 +119,7 @@ namespace pyr {
         }
     }
 
+/*
     // Action Functions
     bool GameEntity::jump() {
          if(getJumping() < 2) {
@@ -141,7 +139,7 @@ namespace pyr {
         _attackStart = true;
         return true;
     }
-
+*/
     // Utitlity Animation functions
     void GameEntity::phaseOutAnimation(Animation name) {
         //_model->getModel().getMixer()->clearCycle((int) name, 0.1f);
@@ -171,6 +169,7 @@ namespace pyr {
     // Purpose: Attacking animation
     //
     void GameEntity::updateAttackState(float dt) {
+        /*
         float xvel = getVel()[0];
         _attackingStartTime += dt;
         if(_attackingStartTime > 2.0) {
@@ -189,6 +188,7 @@ namespace pyr {
                 startStandState();
             }
         }
+        */
         
         //correctDirection(xvel);
     }
@@ -207,6 +207,7 @@ namespace pyr {
     // Purpose: Main Part of Jump Animation
     //
     void GameEntity::updateJumpState(float dt) {
+        /*
         float xvel = getVel()[0];
         if(_attackStart) {
             phaseOutAnimation(JUMPING);
@@ -226,6 +227,7 @@ namespace pyr {
             }
         }
         correctDirection(xvel);
+        */
     }
 
     // Jump start state transition in

@@ -3,6 +3,7 @@
 
 
 #include "Behavior.h"
+#include "Utility.h"
 
 
 namespace pyr {
@@ -19,6 +20,11 @@ namespace pyr {
         const char* getResource() {
             return "";
         }
+
+        void handleEvent(Entity* entity, const std::string& event);
+
+    private:
+        Zeroed<int> _jumping;
     };
 
 }

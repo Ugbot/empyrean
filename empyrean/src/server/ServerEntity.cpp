@@ -13,7 +13,7 @@ namespace pyr {
             Vec2f origPos = _pos;
 
             _pos += _vel * dt;
-            _vel[1] -= 9.81f * dt;                       // gravity
+            _vel[1] += constants::GRAVITY * dt;                       // gravity
             if(_vel[1] < constants::TERMINAL_VELOCITY) { // terminal velocity
                 _vel[1] = constants::TERMINAL_VELOCITY;
             }

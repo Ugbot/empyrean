@@ -3,6 +3,7 @@
 #include "Game.h"
 #include "MapLoader.h"
 #include "PacketTypes.h"
+#include "PlayerBehavior.h"
 #include "ServerAppearance.h"
 #include "ServerEntity.h"
 
@@ -95,29 +96,31 @@ namespace pyr {
     }
 
     void Game::connectionAdded(Connection* connection) {
+        PlayerBehavior* pb = new PlayerBehavior("");
         ServerEntity* entity = new ServerEntity(
             _idGenerator.reserve(),
-            instantiateBehavior("player"),
+            pb,
             new ServerAppearance("cal3d", "models/paladin/paladin.cfg"));
         entity->setPos(_startPosition);
-        // Hardcoded for now.  Hardcoded in the server as well.
+        // Hardcoded for now.  Hardcoded in the client as well.
         float width  = 0.3f;
         float height = 1.9f;
         entity->setBounds(BoundingRectangle(Vec2f(-width / 2, 0), Vec2f(width / 2, height)));
 
         sendAll(buildEntityAddedPacket(entity));
 
-        // set connection-specific data
+        // Set connection-specific data.
         ConnectionData* cd = new ConnectionData;
         cd->playerEntity = entity;
+        cd->behavior = pb;
         setData(connection, cd);
 
-        // add packet handlers
+        // Add packet handlers.
         connection->definePacketHandler(this, &Game::handlePlayerEvent);
 
         addEntity(entity);
 
-        // send all existing entities to the new connection
+        // Send all existing entities to the new connection.
         for (size_t i = 0; i < _entities.size(); ++i) {
             connection->sendPacket(buildEntityAddedPacket(_entities[i]));
         }
@@ -136,6 +139,7 @@ namespace pyr {
         _idGenerator.release(cd->playerEntity->getID());
         removeEntity(cd->playerEntity);
         delete cd->playerEntity;
+        // Don't need to delete the behavior, because the entity does that for us.
         delete cd;
 
         connection->clearHandlers();
@@ -144,29 +148,9 @@ namespace pyr {
 
     void Game::handlePlayerEvent(Connection* c, PlayerEventPacket* p) {
         ConnectionData* cd = getData(c);
-        ServerEntity* entity = cd->playerEntity;
-
-        const float jumpSpeed = 8;
-        const float speed = 2;
-
-        if (p->event() == "Begin Right") {
-            entity->getVel()[0] = speed;
-        }
-                
-        if (p->event() == "Begin Left") {
-            entity->getVel()[0] = -speed;
-        }
-             
-        if (p->event() == "End Right" || p->event() == "End Left") {
-            entity->getVel()[0] = 0;
-        }
-                
-        if (p->event() == "Jump") {
-            entity->getVel()[1] = jumpSpeed;
-        }
-                
-        if (p->event() == "Attack") {
-        }
+        PlayerBehavior* behavior = cd->behavior;
+        Entity* entity = cd->playerEntity;
+        behavior->handleEvent(entity, p->event());
     }
     
 }

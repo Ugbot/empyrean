@@ -46,6 +46,7 @@ namespace pyr {
          * Add a reference to the internal reference count.
          */
         void ref() {
+            PYR_ASSERT(_refCount >= 0, "_refCount is less than zero in ref()!");
             ++_refCount;
         }
 
@@ -54,8 +55,7 @@ namespace pyr {
          * reaches 0, the object is destroyed.
          */
         void unref() {
-            PYR_ASSERT(_refCount > 0, "_refCount is less than zero in unref()!");
-
+            PYR_ASSERT(_refCount > 0, "_refCount is less than or equal to zero in unref()!");
             if (--_refCount == 0) {
                 delete this;
             }

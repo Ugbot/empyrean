@@ -12,6 +12,7 @@
 namespace pyr {
 
     class EntityAddedPacket;
+    class PlayerBehavior;
     class PlayerEventPacket;
     class ServerEntity;
 
@@ -28,6 +29,7 @@ namespace pyr {
     private:
         struct ConnectionData {
             ServerEntity* playerEntity;
+            PlayerBehavior* behavior;
         };
 
         static void setData(Connection* c, ConnectionData* cd);
