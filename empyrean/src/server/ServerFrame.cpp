@@ -1,3 +1,4 @@
+#include "Log.h"
 #include "Server.h"
 #include "ServerFrame.h"
 
@@ -62,13 +63,15 @@ namespace pyr {
     }
     
     void ServerFrame::onStart() {
-        log("Starting...");
+        logMessage("Starting...");
         wxGetApp().start();
+        logMessage("Started");
     }
     
     void ServerFrame::onStop() {
-        log("Stopping...");
+        logMessage("Stopping...");
         wxGetApp().stop();
+        logMessage("Stopped");
     }
     
     void ServerFrame::onRestart() {

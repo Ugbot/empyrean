@@ -20,7 +20,7 @@
 				Name="VCCLCompilerTool"
 				Optimization="0"
 				AdditionalIncludeDirectories="../../third-party-vc7/include"
-				PreprocessorDefinitions="WIN32;_DEBUG;_LIB;NOMINMAX"
+				PreprocessorDefinitions="WIN32;WIN32_LEAN_AND_MEAN;_DEBUG;_LIB;NOMINMAX"
 				MinimalRebuild="TRUE"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
@@ -65,7 +65,7 @@
 				InlineFunctionExpansion="1"
 				OmitFramePointers="TRUE"
 				AdditionalIncludeDirectories="../../third-party-vc7/include"
-				PreprocessorDefinitions="WIN32;NDEBUG;_LIB;NOMINMAX"
+				PreprocessorDefinitions="WIN32;WIN32_LEAN_AND_MEAN;NDEBUG;_LIB;NOMINMAX"
 				StringPooling="TRUE"
 				RuntimeLibrary="2"
 				EnableFunctionLevelLinking="TRUE"
@@ -133,12 +133,6 @@
 				RelativePath="..\..\src\base\Connection.h">
 			</File>
 			<File
-				RelativePath="..\..\src\base\EntityAddedPacket.h">
-			</File>
-			<File
-				RelativePath="..\..\src\base\EntityRemovedPacket.h">
-			</File>
-			<File
 				RelativePath="..\..\src\base\Error.cpp">
 			</File>
 			<File
@@ -149,15 +143,6 @@
 			</File>
 			<File
 				RelativePath="..\..\src\base\extgl.h">
-			</File>
-			<File
-				RelativePath="..\..\src\base\LoginPacket.cpp">
-			</File>
-			<File
-				RelativePath="..\..\src\base\LoginPacket.h">
-			</File>
-			<File
-				RelativePath="..\..\src\base\LoginResponsePacket.h">
 			</File>
 			<File
 				RelativePath="..\..\src\base\LokiTypeInfo.h">
@@ -223,9 +208,6 @@
 				RelativePath="..\..\src\base\Types.h">
 			</File>
 			<File
-				RelativePath="..\..\src\base\UpdatePacket.h">
-			</File>
-			<File
 				RelativePath="..\..\src\base\Utility.cpp">
 			</File>
 			<File
@@ -239,6 +221,34 @@
 			</File>
 			<File
 				RelativePath="..\..\src\base\wx.h">
+			</File>
+		</Filter>
+		<Filter
+			Name="packets"
+			Filter="">
+			<File
+				RelativePath="..\..\src\base\EntityAddedPacket.h">
+			</File>
+			<File
+				RelativePath="..\..\src\base\EntityRemovedPacket.h">
+			</File>
+			<File
+				RelativePath="..\..\src\base\LoginPacket.cpp">
+			</File>
+			<File
+				RelativePath="..\..\src\base\LoginPacket.h">
+			</File>
+			<File
+				RelativePath="..\..\src\base\LoginResponsePacket.h">
+			</File>
+			<File
+				RelativePath="..\..\src\base\PingPacket.h">
+			</File>
+			<File
+				RelativePath="..\..\src\base\PlayerStatePacket.h">
+			</File>
+			<File
+				RelativePath="..\..\src\base\UpdatePacket.h">
 			</File>
 		</Filter>
 	</Files>

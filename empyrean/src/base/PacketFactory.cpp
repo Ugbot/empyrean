@@ -4,6 +4,7 @@
 #include "EntityRemovedPacket.h"
 #include "LoginPacket.h"
 #include "LoginResponsePacket.h"
+#include "PingPacket.h"
 #include "PlayerStatePacket.h"
 #include "UpdatePacket.h"
 
@@ -15,7 +16,8 @@ namespace pyr {
         registerType<EntityRemovedPacket>();
         registerType<LoginPacket>();
         registerType<LoginResponsePacket>();
-	registerType<PlayerStatePacket>();
+        registerType<PingPacket>();
+        registerType<PlayerStatePacket>();
         registerType<UpdatePacket>();
     }
     

@@ -1,4 +1,5 @@
 #include "Error.h"
+#include "Log.h"
 #include "Server.h"
 #include "ServerFrame.h"
 #include "ServerThread.h"
@@ -22,7 +23,7 @@ namespace pyr {
             _frame = new ServerFrame();
             _frame->Show(true);
 
-            log("Welcome to Empyrean!");
+            logMessage("Welcome to Empyrean!");
             return true;
         
         PYR_END_EXCEPTION_TRAP()

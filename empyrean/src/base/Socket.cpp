@@ -54,10 +54,19 @@ namespace pyr {
      */
     int Socket::read(void* buffer, int size, float timeout) {
         int result = PR_Recv(_socket, buffer, size, 0, secondsToInterval(timeout));
-	if (result == -1 && PR_GetError() == PR_IO_TIMEOUT_ERROR) {
-	    return 0;
+        PRErrorCode error = PR_GetError();
+        
+        if (result == 0) {
+            return -1;
+        } else if (result == -1) {
+            if (error == PR_IO_TIMEOUT_ERROR) {
+	        return 0;
+	    } else {
+	        return -1;
+	    }
+	} else {
+	    return result;
 	}
-	return result;
     }
     
     int Socket::write(const void* buffer, int size) {
