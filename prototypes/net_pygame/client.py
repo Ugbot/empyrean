@@ -27,10 +27,16 @@ class Vec:
 class Entity:
     # id
     # pos
+    # vel
 
     def __init__(self, id, pos):
         self.id = id
         self.pos = pos
+        self.vel = Vec(0, 0)
+
+    def update(self, dt):
+        self.pos.x += self.vel.x * dt
+        self.pos.y += self.vel.y * dt
 
 
 class NetworkThread(threading.Thread):
@@ -133,13 +139,14 @@ class Client:
         self.connection = ServerConnection()
 
         while 1:
-            dt = clock.tick(60)
+            dt = float(clock.tick(60)) / 1000
 
             if self.process_events():
                 break
             if self.process_packets():
                 break
 
+            self.update(dt)
             self.draw()
             pygame.display.flip()
 
@@ -187,7 +194,10 @@ class Client:
                 id = int(args[0])
                 x = float(args[1])
                 y = float(args[2])
+                vx = float(args[3])
+                vy = float(args[4])
                 self.others[id].pos = Vec(x, y)
+                self.others[id].vel = Vec(vx, vy)
             elif command == "added":
                 id = int(args[0])
                 x = float(args[1])
@@ -196,6 +206,10 @@ class Client:
             elif command == "removed":
                 id = int(args[0])
                 del self.others[id]
+
+    def update(self, dt):
+        for o in self.others.values():
+            o.update(dt)
 
     def draw(self):
         self.screen.fill(0)

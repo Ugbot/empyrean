@@ -16,9 +16,11 @@ class World:
 
     def update(self, dt):
         l = ScopedLock(self.lock)
-        
+
         for c in self.connections:
             c.update(dt)
+        for c in self.connections:
+            c.process_packets()
         for c in self.connections:
             c.broadcast(self.connections)
 
@@ -57,6 +59,10 @@ def bound(value, n, x):
 
 class ConnectionThread(threading.Thread):
     # socket
+
+    lock = threading.Lock()
+    packets = []
+
     # id
 
     logged_in = 0
@@ -68,6 +74,8 @@ class ConnectionThread(threading.Thread):
 
     last_x = 0.0
     last_y = 0.0
+    last_vx = 0.0
+    last_vy = 0.0
 
     def __init__(self, socket):
         threading.Thread.__init__(self)
@@ -96,13 +104,27 @@ class ConnectionThread(threading.Thread):
             if eol_index != -1:
                 line = data[0:eol_index]
                 data = data[eol_index+1:]
-                if self.process_packet(line):
+                if self.queue_packet(line):
                     break
 
         world.remove_connection(self)
 
         print 'Disconnecting...'
         self.socket.close()
+
+    def queue_packet(self, packet):
+        if packet == "logout":
+            return 1
+        self.lock.acquire()
+        self.packets.append(packet)
+        self.lock.release()
+
+    def process_packets(self):
+        self.lock.acquire()
+        for p in self.packets:
+            self.process_packet(p)
+        self.packets = []
+        self.lock.release()
 
     def process_packet(self, packet):
         print "Processing packet: %s" % repr(packet)
@@ -133,10 +155,14 @@ class ConnectionThread(threading.Thread):
         self.x = bound(self.x + self.vx * dt, -1.5, 1.5)
         self.y = bound(self.y + self.vy * dt, -1.5, 1.5)
 
+        self.last_vx = self.vx
+        self.last_vy = self.vy
+
     def broadcast(self, connections):
         for c in connections:
-            if c.x != c.last_x or c.y != c.last_y:
-                self.send("update %d %f %f" % (c.id, c.x, c.y))
+            if c.x != c.last_x or c.y != c.last_y or c.vx != c.last_vx or c.vy != c.last_vy:
+                self.send("update %d %f %f %f %f" %
+                          (c.id, c.x, c.y, c.vx, c.vy))
 
 
 class ListenerThread(threading.Thread):
