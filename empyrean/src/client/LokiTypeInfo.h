@@ -19,7 +19,7 @@
 #define PYR_TYPE_INFO_H
 
 #include <typeinfo>
-#include "Assert.h"
+#include "Debug.h"
 
 namespace pyr {
 

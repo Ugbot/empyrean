@@ -1,7 +1,16 @@
 #ifndef PYR_UTILITY_H
 #define PYR_UTILITY_H
 
+
+#include <gmtl/Vec.h>
+#include <SDL_opengl.h>
+
+
 namespace pyr {
+
+    inline void glTranslate(const gmtl::Vec2f& vec) {
+        glTranslatef(vec[0], vec[1], 0);
+    }
 
     /**
      * Loki's Type2Type.
@@ -10,6 +19,7 @@ namespace pyr {
     struct Type2Type {
         typedef T OriginalType;
     };
+
 
     /**
      * This smart pointer is roughly analogous to boost's scoped_ptr.

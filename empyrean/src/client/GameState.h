@@ -2,6 +2,8 @@
 #define PYR_GAME_STATE_H
 
 
+#include <vector>
+#include "Entity.h"
 #include "InputManager.h"
 #include "State.h"
 
@@ -26,6 +28,8 @@ namespace pyr {
         Input* _inputLeft;
         Input* _inputRight;
         Input* _inputQuit;
+        
+        std::vector<Entity*> _entities;
         
         float _rotation;
     };

@@ -33,23 +33,32 @@ namespace pyr {
         glMatrixMode(GL_MODELVIEW);
         glLoadIdentity();
         
-        float x = _inputX->getValue() * 4;
-        float y = _inputY->getValue() * 3;
-        glTranslatef(x, y, 0);
+        glPushMatrix();
+            float x = _inputX->getValue() * 4;
+            float y = _inputY->getValue() * 3;
+            glTranslatef(x, y, 0);
+            
+            glRotatef(_rotation, 0, 0, 1);
+            
+            float scale = fade * 10 + 1;
+            glScalef(scale, scale, scale);
+            
+            glBegin(GL_QUADS);
+            glColor3f(1, 0, 0); glVertex2f(-0.5f, -0.5f);
+            glColor3f(0, 1, 0); glVertex2f(-0.5f,  0.5f);
+            glColor3f(0, 0, 1); glVertex2f( 0.5f,  0.5f);
+            glColor3f(1, 0, 1); glVertex2f( 0.5f, -0.5f);
+            glEnd();
+        glPopMatrix();
         
-        glRotatef(_rotation, 0, 0, 1);
-        
-        float scale = fade * 10 + 1;
-        glScalef(scale, scale, scale);
-        
-        glBegin(GL_QUADS);
-        glColor3f(1, 0, 0); glVertex2f(-0.5f, -0.5f);
-        glColor3f(0, 1, 0); glVertex2f(-0.5f,  0.5f);
-        glColor3f(0, 0, 1); glVertex2f( 0.5f,  0.5f);
-        glColor3f(1, 0, 1); glVertex2f( 0.5f, -0.5f);
-        glEnd();
+        for (unsigned i = 0; i < _entities.size(); ++i) {
+            glPushMatrix();
+            glTranslate(_entities[i]->getPos());
+            _entities[i]->draw();
+            glPopMatrix();
+        }
     }
-    
+        
     void GameState::update(float dt) {
         _im.update(dt);
         _rotation += _inputLeft->getValue()  * dt * 50;
