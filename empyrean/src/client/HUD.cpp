@@ -1,5 +1,4 @@
 #include "HUD.h"
-#include "GameEntity.h"
 #include "GLUtility.h"
 #include "OpenGL.h"
 #include "Player.h"
@@ -8,28 +7,28 @@
 namespace pyr {
     PYR_DEFINE_SINGLETON(HUD)
 
-        HUD::HUD() {
-            // Initialize HUD values
-            _barRadius = 20.0f;
-            _barLongStraight = 50.0f;
-            _barShortStraight = 5.0f;
-            _barHeight = 6.0f;
-            _numSegsInCurves = 30;
-            _barBufferX = 10;
-            _barBufferY = 10;
-            _barBuffer = 3;
-            _barPathLength = _barShortStraight+PI*_barRadius+_barLongStraight;
- 
-            calcBar();
-            PYR_ASSERT(_vertsRight.size() == _vertsLeft.size(),
-                       "Improper construction of HUD bar!");
+    HUD::HUD() {
+        // Initialize HUD values
+        _barRadius = 20.0f;
+        _barLongStraight = 50.0f;
+        _barShortStraight = 5.0f;
+        _barHeight = 6.0f;
+        _numSegsInCurves = 30;
+        _barBufferX = 10;
+        _barBufferY = 10;
+        _barBuffer = 3;
+        _barPathLength = _barShortStraight+PI*_barRadius+_barLongStraight;
 
-            // Load the character thumbnail
-            _thumbWidth = _ethCenter[0]-_vitCenter[0]-2*(_barShortStraight+3);
-            _thumbHeight = _ethCenter[1]-_vitCenter[1]+2*(_barRadius-_barHeight/2.0f-3);
-            _thumbnail = Texture::create("images/MikeThumbnail.jpg");
-        }
-        
+        calcBar();
+        PYR_ASSERT(_vertsRight.size() == _vertsLeft.size(),
+                "Improper construction of HUD bar!");
+
+        // Load the character thumbnail
+        _thumbWidth = _ethCenter[0]-_vitCenter[0]-2*(_barShortStraight+3);
+        _thumbHeight = _ethCenter[1]-_vitCenter[1]+2*(_barRadius-_barHeight/2.0f-3);
+        _thumbnail = Texture::create("images/MikeThumbnail.jpg");
+    }
+
     void HUD::draw(gltext::FontRendererPtr rend, Player& player) {
         int vitality, ether, maxVitality, maxEther;
         player.getVitalityUpdate(vitality,maxVitality);

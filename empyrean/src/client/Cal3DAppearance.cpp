@@ -10,14 +10,15 @@ namespace pyr {
     }
 
     void Cal3DAppearance::sendCommand(const std::string& command) {
-        if (command == "Begin Left") {
+        if (command == "Face Left") {
             _direction = 90;
-        } else if (command == "Begin Right") {
+        } else if (command == "Face Right") {
             _direction = -90;
         }
     }
 
     void Cal3DAppearance::beginAnimation(const std::string& animation) {
+        _model->executeAction(animation, 1.0f, 0.1f, 0.1f);
     }
 
     void Cal3DAppearance::beginAnimationCycle(const std::string& animation) {

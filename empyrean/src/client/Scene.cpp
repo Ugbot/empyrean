@@ -1,6 +1,5 @@
 #include <stdexcept>
 #include "ClientEntity.h"
-#include "GameEntity.h"
 #include "GLUtility.h"
 #include "MapLoader.h"
 #include "MapRenderer.h"

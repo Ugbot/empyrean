@@ -39,6 +39,11 @@ namespace pyr {
         if (precollidePosition[1] < pos[1] &&
             precollideVelocity[1] < FALLING_SPEED) {
              _jumping = 0;
+             if (entity->getVel()[0] == 0) {
+                beginAnimationCycle(entity, "idle");
+             } else {
+                beginAnimationCycle(entity, "walk");
+             }
         }
     }
 
@@ -48,13 +53,13 @@ namespace pyr {
 
         if (event == "Begin Right") {
             entity->getVel()[0] = speed;
-            sendAppearanceCommand(entity, "Begin Left");
+            sendAppearanceCommand(entity, "Face Left");
             beginAnimationCycle(entity, "walk");
         }
 
         if (event == "Begin Left") {
             entity->getVel()[0] = -speed;
-            sendAppearanceCommand(entity, "Begin Right");
+            sendAppearanceCommand(entity, "Face Right");
             beginAnimationCycle(entity, "walk");
         }
 
@@ -67,10 +72,12 @@ namespace pyr {
             if (_jumping < 2) {
                 entity->getVel()[1] = jumpSpeed;
                 ++_jumping;
+                beginAnimationCycle(entity, "strut");
             }
         }
 
         if (event == "Attack") {
+            beginAnimation(entity, "attack");
         }
     }
 

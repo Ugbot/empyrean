@@ -1,5 +1,4 @@
 #include <stdexcept>
-#include "GameEntity.h"
 #include "GameState.h"
 #include "GLUtility.h"
 #include "Input.h"
@@ -51,7 +50,7 @@ namespace pyr {
 
         the<HUD>().draw(_renderer, _player);
 
-        if (GameEntity* entity = dynamic_cast<GameEntity*>(scene.getFocus())) {
+        if (Entity* entity = scene.getFocus()) {
             if (_showPlayerData) {
                 Application& app = the<Application>();
                 glEnable(GL_BLEND);
@@ -98,19 +97,19 @@ namespace pyr {
         } else if (_inputRight->getDelta() < -gmtl::GMTL_EPSILON) {
             sc.sendEvent("End Right");
         }
-        
+
         // move to the left!
         if (_inputLeft->getDelta() > gmtl::GMTL_EPSILON) {
             sc.sendEvent("Begin Left");
         } else if (_inputLeft->getDelta() < -gmtl::GMTL_EPSILON) {
             sc.sendEvent("End Left");
         }
-        
+
         // jump!
         if (_inputJump->getDelta() > gmtl::GMTL_EPSILON) {
             sc.sendEvent("Jump");
         }
-        
+
         // attack!
         if (_inputAttack->getDelta() > gmtl::GMTL_EPSILON) {
             sc.sendEvent("Attack");

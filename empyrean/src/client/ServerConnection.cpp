@@ -1,6 +1,6 @@
 #include "AppearanceFactory.h"
+#include "ClientEntity.h"
 #include "Connection.h"
-#include "GameEntity.h"
 #include "Model.h"
 #include "PacketTypes.h"
 #include "Renderer.h"
