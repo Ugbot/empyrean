@@ -6,7 +6,7 @@ using namespace boost::python;
 
 namespace pyr {
     void initBindings() {
-	bindBehavior();
+        bindBehavior();
         bindLog();
     }
 }
