@@ -4,7 +4,7 @@
 #include "Error.h"
 #include "Mutex.h"
 #include "Thread.h"
-
+#include "Log.h"
 
 namespace pyr {
 
@@ -43,12 +43,19 @@ namespace pyr {
     
     void Thread::stop(bool interrupt) {
         if (!_stopped) {
-            PR_AtomicSet(&_shouldQuit, 1);
+			writeLog("Stop line 1");
+			PR_AtomicSet(&_shouldQuit, 1);
+			writeLog("Stop line 2");
             if (interrupt) {
+				writeLog("Stop line 3");
                 PR_Interrupt(_thread);
+				writeLog("Stop line 4");
             }
+			writeLog("Stop line 5");
             join();
+			writeLog("Stop line 6");
             PR_AtomicSet(&_stopped, 1);
+			writeLog("Stop line 7");
         }
     }
     
