@@ -1,5 +1,6 @@
 #include "Error.h"
 #include "Log.h"
+#include "LogEvent.h"
 #include "Server.h"
 #include "ServerFrame.h"
 #include "ServerThread.h"
@@ -29,15 +30,27 @@ namespace pyr {
         PYR_END_EXCEPTION_TRAP()
         return false;
     }
-
+    
     void Server::log(const std::string& s) {
         if (_frame) {
-            _frame->log(s);
+            // Use the wxWindows event system so logging can be used from
+            // multiple threads.
+            LogEvent evt(s);
+            _frame->AddPendingEvent(evt);
         }
     }
-    
+
     bool Server::isRunning() {
-        return _serverThread;
+        if (_serverThread) {
+            if (_serverThread->isRunning()) {
+                return true;
+            } else {
+                _serverThread = 0;
+                return false;
+            }
+         } else {
+            return false;
+        }
     }
     
     void Server::start() {
@@ -47,5 +60,5 @@ namespace pyr {
     void Server::stop() {
         _serverThread = 0;
     }
-
+    
 }

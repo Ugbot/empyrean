@@ -10,8 +10,6 @@
 
 namespace pyr {
 
-    // in case we decouple from SDL
-
     typedef PRUint8  u8;
     typedef PRUint16 u16;
     typedef PRUint32 u32;
@@ -58,18 +56,6 @@ namespace pyr {
             g = pPal[c * 3 + 1] << 2;
             b = pPal[c * 3 + 2] << 2;
             a = c ? 0xFF : 0;
-        }
-
-        RGBA(u32 c) {
-            // not endian independant
-            a = c >> 24;
-            r = (c >> 16) & 0xFF;
-            g = (c >> 8) & 0xFF;
-            b = c & 0xFF;
-        }
-
-        inline operator u32() const {
-            return *(u32*)this; // bwa
         }
     };
 

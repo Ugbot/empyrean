@@ -26,5 +26,13 @@ namespace pyr {
     int Configuration::getScreenHeight() {
         return 768;
     }
+    
+    std::string Configuration::getServer() {
+        return "localhost";
+    }
+    
+    int Configuration::getPort() {
+        return 8765;
+    }
 
 }

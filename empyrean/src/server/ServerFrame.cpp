@@ -1,4 +1,6 @@
+#include "Error.h"
 #include "Log.h"
+#include "LogEvent.h"
 #include "Server.h"
 #include "ServerFrame.h"
 
@@ -19,6 +21,8 @@ namespace pyr {
         EVT_MENU(ID_SERVER_RESTART, ServerFrame::onRestart)
         EVT_MENU(wxID_EXIT,         ServerFrame::onExit)
         
+        EVT_CUSTOM(EVT_LOG, 0, ServerFrame::onLog)
+        
         EVT_UPDATE_UI(ID_SERVER_START,   ServerFrame::onUpdateUI)
         EVT_UPDATE_UI(ID_SERVER_STOP,    ServerFrame::onUpdateUI)
         EVT_UPDATE_UI(ID_SERVER_RESTART, ServerFrame::onUpdateUI)
@@ -33,10 +37,6 @@ namespace pyr {
         createStatusBar();
     }
 
-    void ServerFrame::log(const std::string& s) {
-        _contents->AppendToPage(("<p>" + s + "</p>").c_str());
-    }
-    
     void ServerFrame::createMenu() {
         wxMenu* serverMenu = new wxMenu;
         serverMenu->Append(ID_SERVER_START,   "&Start");
@@ -63,15 +63,19 @@ namespace pyr {
     }
     
     void ServerFrame::onStart() {
-        logMessage("Starting...");
-        wxGetApp().start();
-        logMessage("Started");
+        PYR_BEGIN_EXCEPTION_TRAP()
+            logMessage("Starting...");
+            wxGetApp().start();
+            logMessage("Started");
+        PYR_END_EXCEPTION_TRAP()
     }
     
     void ServerFrame::onStop() {
-        logMessage("Stopping...");
-        wxGetApp().stop();
-        logMessage("Stopped");
+        PYR_BEGIN_EXCEPTION_TRAP()
+            logMessage("Stopping...");
+            wxGetApp().stop();
+            logMessage("Stopped");
+        PYR_END_EXCEPTION_TRAP()
     }
     
     void ServerFrame::onRestart() {
@@ -90,4 +94,10 @@ namespace pyr {
             case ID_SERVER_RESTART: evt.Enable( wxGetApp().isRunning()); break;
         }
     }
+    
+    void ServerFrame::onLog(LogEvent& evt) {
+        _contents->AppendToPage(("<p>" + evt.getMessage() + "</p>").c_str());
+    }
+    
+
 }

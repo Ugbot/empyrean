@@ -2,6 +2,9 @@
 #define PYR_CONFIGURATION_H
 
 
+#include <string>
+
+
 namespace pyr {
 
     class Configuration {
@@ -17,6 +20,9 @@ namespace pyr {
         // immutable for now
         int getScreenWidth();
         int getScreenHeight();
+        
+        std::string getServer();
+        int getPort();
         
     private:
         static Configuration* _instance;

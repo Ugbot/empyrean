@@ -143,6 +143,12 @@
 				RelativePath="..\..\src\server\Log.h">
 			</File>
 			<File
+				RelativePath="..\..\src\server\LogEvent.cpp">
+			</File>
+			<File
+				RelativePath="..\..\src\server\LogEvent.h">
+			</File>
+			<File
 				RelativePath="..\..\src\server\Main.cpp">
 			</File>
 			<File

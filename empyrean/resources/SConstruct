@@ -5,22 +5,23 @@ TARGET = ARGUMENTS.get('TARGET', '.')
 Default(TARGET)
 
 DIRS = Split("""
-   fonts
-   images
-   images/title
-   images/ui
-   models
-   models/paladin
-   models/Walk1
+    editorrc
+    fonts
+    images
+    images/title
+    images/ui
+    models
+    models/paladin
+    models/Walk1
 """)
 
 WILD = Split("""
-   *.png
-   *.jpg
-   *.jpeg
-   *.raw
-   *.caf *.cfg *.cmf *.crf *.csf
-   *.ttf
+    *.png
+    *.jpg
+    *.jpeg
+    *.raw
+    *.caf *.cfg *.cmf *.crf *.csf
+    *.ttf
 """)
 
 env = Environment()

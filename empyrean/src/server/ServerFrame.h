@@ -8,12 +8,12 @@
 
 namespace pyr {
 
+    class LogEvent;
+
     class ServerFrame : public wxFrame {
     public:
         ServerFrame();
 
-        void log(const std::string& s);
-        
     private:
         void createMenu();
         void createContents();
@@ -24,6 +24,8 @@ namespace pyr {
         void onRestart();
         void onExit();
         void onUpdateUI(wxUpdateUIEvent& evt);
+        
+        void onLog(LogEvent& evt);
         
         wxHtmlWindow* _contents;
     

@@ -9,6 +9,7 @@
 
 namespace pyr {
 
+    class LogEvent;
     class ServerFrame;
     class Thread;
 
@@ -19,10 +20,11 @@ namespace pyr {
         bool OnInit();
         
         void log(const std::string& s);
+        
         bool isRunning();
         void start();
         void stop();
-
+        
     private:
         ServerFrame* _frame;
         ScopedPtr<Thread> _serverThread;

@@ -64,12 +64,12 @@ namespace pyr {
         
         wxToolBar* toolbar = CreateToolBar(
             wxNO_BORDER | wxTB_HORIZONTAL | wxTB_FLAT | wxTB_TEXT);
-        toolbar->AddTool(wxID_NEW,  "New",  PNG_BITMAP("new.png"));
-        toolbar->AddTool(wxID_OPEN, "Open", PNG_BITMAP("open.png"));
-        toolbar->AddTool(wxID_SAVE, "Save", PNG_BITMAP("save.png"));
+        toolbar->AddTool(wxID_NEW,  "New",  PNG_BITMAP("editorrc/new.png"));
+        toolbar->AddTool(wxID_OPEN, "Open", PNG_BITMAP("editorrc/open.png"));
+        toolbar->AddTool(wxID_SAVE, "Save", PNG_BITMAP("editorrc/save.png"));
         toolbar->AddSeparator();
-        toolbar->AddTool(ID_TOOL_TRANSLATE, "Trans", PNG_BITMAP("tool_translate.png"));
-        toolbar->AddTool(ID_TOOL_RECTANGLE, "Rect",  PNG_BITMAP("tool_rect.png"));
+        toolbar->AddTool(ID_TOOL_TRANSLATE, "Trans", PNG_BITMAP("editorrc/tool_translate.png"));
+        toolbar->AddTool(ID_TOOL_RECTANGLE, "Rect",  PNG_BITMAP("editorrc/tool_rect.png"));
         
         // add more stuff
         

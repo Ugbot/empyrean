@@ -1,4 +1,5 @@
 #include <phui/SDLBridge.h>
+#include "Configuration.h"
 #include "GameState.h"
 #include "MenuState.h"
 #include "OptionsState.h"
@@ -136,7 +137,9 @@ namespace pyr {
         } else if (e.getSource() == _quit) {
             quit();
         } else if (e.getSource() == _login) {
-//            ServerConnection::instance().connect("localhost", 8765);
+            ServerConnection::instance().connect(
+                Configuration::instance().getServer(),
+                Configuration::instance().getPort());
             ServerConnection::instance().login(_name->getText(), _password->getText());
             invokeTransition<GameState>();
         } else if (e.getSource() == _cancel) {
