@@ -12,7 +12,7 @@ namespace pyr {
     class Map;
 
 #define PYR_BEHAVIOR_NAME(name)             \
-    const std::string getName() {                 \
+    std::string getName() {                 \
         return getClassName();              \
     }                                       \
     static const char* getClassName() {     \
@@ -25,8 +25,8 @@ namespace pyr {
     class Behavior {
     public:
         virtual ~Behavior() { }
-        virtual const std::string getName() = 0;
-        virtual const std::string getResource() = 0;
+        virtual std::string getName() = 0;
+        virtual std::string getResource() = 0;
         virtual void update(Entity* entity, float dt, const Map* map) = 0;
 
     protected:

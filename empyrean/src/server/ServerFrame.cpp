@@ -15,7 +15,6 @@ namespace pyr {
         ID_SERVER_OPTIONS,
         
         ID_DATABASE_ACCOUNTS,
-        ID_DATABASE_CHARACTERS,
         ID_DATABASE_GAMES,
     };
     
@@ -58,7 +57,6 @@ namespace pyr {
         
         wxMenu* databaseMenu = new wxMenu;
         databaseMenu->Append(ID_DATABASE_ACCOUNTS,   "&Accounts...");
-        databaseMenu->Append(ID_DATABASE_CHARACTERS, "&Characters...");
         databaseMenu->Append(ID_DATABASE_GAMES,      "&Games...");
 
         wxMenuBar* menuBar = new wxMenuBar;

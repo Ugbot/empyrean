@@ -16,7 +16,7 @@ namespace pyr {
 
         void update(Entity* entity, float dt, const Map* map);
 
-        const std::string getResource() {
+        std::string getResource() {
             return "";
         }
 

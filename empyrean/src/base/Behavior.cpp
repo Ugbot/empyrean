@@ -43,7 +43,7 @@ namespace pyr {
             angle += PI * dt / 2;
         }
 
-        const std::string getResource() {
+        std::string getResource() {
             return "";
         }
 
@@ -63,7 +63,7 @@ namespace pyr {
             entity->getPos() += entity->getVel() * dt;
         }
 
-        const std::string getResource() {
+        std::string getResource() {
             return "";
         }
     };

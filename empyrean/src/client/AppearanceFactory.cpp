@@ -9,11 +9,11 @@ namespace pyr {
         EmptyAppearance(const std::string& /*resource*/) {
         }
 
-        const char* getName() {
+        std::string getName() {
             return "empty";
         }
         
-        const char* getResource() {
+        std::string getResource() {
             return "";
         }
         

@@ -2,16 +2,13 @@
 #define PYR_FPS_COUNTER_H
 
 
+#include "Utility.h"
+
+
 namespace pyr {
 
     class FPSCounter {
     public:
-        FPSCounter() {
-            _fps = 0;
-            _frameCount = 0;
-            _elapsedTime = 0;
-        }
-        
         void update(float dt) {
             _elapsedTime += dt;
             ++_frameCount;
@@ -27,9 +24,9 @@ namespace pyr {
         }
         
     private:
-        int _fps;
-        int _frameCount;
-        float _elapsedTime;
+        Zeroed<int> _fps;
+        Zeroed<int> _frameCount;
+        Zeroed<float> _elapsedTime;
     };
 
 }

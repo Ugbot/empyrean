@@ -197,6 +197,9 @@
 				RelativePath="..\..\src\base\GLUtility.h">
 			</File>
 			<File
+				RelativePath="..\..\src\base\Image.h">
+			</File>
+			<File
 				RelativePath="..\..\src\base\Log.cpp">
 			</File>
 			<File

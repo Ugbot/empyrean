@@ -15,12 +15,12 @@ namespace pyr {
             _resource = resource;
         }
         
-        const char* getName() {
-            return _name.c_str();
+        std::string getName() {
+            return _name;
         }
         
-        const char* getResource() {
-            return _resource.c_str();
+        std::string getResource() {
+            return _resource;
         }
         
         void sendCommand(const std::string& command) {

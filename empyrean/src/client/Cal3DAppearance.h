@@ -13,12 +13,12 @@ namespace pyr {
     public:
         Cal3DAppearance(const std::string& resource);
 
-        const char* getName() {
+        std::string getName() {
             return "cal3d";
         }
 
-        const char* getResource() {
-            return _resource.c_str();
+        std::string getResource() {
+            return _resource;
         }
 
         void sendCommand(const std::string& command);

@@ -7,9 +7,6 @@
 
 namespace pyr {
 
-    class Weapon;
-    class Armor;
-
     class Player {
     public:
         Player();
