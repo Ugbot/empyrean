@@ -1,0 +1,31 @@
+from os.path import join
+from glob import glob
+
+TARGET = ARGUMENTS.get('TARGET', '.')
+Default(TARGET)
+
+DIRS = Split("""
+   fonts
+   images
+   images/title
+   images/ui
+   models
+   models/paladin
+   models/Walk1
+""")
+
+WILD = Split("""
+   *.png
+   *.jpg
+   *.jpeg
+   *.raw
+   *.caf *.cfg *.cmf *.crf *.csf
+   *.ttf
+""")
+
+env = Environment()
+
+for d in DIRS:
+    for w in WILD:
+        files = glob("%s/%s" % (d, w))
+        env.Install(join(TARGET, d), files)
