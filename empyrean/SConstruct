@@ -74,8 +74,8 @@ def SetupNSPR(env):
     # @todo  make it only include /usr/mozilla...  on debian
     #        check uname's output?
     env.Append(
-        CPPPATH = '/usr/include/mozilla/nspr',
-        LIBS = 'nspr4')
+        CPPPATH = ['/usr/include/mozilla/nspr', '/usr/include/nspr'],
+        LIBS = ['nspr4'])
 
 def SetupSDL(env):
     if sys.platform == 'cygwin':
@@ -86,8 +86,8 @@ def SetupSDL(env):
 Export('SetupCal3D SetupCorona SetupFreeType SetupGL SetupNSPR SetupSDL')
 
 base_env = Environment(ENV = os.environ)
-base_env.Append(CPPPATH = Dir('src/base'),
-                LIBPATH = Dir('src/base'))
+base_env.Append(CPPPATH = [Dir('src/base')],
+                LIBPATH = [Dir('src/base')])
 
 if sys.platform == 'cygwin':
     base_env.Append(CCFLAGS = ['-DCOR_CALL=', '-DWIN32', '-D_WIN32',

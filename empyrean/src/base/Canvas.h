@@ -1,8 +1,8 @@
-#ifndef PIXEL_MATRIX_H
-#define PIXEL_MATRIX_H
+#ifndef PYR_CANVAS_H
+#define PYR_CANVAS_H
 
 #include <string>
-#include "types.h"
+#include "Types.h"
 
 namespace pyr {
     /**

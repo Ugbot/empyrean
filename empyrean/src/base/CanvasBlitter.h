@@ -1,5 +1,10 @@
-// This is pretty cool stuff.  Basically, I'm using C++ templates to inline the pixel blending functions.
-// Not a lot of code doing a whole lot of work. :)
+#ifndef PYR_CANVAS_BLITTER_H
+#define PYR_CANVAS_BLITTER_H
+
+
+// This is pretty cool stuff.  Basically, I'm using C++ templates to
+// inline the pixel blending functions.  Not a lot of code doing a
+// whole lot of work. :)
 
 namespace pyr {
     struct Opaque
@@ -574,3 +579,6 @@ namespace pyr {
     };
 
 }
+
+
+#endif
