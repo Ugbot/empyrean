@@ -9,6 +9,9 @@ namespace pyr {
     class Packet;
 
     class ServerAppearance : public Appearance {
+    protected:
+        ~ServerAppearance() { }
+
     public:
         ServerAppearance(const std::string& name, const std::string& resource) {
             _name = name;
@@ -47,6 +50,7 @@ namespace pyr {
         std::vector<std::string> _animations;
         std::vector<std::string> _animationCycles;
     };
+    PYR_REF_PTR(ServerAppearance);
 
 }
 

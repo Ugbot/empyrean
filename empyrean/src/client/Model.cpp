@@ -47,6 +47,7 @@ namespace pyr {
 
         CalCoreModel _coreModel;
         float _scale;
+        float _matrix[4 * 4];
 
         // The names of each animation in order.  Use this to map names to ids.
         std::vector<std::string> _names;
@@ -54,17 +55,23 @@ namespace pyr {
         CoreModel(const std::string& id) {
             _coreModel.create(id);
             _scale = 1.0f;
+            // Identity.
+            std::fill(_matrix, _matrix + 16, 0.0f);
+            for (int i = 0; i < 4; ++i) {
+                _matrix[i * 4 + i] = 1;
+            }
             loadConfigFile(id, _coreModel);
         }
 
-	protected:
+    protected:
         ~CoreModel() {
             // gaaaaay.  But I can find no way to search a std::map for a certain value.
-            for (InstanceMap::iterator i = _instances.begin(); i != _instances.end(); i++)
+            for (InstanceMap::iterator i = _instances.begin(); i != _instances.end(); i++) {
                 if (i->second == this) {
                     _instances.erase(i);
                     break;
                 }
+            }
 
             // deallocate textures
             for (int i = 0; i < _coreModel.getCoreMaterialCount(); i++) {
@@ -81,12 +88,32 @@ namespace pyr {
             _coreModel.destroy();
         }
 
-	private:
-		void loadConfigFile(const string& filename, CalCoreModel& model) {
-            if (getExtension(filename) == ".cfg") {
-                return loadOldConfigFile(filename, model);
+    private:
+        // 'x' -> 1, 'y' -> 2, 'z' -> 3
+        static int getAxisIndex(char c) {
+            switch (tolower(c)) {
+                case 'x': return 1;
+                case 'y': return 2;
+                case 'z': return 3;
+                default:  return 0;
+            }
+        }
+
+        static bool setRow(float row[3], const string& a) {
+            int column = 0;
+            if (a.length() == 1) {
+                column = getAxisIndex(a[0]);
+            } else if (a.length() == 2) {
+                if (a[0] == '+') column = +getAxisIndex(a[1]);
+                if (a[0] == '-') column = -getAxisIndex(a[1]);
             }
 
+            if (column > 0) { std::fill(row, row + 3, 0.0f); row[ column - 1] =  1; }
+            if (column < 0) { std::fill(row, row + 3, 0.0f); row[-column - 1] = -1; }
+            return column != 0;
+        }
+
+        void loadConfigFile(const string& filename, CalCoreModel& model) {
             ScopedPtr<XMLNode> modelRoot;
             try {
                 modelRoot = parseXMLFile(filename);
@@ -103,6 +130,27 @@ namespace pyr {
             }
 
             _scale = float(atof(modelRoot->getAttr("scale", "1").c_str()));
+
+            if (modelRoot->hasAttr("orientation")) {
+                std::istringstream is(modelRoot->getAttr("orientation"));
+                string axis[3];
+                if (is >> axis[0] >> axis[1] >> axis[2]) {
+                    // Get the bases for rotating the model into "animation space".
+                    float matrix[3 * 3];
+                    bool valid = true;
+                    for (int i = 0; i < 3; ++i) {
+                        valid = valid && setRow(matrix + i * 3, axis[i]);
+                    }
+                    if (valid) {
+                        // Transpose and plug the rotated bases in.
+                        for (int i = 0; i < 3; ++i) {
+                            for (int j = 0; j < 3; ++j) {
+                                _matrix[i * 4 + j] = matrix[j * 3 + i];
+                            }
+                        }
+                    }
+                }
+            }
 
             string skeleton;
             vector<string> animations;
@@ -130,55 +178,13 @@ namespace pyr {
             doLoad(filename, skeleton, animations, meshes, materials, model);
         }
 
-        void loadOldConfigFile(const string& fname, CalCoreModel& model) {
-            ifstream file(fname.c_str());
-
-            string skeleton;
-            vector<string> animations;
-            vector<string> meshes;
-            vector<string> materials;
-
-            int curline=1;
-            while (file) {
-                std::string c;
-                std::getline(file, c);
-                vector<string> line = splitString(c, " \r\n\t=");
-
-                if (line[0][0] == '#' || c[0]=='\0') {
-                    ;   // do nothing at all
-                } else if (line[0] == "scale") {
-                    _scale=float(atof(line[1].c_str()));
-                } else if (line[0] == "skeleton") {
-                    skeleton=line[1];
-                } else if (line[0] == "animation") {
-                    PYR_LOG(_logger, INFO, "Pushing " << line[1]);
-                    animations.push_back(line[1]);
-                } else if (line[0] == "mesh") {
-                    meshes.push_back(line[1]);
-                } else if (line[0] == "material") {
-                    materials.push_back(line[1]);
-                } else {
-                    PYR_LOG(_logger, WARN, "UNKNOWN " << line[0]);
-                    std::ostringstream ss;
-                    ss << "Unkown token \"" << line[0] << "\" on line " << curline << " in " << fname;
-                    throw LoadModelError(ss.str().c_str());
-                }
-
-                curline++;
-            }
-
-            file.close();
-
-            doLoad(fname, skeleton, animations, meshes, materials, model);
-        }
-
         void doLoad(const string& filename,
                     const string& skeleton,
                     const vector<string>& animations,
                     const vector<string>& meshes,
                     const vector<string>& materials,
-                    CalCoreModel& model)
-        {
+                    CalCoreModel& model
+        ) {
             string path = getPath(filename);
             PYR_LOG(_logger, INFO, "Model Load Path " << path);
 
@@ -296,6 +302,10 @@ namespace pyr {
         float getScale() const {
             return _scale;
         }
+
+        const float* getMatrix() const {
+            return _matrix;
+        }
         
         int getAnimationID(const std::string& name) {
             for (size_t i = 0; i < _names.size(); ++i) {
@@ -336,6 +346,10 @@ namespace pyr {
 
     const CalModel& Model::getModel() const {
         return _model;
+    }
+
+    const float* Model::getMatrix() const {
+        return _coreModel->getMatrix();
     }
 
     void Model::update(float timedelta) {

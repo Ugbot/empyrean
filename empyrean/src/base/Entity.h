@@ -3,7 +3,6 @@
 
 
 #include <list>
-// Hm, I'm not sure why we need these here instead of in the source file.
 #include "Appearance.h"
 #include "Behavior.h"
 #include "BoundingRectangle.h"
@@ -22,7 +21,7 @@ namespace pyr {
         virtual ~Entity() { }
 
     public:
-        Entity(BehaviorPtr behavior, Appearance* appearance) {
+        Entity(BehaviorPtr behavior, AppearancePtr appearance) {
             PYR_ASSERT(behavior,   "Behavior cannot be null");
             PYR_ASSERT(appearance, "Appearance cannot be null");
             _behavior   = behavior;
@@ -35,8 +34,8 @@ namespace pyr {
          */
         virtual ActionQueue update(float dt, const Environment& env);
 
-        BehaviorPtr getBehavior()   const { return _behavior;         }
-        Appearance* getAppearance() const { return _appearance.get(); }
+        BehaviorPtr   getBehavior()   const { return _behavior;   }
+        AppearancePtr getAppearance() const { return _appearance; }
 
         void setPos(const Vec2f& pos) { _pos = pos;  }
         Vec2f& getPos()               { return _pos; }
@@ -57,9 +56,14 @@ namespace pyr {
         BoundingRectangle& getBounds()              { return _bounds; }
         const BoundingRectangle& getBounds() const  { return _bounds; }
 
+        // For convenience.
+        void sendAppearanceCommand(const string& command);
+        void beginAnimationCycle(const string& animation);
+        void beginAnimation(const string& animation);
+
     private:
         BehaviorPtr _behavior;
-        ScopedPtr<Appearance> _appearance;
+        AppearancePtr _appearance;
 
         Vec2f _nextPos;
         Vec2f _nextVel;

@@ -11,9 +11,9 @@ namespace pyr {
 
     void Cal3DAppearance::sendCommand(const std::string& command) {
         if (command == "Face Left") {
-            _direction = 90;
-        } else if (command == "Face Right") {
             _direction = -90;
+        } else if (command == "Face Right") {
+            _direction = 90;
         }
     }
 
@@ -30,12 +30,9 @@ namespace pyr {
     }
 
     void Cal3DAppearance::draw() {
-        // Render player model.
         glPushMatrix();
         glEnable(GL_DEPTH_TEST);
-        glRotatef(_direction + 180, 0, 1, 0);
-        glRotatef(90, 1, 0, 0);
-        glScalef(1, 1, -1);
+        glRotatef(_direction, 0, 1, 0);
         ModelRenderer().draw(*_model);
         glDisable(GL_DEPTH_TEST);
         glPopMatrix();

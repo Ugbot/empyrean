@@ -34,6 +34,7 @@ namespace pyr {
         void setFocus(u16 id);
         ClientEntityPtr getFocus() const;
 
+        void toggleEntityData();
         void toggleWireframe();
         void toggleNormals();
         void toggleCollision();
@@ -51,6 +52,7 @@ namespace pyr {
         CollisionData _coldata;
         MapPtr _map;
 
+        Inited<bool, false> _entityData;
         Inited<bool, false> _wireframe;
         Inited<bool, false> _normals;
         Inited<bool, false> _collision;

@@ -8,10 +8,14 @@
 namespace pyr {
 
     class ClientAppearance : public Appearance {
+    protected:
+        ~ClientAppearance() { }
+
     public:
         virtual void draw() = 0;
         virtual void update(float dt) = 0;
     };
+    PYR_REF_PTR(ClientAppearance);
 
 }
 

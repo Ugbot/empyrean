@@ -31,6 +31,15 @@ namespace pyr {
                    max != rhs.max;
         }
 
+        bool intersects(const BoundingRectangle& other) const {
+            for (int i = 0; i < 2; ++i) {
+                if (min[i] > other.max[i] || max[i] < other.min[i]) {
+                    return false;
+                }
+            }
+            return true;
+        }
+
         Vec2f min;
         Vec2f max;
     };

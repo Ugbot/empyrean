@@ -1,5 +1,5 @@
 <map-metadata>
-  <node name="start" position="2 0 0">
+  <node name="start" position="0 2 0">
   </node>
   <node name="Line01" position="1.97709 10.3293 0">
   </node>
@@ -9,7 +9,6 @@
   </node>
   <node name="Line04" position="27.8393 17.8492 9.62532">
   </node>
-<!--
   <node name="Dummy01" position="10 2 0">
     <property key="entity" value="true"/>
     <property key="behavior" value="python"/>
@@ -35,17 +34,85 @@
     <property key="entity" value="true"/>
     <property key="behavior" value="python"/>
     <property key="behaviorResource" value="maps/fishmonster.py"/>
-    <property key="appearance" value="obj"/>
-    <property key="appearanceResource" value="maps/fish-smoothed2.obj"/>
+    <property key="appearance" value="cal3d"/>
+    <property key="appearanceResource" value="models/fish/fish.cal3d"/>
   </node>
-  <node name="Dummy02" position="6.18181 13.89528 8.91136">
-    <property key="enemy" value="true"/>
+  <node name="Grunt1" position="20 20 0">
+    <property key="entity" value="true"/>
+    <property key="behavior" value="python"/>
+    <property key="behaviorResource" value="maps/entity.py"/>
+    <property key="appearance" value="cal3d"/>
+    <property key="appearanceResource" value="models/lizzard/lizzard.cal3d"/>
   </node>
-  <node name="Dummy03" position="43.4006 11.16142 -2.65701">
-    <property key="enemy" value="true"/>
+  <node name="Grunt6" position="10 2 0">
+    <property key="entity" value="true"/>
+    <property key="behavior" value="python"/>
+    <property key="behaviorResource" value="maps/entity.py"/>
+    <property key="appearance" value="cal3d"/>
+    <property key="appearanceResource" value="models/lizzard/lizzard.cal3d"/>
   </node>
-  <node name="Dummy04" position="30.3564 19.47228 -2.16701">
-    <property key="enemy" value="true"/>
+  <node name="Grunt3" position="-8 2 0">
+    <property key="entity" value="true"/>
+    <property key="behavior" value="python"/>
+    <property key="behaviorResource" value="maps/entity.py"/>
+    <property key="appearance" value="cal3d"/>
+    <property key="appearanceResource" value="models/lizzard/lizzard.cal3d"/>
   </node>
--->
+  <node name="Grunt10" position="66.2 10 0">
+    <property key="entity" value="true"/>
+    <property key="behavior" value="python"/>
+    <property key="behaviorResource" value="maps/entity.py"/>
+    <property key="appearance" value="cal3d"/>
+    <property key="appearanceResource" value="models/lizzard/lizzard.cal3d"/>
+  </node>
+  <node name="Grunt11" position="94.13 18 0">
+    <property key="entity" value="true"/>
+    <property key="behavior" value="python"/>
+    <property key="behaviorResource" value="maps/entity.py"/>
+    <property key="appearance" value="cal3d"/>
+    <property key="appearanceResource" value="models/lizzard/lizzard.cal3d"/>
+  </node>
+  <node name="Grunt12" position="100 25 0">
+    <property key="entity" value="true"/>
+    <property key="behavior" value="python"/>
+    <property key="behaviorResource" value="maps/entity.py"/>
+    <property key="appearance" value="cal3d"/>
+    <property key="appearanceResource" value="models/lizzard/lizzard.cal3d"/>
+  </node>
+  <node name="Grunt13" position="105 25 0">
+    <property key="entity" value="true"/>
+    <property key="behavior" value="python"/>
+    <property key="behaviorResource" value="maps/entity.py"/>
+    <property key="appearance" value="cal3d"/>
+    <property key="appearanceResource" value="models/lizzard/lizzard.cal3d"/>
+  </node>
+  <node name="Grunt14" position="140 25 0">
+    <property key="entity" value="true"/>
+    <property key="behavior" value="python"/>
+    <property key="behaviorResource" value="maps/entity.py"/>
+    <property key="appearance" value="cal3d"/>
+    <property key="appearanceResource" value="models/lizzard/lizzard.cal3d"/>
+  </node>
+  <node name="CaveFish1" position="140 9 0">
+    <property key="entity" value="true"/>
+    <property key="behavior" value="python"/>
+    <property key="behaviorResource" value="maps/entity.py"/>
+    <property key="appearance" value="cal3d"/>
+    <property key="appearanceResource" value="models/fish/fish.cal3d"/>
+  </node>
+  <node name="CaveFish2" position="112 -20 0">
+    <property key="entity" value="true"/>
+    <property key="behavior" value="python"/>
+    <property key="behaviorResource" value="maps/entity.py"/>
+    <property key="appearance" value="cal3d"/>
+    <property key="appearanceResource" value="models/fish/fish.cal3d"/>
+  </node>
+  <node name="CaveFish3" position="90 -20 0">
+    <property key="entity" value="true"/>
+    <property key="behavior" value="python"/>
+    <property key="behaviorResource" value="maps/entity.py"/>
+    <property key="appearance" value="cal3d"/>
+    <property key="appearanceResource" value="models/fish/fish.cal3d"/>
+  </node>
+
 </map-metadata>

@@ -1,1 +1,1 @@
-SConscript(dirs = ['Walk1', 'paladin'])
+SConscript(dirs = ['Walk1', 'paladin', 'fish', 'lizzard'])

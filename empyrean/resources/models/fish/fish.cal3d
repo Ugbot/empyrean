@@ -1,0 +1,7 @@
+<model scale="0.4">
+  <skeleton file="fish.xsf"/>
+  <mesh file="fish.xmf"/>
+  <animation name="idle" file="fish_idle.xaf"/>
+  <animation name="walk" file="fish_walk.xaf"/>
+  <animation name="attack" file="fish_attack.xaf"/>
+</model>

@@ -23,15 +23,15 @@ namespace pyr {
         // Reset Jumping if needed.
         if(_physics->jumpNumber > 0 && !_physics->inAir) {
             if(_physics->desiredAccel[0] > 0) {
-                sendAppearanceCommand(entity, "Face Left");
-                beginAnimationCycle(entity, "walk");
+                entity->sendAppearanceCommand("Face Right");
+                entity->beginAnimationCycle("walk");
             }
             else if(_physics->desiredAccel[0] < 0) {
-                sendAppearanceCommand(entity, "Face Right");
-                beginAnimationCycle(entity, "walk");
+                entity->sendAppearanceCommand("Face Left");
+                entity->beginAnimationCycle("walk");
             }
             else {
-                beginAnimationCycle(entity, "idle");
+                entity->beginAnimationCycle("idle");
             }
             _physics->jumpNumber = 0;
         }
@@ -45,22 +45,22 @@ namespace pyr {
             _physics->desiredAccel[0] = accel;
             _physics->desiredGroundSpeed = 3.0f;
             _physics->facingRight = true;
-            sendAppearanceCommand(entity, "Face Left");
-            beginAnimationCycle(entity, "walk");
+            entity->sendAppearanceCommand("Face Right");
+            entity->beginAnimationCycle("walk");
         }
 
         if (event == "Begin Left") {
             _physics->desiredAccel[0] = -accel;
             _physics->desiredGroundSpeed = -3.0f;
             _physics->facingRight = false;
-            sendAppearanceCommand(entity, "Face Right");
-            beginAnimationCycle(entity, "walk");
+            entity->sendAppearanceCommand("Face Left");
+            entity->beginAnimationCycle("walk");
         }
 
         if (event == "End Right" || event == "End Left") {
             _physics->desiredAccel[0] = 0;
             _physics->desiredGroundSpeed = 0.0f;
-            beginAnimationCycle(entity, "idle");
+            entity->beginAnimationCycle("idle");
         }
 
         if (event == "Jump") {
@@ -69,12 +69,12 @@ namespace pyr {
                 _physics->desiredAccel[1] = jumpForce/_physics->mass;
                 ++_physics->jumpNumber;
                 _physics->inAir = true;
-                beginAnimationCycle(entity, "strut");
+                entity->beginAnimationCycle("strut");
             }
         }
 
         if (event == "Attack") {
-            beginAnimation(entity, "attack");
+            entity->beginAnimation("attack");
         }
     }
     

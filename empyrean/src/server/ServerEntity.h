@@ -34,10 +34,10 @@ namespace pyr {
             return _id;
         }
 
-        ServerAppearance* getServerAppearance() const {
+        ServerAppearancePtr getServerAppearance() const {
             // Since we created the base class, we know what
             // type of appearance it has.
-            return checked_cast<ServerAppearance*>(getAppearance());
+            return checked_cast<ServerAppearance*>(getAppearance().get());
         }
 
         GameStatisticsPtr getGameStats() const {

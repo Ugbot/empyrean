@@ -18,6 +18,7 @@ namespace pyr {
         // We would like to be able to start in some sort of animation.
         //beginAnimationCycle("idle");
         _physics->desiredGroundSpeed = 1.5f;
+        _physics->desiredAirSpeed    = 4.0f;
     }
 
     void MonsterBehavior::update(Entity* entity, float dt, const Environment& env) {
@@ -39,26 +40,26 @@ namespace pyr {
             if (closest->getPos()[0] > entity->getPos()[0] + 1.0) {
                 _physics->desiredAccel = Vec2f(1.0f,0.0f);
                 _physics->facingRight = true;
-                sendAppearanceCommand(entity, "Face Left");
-                beginAnimationCycle(entity, "walk");                
+                entity->sendAppearanceCommand("Face Left");
+                entity->beginAnimationCycle("walk");                
             }
             else if (closest->getPos()[0] > entity->getPos()[0]) {
                 _physics->desiredAccel = Vec2f(-1.0f,0.0f);
                 _physics->facingRight = false;
-                sendAppearanceCommand(entity, "Face Right");
-                beginAnimationCycle(entity, "walk");
+                entity->sendAppearanceCommand("Face Right");
+                entity->beginAnimationCycle("walk");
             }
             else if (closest->getPos()[0] < entity->getPos()[0] - 1.0) {
                 _physics->desiredAccel = Vec2f(-1.0f,0.0f);
                 _physics->facingRight = false;
-                sendAppearanceCommand(entity, "Face Right");
-                beginAnimationCycle(entity, "walk");
+                entity->sendAppearanceCommand("Face Right");
+                entity->beginAnimationCycle("walk");
             }
             else if (closest->getPos()[0] < entity->getPos()[0]) {
                 _physics->desiredAccel = Vec2f(1.0f,0.0f);
                 _physics->facingRight = true;
-                sendAppearanceCommand(entity, "Face Left");
-                beginAnimationCycle(entity, "walk");                
+                entity->sendAppearanceCommand("Face Left");
+                entity->beginAnimationCycle("walk");                
             }
         }
     }

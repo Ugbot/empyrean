@@ -21,6 +21,7 @@ namespace pyr {
 
             Behavior* aggregated = extract<Behavior*>(_behavior);
             copySlots(aggregated);
+            copyActions(aggregated);
         })
     }
 
@@ -103,6 +104,10 @@ namespace pyr {
         class_<PhysicsBehaviorSlot, bases<BehaviorSlot>,
                PhysicsBehaviorSlotPtr, noncopyable>("PhysicsBehaviorSlot", no_init)
             .def(init<>())
+            .def_readwrite("desiredAccel",       &PhysicsBehaviorSlot::desiredAccel)
+            .def_readwrite("groundDir",          &PhysicsBehaviorSlot::groundDir)
+            .def_readwrite("facingRight",        &PhysicsBehaviorSlot::facingRight)
+            .def_readwrite("desiredGroundSpeed", &PhysicsBehaviorSlot::desiredGroundSpeed)
             ;
 
         class_<Behavior, BehaviorWrap, noncopyable>("Behavior", no_init)
@@ -119,9 +124,12 @@ namespace pyr {
         // Perhaps this should go into a bindEntity() function somewhere else.
         class_<Entity, EntityPtr, noncopyable>("Entity", no_init)
             .add_property("behavior",   &Entity::getBehavior)
-            //.add_property("appearance", &Entity::getAppearance)
+            .add_property("appearance", &Entity::getAppearance)
             .add_property("pos", &getPos, &setPos)
             .add_property("vel", &getVel, &setVel)
+            .def("sendAppearanceCommand", &Entity::sendAppearanceCommand)
+            .def("beginAnimationCycle",   &Entity::beginAnimationCycle)
+            .def("beginAnimation",        &Entity::beginAnimation)
             ;
 
         //class_<EntityList>("EntityList")

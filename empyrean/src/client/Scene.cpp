@@ -106,6 +106,16 @@ namespace pyr {
 
         glMaterialf(GL_FRONT_AND_BACK, GL_SHININESS, 0);
 
+        
+        // Make LIGHT1 less intense on the entities.
+        float k = 2;
+        float diffuse_1[4]  = {k,0,0,1};
+        float specular_1[4] = {k,k,0,1};
+        float ambient_1[4]  = {0,0,0,0};
+        glLightfv(GL_LIGHT1, GL_SPECULAR, specular_1);
+        glLightfv(GL_LIGHT1, GL_DIFFUSE, diffuse_1);
+        glLightfv(GL_LIGHT1, GL_AMBIENT, ambient_1);
+
         (_lighting ? glEnable : glDisable)(GL_LIGHTING);
 
         EntityMap::iterator itr = _entities.begin();
@@ -120,6 +130,21 @@ namespace pyr {
         glDisable(GL_LIGHTING);
         glDisable(GL_LIGHT0);
         glDisable(GL_DEPTH_TEST);
+
+        if (_entityData) {
+            glColor3f(1, 1, 1);
+            EntityMap::iterator itr = _entities.begin();
+            for (; itr != _entities.end(); ++itr) {
+                ClientEntityPtr e = itr->second;
+                glPushMatrix();
+                glTranslate(e->getPos());
+
+                const BoundingRectangle& b = e->getBounds();
+                glRectf(b.min[0], b.min[1], b.max[0], b.max[1]);
+
+                glPopMatrix();
+            }
+        }
     }
 
     void Scene::update(float dt) {
@@ -185,6 +210,10 @@ namespace pyr {
     
     ClientEntityPtr Scene::getFocus() const {
         return _focus;
+    }
+
+    void Scene::toggleEntityData() {
+        _entityData = !_entityData;
     }
 
     void Scene::toggleWireframe() {

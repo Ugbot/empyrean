@@ -1,5 +1,6 @@
 #include <stdexcept>
 #include "AudioSystem.h"
+#include "Configuration.h"
 #include "Log.h"
 
 
@@ -27,13 +28,15 @@ namespace pyr {
     void AudioSystem::playMusic(const string& filename) {
         PYR_LOG_SCOPE(_logger, INFO, "AudioSystem::playMusic");
 
-        _music = audiere::OpenSound(_device, filename.c_str(), true);
-        if (!_music) {
-            PYR_LOG(_logger, WARN, "Could not open music file: " << filename);
-            throw std::runtime_error("Could not open music file: " + filename);
+        if (the<Configuration>().enableMusic) {
+            _music = audiere::OpenSound(_device, filename.c_str(), true);
+            if (!_music) {
+                PYR_LOG(_logger, WARN, "Could not open music file: " << filename);
+                throw std::runtime_error("Could not open music file: " + filename);
+            }
+            _music->setRepeat(true);
+            _music->play();
         }
-        _music->setRepeat(true);
-        _music->play();
     }
 
     void AudioSystem::playSound(const string& filename) {

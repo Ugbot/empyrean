@@ -88,41 +88,39 @@ namespace pyr {
             _actions.push(action);
         }
         
-		bool isAttacking()
-		{
-			//return !(_amAttacking ? _amAttacking = false : true);
-			if(_amAttacking) {
-				_amAttacking = false;
-				return true;
-			}
-			else
-				return false;
-		}
+        bool isAttacking()
+        {
+            //return !(_amAttacking ? _amAttacking = false : true);
+            if(_amAttacking) {
+                _amAttacking = false;
+                return true;
+            }
+            else
+                return false;
+        }
 
         void getActions(ActionQueue& actions) {
             actions = _actions;
             // queue has no clear()!
             while (!_actions.empty()) {
-				_amAttacking = true;
+                _amAttacking = true;
                 _actions.pop();
             }
         }
 
     protected:
-        void sendAppearanceCommand(Entity* entity, const std::string& command);
-        void beginAnimationCycle(Entity* entity, const std::string& animation);
-        void beginAnimation(Entity* entity, const std::string& animation);
-
         void copySlots(const Behavior* other) {
             _slots = other->_slots;
         }
 
-    private:
-        static Appearance* getAppearance(Entity* entity);
+        void copyActions(const Behavior* other) {
+            _actions = other->_actions;
+        }
 
+    private:
         typedef std::map<TypeInfo, BehaviorSlotPtr> SlotMap;
 
-		bool _amAttacking;
+        bool _amAttacking;
         SlotMap _slots;
         ActionQueue _actions;
     };

@@ -9,28 +9,6 @@
 
 namespace pyr {
 
-    void Behavior::sendAppearanceCommand(Entity* entity,
-                                         const std::string& command) {
-        getAppearance(entity)->sendCommand(command);
-    }
-
-    void Behavior::beginAnimationCycle(Entity* entity,
-                                       const std::string& animation) {
-        getAppearance(entity)->beginAnimationCycle(animation);
-    }
-
-    void Behavior::beginAnimation(Entity* entity, const std::string& animation) {
-        getAppearance(entity)->beginAnimation(animation);
-    }
-
-    Appearance* Behavior::getAppearance(Entity* entity) {
-        PYR_ASSERT(entity, "Can't get appearance without an entity");
-        Appearance* appearance = entity->getAppearance();
-        PYR_ASSERT(appearance, "Entity must have an appearance");
-        return appearance;
-    }
-
-
     /// Placeholder entity behavior class, for testing only.
     class DumbBehavior : public Behavior {
     public:

@@ -1,5 +1,5 @@
 <!-- make the character about 2 meters tall -->
-<model scale="0.02">
+<model scale="0.02" orientation="x z -y">
   <skeleton file="paladin.csf" />
 
   <animation name="attack" file="paladin_shoot_arrow.caf" />

@@ -47,6 +47,8 @@ namespace pyr {
             return _scale;
         }
 
+        const float* getMatrix() const;
+
         void update(float timedelta);
         void blendCycle(const std::string& animation, float weight, float delay);
         void executeAction(const std::string& animation, float weight, float delayIn, float delayOut);
@@ -55,6 +57,8 @@ namespace pyr {
         CoreModelPtr _coreModel;
         CalModel _model;
         float _scale;
+        float _matrix[4 * 4];
+
         // We'll probably want to store information on how this particular model
         // is skinned, and so on.
         

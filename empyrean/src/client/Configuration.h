@@ -25,6 +25,8 @@ namespace pyr {
         int screenWidth;
         int screenHeight;
         bool fullscreen;
+
+        bool enableMusic;
         
         std::string server;
         std::string username;

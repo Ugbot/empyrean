@@ -12,16 +12,24 @@ namespace pyr {
         ~PhysicsBehaviorSlot() { }
 
     public:
+        PhysicsBehaviorSlot() {
+            jumpNumber = 1;
+            facingRight = true;
+            desiredGroundSpeed = 0;
+            desiredAirSpeed = 0;
+            inAir = true;
+        }
+
         // Yay for public fields.  ;)  Put these behind mutators and
         // accessors if need be.
 
-        Inited<int, 1> jumpNumber;
+        int jumpNumber;
         Vec2f desiredAccel;
         Vec2f appliedForce;
-        Inited<bool, true> facingRight;
-        Zeroed<float> desiredGroundSpeed;
-        Zeroed<float> desiredAirSpeed;
-        Inited<bool, true> inAir;
+        bool facingRight;
+        float desiredGroundSpeed;
+        float desiredAirSpeed;
+        bool inAir;
         Vec2f groundDir;
         Vec2f groundNorm;
         Zeroed<float> staticCoeffOfFriction;

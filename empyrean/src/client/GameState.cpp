@@ -284,11 +284,10 @@ namespace pyr {
     void GameState::handleAppearance(Connection*, AppearancePacket* p) {
         EntityPtr entity = _scene.getEntity(p->id());
         if (entity) {
-            Appearance* appearance = entity->getAppearance();
             switch (p->code()) {
-                case AP_COMMAND:         appearance->sendCommand(p->str()); break;
-                case AP_ANIMATION:       appearance->beginAnimation(p->str()); break;
-                case AP_ANIMATION_CYCLE: appearance->beginAnimationCycle(p->str()); break;
+                case AP_COMMAND:         entity->sendAppearanceCommand(p->str()); break;
+                case AP_ANIMATION:       entity->beginAnimation(p->str()); break;
+                case AP_ANIMATION_CYCLE: entity->beginAnimationCycle(p->str()); break;
                 default:
                     PYR_LOG(_logger, WARN, "Unknown code in appearance packet:");
                     p->log();
@@ -384,6 +383,7 @@ namespace pyr {
         if (down) {
             switch (key) {
                 case SDLK_F2:
+                    _scene.toggleEntityData();
                     _showPlayerData = !_showPlayerData;
                     break;
                 case SDLK_F3:

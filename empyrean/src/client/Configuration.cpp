@@ -14,6 +14,8 @@ namespace pyr {
         screenWidth = 1024;
         screenHeight = 768;
         fullscreen = false;
+        
+        enableMusic = true;
 
         server = "localhost";
         username = "EmpyreanPlayer";
@@ -33,6 +35,8 @@ namespace pyr {
                         screenHeight = atoi(value.c_str());
                     } else if (attr == "fullscreen") {
                         fullscreen = (value == "true");
+                    } else if (attr == "enableMusic") {
+                        enableMusic = (value == "true");
                     } else if (attr == "server") {
                         server = value;
                     } else if (attr == "username") {
@@ -70,6 +74,7 @@ namespace pyr {
         writeAttr(file, "screenWidth", screenWidth);
         writeAttr(file, "screenHeight", screenHeight);
         writeAttr(file, "fullscreen", fullscreen);
+        writeAttr(file, "enableMusic", enableMusic);
         writeAttr(file, "server", server);
         writeAttr(file, "username", username);
         fprintf(file, "</client-configuration>\n");

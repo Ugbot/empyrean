@@ -25,6 +25,11 @@ EXTENSIONS = Split("""
     csf
     raw
 
+    xsf
+    xmf
+    xaf
+    xrf
+
     py
 
 """)

@@ -21,4 +21,17 @@ namespace pyr {
         _pos = _nextPos;
         _vel = _nextVel;
     }
+
+    void Entity::sendAppearanceCommand(const std::string& command) {
+        getAppearance()->sendCommand(command);
+    }
+
+    void Entity::beginAnimationCycle(const std::string& animation) {
+        getAppearance()->beginAnimationCycle(animation);
+    }
+
+    void Entity::beginAnimation(const std::string& animation) {
+        getAppearance()->beginAnimation(animation);
+    }
+
 }

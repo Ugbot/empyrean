@@ -44,8 +44,8 @@ namespace pyr {
         Inited<bool,true> _etherFirstTime;
 
         /// We specified the appearance, so we know what type it is.
-        ClientAppearance* getClientAppearance() const {
-            return checked_cast<ClientAppearance*>(getAppearance());
+        ClientAppearancePtr getClientAppearance() const {
+            return checked_cast<ClientAppearance*>(getAppearance().get());
         }
     };
     PYR_REF_PTR(ClientEntity);
