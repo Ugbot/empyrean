@@ -155,6 +155,9 @@
 				RelativePath="..\..\src\base\extgl.h">
 			</File>
 			<File
+				RelativePath="..\..\src\base\GLUtility.cpp">
+			</File>
+			<File
 				RelativePath="..\..\src\base\GLUtility.h">
 			</File>
 			<File

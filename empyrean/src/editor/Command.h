@@ -11,10 +11,10 @@ namespace pyr {
     class Command;
 
     /**
-     * Something that can recieve a command.
-     * The reciever assumes responsibility for the pointer.
+     * Something that can receive a command.
+     * The receiver assumes responsibility for the pointer.
      */
-    class CommandReciever {
+    class CommandReceiver {
     public:
         virtual void handleCommand(Command* cmd) = 0;
     };

@@ -27,6 +27,9 @@ namespace pyr {
         void setViewCenter(const gmtl::Vec2f& center) { _viewCenter = center; }        
         const gmtl::Vec2f& getViewCenter() const      { return _viewCenter;   }
         gmtl::Vec2f& getViewCenter()                  { return _viewCenter;   }
+        
+        void setZoomFactor(float factor) { _zoomFactor = factor; }
+        float getZoomFactor() const      { return _zoomFactor; }
 
     private:
         void OnSize(wxSizeEvent& e);
@@ -39,6 +42,7 @@ namespace pyr {
         MainFrame* _mainFrame;
         ScopedPtr<Tool> _tool;
         gmtl::Vec2f _viewCenter;
+        float _zoomFactor;
 
         DECLARE_EVENT_TABLE()
     };

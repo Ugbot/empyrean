@@ -1,14 +1,15 @@
 #include "MainFrame.h"
-#include "MapView.h"
+#include "MapElement.h"
+#include "MapFile.h"
+#include "MapTree.h"
 #include "MapUpdateVisitor.h"
+#include "MapView.h"
+#include "ObstructionTool.h"
+#include "PropertyGridUpdater.h"
 #include "RectangleTool.h"
 #include "TranslateTool.h"
-#include "ObstructionTool.h"
 #include "TranslateViewTool.h"
-#include "MapFile.h"
-#include "MapElement.h"
-#include "MapTree.h"
-#include "PropertyGridUpdater.h"
+#include "ZoomViewTool.h"
 
 namespace pyr {
 
@@ -240,14 +241,15 @@ namespace pyr {
     }
     
     void MainFrame::onUseTranslateViewTool(wxCommandEvent&) {
-        _mapView->setTool(new TranslateViewTool());
+        _mapView->setTool(new TranslateViewTool);
     }
 
     void MainFrame::onUseZoomViewTool(wxCommandEvent&) {
+        _mapView->setTool(new ZoomViewTool);
     }
 
     void MainFrame::onUseTranslateTool(wxCommandEvent&) {
-        _mapView->setTool(new TranslateTool());
+        _mapView->setTool(new TranslateTool);
     }
 
     void MainFrame::onUseRectangleTool(wxCommandEvent&) {

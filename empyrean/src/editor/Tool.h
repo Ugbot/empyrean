@@ -10,11 +10,12 @@ namespace pyr {
     class MainFrame;
     class MapView;
     class Map;
-    class CommandReciever;
+    class CommandReceiver;
 
     struct ToolEvent {
-        CommandReciever* cmd;
+        CommandReceiver* cmd;
         gmtl::Vec2f pos;
+        gmtl::Vec2i screenPos;
         bool leftButton;
         bool rightButton;
         bool middleButton;
@@ -24,7 +25,7 @@ namespace pyr {
     };
 
     struct GridEvent {
-        CommandReciever* cmd;
+        CommandReceiver* cmd;
         std::string name;
         std::string value;
     };

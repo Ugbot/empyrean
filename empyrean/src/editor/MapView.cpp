@@ -31,6 +31,7 @@ namespace pyr {
         typedef TranslateViewTool DefaultTool;
 
         _tool = new DefaultTool;
+        _zoomFactor = 100.0f;
 
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     }
@@ -90,6 +91,8 @@ namespace pyr {
         te.cmd = _mainFrame;
         te.pos[0] = float(e.GetX()) / size.x *  2 - 1;
         te.pos[1] = float(e.GetY()) / size.y * -2 + 1;
+        te.screenPos[0] = e.GetX();
+        te.screenPos[1] = e.GetY();
         te.leftButton = e.LeftIsDown();
         te.rightButton = e.RightIsDown();
         te.middleButton = e.MiddleIsDown();
@@ -121,8 +124,11 @@ namespace pyr {
         int w, h;
         GetClientSize(&w, &h);
     
-        setOrthoProjection(12, 9, true);
-        glTranslatef(6 - _viewCenter[0], 4.5f - _viewCenter[1], 0);
+        const float mapViewX = w / _zoomFactor;
+        const float mapViewY = h / _zoomFactor;
+        setOrthoProjection(mapViewX, mapViewY, true);
+        glTranslatef(mapViewX / 2 - _viewCenter[0],
+                     mapViewY / 2 - _viewCenter[1], 0);
     
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 

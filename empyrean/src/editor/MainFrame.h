@@ -13,7 +13,7 @@ namespace pyr {
     class MapElement;
 
     // HACK THE MAINFRAME
-    class MainFrame : public wxFrame, public CommandReciever {
+    class MainFrame : public wxFrame, public CommandReceiver {
     public:
         MainFrame();
         ~MainFrame();
