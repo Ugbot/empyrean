@@ -74,13 +74,26 @@ namespace pyr {
     private:
         T _value;
     };
+    
+
+    /**
+     * Same as static_cast, except does some type checking (ideally only
+     * in debug builds).  This only works for classes, not native types.
+     */
+    template<typename T, typename U>
+    T checked_cast(U u) {
+        T t = dynamic_cast<T>(u);
+        PYR_ASSERT(t, "checked_cast failed");
+        return t;
+    }
 
 
     // These are perfect candidates for unit tests.
+    // They are also perfect candidates for going into their own string header.
 
 
     std::string itos(int i);
-    
+
 
     /// Returns the string, stripped of leading and trailing whitespace
     std::string trimString(const std::string& s);

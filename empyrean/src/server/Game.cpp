@@ -75,12 +75,8 @@ namespace pyr {
         }
     }
 
-    void Game::setData(Connection* c, ConnectionData* cd) {
-        c->setOpaque(cd);
-    }
-
-    Game::ConnectionData* Game::getData(Connection* c) {
-        return static_cast<ConnectionData*>(c->getOpaque());
+    GameConnectionData* Game::getData(Connection* c) {
+        return checked_cast<GameConnectionData*>(c->getData());
     }
 
     void Game::addEntity(ServerEntity* entity) {
@@ -106,32 +102,40 @@ namespace pyr {
     }
 
     void Game::connectionAdded(Connection* connection) {
+        // Not using checked_cast here because the error message wouldn't be as descriptive.
+        ServerConnectionData* scd = dynamic_cast<ServerConnectionData*>(connection->getData());
+        PYR_ASSERT(scd, "Connection data in game is not set.  Maybe connection " \
+                        "was added to Game without going through Server?");
+
+        GameConnectionData* cd = new GameConnectionData(*scd);
+
         PlayerBehavior* pb = new PlayerBehavior("");
         ServerEntity* entity = new ServerEntity(
             _idGenerator.reserve(),
             pb,
             new ServerAppearance("cal3d", "models/paladin/paladin.cal3d"),
-            0);
+            // Just pick a character.
+            cd->account->getCharacter(0));
         entity->setPos(_startPosition);
         // Hardcoded for now.  Hardcoded in the client as well.
         float width  = 0.3f;
         float height = 1.9f;
         entity->setBounds(BoundingRectangle(Vec2f(-width / 2, 0), Vec2f(width / 2, height)));
 
-        sendAll(buildEntityAddedPacket(entity));
-
         // Set connection-specific data.
-        ConnectionData* cd = new ConnectionData;
         cd->playerEntity = entity;
         cd->behavior = pb;
-        setData(connection, cd);
+        connection->setData(cd);
 
         // Add packet handlers.
         connection->definePacketHandler(this, &Game::handlePlayerEvent);
 
         addEntity(entity);
 
-        // Send all existing entities to the new connection.
+        // Add player entity to other clients.
+        sendAll(buildEntityAddedPacket(entity));
+
+        // Send all entities to the new connection.
         for (size_t i = 0; i < _entities.size(); ++i) {
             connection->sendPacket(buildEntityAddedPacket(_entities[i]));
         }
@@ -140,8 +144,8 @@ namespace pyr {
     }
 
     void Game::connectionRemoved(Connection* connection) {
-        ConnectionData* cd = getData(connection);
-        PYR_ASSERT(cd, "connectionRemoved() called before connectionAdded()");
+        GameConnectionData* cd = getData(connection);
+        PYR_ASSERT(cd, "No ConnectionData.  connectionRemoved() called before connectionAdded()?");
 
         sendAll(new EntityRemovedPacket(cd->playerEntity->getID()));
         connection->sendPacket(new EntityRemovedPacket(
@@ -151,17 +155,17 @@ namespace pyr {
         removeEntity(cd->playerEntity);
         delete cd->playerEntity;
         // Don't need to delete the behavior, because the entity does that for us.
-        delete cd;
 
+        // Maybe this will need to specifically unregister handlers as
+        // opposed to clearing them all.
         connection->clearHandlers();
-        connection->setOpaque(0);
     }
 
     void Game::handlePlayerEvent(Connection* c, PlayerEventPacket* p) {
-        ConnectionData* cd = getData(c);
+        GameConnectionData* cd = getData(c);
         PlayerBehavior* behavior = cd->behavior;
         Entity* entity = cd->playerEntity;
         behavior->handleEvent(entity, p->event());
     }
-    
+
 }

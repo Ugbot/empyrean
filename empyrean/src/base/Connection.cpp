@@ -16,10 +16,8 @@ namespace pyr {
         _writer = new WriterThread(socket);
         _readerThread = new Thread(_reader, PR_PRIORITY_HIGH);
         _writerThread = new Thread(_writer, PR_PRIORITY_HIGH);
-        
+
         _closing = false;
-        
-        _opaque = 0;
     }
     
     Connection::~Connection() {

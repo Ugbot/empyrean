@@ -25,6 +25,10 @@ namespace pyr {
             return _password;
         }
         
+        CharacterPtr getCharacter(int i) const {
+            return _characters[i];
+        }
+        
     private:
         std::string _username;
         std::string _password;

@@ -15,6 +15,7 @@ namespace pyr {
     class LoginPacket;
     class Packet;
     class SayPacket;
+    class ServerConnectionData;
 
     /**
      * Represents the actual server and server-logic.  Contains a list of
@@ -29,12 +30,7 @@ namespace pyr {
         void update(float dt);
 
     private:
-        struct ConnectionData {
-            bool loggedIn;
-            AccountPtr account;
-        };
-
-        static ConnectionData* getData(Connection* c);
+        static ServerConnectionData* getData(Connection* c);
 
         Game* getGame(const std::string& name);
 

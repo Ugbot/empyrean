@@ -18,7 +18,7 @@ namespace pyr {
 
     class ServerEntity : public Entity {
     public:
-        ServerEntity(u16 id, Behavior* behavior, ServerAppearance* appearance, Character* character)
+        ServerEntity(u16 id, Behavior* behavior, ServerAppearance* appearance, CharacterPtr character)
             : Entity(behavior, appearance)
         {
             _id = id;

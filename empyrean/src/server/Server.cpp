@@ -3,6 +3,7 @@
 #include "Game.h"
 #include "PacketTypes.h"
 #include "Server.h"
+#include "ServerConnectionData.h"
 #include "ServerLog.h"
 
 
@@ -10,7 +11,7 @@ namespace pyr {
 
     Server::~Server() {
         clearConnections();
-        
+
         for_each(_games.begin(), _games.end(), delete_function<Game>);
         _games.clear();
     }
@@ -25,8 +26,8 @@ namespace pyr {
         }
     }
 
-    Server::ConnectionData* Server::getData(Connection* c) {
-        return static_cast<ConnectionData*>(c->getOpaque());
+    ServerConnectionData* Server::getData(Connection* c) {
+        return checked_cast<ServerConnectionData*>(c->getData());
     }
 
     Game* Server::getGame(const std::string& name) {
@@ -41,11 +42,19 @@ namespace pyr {
     void Server::connectionAdded(Connection* connection) {
         PYR_SERVER_LOG() << "Connection from address " << italic(connection->getPeerAddress());
 
-        // set up connection-specific data
-        ConnectionData* cd = new ConnectionData;
-        cd->loggedIn = false;
-        cd->account = 0;
-        connection->setOpaque(cd);
+        // Set up connection-specific data.
+        ServerConnectionData* cd = dynamic_cast<ServerConnectionData*>(connection->getData());
+        if (cd) {
+            // Connection has come back from another holder.  Reset the data
+            // object, but preserve the data that makes sense.
+            cd = new ServerConnectionData(*cd);
+        } else {
+            // Assign new data.
+            ServerConnectionData* cd = new ServerConnectionData;
+            cd->loggedIn = false;
+            cd->account = 0;
+        }
+        connection->setData(cd);
 
         // set up packet handlers
         connection->definePacketHandler(this, &Server::handleLogin);
@@ -54,24 +63,25 @@ namespace pyr {
     }
 
     void Server::connectionRemoved(Connection* connection) {
-        ConnectionData* cd = getData(connection);
+        ServerConnectionData* cd = getData(connection);
 
         if (cd->loggedIn) {
             announceLogout(connection);
         }
 
-        delete cd;
-
-        connection->setOpaque(0);
+        // This might have to explicitly unregister the handlers we set
+        // instead of clearing them all.
         connection->clearHandlers();
 
+        // Don't say the client disconnected if it only went to another
+        // ConnectionHolder.
         if (connection->isClosed()) {
             PYR_SERVER_LOG() << italic(connection->getPeerAddress()) << " disconnected";
         }
     }
 
     void Server::handleLogin(Connection* c, LoginPacket* p) {
-        ConnectionData* cd = getData(c);
+        ServerConnectionData* cd = getData(c);
         if (cd->loggedIn) {
             c->sendPacket(new LoginResponsePacket(LR_ALREADY_LOGGED_IN));
             PYR_SERVER_LOG() << italic(p->username()) << " attempted to log in twice!";
@@ -81,7 +91,7 @@ namespace pyr {
         /// @todo  test for invalid username
 
         for (size_t i = 0; i < getConnectionCount(); ++i) {
-            ConnectionData* cdi = getData(getConnection(i));
+            ServerConnectionData* cdi = getData(getConnection(i));
             if (cdi != cd && cdi->account && cdi->account->getUsername() == p->username()) {
                 c->sendPacket(new LoginResponsePacket(LR_ALREADY_LOGGED_IN));
                 PYR_SERVER_LOG() << italic(p->username()) << " already logged in!";
@@ -126,7 +136,7 @@ namespace pyr {
     }
 
     void Server::handleSay(Connection* c, SayPacket* p) {
-        ConnectionData* cd = getData(c);
+        ServerConnectionData* cd = getData(c);
         sendAll(new LobbyPacket(cd->account->getUsername(),
                                 LOBBY_SAY,
                                 p->text()));
@@ -135,7 +145,7 @@ namespace pyr {
     }
 
     void Server::handleJoinGame(Connection* c, JoinGamePacket* p) {
-        ConnectionData* cd = getData(c);
+        ServerConnectionData* cd = getData(c);
 
         if (!cd->account) {
             // ignore packet, must log in first
@@ -185,13 +195,13 @@ namespace pyr {
     }
 
     void Server::announceLogin(Connection* c) {
-        ConnectionData* cd = getData(c);
+        ServerConnectionData* cd = getData(c);
         sendAllBut(c, new LobbyPacket(cd->account->getUsername(),
                                       LOBBY_LOGIN, ""));
     }
 
     void Server::announceLogout(Connection* c) {
-        ConnectionData* cd = getData(c);
+        ServerConnectionData* cd = getData(c);
         sendAllBut(c, new LobbyPacket(cd->account->getUsername(),
                                       LOBBY_LOGOUT, ""));
     }

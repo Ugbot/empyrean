@@ -5,9 +5,10 @@
 #include <string>
 #include <vector>
 #include "ConnectionHolder.h"
+#include "Map.h"
+#include "ServerConnectionData.h"
 #include "Types.h"
 #include "UIDGenerator.h"
-#include "Map.h"
 
 namespace pyr {
 
@@ -15,6 +16,32 @@ namespace pyr {
     class PlayerBehavior;
     class PlayerEventPacket;
     class ServerEntity;
+
+    /// While in a game, extra data is needed.
+    struct GameConnectionData : public ServerConnectionData {
+        GameConnectionData() {
+            playerEntity = 0;
+            behavior = 0;
+        }
+
+        GameConnectionData(const ServerConnectionData& rhs)
+            : ServerConnectionData(rhs)
+        {
+            playerEntity = 0;
+            behavior = 0;
+        }
+
+        GameConnectionData(const GameConnectionData& rhs)
+            : ServerConnectionData(rhs)
+        {
+            playerEntity = rhs.playerEntity;
+            behavior = rhs.behavior;
+        }
+
+        // Can't use Zeroed<> because delete doesn't work.
+        ServerEntity* playerEntity;
+        PlayerBehavior* behavior;
+    };
 
     class Game : public ConnectionHolder {
     public:
@@ -27,13 +54,7 @@ namespace pyr {
         void update(float dt);
 
     private:
-        struct ConnectionData {
-            ServerEntity* playerEntity;
-            PlayerBehavior* behavior;
-        };
-
-        static void setData(Connection* c, ConnectionData* cd);
-        static ConnectionData* getData(Connection* c);
+        static GameConnectionData* getData(Connection* c);
 
         void addEntity(ServerEntity* entity);
         void removeEntity(ServerEntity* entity);
