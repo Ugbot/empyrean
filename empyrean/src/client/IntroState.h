@@ -17,7 +17,8 @@ namespace pyr {
         
         void onKeyPress(SDLKey key, bool down);
         void onMousePress(Uint8 button, bool down, int x, int y);
-        
+        void onJoyPress(Uint8 button, bool down);
+
     private:
         Texture* _image;  
     };

@@ -22,6 +22,8 @@ namespace pyr {
     MenuState::MenuState() {
         createInterface();
         showPointer();
+        _joyVelX = 0;
+        _joyVelY = 0;
     }
 
     MenuState::~MenuState() {
@@ -73,15 +75,65 @@ namespace pyr {
         } else {
             _screen->genMouseUpEvent(phui::SDLToPhuiButton(button), p);
         }
+        _joyVelX = 0;
+        _joyVelY = 0;
     }
     
     void MenuState::onMouseMove(int x, int y) {
         const phui::Point p(
             x * 1024 / Application::instance().getWidth(),
             y * 768 / Application::instance().getHeight());
-        _screen->genMouseMoveEvent(p);
+        //_screen->genMouseMoveEvent(p);
+        _joyVelX = 0;
+        _joyVelY = 0;
     }
     
+    void MenuState::onJoyPress(Uint8 button, bool down) {
+        if(button == 8 && down) {
+            quit();
+        }
+        
+        const phui::Point p(
+            Application::instance().getMousePosX() * 1024 / Application::instance().getWidth(),
+            Application::instance().getMousePosY() * 768 / Application::instance().getHeight());
+
+        if (button == 0 && down) {
+            _screen->genMouseDownEvent(phui::SDLToPhuiButton(SDL_BUTTON_LEFT), p);
+        } else if(button == 0) {
+            _screen->genMouseUpEvent(phui::SDLToPhuiButton(SDL_BUTTON_LEFT), p);
+        }
+
+        if (button == 1 && down) {
+            _screen->genMouseDownEvent(phui::SDLToPhuiButton(SDL_BUTTON_RIGHT), p);
+        } else if(button == 1) {
+            _screen->genMouseUpEvent(phui::SDLToPhuiButton(SDL_BUTTON_RIGHT), p);
+        }
+        
+        
+    }
+
+    void MenuState::onJoyMove(int axis, int value) {
+        if(axis == 0) {
+            if(value > 3200 || value < -3200) {
+                _joyVelX = (int)(value/50.0);
+            }
+            else {
+                _joyVelX = 0;
+            }
+
+        } else if(axis == 1) {
+            if(value > 3200 || value < -3200) {
+                _joyVelY = (int)(value/50.0);
+            }
+            else {
+                _joyVelY = 0;
+            }
+        }
+
+        Application::instance().setMouseVelX(_joyVelX);
+        Application::instance().setMouseVelY(_joyVelY);
+    }
+
     void MenuState::onErrorOK() {
         _screen = _mainScreen;
     }

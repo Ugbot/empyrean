@@ -12,12 +12,13 @@
 #include "Renderer.h"
 #include "ResourceManager.h"
 #include "VecMath.h"
+#include "Log.h"
 
 namespace pyr {
     PlayerEntity::PlayerEntity(Model* model, Renderer* renderer) {
         _model = model;
         _renderer = renderer;
-        _direction = 0;
+        _direction = 90;
 
         startStandState();
     }
@@ -32,7 +33,8 @@ namespace pyr {
         _renderer->draw(_model);
         glDisable(GL_DEPTH_TEST);
         glPopMatrix();
-        /*
+        
+/*
         // Render player bounding box [debugging].
         float height = 1.9f;
         float width = 0.3f;
@@ -83,6 +85,9 @@ namespace pyr {
 
     void PlayerEntity::startStandState() {
         _model->getModel().getMixer()->clearCycle(0, 0.0f);
+        if(!_model->getModel().getMixer()->blendCycle(1, 1.0f, 10.0f)) {
+            PYR_LOG() << "ERROR CHANGING BACK TO STAND STATE";
+        }
         _state = &PlayerEntity::updateStandState;
     }
     
@@ -94,6 +99,9 @@ namespace pyr {
     }
 
     void PlayerEntity::startWalkState() {
+        if(!_model->getModel().getMixer()->clearCycle(1, 0.0f)) {
+            PYR_LOG() << "ERROR CHANGING BACK TO ACTION STATE";
+        }
         _model->getModel().getMixer()->blendCycle(0, 1.0f, 5.0f);
         _state = &PlayerEntity::updateWalkState;
     }

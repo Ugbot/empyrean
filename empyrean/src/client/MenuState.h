@@ -29,7 +29,8 @@ namespace pyr {
         void onKeyPress(SDLKey key, bool down);
         void onMousePress(Uint8 button, bool down, int x, int y);
         void onMouseMove(int x, int y);
-        
+        void onJoyPress(Uint8 button, bool down);
+        void onJoyMove(int axis, int value);
         // screen callbacks below
         
         void onErrorOK();
@@ -89,6 +90,10 @@ namespace pyr {
         RefPtr<LobbyScreen>        _lobbyScreen;
         RefPtr<NewCharacterScreen> _newCharacterScreen;
         RefPtr<NewGameScreen>      _newGameScreen;
+
+        // For controlling menu with joystick
+        int _joyVelX;
+        int _joyVelY;
     };
 
 }

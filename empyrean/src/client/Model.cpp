@@ -8,18 +8,15 @@
 #include <cal3d/cal3d.h>
 
 #include "Model.h"
-#include "OpenGL.h"
 #include "Profiler.h"
 #include "ResourceManager.h"
 #include "Utility.h"
 #include "Types.h"
+#include "Log.h"
 
 namespace pyr {
 
-    struct CalTexture {
-        GLuint tex;
-    };
-
+    
     using std::ifstream;
     using std::string;
     using std::vector;
@@ -78,6 +75,8 @@ namespace pyr {
         void loadConfigFile(const string& fname, CalCoreModel& model) {
             string path = getPath(fname);
 
+            PYR_LOG() << "Model Load Path " << path;
+
             ifstream file(fname.c_str());
             std::string c;
 
@@ -98,12 +97,14 @@ namespace pyr {
                 } else if (line[0] == "skeleton") {
                     skeleton=line[1];
                 } else if (line[0] == "animation") {
+                    PYR_LOG() << "Pushing " << line[1];
                     animations.push_back(line[1]);
                 } else if (line[0] == "mesh") {
                     meshes.push_back(line[1]);
                 } else if (line[0] == "material") {
                     materials.push_back(line[1]);
                 } else {
+                    PYR_LOG() << "UNKNOWN " << line[0];
                     std::stringstream ss;
                     ss << "Unkown token \"" << line[0] << "\" on line " << curline << " in " << fname;
                     throw std::runtime_error(ss.str().c_str());
@@ -124,6 +125,7 @@ namespace pyr {
 
                 for (u32 i = 0; i < animations.size(); i++) {
                     result=model.loadCoreAnimation(path + animations[i]);
+                    PYR_LOG() << "Loading " << animations[i];
                     if (result==-1) throw CalException();
                 }
 

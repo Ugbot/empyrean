@@ -2,9 +2,14 @@
 #define PYR_MODEL_H
 
 #include <cal3d/cal3d.h>
+#include "OpenGL.h"
 
 namespace pyr {
     class CoreModel;
+
+    struct CalTexture {
+        GLuint tex;
+    };
 
     /** Encapsulates a 3D model.
      *

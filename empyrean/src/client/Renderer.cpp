@@ -42,7 +42,7 @@ namespace pyr {
 
         if (!cellshade)
         {
-            glEnable(GL_LIGHTING);
+            //glEnable(GL_LIGHTING);
         }
         glColor3f(1,1,1);
 
@@ -93,7 +93,7 @@ namespace pyr {
                     static float texcoords[30000][2];
                     /*int nTexcoords=*/r->getTextureCoordinates(0, &texcoords[0][0]);
                     glEnable(GL_TEXTURE_2D);
-                    glBindTexture(GL_TEXTURE_2D, (GLuint)r->getMapUserData(0));
+                    glBindTexture(GL_TEXTURE_2D, ((CalTexture*)r->getMapUserData(0))->tex);
                     glEnableClientState(GL_TEXTURE_COORD_ARRAY);
                     glTexCoordPointer(2, GL_FLOAT, 0, &texcoords[0][0]);
                 } else {
@@ -162,7 +162,7 @@ namespace pyr {
                 int nTexcoords=r.getTextureCoordinates(0,&texcoords[0][0]);
 
                 if (r.getMapCount() && nTexcoords>0) {
-                    u32 tex=(u32)r.getMapUserData(0);
+                    u32 tex=((CalTexture*) r.getMapUserData(0))->tex;
                     shader.setTex(tex);
                 }
 

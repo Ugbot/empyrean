@@ -25,7 +25,9 @@ namespace pyr {
         // mouse
         void onMousePress(Uint8 button, bool down, int x, int y);
         void onMouseMove(int x, int y);
-        
+        void onJoyPress(Uint8 button, bool down);
+        void onJoyMove(int axis, int value);
+
     private:
         static std::string getSDLKeyName(SDLKey key);
         static std::string getSDLButtonName(Uint8 button);

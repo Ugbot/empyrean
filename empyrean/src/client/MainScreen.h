@@ -19,7 +19,7 @@ namespace pyr {
             createConnectWindow();
             createConnectingWindow();
         }
-        
+
     private:
         void createMainScreen() {
             using namespace phui;

@@ -62,6 +62,8 @@ namespace pyr {
         glPointSize(5);
         MapRenderer renderer;
         _map->handleVisitor(renderer);
+        
+        glEnable(GL_TEXTURE_2D);
 
         EntityMap::iterator itr = _entities.begin();
         for (; itr != _entities.end(); ++itr) {

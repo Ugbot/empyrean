@@ -168,6 +168,23 @@ namespace pyr {
         }
     }
     
+    void InputManager::onJoyMove(int axis, int value) {
+        if(axis == 0) {
+            getInput("JoyX").setValue(value);
+        }
+    }
+    
+    void InputManager::onJoyPress(Uint8 button, bool down) {
+        switch(button) {
+            case 0:
+                getInput("JoyButtonA").setValue(down ? 1.0f : 0.0f);    
+                break;
+            case 8:
+                getInput("JoyStart").setValue(down ? 1.0f : 0.0f);    
+                break;
+        }
+    }
+
     std::string InputManager::getSDLKeyName(SDLKey key) {
         if (gNameMap.count(key)) {
             return gNameMap[key];

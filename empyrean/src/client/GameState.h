@@ -18,6 +18,8 @@ namespace pyr {
         void onKeyPress(SDLKey key, bool down);
         void onMousePress(Uint8 button, bool down, int x, int y);
         void onMouseMove(int x, int y);
+        void onJoyPress(Uint8 button, bool down);
+        void onJoyMove(int axis, int value);
         
     private:
         InputManager _im;
@@ -26,7 +28,11 @@ namespace pyr {
         Input* _inputJump;
         Input* _inputAttack;
         Input* _inputQuit;
-        
+        Input* _inputJoyX;
+        Input* _inputJoyJump;
+        Input* _inputJoyStart;
+
+        int _lastJoyX;
         gltext::FontRendererPtr _renderer;
     };
 

@@ -40,4 +40,10 @@ namespace pyr {
         }
     }
 
+    void IntroState::onJoyPress(Uint8 button, bool down) {
+        if(down) {
+            invokeTransition<MenuState>();
+        }
+    }
+
 }

@@ -128,7 +128,7 @@ namespace pyr {
                 break;
                 
             case PE_JUMP:
-                if(entity->getVel()[1] == 0) {
+                if(fabs(entity->getVel()[1]) < .1) {
                     entity->getVel()[1] = 8;
                     entity->jumping() = 1;
                 }

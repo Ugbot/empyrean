@@ -28,7 +28,9 @@ namespace pyr {
         virtual void onKeyPress(SDLKey key, bool down) { }
         virtual void onMousePress(Uint8 button, bool down, int x, int y) { }
         virtual void onMouseMove(int x, int y) { }
-        
+        virtual void onJoyPress(Uint8 button, bool down) { }
+        virtual void onJoyMove(int axis, int value) { }
+
         bool isPointerVisible() {
             return _pointerVisible;
         }

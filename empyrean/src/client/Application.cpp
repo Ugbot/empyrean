@@ -23,6 +23,8 @@ namespace pyr {
         _height = 0;
         _lastX = 0;
         _lastY = 0;
+        _velX = 0;
+        _velY = 0;
         _currentState = new InitialState();
         _showCPUInfo = false;
         
@@ -119,6 +121,13 @@ namespace pyr {
             }
         }
 
+        if(_velX != 0) {
+            _lastX += _velX * dt;
+        }
+
+        if(_velY != 0) {
+            _lastY += _velY * dt;
+        }
         _fps.update(dt);
     }
 
@@ -145,6 +154,18 @@ namespace pyr {
         }
         _lastX = x;
         _lastY = y;
+    }
+
+    void Application::onJoyPress(Uint8 button, bool down) {
+        if (_currentState) {
+            _currentState->onJoyPress(button,down);
+        }
+    }
+
+    void Application::onJoyMove(int axis, int value) {
+        if (_currentState) {
+            _currentState->onJoyMove(axis,value);
+        }
     }
 
     void Application::invokeTransition(State* state) {
@@ -181,4 +202,19 @@ namespace pyr {
         }
     }
 
+    void Application::setMouseVelX(int X) {
+        _velX = X;
+    }
+
+    void Application::setMouseVelY(int Y) {
+        _velY = Y;
+    }
+
+    int Application::getMousePosX() {
+        return _lastX;
+    }
+
+    int Application::getMousePosY() {
+        return _lastY;
+    }
 }

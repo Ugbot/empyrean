@@ -27,6 +27,12 @@ namespace pyr {
         _inputJump   = &_im.getInput("Space");
         _inputAttack = &_im.getInput("RCtrl");
         _inputQuit   = &_im.getInput("Escape");
+        _inputJoyX   = &_im.getInput("JoyX");
+        _inputJoyJump = &_im.getInput("JoyButtonA");
+        _inputJoyStart = &_im.getInput("JoyStart");
+        
+        _lastJoyX = 0;
+        _inputJoyX->setValue(0);
 
         gltext::FontPtr font = gltext::OpenFont("fonts/Vera.ttf", 16);
         _renderer = gltext::CreateRenderer(gltext::TEXTURE, font);
@@ -83,7 +89,45 @@ namespace pyr {
         if (_inputAttack->getDelta() > gmtl::GMTL_EPSILON) {
             sc.sendEvent(PE_ATTACK);
         }
+
         
+        if(_inputJoyX->getValue() > 3200 && _lastJoyX == 0) {
+            sc.sendEvent(PE_BEGIN_RIGHT);
+            _lastJoyX = 3201;
+        }
+        else if(_inputJoyX->getValue() > -3200 && _inputJoyX->getValue() < 3200 && _lastJoyX > 3200) {
+            sc.sendEvent(PE_END_RIGHT);
+            _lastJoyX = 0;
+        }
+        else if(_inputJoyX->getValue() > -3200 && _inputJoyX->getValue() < 3200 && _lastJoyX < -3200) {
+            sc.sendEvent(PE_END_LEFT);
+            _lastJoyX = 0;
+        }
+        else if(_inputJoyX->getValue() < -3200 && _lastJoyX == 0) {
+            sc.sendEvent(PE_BEGIN_LEFT);
+            _lastJoyX = -3201;
+        }
+        else if(_inputJoyX->getValue() < -3200 && _lastJoyX > 3200) {
+            sc.sendEvent(PE_END_RIGHT);
+            sc.sendEvent(PE_BEGIN_LEFT);
+            _lastJoyX = -3201;
+        }
+        else if(_inputJoyX->getValue() > 3200 && _lastJoyX < -3200) {
+            sc.sendEvent(PE_END_LEFT);
+            sc.sendEvent(PE_BEGIN_RIGHT);
+            _lastJoyX = 3201;
+        }
+       
+        // jump!
+        if (_inputJoyJump->getDelta() > gmtl::GMTL_EPSILON) {
+            sc.sendEvent(PE_JUMP);
+        }
+        
+        if(_inputJoyStart->getDelta() > gmtl::GMTL_EPSILON) {
+            sc.disconnect();
+            invokeTransition<MenuState>();
+        }
+
         if (_inputQuit->getValue() >= 0.50f) {
             sc.disconnect();
             invokeTransition<MenuState>();
@@ -103,5 +147,14 @@ namespace pyr {
     void GameState::onMouseMove(int x, int y) {
         _im.onMouseMove(x, y);
     }
+
+    void GameState::onJoyPress(Uint8 button, bool down) {
+        _im.onJoyPress(button,down);
+    }
+
+    void GameState::onJoyMove(int axis, int value) {
+        _im.onJoyMove(axis,value);
+    }
+
 
 }

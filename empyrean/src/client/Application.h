@@ -34,10 +34,20 @@ namespace pyr {
         void onMousePress(Uint8 button, bool down, int x, int y);
         void onMouseMove(int x, int y);
         
+        void onJoyMove(int axis, int value);
+        void onJoyPress(Uint8 button, bool down);
+
         void invokeTransition(State* state);
         void invokeTimedTransition(State* state, float seconds);
         bool shouldQuit();
         
+        // Mouse hijacking
+        void setMouseVelX(int X);
+        void setMouseVelY(int Y);
+
+        int getMousePosX();
+        int getMousePosY();
+
     private:
         void renderCallTree(const CallNodeList& callTree);
 
@@ -49,6 +59,10 @@ namespace pyr {
         // the mouse's position)
         int _lastX;
         int _lastY;
+
+        // Velocity of the mouse based on joystick input
+        int _velX;
+        int _velY;
 
         ScopedPtr<State> _currentState;
         ScopedPtr<State> _nextState;

@@ -37,7 +37,7 @@ namespace pyr {
         }
 
         PYR_LOG() << "Initializing SDL...";
-        initializeSDL(SDL_INIT_NOPARACHUTE | SDL_INIT_VIDEO | SDL_INIT_TIMER);
+        initializeSDL(SDL_INIT_NOPARACHUTE | SDL_INIT_VIDEO | SDL_INIT_TIMER | SDL_INIT_JOYSTICK);
 
         // define our minimum requirements for the GL window
         SDL_GL_SetAttribute(SDL_GL_RED_SIZE,     5);
@@ -76,6 +76,18 @@ namespace pyr {
         SDL_WM_SetCaption("Empyrean", 0);
         SDL_ShowCursor(SDL_DISABLE);
 
+        SDL_Joystick *joystick=NULL;
+        if(SDL_NumJoysticks() > 0) {
+            
+            SDL_JoystickEventState(SDL_ENABLE);
+            joystick = SDL_JoystickOpen(0);
+
+            PYR_LOG() << "Creating Joystick with name of " << SDL_JoystickName(0);
+            PYR_LOG() << "Num Axes " << SDL_JoystickNumAxes(joystick);
+            PYR_LOG() << "Num Buttons " << SDL_JoystickNumButtons(joystick);
+            PYR_LOG() << "Num Hats " << SDL_JoystickNumHats(joystick);
+        }
+
         pyr::Application& app = pyr::Application::instance();
 
         // notify the app and the input manager of the window size
@@ -111,6 +123,141 @@ namespace pyr {
 
                     case SDL_MOUSEMOTION:
                         app.onMouseMove(event.motion.x, event.motion.y);
+                        break;
+
+                    case SDL_JOYAXISMOTION:
+                        switch(event.jaxis.axis) {
+                            case 0:
+                                // X Axis left stick (Left = negative, Right = positive)
+                                app.onJoyMove(0,event.jaxis.value);
+                                break;
+                            case 1:
+                                // Y Axis left stick (Forward = negative, Back = positive)
+                                app.onJoyMove(1,event.jaxis.value);
+                                break;
+                            case 2:
+                                // Throttle (low = positive, high = negative)
+                                break;
+                            case 3:
+                                // X Axis right stick (Left = negative, Right = positive)
+                                break;
+                            case 4:
+                                // Y Axis right stick (Forward = negative, Back = positive)
+                                break;
+                        }
+                        break;
+
+                    case SDL_JOYHATMOTION:
+                        if(event.jhat.value & SDL_HAT_CENTERED) {
+                            // Doesn't work
+                        }
+
+                        if(event.jhat.value & SDL_HAT_RIGHT) {
+                            // Right
+                        }
+                        
+                        if(event.jhat.value & SDL_HAT_LEFT ) {
+                            // Left
+                        }
+
+                        break;
+
+                    case SDL_JOYBUTTONDOWN:
+                        switch(event.jbutton.button) {
+                            case 0:
+                                // A
+                                app.onJoyPress(0,true);
+                                break;
+                            case 1:
+                                // B
+                                
+                                break;
+                            case 2:
+                                // C
+                                
+                                break;
+                            case 3:
+                                // X
+                                
+                                break;
+                            case 4:
+                                // Y
+                                
+                                break;
+                            case 5:
+                                // Z
+                                
+                                break;
+                            case 6:
+                                // L1
+                                
+                                break;
+                            case 7:
+                                // R1
+                                
+                                break;
+                            case 8:
+                                // Start
+                                app.onJoyPress(8,true);
+                                break;
+                            case 9:
+                                // L2
+                                
+                                break;
+                            case 10:
+                                // R2
+                                
+                                break;
+                        }
+                        break;
+
+                    case SDL_JOYBUTTONUP:
+                        switch(event.jbutton.button) {
+                            case 0:
+                                // A
+                                app.onJoyPress(0,false);
+                                break;
+                            case 1:
+                                // B
+                                
+                                break;
+                            case 2:
+                                // C
+                                
+                                break;
+                            case 3:
+                                // X
+                                
+                                break;
+                            case 4:
+                                // Y
+                                
+                                break;
+                            case 5:
+                                // Z
+                                
+                                break;
+                            case 6:
+                                // L1
+                                
+                                break;
+                            case 7:
+                                // R1
+                                
+                                break;
+                            case 8:
+                                // Start
+                                app.onJoyPress(8,false);
+                                break;
+                            case 9:
+                                // L2
+                                
+                                break;
+                            case 10:
+                                // R2
+                                
+                                break;
+                        }
                         break;
 
                     case SDL_QUIT:
