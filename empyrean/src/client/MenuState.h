@@ -4,7 +4,6 @@
 
 #include "State.h"
 #include "MultiTextureImage.h"
-#include "MultiImageTex.h"
 
 namespace pyr {
 
