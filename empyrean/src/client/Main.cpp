@@ -5,11 +5,14 @@
 #include <stdlib.h>
 #include <time.h>
 #include <SDL.h>
-#include "Application.h"
-#include "Error.h"
+
 #ifdef PYR_USE_EXTGL
 #include "extgl.h"
 #endif
+
+#include "Application.h"
+#include "Configuration.h"
+#include "Error.h"
 #include "InputManager.h"
 #include "Profiler.h"
 #include "SDLUtility.h"
@@ -40,10 +43,8 @@ namespace pyr {
         SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE,   16);
         SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
 
-        //const int width = 640;
-        //const int height = 480;
-        const int width  = 1024;
-        const int height = 768;
+        const int width  = Configuration::instance().getScreenWidth();
+        const int height = Configuration::instance().getScreenHeight();
         const int bpp    = info->vfmt->BitsPerPixel;
         if (!SDL_SetVideoMode(width, height, bpp, SDL_OPENGL)) {
             throwSDLError("Setting video mode failed");
@@ -56,6 +57,7 @@ namespace pyr {
 #endif
 
         SDL_WM_SetCaption("Empyrean", 0);
+        SDL_ShowCursor(SDL_DISABLE);
         
         pyr::Application& app = pyr::Application::instance();
         

@@ -121,6 +121,12 @@
 				RelativePath="..\..\src\client\Color.h">
 			</File>
 			<File
+				RelativePath="..\..\src\client\Configuration.cpp">
+			</File>
+			<File
+				RelativePath="..\..\src\client\Configuration.h">
+			</File>
+			<File
 				RelativePath="..\..\src\client\Entity.h">
 			</File>
 			<File
@@ -248,12 +254,6 @@
 			</File>
 			<File
 				RelativePath="..\..\src\client\TextureImage.h">
-			</File>
-			<File
-				RelativePath="..\..\src\client\extgl.c">
-			</File>
-			<File
-				RelativePath="..\..\src\client\extgl.h">
 			</File>
 		</Filter>
 	</Files>

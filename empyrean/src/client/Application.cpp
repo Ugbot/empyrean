@@ -2,7 +2,7 @@
 #include <sstream>
 
 #include "Application.h"
-#include "GameState.h"
+#include "IntroState.h"
 #include "OpenGL.h"
 #include "Profiler.h"
 #include "NSPRUtility.h"
@@ -10,7 +10,7 @@
 
 namespace pyr {
 
-    typedef GameState InitialState;
+    typedef IntroState InitialState;
 
 
     Application* Application::_instance = 0;
