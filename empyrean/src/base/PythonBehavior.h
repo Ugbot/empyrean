@@ -28,6 +28,11 @@ namespace pyr {
 
     void bindBehavior();
 
+	void setPos(Entity* entity, float x, float y);
+	void setVel(Entity* entity, float x, float y);
+	float getPosX(Entity* entity);
+	float getVelX(Entity* entity);
+
 }
 
 
