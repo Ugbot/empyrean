@@ -1,0 +1,21 @@
+from os.path import join
+from glob import glob
+
+TARGET = ARGUMENTS.get('TARGET', '.')
+
+DIRS = Split("""
+   images
+""")
+
+WILD = Split("""
+   *.png
+   *.jpg
+   *.jpeg
+""")
+
+env = Environment()
+
+for d in DIRS:
+    for w in WILD:
+        files = glob("%s/%s" % (d, w))
+        env.Install(join(TARGET, d), files)
