@@ -52,12 +52,13 @@ namespace pyr {
 
         glColor3f(1, 1, 1);
         glPointSize(5);
-        drawMap();
 
         glEnable(GL_TEXTURE_2D);
 
         glEnable(GL_LIGHTING);
-        //glEnable(GL_LIGHT0);
+        glEnable(GL_LIGHT0);
+        float pos0[] = {-1, -1, 1, 0};
+        glLightfv(GL_LIGHT0, GL_POSITION, pos0);
 
         glEnable(GL_LIGHT1);
         if (_focus) {
@@ -84,6 +85,8 @@ namespace pyr {
             e->draw(rend);
             glPopMatrix();
         }
+
+        drawMap();
 
         glDisable(GL_LIGHTING);
         glDisable(GL_LIGHT0);
