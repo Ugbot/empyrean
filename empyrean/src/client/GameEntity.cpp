@@ -23,7 +23,7 @@ namespace pyr {
 
         // Initializing frenzy! // TEMP TESTING -> real values commented out
         _currentEther = 25; //0;
-        _maxEther = 50; //0;
+        _maxEther = 100; //0;
         _currentVitality = 10; //0;
         _maxVitality = 100; //0;
         _jumpStart = false;

@@ -5,6 +5,7 @@ Install(env, Split("""
     menu.png
     particle.png
     pointer.png
+    MikeThumbnail.jpg
 """))
 
 ConvertImage(env, 'intro.tga', 'intro.png')

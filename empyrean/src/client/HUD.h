@@ -7,6 +7,7 @@
 
 namespace pyr {
     class Entity;
+    class Texture;
 
     class HUD {
         PYR_DECLARE_SINGLETON(HUD)
@@ -26,6 +27,10 @@ namespace pyr {
         std::vector<Vec2f> _vertsLeft;
         std::vector<Vec2f> _vertsRight;
         Vec2f _vitCenter;
+        Vec2f _ethCenter;
+        Texture* _thumbnail;
+        float _thumbWidth;
+        float _thumbHeight;
         float _barRadius;
         float _barLongStraight;
         float _barShortStraight;
@@ -33,6 +38,7 @@ namespace pyr {
         int _numSegsInCurves;
         int _barBufferX;
         int _barBufferY;
+        int _barBuffer;
         float _barPathLength;
     };
 };
