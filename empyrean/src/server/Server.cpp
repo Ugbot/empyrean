@@ -1,12 +1,13 @@
 #include "Configuration.h"
 #include "Database.h"
 #include "Error.h"
-#include "Log.h"
+#include "ServerLog.h"
 #include "LogEvent.h"
 #include "Platform.h"
 #include "Server.h"
 #include "ServerFrame.h"
 #include "ServerThread.h"
+#include "Log.h"
 
 
 namespace pyr {
@@ -30,6 +31,9 @@ namespace pyr {
             catch (const ConfigurationError& /*error*/) {
                 // show a warning or something
             }
+
+			// Prepare the log file
+			the<Log>().open("server.log");
         
             wxInitAllImageHandlers();
             

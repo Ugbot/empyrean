@@ -1,5 +1,5 @@
-#ifndef PYR_LOG_H
-#define PYR_LOG_H
+#ifndef PYR_SERVER_LOG_H
+#define PYR_SERVER_LOG_H
 
 
 #include <string>
