@@ -181,6 +181,9 @@
 				RelativePath="..\..\src\client\HUD.h">
 			</File>
 			<File
+				RelativePath="..\..\src\client\IncludePython.h">
+			</File>
+			<File
 				RelativePath="..\..\src\client\Input.h">
 			</File>
 			<File
@@ -236,6 +239,12 @@
 			</File>
 			<File
 				RelativePath="..\..\src\client\PythonLog.cpp">
+			</File>
+			<File
+				RelativePath="..\..\src\client\PythonScript.cpp">
+			</File>
+			<File
+				RelativePath="..\..\src\client\PythonScript.h">
 			</File>
 			<File
 				RelativePath="..\..\src\client\Renderer.cpp">

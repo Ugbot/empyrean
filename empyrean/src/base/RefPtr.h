@@ -43,6 +43,7 @@ namespace pyr {
     public:
         // For compatibility with Boost.Python.
         typedef T element_type;
+        typedef RefDerivedSafe<T>* get_result;
 
         RefPtr(T* ptr = 0) {
             *this = ptr;

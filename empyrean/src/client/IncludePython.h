@@ -2,6 +2,10 @@
 #define PYR_INCLUDE_PYTHON_H
 
 
+#include "RefPtr.h"
+#include "ScopedPtr.h"
+
+
 // Both NSPR and Python #define HAVE_LONG_LONG without checking to see
 // if it's already defined.  :P
 
@@ -30,6 +34,29 @@
 #if defined(PYR__POSIX_C_SOURCE) && !defined(_POSIX_C_SOURCE)
  #define _POSIX_C_SOURCE
 #endif
+
+
+namespace pyr {
+
+    /**
+     * @{
+     * I can't figure out how to make Boost.Python accept a pyr::RefPtr or
+     * pyr::ScopedPtr, so make a pyr::ptr that does what we need.
+     */
+
+    template<typename T>
+    inline boost::python::pointer_wrapper<T*> ptr(const pyr::RefPtr<T>& p) {
+        return boost::python::ptr(p.raw_ptr());
+    }
+
+    template<typename T>
+    inline boost::python::pointer_wrapper<T*> ptr(const pyr::ScopedPtr<T>& p) {
+        return boost::python::ptr(p.raw_ptr());
+    }
+
+    /// @}
+
+}
 
 
 #endif

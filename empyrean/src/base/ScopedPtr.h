@@ -36,6 +36,7 @@ namespace pyr {
     public:
         // For compatibility with Boost.Python.
         typedef T element_type;
+        typedef ScopedDerivedSafe<T>* get_result;
 
         ScopedPtr(T* p = 0) {
             _ptr = p;
