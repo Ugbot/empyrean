@@ -61,14 +61,14 @@ namespace pyr {
             glPopMatrix();
         }
 
+        Renderer::begin3D();
         glPushMatrix();
-            glTranslatef(2,2,0);
-            glRotatef(90,0,-1,0);
-            glRotatef(90,1,0,0);
-            glEnable(GL_DEPTH_TEST);
+            glTranslatef(200, 200, 0);
+            glRotatef(_rotation, 0, -1, 0);
+            glRotatef(90, 1, 0, 0);
             _renderer->draw(_testModel);
-            glDisable(GL_DEPTH_TEST);
         glPopMatrix();
+        Renderer::end3D();
     }
         
     void GameState::update(float dt) {

@@ -189,7 +189,7 @@ namespace {
         }
     };
 
-    const float DefaultShade::scale=0.01f;
+    const float DefaultShade::scale=1.0f;
 
     /** Cell shading algorithm outlined at http://nehe.gamedev.net/tutorials/lesson37.jpg
      *
@@ -282,7 +282,7 @@ namespace pyr {
     void Renderer::end2D() {
         glMatrixMode(GL_PROJECTION);
         glLoadIdentity();
-        gluPerspective(45,4.0/3.0,0.1,800);
+        glOrtho(0,400,300,0,-100,100);
 
         glMatrixMode(GL_MODELVIEW);
         glLoadIdentity();

@@ -16,18 +16,37 @@ namespace pyr {
     using std::string;
     using std::vector;
 
-    /*
-     * It's clear now that we do indeed need an abstraction for CalCoreModel.
-     * Firstly, CalCoreModel doesn't clean itself up in its destructor. (wtf)  We need to call its destroy() method.
-     * Second, we need to deallocate any textures we've loaded.  We can do neither without some minimal wrapping.
-     */
-    template<>
-    class CachePolicy<CalCoreModel*> {
+    //! A quick and dirty adapter for CalCoreModel.
+    class CoreModel {
     public:
-        static CalCoreModel* create(const string& id) {
-            CalCoreModel* m=new CalCoreModel;
-            m->create(id);
-            loadConfigFile(id, *m);
+        // If you even know this class exists, then you have the right to use it as you see fit.
+        CalCoreModel _coreModel;
+
+        CoreModel(const std::string& id) {
+            _coreModel.create(id);
+        }
+
+        ~CoreModel() {
+            // deallocate all the textures
+            for (int i = 0; i < _coreModel.getCoreMaterialCount(); i++) {
+                CalCoreMaterial& material=*_coreModel.getCoreMaterial(i);
+
+                for (int j = 0; j < material.getMapCount(); j++) {                    
+                    pyr::u32 tex = (pyr::u32)material.getMapUserData(j);
+                    glDeleteTextures(1, &tex);
+                }
+            }
+
+            _coreModel.destroy();
+        }
+    };
+
+    template<>
+    class CachePolicy<CoreModel*> {
+    public:
+        static CoreModel* create(const string& id) {
+            CoreModel* m=new CoreModel(id);
+            loadConfigFile(id, m->_coreModel);
             return m;
         }
 
@@ -152,7 +171,9 @@ namespace pyr {
     }
 
     Model::Model(const string& fname) {
-        _coreModel=ResourceManager::instance().get<CalCoreModel*>(fname);
+        CoreModel* coremodel=ResourceManager::instance().get<CoreModel*>(fname);
+        _coreModel=&coremodel->_coreModel;
+
         _model=new CalModel();
 
         _model->create(_coreModel);
