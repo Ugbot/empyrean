@@ -128,26 +128,23 @@ namespace pyr {
 
         const float speed = 2;
 
-        switch (p->code()) {
-            case PE_BEGIN_RIGHT:
-                entity->getVel()[0] = speed;
-                break;
+        if (p->event() == "Begin Right") {
+            entity->getVel()[0] = speed;
+        }
                 
-            case PE_BEGIN_LEFT:
-                entity->getVel()[0] = -speed;
-                break;
+        if (p->event() == "Begin Left") {
+            entity->getVel()[0] = -speed;
+        }
+             
+        if (p->event() == "End Right" || p->event() == "End Left") {
+            entity->getVel()[0] = 0;
+        }
                 
-            case PE_END_RIGHT:
-            case PE_END_LEFT:
-                entity->getVel()[0] = 0;
-                break;
+        if (p->event() == "Jump") {
+            entity->getVel()[1] = 8;
+        }
                 
-            case PE_JUMP:
-                entity->getVel()[1] = 8;
-                break;
-                
-            case PE_ATTACK:
-                break;
+        if (p->event() == "Attack") {                
         }
     }
     

@@ -111,7 +111,7 @@ namespace pyr {
         return sendPacket(new NewCharacterPacket(name));
     }
 
-    bool ServerConnection::sendEvent(u16 event) {
+    bool ServerConnection::sendEvent(const std::string& event) {
         return sendPacket(new PlayerEventPacket(event));
     }
 

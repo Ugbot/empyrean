@@ -97,16 +97,16 @@ namespace pyr {
 
         // move to the right!
         if (_inputRight->getDelta() > gmtl::GMTL_EPSILON) {
-            sc.sendEvent(PE_BEGIN_RIGHT);
+            sc.sendEvent("Begin Right");
         } else if (_inputRight->getDelta() < -gmtl::GMTL_EPSILON) {
-            sc.sendEvent(PE_END_RIGHT);
+            sc.sendEvent("End Right");
         }
         
         // move to the left!
         if (_inputLeft->getDelta() > gmtl::GMTL_EPSILON) {
-            sc.sendEvent(PE_BEGIN_LEFT);
+            sc.sendEvent("Begin Left");
         } else if (_inputLeft->getDelta() < -gmtl::GMTL_EPSILON) {
-            sc.sendEvent(PE_END_LEFT);
+            sc.sendEvent("End Left");
         }
         
         // jump!
@@ -114,7 +114,7 @@ namespace pyr {
             GameEntity* gentity = dynamic_cast<GameEntity*>(the<Scene>().getFocus());
             if(gentity) {
                 if(gentity->jump()) {
-                    sc.sendEvent(PE_JUMP);
+                    sc.sendEvent("Jump");
                 }
             }
         }
@@ -124,36 +124,36 @@ namespace pyr {
             GameEntity* gentity = dynamic_cast<GameEntity*>(the<Scene>().getFocus());
             if(gentity) {
                 if(gentity->attack()) {
-                    sc.sendEvent(PE_ATTACK);
+                    sc.sendEvent("Attack");
                 }
             }
         }
 
         // Input with Joystick
         if(_inputJoyX->getValue() > 0.5 && _lastJoyX == 0) {
-            sc.sendEvent(PE_BEGIN_RIGHT);
+            sc.sendEvent("Begin Right");
             _lastJoyX = 1;
         }
         else if(fabs(_inputJoyX->getValue()) < 0.5 && _lastJoyX > 0.5) {
-            sc.sendEvent(PE_END_RIGHT);
+            sc.sendEvent("End Right");
             _lastJoyX = 0;
         }
         else if(fabs(_inputJoyX->getValue()) < 0.5 && _lastJoyX < -0.5) {
-            sc.sendEvent(PE_END_LEFT);
+            sc.sendEvent("End Left");
             _lastJoyX = 0;
         }
         else if(_inputJoyX->getValue() < -0.5 && _lastJoyX == 0) {
-            sc.sendEvent(PE_BEGIN_LEFT);
+            sc.sendEvent("Begin Left");
             _lastJoyX = -1;
         }
         else if(_inputJoyX->getValue() < -0.5 && _lastJoyX > 0.5) {
-            sc.sendEvent(PE_END_RIGHT);
-            sc.sendEvent(PE_BEGIN_LEFT);
+            sc.sendEvent("End Right");
+            sc.sendEvent("Begin Left");
             _lastJoyX = -1;
         }
         else if(_inputJoyX->getValue() > 0.5 && _lastJoyX < -0.5) {
-            sc.sendEvent(PE_END_LEFT);
-            sc.sendEvent(PE_BEGIN_RIGHT);
+            sc.sendEvent("End Left");
+            sc.sendEvent("Begin Right");
             _lastJoyX = 1;
         }
        
@@ -162,7 +162,7 @@ namespace pyr {
             GameEntity* gentity = dynamic_cast<GameEntity*>(the<Scene>().getFocus());
             if(gentity) {
                 if(gentity->jump()) {
-                    sc.sendEvent(PE_JUMP);
+                    sc.sendEvent("Jump");
                 }
             }
         }
@@ -172,7 +172,7 @@ namespace pyr {
             GameEntity* gentity = dynamic_cast<GameEntity*>(the<Scene>().getFocus());
             if(gentity) {
                 if(gentity->attack()) {
-                    sc.sendEvent(PE_ATTACK);
+                    sc.sendEvent("Attack");
                 }
             }
         }

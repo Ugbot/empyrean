@@ -70,7 +70,7 @@ namespace pyr {
                       const std::string& password,
                       bool newGame);
         bool newCharacter(const std::string& name);
-        bool sendEvent(u16 event);
+        bool sendEvent(const std::string& event);
 
     private:
         /**

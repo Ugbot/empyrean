@@ -97,20 +97,10 @@ namespace pyr {
         _(field)(u16, code)
         
     // Player Event codes
-    enum {
-        PE_NONE,
-        PE_BEGIN_RIGHT,
-        PE_END_RIGHT,
-        PE_BEGIN_LEFT,
-        PE_END_LEFT,
-        PE_JUMP,
-        PE_ATTACK,
-    };
-
     // client -> server
     #define PYR_PLAYER_EVENT_PACKET_NAME PlayerEventPacket
     #define PYR_PLAYER_EVENT_PACKET(_) \
-        _(field)(u16, code)
+        _(string)(32, event)
         
     // server -> client
     #define PYR_SET_PLAYER_PACKET_NAME SetPlayerPacket
