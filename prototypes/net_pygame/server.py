@@ -51,6 +51,10 @@ def generate_id():
     return id
 
 
+def bound(value, n, x):
+    return max(min(value, x), n)
+
+
 class ConnectionThread(threading.Thread):
     # socket
     # id
@@ -126,8 +130,8 @@ class ConnectionThread(threading.Thread):
     def update(self, dt):
         self.last_x = self.x
         self.last_y = self.y
-        self.x += self.vx * dt
-        self.y += self.vy * dt
+        self.x = bound(self.x + self.vx * dt, -1.5, 1.5)
+        self.y = bound(self.y + self.vy * dt, -1.5, 1.5)
 
     def broadcast(self, connections):
         for c in connections:
