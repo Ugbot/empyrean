@@ -1,0 +1,40 @@
+{
+   stringalloc1
+   Helgrind:Eraser
+   fun:_ZNSs4_Rep9_S_createEjRKSaIcE
+}
+
+{
+   stringalloc2
+   Helgrind:Eraser
+   fun:memcpy
+   fun:_ZNSs12_S_constructIPcEES0_T_S1_RKSaIcESt20forward_iterator_tag
+   fun:_ZNSs16_S_construct_auxIPcEES0_T_S1_RKSaIcE12__false_type
+   fun:_ZNSs12_S_constructIPcEES0_T_S1_RKSaIcE
+}
+
+{
+   stringalloc3
+   Helgrind:Eraser
+   fun:_ZNSt24__default_alloc_templateILb1ELi0EE8allocateEj
+   fun:_ZNSs4_Rep9_S_createEjRKSaIcE
+   fun:_ZNSs12_S_constructIPKcEEPcT_S3_RKSaIcESt20forward_iterator_tag
+   fun:_ZNSsC1EPKcRKSaIcE
+}
+
+{
+   stringalloc4
+   Helgrind:Eraser
+   fun:_ZNSs4_Rep9_S_createEjRKSaIcE
+   fun:_ZNSs12_S_constructIPKcEEPcT_S3_RKSaIcESt20forward_iterator_tag
+   fun:_ZNSsC1EPKcRKSaIcE
+}
+
+{
+   stringalloc5
+   Helgrind:Eraser
+   fun:_ZNSs4_Rep9_S_createEjRKSaIcE
+   fun:_ZNSs4_Rep8_M_cloneERKSaIcEj
+   fun:_ZNSs7reserveEj
+   fun:_ZNSs6appendEPKcj
+}
