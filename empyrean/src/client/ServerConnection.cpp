@@ -1,5 +1,9 @@
 #include "Connection.h"
+#include "Model.h"
 #include "PacketTypes.h"
+#include "PlayerEntity.h"
+#include "Renderer.h"
+#include "Scene.h"
 #include "ServerConnection.h"
 #include "ServerConnectionThread.h"
 #include "Socket.h"
@@ -46,7 +50,7 @@ namespace pyr {
     bool ServerConnection::loginFailed() {
         return _loginFailed;
     }
-    
+
     const std::string& ServerConnection::getError() {
         return _error;
     }
@@ -60,6 +64,10 @@ namespace pyr {
                 _connection->definePacketHandler(this, &ServerConnection::handleLoginResponse);
                 _connection->definePacketHandler(this, &ServerConnection::handleLobby);
                 _connection->definePacketHandler(this, &ServerConnection::handleJoinGameResponse);
+                _connection->definePacketHandler(this, &ServerConnection::handleNewCharacterResponse);
+                _connection->definePacketHandler(this, &ServerConnection::handleEntityAdded);
+                _connection->definePacketHandler(this, &ServerConnection::handleEntityRemoved);
+                _connection->definePacketHandler(this, &ServerConnection::handleEntityUpdated);                
                 
                 _connectionMaker = 0;
                 _connectionThread = 0;
@@ -114,11 +122,16 @@ namespace pyr {
         return sendPacket(new NewCharacterPacket(name));
     }
 
+    bool ServerConnection::setVelocity(const gmtl::Vec2f& vel) {
+        return sendPacket(new SetVelocityPacket(vel));
+    }
+
     bool ServerConnection::sendPacket(Packet* p) {
         if (_connection) {
             _connection->sendPacket(p);
             return true;
         } else {
+            delete p;
             return false;
         }
     }
@@ -163,6 +176,31 @@ namespace pyr {
     void ServerConnection::handleNewCharacterResponse(Connection*, NewCharacterResponsePacket* p) {
         _hasNewCharacterResponse = true;
         _newCharacterResponse = p->code();
+    }
+
+    void ServerConnection::handleEntityAdded(Connection*, EntityAddedPacket* p) {
+        PlayerEntity* entity = new PlayerEntity(
+            new Model(p->appearance()),
+            new DefaultRenderer(),
+            0);
+        Scene::instance().addEntity(p->id(), entity);
+    }
+
+    void ServerConnection::handleEntityRemoved(Connection*, EntityRemovedPacket* p) {
+        Scene& s = Scene::instance();
+        Entity* entity = s.getEntity(p->id());
+        if (entity) {
+            s.removeEntity(p->id());
+            delete entity;
+        }
+    }
+
+    void ServerConnection::handleEntityUpdated(Connection*, EntityUpdatedPacket* p) {
+        Entity* entity = Scene::instance().getEntity(p->id());
+        if (entity) {
+            entity->setPos(p->pos());
+            entity->setVel(p->vel());
+        }
     }
 
 }

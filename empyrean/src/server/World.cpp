@@ -69,7 +69,8 @@ namespace pyr {
         }
         
         delete cd;
-        
+
+        connection->setOpaque(0);
         connection->clearHandlers();
         
         if (connection->isClosed()) {

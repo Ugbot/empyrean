@@ -3,6 +3,7 @@
 
 
 #include <string>
+#include <gmtl/Vec.h>
 #include "Connection.h"
 #include "Singleton.h"
 #include "Utility.h"
@@ -17,6 +18,9 @@
 
 namespace pyr {
 
+    class EntityAddedPacket;
+    class EntityRemovedPacket;
+    class EntityUpdatedPacket;
     class JoinGameResponsePacket;
     class LobbyPacket;
     class LoginResponsePacket;
@@ -43,7 +47,6 @@ namespace pyr {
         bool isConnected();
         Status getStatus();
         bool loginFailed();
-        bool isInGame();
         
         bool hasJoinGameResponse() { return _hasJoinGameResponse; }
         u16 getJoinGameResponse()  { return _joinGameResponse; }
@@ -70,6 +73,8 @@ namespace pyr {
                       
         bool newCharacter(const std::string& name);
 
+        bool setVelocity(const gmtl::Vec2f& vel);
+
     private:
         /**
          * Sends a packet to the server.
@@ -83,6 +88,10 @@ namespace pyr {
         void handleLobby(Connection*, LobbyPacket* p);
         void handleJoinGameResponse(Connection*, JoinGameResponsePacket* p);
         void handleNewCharacterResponse(Connection*, NewCharacterResponsePacket* p);
+
+        void handleEntityAdded(Connection*, EntityAddedPacket* p);
+        void handleEntityRemoved(Connection*, EntityRemovedPacket* p);
+        void handleEntityUpdated(Connection*, EntityUpdatedPacket* p);
     
         Status _status;
         

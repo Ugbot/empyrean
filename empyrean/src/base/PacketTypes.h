@@ -86,19 +86,25 @@ namespace pyr {
     #define PYR_NEW_CHARACTER_RESPONSE_PACKET_NAME NewCharacterResponsePacket
     #define PYR_NEW_CHARACTER_RESPONSE_PACKET(_) \
         _(field)(u16, code)
-        
+
+    #define PYR_SET_VELOCITY_PACKET_NAME SetVelocityPacket
+    #define PYR_SET_VELOCITY_PACKET(_) \
+        _(field)(gmtl::Vec2f, vel)
         
     #define PYR_ENTITY_ADDED_PACKET_NAME EntityAddedPacket
     #define PYR_ENTITY_ADDED_PACKET(_) \
-        _(field)(u16, id)
-        
+        _(field)(u16, id)              \
+        _(string)(256, appearance)
+
     #define PYR_ENTITY_REMOVED_PACKET_NAME EntityRemovedPacket
     #define PYR_ENTITY_REMOVED_PACKET(_) \
         _(field)(u16, id)
-        
+
     #define PYR_ENTITY_UPDATED_PACKET_NAME EntityUpdatedPacket
     #define PYR_ENTITY_UPDATED_PACKET(_) \
-        _(field)(u16, id)
+        _(field)(u16, id)                \
+        _(field)(gmtl::Vec2f, pos)       \
+        _(field)(gmtl::Vec2f, vel)
 
 
     // PACKET LIST
@@ -113,6 +119,7 @@ namespace pyr {
         _(PYR_JOIN_GAME_RESPONSE_PACKET)        \
         _(PYR_NEW_CHARACTER_PACKET)             \
         _(PYR_NEW_CHARACTER_RESPONSE_PACKET)    \
+        _(PYR_SET_VELOCITY_PACKET)              \
         _(PYR_ENTITY_ADDED_PACKET)              \
         _(PYR_ENTITY_REMOVED_PACKET)            \
         _(PYR_ENTITY_UPDATED_PACKET)

@@ -34,32 +34,35 @@ namespace pyr {
             throw std::runtime_error("Error opening fonts/Vera.ttf");
         }
 
-        _player = new PlayerEntity(
-            new Model("models/paladin/paladin.cfg"),
-            new DefaultRenderer(),
-            &_im);
-        Scene::instance().addEntity(0, _player);
+        //_player = new PlayerEntity(
+        //    new Model("models/paladin/paladin.cfg"),
+        //    new DefaultRenderer(),
+        //    &_im);
+        //Scene::instance().addEntity(0, _player);
         
         // assume already logged in
     }
 
     void GameState::draw(float fade) {
         PYR_PROFILE_BLOCK("GameState::draw");
-        Scene::instance().draw();
         
         glMatrixMode(GL_PROJECTION);
-        glLoadIdentity();
-        
-        glMatrixMode(GL_MODELVIEW);
         glLoadIdentity();
         Application& a = Application::instance();
         gluOrtho2D(0, a.getWidth(), a.getHeight(), 0);
         
+        glMatrixMode(GL_MODELVIEW);
+        glLoadIdentity();
+        
+        /*
         glEnable(GL_TEXTURE_2D);
         glEnable(GL_BLEND);
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
         glColor4f(1, 1, 1, 1);
         glTranslatef(0, 8, 0);
+        */
+
+        Scene::instance().draw();
     }
 
     void GameState::update(float dt) {
@@ -72,8 +75,9 @@ namespace pyr {
         ServerConnection& sc = ServerConnection::instance();
         sc.update();
 
-        //float dx = _inputRight->getValue() - _inputLeft->getValue();
-        //float dy = 1 - _inputSpace->getValue() * 2;
+        float dx = _inputRight->getValue() - _inputLeft->getValue();
+        float dy = 1 - _inputSpace->getValue() * 2;
+        sc.setVelocity(gmtl::Vec2f(dx * 50, dy * 10));
         //_player->setVel(gmtl::Vec2f(dx * 50, dy * 10));
 
         if (_inputQuit->getValue() >= 0.50f) {

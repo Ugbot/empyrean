@@ -16,8 +16,13 @@ namespace pyr {
         _renderer = renderer;
 	_direction = 0;
 	
-	_inputLeft  = &im->getInput("Left");
-	_inputRight = &im->getInput("Right");
+        if (im) {
+            _inputLeft  = &im->getInput("Left");
+            _inputRight = &im->getInput("Right");
+        } else {
+            _inputLeft = 0;
+            _inputRight = 0;
+        }
 
         startStandState();
     }
@@ -48,9 +53,9 @@ namespace pyr {
     }
     
     void PlayerEntity::updateStandState(float dt) {
-        if (_inputLeft->getValue() != 0) {
+        if (_inputLeft && _inputLeft->getValue() != 0) {
             startWalkState();
-        } else if (_inputRight->getValue() != 0) {
+        } else if (_inputRight && _inputRight->getValue() != 0) {
             startWalkState();
         } else {
             startStandState();
@@ -66,10 +71,10 @@ namespace pyr {
     }
 
     void PlayerEntity::updateWalkState(float dt) {
-        if (_inputLeft->getValue() != 0) {
+        if (_inputLeft && _inputLeft->getValue() != 0) {
             setVel(gmtl::Vec2f(-vel, 0));
             _direction = -90;
-        } else if (_inputRight->getValue() != 0) {
+        } else if (_inputRight && _inputRight->getValue() != 0) {
             setVel(gmtl::Vec2f(vel, 0));
             _direction = 90;
         } else {

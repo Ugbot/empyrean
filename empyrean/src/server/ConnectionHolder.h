@@ -37,14 +37,16 @@ namespace pyr {
         void sendAllBut(Connection* c, Packet* p);
         
         /**
-         * Called when a connection is added to the holder.  Should set up
-         * packet listeners and connection-specific data.
+         * Called when a connection is added to the holder.  Should
+         * set up packet listeners and connection-specific data.
+         * Called before connection is added to connection list.
          */
         virtual void connectionAdded(Connection* connection) = 0;
         
         /**
          * Called when a connection has been removed.  Should clean up
-         * connection-specific data.
+         * connection-specific data.  Called after connection has been
+         * removed from connection list.
          */
         virtual void connectionRemoved(Connection* connection) = 0;
         

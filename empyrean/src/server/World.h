@@ -30,7 +30,7 @@ namespace pyr {
             Account* account;
         };
 
-        ConnectionData* getData(Connection* c);
+        static ConnectionData* getData(Connection* c);
         
         Game* getGame(const std::string& name);
         

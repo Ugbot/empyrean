@@ -5,11 +5,14 @@
 #include <string>
 #include <vector>
 #include "ConnectionHolder.h"
+#include "Types.h"
+#include "UIDGenerator.h"
 
 
 namespace pyr {
 
     class ServerEntity;
+    class SetVelocityPacket;
 
     class Game : public ConnectionHolder {
     public:
@@ -22,13 +25,23 @@ namespace pyr {
         void update(float dt);
         
     private:
+        struct ConnectionData {
+            ServerEntity* playerEntity;
+        };
+
+        static ConnectionData* getData(Connection* c);
+
         void connectionAdded(Connection* connection);
         void connectionRemoved(Connection* connection);
+
+        void handleSetVelocity(Connection*, SetVelocityPacket* p);
 
         std::string _name;
         std::string _password;
         
         std::vector<ServerEntity*> _entities;
+
+        UIDGenerator<u16> _idGenerator;
     };
 
 }

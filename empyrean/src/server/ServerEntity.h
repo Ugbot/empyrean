@@ -4,12 +4,21 @@
 
 #include <gmtl/Vec.h>
 #include <gmtl/VecOps.h>
+#include "Types.h"
 
 
 namespace pyr {
 
     class ServerEntity {
     public:
+        ServerEntity(u16 id) {
+            _id = id;
+        }
+
+        u16 getID() const {
+            return _id;
+        }
+
         std::string getAppearance() const {
             return "models/paladin/paladin.cfg";
         }
@@ -25,6 +34,7 @@ namespace pyr {
         }
         
     private:
+        u16 _id;
         gmtl::Vec2f _pos;
         gmtl::Vec2f _vel;
     };
