@@ -162,6 +162,12 @@
 				RelativePath="..\..\src\client\Model.h">
 			</File>
 			<File
+				RelativePath="..\..\src\client\Profiler.cpp">
+			</File>
+			<File
+				RelativePath="..\..\src\client\Profiler.h">
+			</File>
+			<File
 				RelativePath="..\..\src\client\ResourceManager.cpp">
 			</File>
 			<File

@@ -25,7 +25,7 @@ namespace pyr {
          * that you have to include it yourself in any source file that uses
          * these classes, so maybe it's not worth it.  Time will tell.
          */
-        CalCoreModel* _coremodel;
+        CalCoreModel* _coreModel;
         CalModel* _model;
         // We'll probably want to store information on how this particular model
         // is skinned, and so on.

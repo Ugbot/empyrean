@@ -30,20 +30,20 @@ namespace pyr {
     };
 
     Model::Model(const std::string& fname) {
-        _coremodel=ResourceManager::instance().get<CalCoreModel*>(fname);
+        _coreModel=ResourceManager::instance().get<CalCoreModel*>(fname);
         _model=new CalModel();
-        _model->create(_coremodel);
+        _model->create(_coreModel);
     }
 
     Model::~Model()
     {
-        //ResourceManager::instance().unRef<CalCoreModel*>(_coremodel); // or whatever, if/when it becomes necessary.
+        //ResourceManager::instance().unRef<CalCoreModel*>(_coreModel); // or whatever, if/when it becomes necessary.
         _model->destroy();
         delete _model;
     }
 
     CalCoreModel& Model::getCoreModel() {
-        return *_coremodel;
+        return *_coreModel;
     }
 
     CalModel& Model::getModel() {

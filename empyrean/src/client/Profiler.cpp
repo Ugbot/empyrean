@@ -11,38 +11,38 @@ namespace pyr {
     using std::endl;
 
     // Static things.
-    int                             Profiler::_lasttime;
-    int                             Profiler::_totaltime;
+    int                             Profiler::_lastTime;
+    int                             Profiler::_totalTime;
     map<string,Profiler::Process>   Profiler::_processes;
-    stack<Profiler::Process*>       Profiler::_prochistory;
+    stack<Profiler::Process*>       Profiler::_procHistory;
 
     Profiler::Profiler(const string& name) {
         int ticks=SDL_GetTicks();
 
-        if (_prochistory.empty()) {
-            _lasttime=ticks;
+        if (_procHistory.empty()) {
+            _lastTime=ticks;
         }
         else {
-            _prochistory.top()->time += ticks - _lasttime;
-            _totaltime += ticks - _lasttime;
-            _lasttime = ticks;
+            _procHistory.top()->time += ticks - _lastTime;
+            _totalTime += ticks - _lastTime;
+            _lastTime = ticks;
         }
 
         _proc = &_processes[name];
         _starttime = ticks;
 
-        _prochistory.push(_proc);
+        _procHistory.push(_proc);
     }
 
     Profiler::~Profiler() {
         int ticks=SDL_GetTicks();
 
-        _proc->time += ticks - _lasttime;
+        _proc->time += ticks - _lastTime;
         _proc->timepluschildren += ticks - _starttime;
-        _prochistory.pop();
+        _procHistory.pop();
 
-        _totaltime += ticks - _lasttime;
-        _lasttime = ticks;
+        _totalTime += ticks - _lastTime;
+        _lastTime = ticks;
     }
 
     const std::map<std::string,Profiler::Process>& Profiler::getProfileInfo() {
@@ -59,7 +59,7 @@ namespace pyr {
             file << "<tr><td>" << i->first << "</td><td>" << i->second.time << "</td><td>" 
                 << i->second.timepluschildren << "</td></tr>" << endl;
         }
-        file << "<tr><td>Total</td><td colspan=2>" << _totaltime << "</td></tr></table>" << endl;
+        file << "<tr><td>Total</td><td colspan=2>" << _totalTime << "</td></tr></table>" << endl;
 
         file.close();
     }

@@ -12,7 +12,7 @@ namespace pyr {
 
     /** A Simple class for figuring out what's going on when, and for how long.
      * 
-     * This is a bit goofy, but I'll try to explain anyway.  _lasttime is the time
+     * This is a bit goofy, but I'll try to explain anyway.  _lastTime is the time
      * at which the last Process transition occured.  Any time a Profiler is created
      * or destroyed, it's updated.  When a new profiler is created, the old Process's
      * time is updated before it's reset. (time spent in that process, not child
@@ -20,12 +20,12 @@ namespace pyr {
      * destroyed, it holds the time at which the last child process terminated,
      * (so once more, we get the time spent in the process, and not its children)
      *
-     * _lasttime is much simpler.  It holds the time the Profiler was born at.
+     * _lastTime is much simpler.  It holds the time the Profiler was born at.
      * So, when the Profiler is destroyed, we know how much time was spent in the
      * Process, as well as all child processes spawned.
      *
-     * _totaltime is the easiest.  Before we nuke the value of _lasttime, we add it
-     * into _totaltime.
+     * _totalTime is the easiest.  Before we nuke the value of _lastTime, we add it
+     * into _totalTime.
      */
     class Profiler {
     public:
@@ -42,10 +42,10 @@ namespace pyr {
         Process* _proc;                             //!< The process we're tracking right now.
         int _starttime;                             //!< The time at which this object was created.
 
-        static int _lasttime;                       //!< Time since the last process transition
-        static int _totaltime;                      //!< Total number of ticks elapsed with profiling on
+        static int _lastTime;                       //!< Time since the last process transition
+        static int _totalTime;                      //!< Total number of ticks elapsed with profiling on
         static map<string,Process> _processes;      //!< Tallied up times for all started processes.
-        static stack<Process*>     _prochistory;    //!< "call stack"
+        static stack<Process*>     _procHistory;    //!< "call stack"
 
     public:
         Profiler(const string& name);
