@@ -52,8 +52,11 @@ class NetworkThread(threading.Thread):
         
         data = ''
         while 1:
-            read = self.socket.recv(1024)
-            if len(read) == 0:
+            try:
+                read = self.socket.recv(1024)
+                if len(read) == 0:
+                    break
+            except:
                 break
 
             data += read.replace('\r', '')
@@ -73,7 +76,10 @@ class NetworkThread(threading.Thread):
 
     def send(self, packet):
         print "Sending: " + repr(packet)
-        self.socket.sendall(packet + '\n')
+        try:
+            self.socket.sendall(packet + '\n')
+        except:
+            pass
 
 
 class ServerConnection:

@@ -2,31 +2,43 @@ import socket
 import threading
 import time
 
+class ScopedLock:
+    def __init__(self, l):
+        self.lock = l
+        self.lock.acquire()
+        
+    def __del__(self):
+        self.lock.release()
+
 class World:
     lock = threading.Lock()
     connections = []
 
     def update(self, dt):
-        self.lock.acquire()
+        l = ScopedLock(self.lock)
+        
         for c in self.connections:
             c.update(dt)
         for c in self.connections:
             c.broadcast(self.connections)
-        self.lock.release()
 
     def add_connection(self, conn):
-        self.lock.acquire()
+        l = ScopedLock(self.lock)
+
+        for c in self.connections:
+            conn.send('added %d' % c.id)
         self.connections.append(conn)
         for c in self.connections:
             c.send('added %d' % conn.id)
-        self.lock.release()
 
     def remove_connection(self, conn):
-        self.lock.acquire()
+        l = ScopedLock(self.lock)
+
         for c in self.connections:
             c.send('removed %d' % conn.id)
         self.connections.remove(conn)
-        self.lock.release()
+        for c in self.connections:
+            conn.send('removed %d' % c.id)
 
 world = World()
  
@@ -64,8 +76,11 @@ class ConnectionThread(threading.Thread):
 
         data = ''
         while 1:
-            read = self.socket.recv(1024)
-            if not len(read):
+            try:
+                read = self.socket.recv(1024)
+                if not len(read):
+                    break
+            except:
                 break
 
             data += read.replace('\r', '')
@@ -100,7 +115,10 @@ class ConnectionThread(threading.Thread):
 
     def send(self, packet):
         print "Sending: " + repr(packet)
-        self.socket.sendall(packet + '\n')
+        try:
+            self.socket.sendall(packet + '\n')
+        except:
+            pass
 
     def update(self, dt):
         self.x += self.vx * dt
@@ -131,7 +149,7 @@ def main():
         dt = now - last_update
 
         world.update(dt)
-        time.sleep(1 / 20.0)
+        time.sleep(1 / 10.0)
 
         last_update = now
 
