@@ -84,7 +84,7 @@ namespace pyr {
     }
 
     void Texture::drawRectangle(float x, float y) {
-        drawRectangle(x, y, _width, _height);
+        drawRectangle(x, y, float(_width), float(_height));
     }
 
     int Texture::width() const {

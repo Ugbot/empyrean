@@ -66,7 +66,7 @@ namespace pyr {
                 glLoadIdentity();
                 
                 glColor4f(1, 1, 1, 1);
-                _pointer->drawRectangle(_lastX, _lastY);
+                _pointer->drawRectangle(float(_lastX), float(_lastY));
             }
         }
         if (_fadingState && _totalFadeTime != 0) {

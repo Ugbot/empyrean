@@ -1,7 +1,7 @@
-<?xml version="1.0" encoding = "Windows-1252"?>
+<?xml version="1.0" encoding="Windows-1252"?>
 <VisualStudioProject
 	ProjectType="Visual C++"
-	Version="7.00"
+	Version="7.10"
 	Name="client"
 	ProjectGUID="{9A8DD0EB-2ADD-4815-9E3D-E818A9297C9C}"
 	Keyword="Win32Proj">
@@ -54,7 +54,13 @@
 			<Tool
 				Name="VCWebServiceProxyGeneratorTool"/>
 			<Tool
+				Name="VCXMLDataGeneratorTool"/>
+			<Tool
 				Name="VCWebDeploymentTool"/>
+			<Tool
+				Name="VCManagedWrapperGeneratorTool"/>
+			<Tool
+				Name="VCAuxiliaryManagedWrapperGeneratorTool"/>
 		</Configuration>
 		<Configuration
 			Name="Release|Win32"
@@ -104,9 +110,17 @@
 			<Tool
 				Name="VCWebServiceProxyGeneratorTool"/>
 			<Tool
+				Name="VCXMLDataGeneratorTool"/>
+			<Tool
 				Name="VCWebDeploymentTool"/>
+			<Tool
+				Name="VCManagedWrapperGeneratorTool"/>
+			<Tool
+				Name="VCAuxiliaryManagedWrapperGeneratorTool"/>
 		</Configuration>
 	</Configurations>
+	<References>
+	</References>
 	<Files>
 		<Filter
 			Name="files"
@@ -130,13 +144,13 @@
 				RelativePath="..\..\src\client\Entity.h">
 			</File>
 			<File
-				RelativePath="..\..\src\client\FPSCounter.h">
-			</File>
-			<File
 				RelativePath="..\..\src\client\Font.cpp">
 			</File>
 			<File
 				RelativePath="..\..\src\client\Font.h">
+			</File>
+			<File
+				RelativePath="..\..\src\client\FPSCounter.h">
 			</File>
 			<File
 				RelativePath="..\..\src\client\GLUtility.h">
@@ -205,16 +219,16 @@
 				RelativePath="..\..\src\client\ResourceManager.h">
 			</File>
 			<File
-				RelativePath="..\..\src\client\SDLUtility.cpp">
-			</File>
-			<File
-				RelativePath="..\..\src\client\SDLUtility.h">
-			</File>
-			<File
 				RelativePath="..\..\src\client\Scene.cpp">
 			</File>
 			<File
 				RelativePath="..\..\src\client\Scene.h">
+			</File>
+			<File
+				RelativePath="..\..\src\client\SDLUtility.cpp">
+			</File>
+			<File
+				RelativePath="..\..\src\client\SDLUtility.h">
 			</File>
 			<File
 				RelativePath="..\..\src\client\ServerConnection.cpp">

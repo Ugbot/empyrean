@@ -1,24 +1,32 @@
-Microsoft Visual Studio Solution File, Format Version 7.00
+Microsoft Visual Studio Solution File, Format Version 8.00
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "server", "server\server.vcproj", "{084A19A1-07D9-4C88-BA1F-B47A04427F6D}"
+	ProjectSection(ProjectDependencies) = postProject
+		{03B95B05-B6D6-4FB1-B9AC-269467287C88} = {03B95B05-B6D6-4FB1-B9AC-269467287C88}
+	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "client", "client\client.vcproj", "{9A8DD0EB-2ADD-4815-9E3D-E818A9297C9C}"
+	ProjectSection(ProjectDependencies) = postProject
+		{E36E29D7-7422-4030-B30D-5E8FD6727BA4} = {E36E29D7-7422-4030-B30D-5E8FD6727BA4}
+		{03B95B05-B6D6-4FB1-B9AC-269467287C88} = {03B95B05-B6D6-4FB1-B9AC-269467287C88}
+	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "base", "base\base.vcproj", "{03B95B05-B6D6-4FB1-B9AC-269467287C88}"
+	ProjectSection(ProjectDependencies) = postProject
+	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "editor", "editor\editor.vcproj", "{C85FCCC5-1494-4AEE-9CE7-8808B322F33A}"
+	ProjectSection(ProjectDependencies) = postProject
+		{03B95B05-B6D6-4FB1-B9AC-269467287C88} = {03B95B05-B6D6-4FB1-B9AC-269467287C88}
+	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "phui", "phui\phui.vcproj", "{E36E29D7-7422-4030-B30D-5E8FD6727BA4}"
+	ProjectSection(ProjectDependencies) = postProject
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfiguration) = preSolution
-		ConfigName.0 = Debug
-		ConfigName.1 = Release
-	EndGlobalSection
-	GlobalSection(ProjectDependencies) = postSolution
-		{084A19A1-07D9-4C88-BA1F-B47A04427F6D}.0 = {03B95B05-B6D6-4FB1-B9AC-269467287C88}
-		{9A8DD0EB-2ADD-4815-9E3D-E818A9297C9C}.0 = {03B95B05-B6D6-4FB1-B9AC-269467287C88}
-		{9A8DD0EB-2ADD-4815-9E3D-E818A9297C9C}.1 = {E36E29D7-7422-4030-B30D-5E8FD6727BA4}
-		{C85FCCC5-1494-4AEE-9CE7-8808B322F33A}.0 = {03B95B05-B6D6-4FB1-B9AC-269467287C88}
+		Debug = Debug
+		Release = Release
 	EndGlobalSection
 	GlobalSection(ProjectConfiguration) = postSolution
 		{084A19A1-07D9-4C88-BA1F-B47A04427F6D}.Debug.ActiveCfg = Debug|Win32
