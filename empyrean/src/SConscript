@@ -1,1 +1,2 @@
-SConscript(dirs = ['client', 'editor', 'phui', 'server', 'base'])
+Import('*')
+SConscript(dirs = ['base', 'client', 'editor', 'phui', 'server'])

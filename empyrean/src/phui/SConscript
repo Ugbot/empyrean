@@ -1,4 +1,4 @@
-Import('base_env TOOLS')
+Import('env TOOLS')
 
 SOURCES = Split("""
     BoxLayout.cpp
@@ -19,7 +19,7 @@ SOURCES = Split("""
     Window.cpp
 """)
 
-env = base_env.Copy()
+env = env.Copy()
 for t in ['PyrBase', 'SDL', 'NSPR']:
     TOOLS[t](env)
 env.Library('phui', SOURCES)

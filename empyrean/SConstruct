@@ -63,7 +63,7 @@ def SetupCorona(env):
         ParseConfig(env, 'corona-config', ['--cxxflags', '--libs'])
     except SCons.Errors.UserError, e:
         env.Append(LIBS = ['corona', 'jpeg', 'png', 'z'])
-        
+
     if env['PLATFORM'] == 'cygwin':
         env.Append(CPPDEFINES = ['COR_CALL='])
 
@@ -143,44 +143,55 @@ TOOLS = {
 Export('TOOLS')
 
 
+opts = Options('options.cache')
+opts.AddOptions(
+    BoolOption('dbg',    'Build with debugging enabled', 0),
+    BoolOption('opt',    'Build with optimizations', 0),
+    BoolOption('distcc', 'Enable compiling with distcc', 0))
+
 # Create base environment.
-base_env = Environment(ENV = os.environ)
+env = Environment(ENV = os.environ, options=opts)
 
-if base_env['PLATFORM'] == 'cygwin':
-    base_env.Append(CPPDEFINES = ['WIN32', '_WIN32', 'NOMINMAX'],
-                    CPPPATH = ['#/third-party-cygwin/include'],
-                    LIBPATH = ['#/third-party-cygwin/lib'])
+Help(opts.GenerateHelpText(env))
+opts.Save('options.cache', env)
 
-if base_env['PLATFORM'] in ['cygwin', 'irix']:
-    base_env['USE_EXTGL'] = 1
-    base_env.Append(CCFLAGS = ['-DPYR_USE_EXTGL'])
+# Process platforms.
+if env['PLATFORM'] == 'cygwin':
+    env.Append(CPPDEFINES = ['WIN32', '_WIN32', 'NOMINMAX'],
+               CPPPATH = ['#/third-party-cygwin/include'],
+               LIBPATH = ['#/third-party-cygwin/lib'])
+
+if env['PLATFORM'] in ['cygwin', 'irix']:
+    env['USE_EXTGL'] = 1
+    env.Append(CCFLAGS = ['-DPYR_USE_EXTGL'])
 else:
-    base_env['USE_EXTGL'] = 0
+    env['USE_EXTGL'] = 0
 
-if base_env['PLATFORM'] == 'irix':
-    base_env.Append(
+if env['PLATFORM'] == 'irix':
+    env.Append(
         CPPPATH = string.split(os.environ['CPLUS_INCLUDE_PATH'], ':'),
         LIBPATH = string.split(os.environ['LIBRARY_PATH'], ':'),
         LIBS = ['m'])
 
-if base_env['CC'] == 'gcc':
-    base_env.Append(CCFLAGS=['-Wall'])
-if base_env['CXX'] == 'g++':
-    base_env.Append(CXXFLAGS=['-Wall', '-Wno-non-virtual-dtor'])
+if env['CC'] == 'gcc':
+    env.Append(CCFLAGS=['-Wall'])
+if env['CXX'] == 'g++':
+    env.Append(CXXFLAGS=['-Wall', '-Wno-non-virtual-dtor'])
 
 # Process build options.
-if ARGUMENTS.get('dbg'):
-    base_env.Append(CCFLAGS = ['-g', '-DDEBUG'])
-if ARGUMENTS.get('opt'):
-    base_env.Append(CCFLAGS = ['-O2'],
-                    LINKFLAGS = ['-s'])
+if env.get('dbg'):
+    env.Append(CCFLAGS = ['-g'], CPPDEFINES=['DEBUG'])
+if env.get('opt'):
+    env.Append(CCFLAGS = ['-O2'], LINKFLAGS = ['-s'])
+if env.get('distcc'):
+    env['CC']  = ['$(', 'distcc', '$)', env['CC']]
+    env['CXX'] = ['$(', 'distcc', '$)', env['CXX']]
 
-if ARGUMENTS.get('distcc'):
-    base_env['CC']  = ['$(', 'distcc', '$)', base_env['CC']]
-    base_env['CXX'] = ['$(', 'distcc', '$)', base_env['CXX']]
-
-Export('base_env')
-
+print env['USE_EXTGL']
+Export('env')
 
 # Process subdirectories.
-SConscript(dirs = ['resources', 'src'])
+# XXX Due to a bug in SCons, we have to do resources last.
+# The bug is that if one subscript does an Export(), it overwrites imports in
+# other scripts.
+SConscript(dirs = ['src', 'resources'])

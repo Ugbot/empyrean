@@ -1,4 +1,4 @@
-Import('base_env TOOLS')
+Import('*')
 
 SOURCES = Split("""
     ArmorPool.cpp
@@ -35,9 +35,9 @@ SOURCES = Split("""
     XMLParser.cpp
 """)
 
-if base_env['USE_EXTGL']:
-    SOURCES.append('extgl.c')
+env = env.Copy(tools = [TOOLS[n] for n in ['NSPR', 'Corona']])
 
-env = base_env.Copy(tools = [TOOLS[n] for n in ['NSPR', 'Corona']])
+if env['USE_EXTGL']:
+    SOURCES.append('extgl.c')
 
 env.Library('base', SOURCES)
