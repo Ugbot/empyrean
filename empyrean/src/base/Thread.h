@@ -2,7 +2,7 @@
 #define PYR_THREAD_H
 
 
-#include <prthread.h>
+#include "IncludeNSPR.h"
 #include "ScopedPtr.h"
 
 

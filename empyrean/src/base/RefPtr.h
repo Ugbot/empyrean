@@ -167,6 +167,22 @@ namespace pyr {
     }
     
     
+    template<typename T, typename U>
+    bool operator<(const RefPtr<T>& a, const RefPtr<U>& b) {
+        return (a.get() < b.get());
+    }
+
+    template<typename T, typename U>
+    bool operator<(const RefPtr<T>& a, const U* b) {
+        return (a.get() < b);
+    }
+
+    template<typename T, typename U>
+    bool operator<(const T* a, const RefPtr<U>& b) {
+        return (a < b.get());
+    }
+    
+    
     #define PYR_REF_PTR(type)    \
         typedef RefPtr<type> type##Ptr
 

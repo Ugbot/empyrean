@@ -7,20 +7,24 @@
 
 namespace pyr {
 
+    namespace {
+        Logger& _logger = Logger::get("pyr.UIState");
+    }
+
     UIState::UIState() {
         _root = new phui::RootWidget(1024, 768);
     }
     
     void UIState::update(float dt) {
         PYR_PROFILE_BLOCK("UIState::update");
-	PYR_LOG() << "UIState::update";
+	PYR_LOG_SCOPE(_logger, INFO, "UIState::update");
 
         _root->update(dt);
     }
     
     void UIState::draw() {
         PYR_PROFILE_BLOCK("UIState::draw");
-	PYR_LOG() << "UIState::draw";
+	PYR_LOG_SCOPE(_logger, INFO, "UIState::draw");
 
         // New renderer is needed!
         glDisable(GL_DEPTH_TEST);

@@ -10,6 +10,10 @@
 
 namespace pyr {
 
+    namespace {
+        Logger& _logger = Logger::get("pyr.PacketReceiver");
+    }
+
     bool PacketReceiver::receivePacket(Connection* c, Packet* p) {
         PacketHandlerPtr handler = _handlers[typeid(*p)];
         if (handler) {
@@ -43,7 +47,7 @@ namespace pyr {
             // Thus, make a local copy first.
             ReceiverSet r = _receivers;
             
-            PYR_LOG() << "Received: " << p->getName();
+            PYR_LOG(_logger, INFO) << "Received: " << p->getName();
 
             bool handled = false;
             for (ReceiverSetIter i = r.begin(); i != r.end(); ++i) {

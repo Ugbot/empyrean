@@ -3,7 +3,7 @@
 
 
 #include <string>
-#include <prinrval.h>
+#include "IncludeNSPR.h"
 
 
 namespace pyr {

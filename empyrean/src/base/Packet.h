@@ -62,7 +62,7 @@ namespace pyr {
     #define PYR_CREATE_string(size, name)       name,
     #define PYR_CLONE_string(size, name)        name(),
     #define PYR_CONTENTS_string(size, name)     std::string m_ ## name;
-    #define PYR_LOG_string(size, name)          PYR_LOG() << (#name) << ": " << name();
+    #define PYR_LOG_string(size, name)          PYR_LOG(_logger, INFO) << (#name) << ": " << name();
 
     #define PYR_CTOR_ARGS_field(type, name)     const type& name,
     #define PYR_CTOR_INIT_field(type, name)     m_ ## name = name;
@@ -73,7 +73,7 @@ namespace pyr {
     #define PYR_CREATE_field(type, name)        name,
     #define PYR_CLONE_field(type, name)         name(),
     #define PYR_CONTENTS_field(type, name)      type m_ ## name;
-    #define PYR_LOG_field(type, name)           PYR_LOG() << (#name) << ": " << promoteForOutput(name());
+    #define PYR_LOG_field(type, name)           PYR_LOG(_logger, INFO) << (#name) << ": " << promoteForOutput(name());
 
     #define PYR_CTOR_ARGS(_) PYR_CTOR_ARGS_ ## _
     #define PYR_CTOR_INIT(_) PYR_CTOR_INIT_ ## _
@@ -105,43 +105,46 @@ namespace pyr {
                                                                         \
         private:                                                        \
             body(PYR_CONTENTS)                                          \
+            static Logger& _logger;                                     \
         };
 
 
-    #define PYR_DEFINE_PACKET(name, id, body)                           \
-        name::name(body(PYR_CTOR_ARGS) EndOfList) {                     \
-            body(PYR_CTOR_INIT)                                         \
-            setID(id);                                                  \
-            setSize(body(PYR_SIZE)  0);                                 \
-        }                                                               \
-                                                                        \
-        void name::serialize(ByteBuffer& out) const {                   \
-            body(PYR_SERIALIZE)                                         \
-        }                                                               \
-                                                                        \
-        Packet* name::create(int size, const void* bytes) {             \
-            BufferParser bp(size, bytes);                               \
-            body(PYR_PARSE)                                             \
-            if (bp.passedEnd()) {                                       \
-                return 0;                                               \
-            } else {                                                    \
-                return new name(body(PYR_CREATE)  EndOfList());         \
-            }                                                           \
-        }                                                               \
-                                                                        \
-        Packet* name::clone() const {                                   \
-            return new name(                                            \
-                body(PYR_CLONE)                                         \
-                EndOfList());                                           \
-        }                                                               \
-                                                                        \
-        const char* name::getName() const {                             \
-            return #name;                                               \
-        }                                                               \
-                                                                        \
-        void name::log() const {                                        \
-            PYR_LOG_BLOCK(PYR_STR(name))                                \
-            body(PYR_WRITE_LOG);                                        \
+    #define PYR_DEFINE_PACKET(name, id, body)                               \
+        Logger& name::_logger = Logger::get("pyr.Packet." PYR_STR(name));   \
+                                                                            \
+        name::name(body(PYR_CTOR_ARGS) EndOfList) {                         \
+            body(PYR_CTOR_INIT)                                             \
+            setID(id);                                                      \
+            setSize(body(PYR_SIZE)  0);                                     \
+        }                                                                   \
+                                                                            \
+        void name::serialize(ByteBuffer& out) const {                       \
+            body(PYR_SERIALIZE)                                             \
+        }                                                                   \
+                                                                            \
+        Packet* name::create(int size, const void* bytes) {                 \
+            BufferParser bp(size, bytes);                                   \
+            body(PYR_PARSE)                                                 \
+            if (bp.passedEnd()) {                                           \
+                return 0;                                                   \
+            } else {                                                        \
+                return new name(body(PYR_CREATE)  EndOfList());             \
+            }                                                               \
+        }                                                                   \
+                                                                            \
+        Packet* name::clone() const {                                       \
+            return new name(                                                \
+                body(PYR_CLONE)                                             \
+                EndOfList());                                               \
+        }                                                                   \
+                                                                            \
+        const char* name::getName() const {                                 \
+            return #name;                                                   \
+        }                                                                   \
+                                                                            \
+        void name::log() const {                                            \
+            PYR_LOG_SCOPE(_logger, INFO, PYR_STR(name))                     \
+            body(PYR_WRITE_LOG);                                            \
         }
 
 }

@@ -15,12 +15,18 @@
 
 namespace pyr {
 
+    namespace {
+    
+        Logger& _logger = Logger::get("pyr.Application");
+    
+    }
+
     class IntroState;
     typedef IntroState InitialState;
 
 
     PYR_DEFINE_SINGLETON(Application)
-
+    
     
     Application::Application() {
         _currentState = instantiateState<InitialState>();
@@ -137,7 +143,7 @@ namespace pyr {
 
     void Application::invokeTransition(State* state) {
         PYR_ASSERT(state, "Can't transition to null state");
-	PYR_LOG() << "Switching to state: " << state->getName();
+	PYR_LOG(_logger, INFO) << "Switching to state: " << state->getName();
         _nextState = state;
     }
     

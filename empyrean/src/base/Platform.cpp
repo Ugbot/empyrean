@@ -88,12 +88,20 @@ std::string pyr::getStartDirectory(int argc, char* argv[]) {
 #endif // #ifdef WIN32
 
 
-void pyr::setStartDirectory(int argc, char* argv[]) {
-    std::string startDir = getStartDirectory(argc, argv);
-    PYR_LOG() << "Setting start directory to: " << startDir;
-    if (!startDir.empty()) {
-        if (!setCurrentDirectory(startDir.c_str())) {
-            PYR_LOG() << "SetCurrentDirectory() failed";
+namespace pyr {
+
+    namespace {
+        Logger& _logger = Logger::get("pyr.Platform");
+    }
+
+    void setStartDirectory(int argc, char* argv[]) {
+        std::string startDir = getStartDirectory(argc, argv);
+        PYR_LOG(_logger, INFO) << "Setting start directory to: " << startDir;
+        if (!startDir.empty()) {
+            if (!setCurrentDirectory(startDir.c_str())) {
+                PYR_LOG(_logger, WARN) << "SetCurrentDirectory(" << startDir << ") failed";
+            }
         }
     }
+
 }

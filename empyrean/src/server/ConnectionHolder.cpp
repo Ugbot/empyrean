@@ -5,6 +5,10 @@
 
 namespace pyr {
 
+    namespace {
+        Logger& _logger = Logger::get("pyr.ConnectionHolder");
+    }
+
     void ConnectionHolder::addConnection(Connection* connection) {
         connection->addReceiver(this);
         connectionAdded(connection);
@@ -20,7 +24,7 @@ namespace pyr {
     }
     
     void ConnectionHolder::update() {
-        PYR_LOG_BLOCK("ConnectionHolder::update");
+        PYR_LOG_SCOPE(_logger, INFO, "ConnectionHolder::update");
         for (size_t i = 0; i < getConnectionCount(); ++i) {
             Connection* c = getConnection(i);
             

@@ -18,6 +18,12 @@
 
 namespace pyr {
 
+    namespace {
+    
+        Logger& _logger = Logger::get("pyr.Main");
+    
+    }
+
     /*
      * Notes for Jared's wireless gamepad.
      *
@@ -149,13 +155,7 @@ namespace pyr {
     }
 
     void runClient(int argc, char* argv[]) {
-        // Initialize log.
-        try {
-            the<Log>().open(getStartDirectory(argc, argv) + "/client.log");
-        }
-        catch (const LogFileOpenFailure&) {
-            // Could not open log file.  That's okay, defer any problems until later.
-        }
+        initializeLog(getStartDirectory(argc, argv) + "/client.log.config");
 
         // Set start directory.
         setStartDirectory(argc, argv);
@@ -165,14 +165,15 @@ namespace pyr {
             the<Configuration>().load();
         }
         catch (const ConfigurationError& e) {
-            PYR_LOG() << "Could not load client configuration: " << e.what()
-                      << "  That's okay, using defaults.";
+            PYR_LOG(_logger, WARN)
+                << "Could not load client configuration: " << e.what()
+                << "  That's okay, using defaults.";
         }
 
         // Register the pyr_client module with the PythonInterpreter.
         the<PythonInterpreter>().addSubModule(initpyr_client);
 
-        PYR_LOG() << "Initializing SDL...";
+        _logger.log(INFO, "Initializing SDL...");
         initializeSDL(SDL_INIT_NOPARACHUTE | SDL_INIT_VIDEO | SDL_INIT_TIMER | SDL_INIT_JOYSTICK);
 
         // define our minimum requirements for the GL window
@@ -197,7 +198,7 @@ namespace pyr {
          */
         const int width  = the<Configuration>().screenWidth;
         const int height = the<Configuration>().screenHeight;
-        PYR_LOG() << "Setting video mode...";
+        _logger.log(INFO, "Setting video mode...");
         if (!SDL_SetVideoMode(width, height, 32, mode)) {
             throwSDLError("Setting video mode failed");
         }
@@ -209,10 +210,10 @@ namespace pyr {
             throw std::runtime_error(error.c_str());
         }
 
-        PYR_LOG() << "GL_VENDOR: " << glGetString(GL_VENDOR);
-        PYR_LOG() << "GL_RENDERER: " << glGetString(GL_RENDERER);
-        PYR_LOG() << "GL_VERSION: " << glGetString(GL_VERSION);
-        PYR_LOG() << "GL_EXTENSIONS: " << glGetString(GL_EXTENSIONS);
+        PYR_LOG(_logger, INFO) << "GL_VENDOR: " << glGetString(GL_VENDOR);
+        PYR_LOG(_logger, INFO) << "GL_RENDERER: " << glGetString(GL_RENDERER);
+        PYR_LOG(_logger, INFO) << "GL_VERSION: " << glGetString(GL_VERSION);
+        PYR_LOG(_logger, INFO) << "GL_EXTENSIONS: " << glGetString(GL_EXTENSIONS);
 
         SDL_ShowCursor(SDL_DISABLE);
 
@@ -222,10 +223,10 @@ namespace pyr {
             SDL_JoystickEventState(SDL_ENABLE);
             joystick = SDL_JoystickOpen(0);
 
-            PYR_LOG() << "Creating Joystick with name of " << SDL_JoystickName(0);
-            PYR_LOG() << "Num Axes " << SDL_JoystickNumAxes(joystick);
-            PYR_LOG() << "Num Buttons " << SDL_JoystickNumButtons(joystick);
-            PYR_LOG() << "Num Hats " << SDL_JoystickNumHats(joystick);
+            PYR_LOG(_logger, INFO) << "Creating Joystick with name of " << SDL_JoystickName(0);
+            PYR_LOG(_logger, INFO) << "Num Axes " << SDL_JoystickNumAxes(joystick);
+            PYR_LOG(_logger, INFO) << "Num Buttons " << SDL_JoystickNumButtons(joystick);
+            PYR_LOG(_logger, INFO) << "Num Hats " << SDL_JoystickNumHats(joystick);
         }
 
         // notify the app of the window size

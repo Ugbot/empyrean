@@ -8,6 +8,10 @@
 
 namespace pyr {
 
+    namespace {
+        Logger& _logger = Logger::get("pyr.Thread");
+    }
+
     Thread::Thread(Runnable* runnable, PRThreadPriority priority) {
         _runnable = runnable;
     
@@ -33,20 +37,21 @@ namespace pyr {
     }
     
     void Thread::stop(bool interrupt) {
+        PYR_LOG_SCOPE(_logger, VERBOSE, "Thread::stop");
         if (!_stopped) {
-            writeLog("Stop line 1");
+            _logger.log(VERBOSE, "Setting _shouldQuit flag");
             PR_AtomicSet(&_shouldQuit, 1);
-            writeLog("Stop line 2");
+            _logger.log(VERBOSE, "Set _shouldQuit flag");
             if (interrupt) {
-                writeLog("Stop line 3");
+                _logger.log(VERBOSE, "Interrupting thread");
                 PR_Interrupt(_thread);
-                writeLog("Stop line 4");
+                _logger.log(VERBOSE, "Interrupted thread");
             }
-            writeLog("Stop line 5");
+            _logger.log(VERBOSE, "Joining thread");
             join();
-            writeLog("Stop line 6");
+            _logger.log(VERBOSE, "Joined thread, setting _stopped flag");
             PR_AtomicSet(&_stopped, 1);
-            writeLog("Stop line 7");
+            _logger.log(VERBOSE, "Set _stopped flag");
         }
     }
     

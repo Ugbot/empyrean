@@ -6,6 +6,12 @@
 
 namespace pyr {
 
+    namespace {
+    
+        Logger& _logger = Logger::get("pyr.InputManager");
+    
+    }
+
     static std::map<std::string, SDLKey> gKeyMap;
     static std::map<SDLKey, std::string> gNameMap;
 
@@ -173,7 +179,7 @@ namespace pyr {
         if (axis == 0) {
             getInput("JoyX").setValue(value);
         } else {
-            PYR_LOG() << "Warning: unknown joystick axis: " << axis;
+            PYR_LOG(_logger, WARN) << "Unknown joystick axis: " << axis;
         }
     }
     
@@ -189,7 +195,7 @@ namespace pyr {
                 getInput("JoyStart").setValue(down ? 1.0f : 0.0f);
                 break;
             default:
-                PYR_LOG() << "Warning: unknown joystick button: " << button;
+                PYR_LOG(_logger, WARN) << "Unknown joystick button: " << button;
                 break;
         }
     }

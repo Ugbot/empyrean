@@ -9,6 +9,10 @@
 
 namespace pyr {
 
+    namespace {
+        Logger& _logger = Logger::get("pyr.WriterThread");
+    }
+
     WriterThread::WriterThread(Socket* socket) {
         _socket = socket;
         _outgoingLock = new Mutex();
@@ -63,7 +67,7 @@ namespace pyr {
     void WriterThread::addPackets(const std::vector<PacketPtr>& packets) {
         PYR_SYNCHRONIZED(_outgoingLock, {
             for (size_t i = 0; i < packets.size(); ++i) {
-                PYR_LOG() << "Queueing packet for writing:";
+                PYR_LOG(_logger, INFO) << "Queueing packet for writing:";
                 packets[i]->log();
                 _outgoing.push(packets[i]);
             }

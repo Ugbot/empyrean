@@ -141,6 +141,23 @@ namespace pyr {
     bool operator!=(const T* a, const ScopedPtr<U>& b) {
         return (a != b.get());
     }
+    
+    
+    template<typename T, typename U>
+    bool operator<(const ScopedPtr<T>& a, const ScopedPtr<U>& b) {
+        return (a.get() < b.get());
+    }
+
+    template<typename T, typename U>
+    bool operator<(const ScopedPtr<T>& a, const U* b) {
+        return (a.get() < b);
+    }
+
+    template<typename T, typename U>
+    bool operator<(const T* a, const ScopedPtr<U>& b) {
+        return (a < b.get());
+    }
+    
 
 }
 

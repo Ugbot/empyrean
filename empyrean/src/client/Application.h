@@ -11,6 +11,7 @@
 
 namespace pyr {
 
+    class Logger;
     class State;
     class Texture;
 

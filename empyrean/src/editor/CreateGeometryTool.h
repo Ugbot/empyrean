@@ -4,7 +4,6 @@
 
 #include "CreateMapElementCommand.h"
 #include "GLUtility.h"
-#include "Log.h"
 #include "MapView.h"
 #include "Tool.h"
 
@@ -46,8 +45,6 @@ namespace pyr {
             if (_down) {
                 return false;
             } else {
-                PYR_LOG() << "Creating geometry element.";
-
                 GeometryElementPtr elt = new GeometryElement;
                 //elt->geometry.addFace(_points);
                 _points.clear();

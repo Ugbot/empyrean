@@ -19,6 +19,12 @@
 
 namespace pyr {
 
+    namespace {
+    
+        Logger& _logger = Logger::get("pyr.State.GameState");
+    
+    }
+
     GameState::GameState() {
         PYR_PROFILE_BLOCK("GameState::GameState");
         
@@ -32,7 +38,7 @@ namespace pyr {
 
         _device = audiere::OpenDevice();
         if (!_device) {
-            PYR_LOG() << "Couldn't open normal Audiere device, trying null...";
+            PYR_LOG(_logger, WARN) << "Couldn't open normal Audiere device, trying null...";
             _device = audiere::OpenDevice("null");
             if (!_device) {
                 throw std::runtime_error("Error opening null Audiere device");
@@ -226,7 +232,7 @@ namespace pyr {
         if (entity) {
             _scene.removeEntity(p->id());
         } else {
-            PYR_LOG() << "Received remove entity packet for nonexistent entity " << p->id();
+            PYR_LOG(_logger, WARN) << "Received remove entity packet for nonexistent entity " << p->id();
         }
     }
 
@@ -236,7 +242,7 @@ namespace pyr {
             entity->setPos(p->pos());
             entity->setVel(p->vel());
         } else {
-            PYR_LOG() << "Received update entity packet for nonexistent entity " << p->id();
+            PYR_LOG(_logger, WARN) << "Received update entity packet for nonexistent entity " << p->id();
         }
     }
 
@@ -249,12 +255,12 @@ namespace pyr {
                 case AP_ANIMATION:       appearance->beginAnimation(p->str()); break;
                 case AP_ANIMATION_CYCLE: appearance->beginAnimationCycle(p->str()); break;
                 default:
-                    PYR_LOG() << "Unknown code in appearance packet:";
+                    PYR_LOG(_logger, WARN) << "Unknown code in appearance packet:";
                     p->log();
                     break;
             }
         } else {
-            PYR_LOG() << "Received appearance packet for nonexistent entity " << p->id();
+            PYR_LOG(_logger, WARN) << "Received appearance packet for nonexistent entity " << p->id();
         }
     }
 
@@ -266,7 +272,7 @@ namespace pyr {
             entity->setCurrentEther(p->currEth());
             entity->setMaxEther(p->maxEth());
         } else {
-            PYR_LOG() << "Received update entity packet for nonexistent entity " << p->id();
+            PYR_LOG(_logger, WARN) << "Received update entity packet for nonexistent entity " << p->id();
         }
     }
 
@@ -300,7 +306,7 @@ namespace pyr {
 
            if(combo != "None") {
                sc.sendAttack(combo);
-               PYR_LOG() << combo << " Special Attack";
+               PYR_LOG(_logger, INFO) << combo << " Special Attack";
                fastCombo.clear();
                return;
            }

@@ -1,57 +1,97 @@
+/**
+ * @file
+ * The logging subsystem design is based on log4j.
+ */
+
+
 #ifndef PYR_LOG_H
 #define PYR_LOG_H
 
-#include <fstream>
+
+#include <map>
+#include <set>
 #include <sstream>
-#include <string>
 #include "Error.h"
+#include "RefCounted.h"
+#include "RefPtr.h"
 #include "Singleton.h"
+#include "Types.h"
+
 
 namespace pyr {
 
-    /**
-     * @file
-     * @todo The log really needs to be stored in thread-local storage,
-     * stored in a separate file or some such.
-     */
-
-    PYR_DEFINE_RUNTIME_ERROR(LogFileOpenFailure);
-
-
-    /**
-     * Singleton logging system.  Logs messages to the file specified in
-     * the call to the file specified in open, otherwise default.log,
-     * otherwise cerr.
-     */
-    class Log {
-        PYR_DECLARE_SINGLETON(Log)
-
-        Log();
-        ~Log();
-
-    public:
-        void open(const std::string& filename);
-        void write(const std::string& message);
-        
-        void beginBlock();
-        void endBlock();
-
-    private:
-        void doWrite(const std::string& message);
-        void close();  ///< private until somebody needs it.
-
-        std::ostream* _stream;
-        std::ofstream _file;
-        Zeroed<int> _indent;
+    //PYR_DEFINE_RUNTIME_ERROR(LogFileOpenFailure);
+    
+    
+    enum LogLevel {
+        ALL,     // Lowest rank, turns all levels on.
+        VERBOSE,
+        INFO,
+        WARN,
+        ERROR,
+        FATAL,
+        OFF,     // Highest rank, turns all levels off.
     };
+    
 
-
-    /**
-     * Maybe more efficient than using PYR_LOG(), because PYR_LOG()
-     * instantiates a std::ostringstream for every log request.
-     */
-    inline void writeLog(const std::string& message) {
-        the<Log>().write(message);
+    class LogWriter : public RefCounted {
+    protected:
+        ~LogWriter() { }
+        
+    public:
+        virtual void write(const string& message) = 0;
+    };
+    PYR_REF_PTR(LogWriter);
+    
+    
+    class Logger {
+    private:
+        Logger(const string& name, Logger* parent);
+        ~Logger();
+    
+    public:
+        static Logger& get(const string& name);
+        
+        // These don't necessarily have to be in the Logger class.
+        static void indent();
+        static void unindent();
+        
+        bool enabled(LogLevel level);
+        void log(LogLevel level, const string& message);
+        
+        void inheritLevel();
+        void setLevel(LogLevel level);
+        
+        void addWriter(const LogWriterPtr& writer);
+        void removeWriter(const LogWriterPtr& writer);
+        
+    private:
+        void updateActualLevel();
+        Logger& getChild(const string& name);
+        
+        typedef std::map<string, Logger*> ChildMap;
+        typedef std::set<LogWriterPtr> WriterSet;
+    
+        // Structural attributes. 
+        string _name;
+        Logger* _parent;
+        ChildMap _children;
+        
+        // Properties that can be set by a configuration.
+        bool _inheritLevel;     ///< Set by setLevel and inheritLevel.
+        LogLevel _setLevel;     ///< Set by setLevel and inheritLevel.
+        LogLevel _actualLevel;  ///< Propagated by parents, used for the actual test.
+        WriterSet _writers;
+                
+        static Logger _root;
+    
+        // Noncopyable.
+        Logger(const Logger&);
+        Logger& operator=(const Logger&);
+    };
+    
+    inline bool operator==(const Logger& lhs, const Logger& rhs) {
+        return &lhs == &rhs;
     }
 
 
@@ -61,8 +101,13 @@ namespace pyr {
      */
     class LogStream : public std::ostringstream {
     public:
+        LogStream(Logger& logger, LogLevel level)
+        : _logger(logger)
+        , _level(level) {
+        }
+    
         ~LogStream() {
-            writeLog(str());
+            _logger.log(_level, str());
         }
 
         /**
@@ -81,37 +126,39 @@ namespace pyr {
         LogStream& get() {
             return *this;
         }
-    };
-    
-    
-    class LogBlock {
-    public:
-        LogBlock(const std::string& name) {
-            _name = name;
-            the<Log>().write("+" + _name);
-            the<Log>().beginBlock();
-        }
-
-        ~LogBlock() {
-            the<Log>().endBlock();
-            the<Log>().write("-" + _name);
-        }
-
+        
     private:
-        std::string _name;
+        Logger& _logger;
+        LogLevel _level;
     };
-
-
+    
+    
     /**
      * A convenience macro around pyr::LogStream().  Used as follows:
      * PYR_LOG() << blah blah blah;
      *
-     * This is the preferred interface for streaming text to the log.
+     * This is the preferred interface for streaming objects to the log,
+     * although it might be too expensive for logging basic text.  For that,
+     * use logger.log(level, message);
      */
-    #define PYR_LOG() ::pyr::LogStream().get()
+    #define PYR_LOG(logger, level) ::pyr::LogStream(logger, level).get()
 
-    #define PYR_LOG_BLOCK(name) ::pyr::LogBlock PYR_UNIQUE_NAME()(name);
+    
+    class LogScope {
+    public:
+        LogScope(Logger& logger, LogLevel level, const string& name);
+        ~LogScope();
 
+    private:
+        Logger& _logger;
+        LogLevel _level;
+        string _name;
+    };
+
+    #define PYR_LOG_SCOPE(logger, level, name) ::pyr::LogScope PYR_UNIQUE_NAME()(logger, level, name);
+    
+    
+    void initializeLog(const string& configFile);
 
 };
 

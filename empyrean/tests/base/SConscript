@@ -3,5 +3,6 @@ env = env.Copy(tools=['pyr_base', 'nspr'],
                toolpath=[Dir('#/toolspec').abspath])
 
 env.Program('testCallStack.cpp')
+env.Program('testLog.cpp')
 env.Program('packetServer.cpp')
 env.Program('packetClient.cpp')

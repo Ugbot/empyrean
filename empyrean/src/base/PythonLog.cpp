@@ -6,7 +6,8 @@ using namespace boost::python;
 namespace pyr {
 
     void bindLog() {
-        def("log", writeLog);
+        // @todo Oi.  Figure out how to bind the logging API to Python.
+        // def("log", writeLog);
     }
 
 }

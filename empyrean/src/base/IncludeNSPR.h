@@ -7,12 +7,15 @@
 
 #ifdef HAVE_LONG_LONG
  #undef HAVE_LONG_LONG
- #include <prtypes.h>
- #ifndef HAVE_LONG_LONG
-  #define HAVE_LONG_LONG
- #endif
-#else
- #include <prtypes.h>
+ #define PYR_HAVE_LONG_LONG
+#endif
+
+#include <prinrval.h>
+#include <prthread.h>
+#include <prtypes.h>
+
+#if defined(PYR_HAVE_LONG_LONG) && !defined(HAVE_LONG_LONG)
+ #define HAVE_LONG_LONG
 #endif
 
 

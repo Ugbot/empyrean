@@ -9,6 +9,10 @@
 
 namespace pyr {
 
+    namespace {
+        Logger& _logger = Logger::get("pyr.Server");
+    }
+
     Server::Server() {
         definePacketHandler(this, &Server::handleLogin);
         definePacketHandler(this, &Server::handleSay);
@@ -21,7 +25,7 @@ namespace pyr {
     }
 
     void Server::update(float dt) {
-        PYR_LOG_BLOCK("Server::update");
+        PYR_LOG_SCOPE(_logger, INFO, "Server::update");
 
         ConnectionHolder::update();
 

@@ -8,6 +8,10 @@
 
 namespace pyr {
 
+    namespace {
+        Logger& _logger = Logger::get("pyr.ReaderThread");
+    }
+
     ReaderThread::ReaderThread(Socket* socket) {
         _socket = socket;
     }
@@ -25,7 +29,7 @@ namespace pyr {
             bb.add(buffer, read);
 
             while (Packet* p = extractPacket(bb)) {
-                PYR_LOG() << "Read packet:";
+                PYR_LOG(_logger, INFO) << "Read packet:" << p->getName();
                 p->log();
                 PYR_SYNCHRONIZED(_incomingLock, {
                     _incoming.push(p);
