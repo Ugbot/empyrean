@@ -9,12 +9,17 @@
 
 namespace pyr {
 
-    void checkVelocity(Vec2f& newVel) {
+    void checkVelocity(Vec2f& newVel, PhysicsBehaviorSlot* p) {
         // Set velocity to zero if it is small to stop friction
-        if (fabs(newVel[0]) < 0.05f) {
+        float normalSettle = 0.05f;
+        if(gmtl::lengthSquared(p->desiredAccel) == 0 && !p->inAir) {
+            normalSettle = 0.5f;
+        }
+
+        if (fabs(newVel[0]) < normalSettle) {
                 newVel[0] = 0.0f;
         }
-        if (fabs(newVel[1]) < 0.05f) {
+        if (fabs(newVel[1]) < normalSettle) {
                 newVel[1] = 0.0f;
         }
     }
@@ -117,6 +122,7 @@ namespace pyr {
         accel += p->appliedForce/p->mass;
         p->appliedForce = Vec2f(0.0f, 0.0f);
 
+
         return accel;
     }
 
@@ -135,7 +141,7 @@ namespace pyr {
             PhysicsBehaviorSlot* phys = physicsEntities[i]->getBehavior()->getSlot<PhysicsBehaviorSlot>();
             physicsEntities[i]->setNextWithCurrent();
             newVel = physicsEntities[i]->getVel() + getAccel(physicsEntities[i]) * dt;
-            checkVelocity(newVel);
+            checkVelocity(newVel, phys);
             physicsEntities[i]->setNextVel(newVel);
             phys->inAir = true;
             //the<VisDebug>().addSegment(physicsEntities[i]->getPos(),physicsEntities[i]->getPos() + physicsEntities[i]->getVel() * dt, Vec3f(1,0,1));            

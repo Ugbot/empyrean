@@ -228,7 +228,7 @@ namespace pyr {
         }
         
         if(index != -1) {
-                colDat.displacement = (displacementPt - bottomPoint) * 1.05f;
+                colDat.displacement = (displacementPt - bottomPoint) * 1.25f;
                 colDat.type = collision::GROUND_BELOW;
                 colDat.time = gmtl::length(colDat.displacement)/gmtl::length(colDat.velocity);
                 if(colDat.time > dt) {
@@ -249,7 +249,7 @@ namespace pyr {
         }
 
         // top detector
-        groundDetector = Segment(topPoint,topPoint - Vec2f(0,topPoint[1] - bottomPoint[1]) * 0.45f);
+        groundDetector = Segment(topPoint,topPoint - Vec2f(0,topPoint[1] - bottomPoint[1]) * 0.25f);
         
         displacementPt = topPoint;
         index = -1;
@@ -286,7 +286,7 @@ namespace pyr {
         }
 
         // leftside
-        groundDetector = Segment(leftPoint,leftPoint + Vec2f(rightPoint[0]-leftPoint[0],0) * 0.45f);
+        groundDetector = Segment(leftPoint,leftPoint + Vec2f(rightPoint[0]-leftPoint[0],0) * 0.25f);
 
         displacementPt = leftPoint;
         index = -1;
@@ -323,7 +323,7 @@ namespace pyr {
         }
 
         // right point
-        groundDetector = Segment(rightPoint,rightPoint - Vec2f(rightPoint[0]-leftPoint[0],0) * 0.45f);
+        groundDetector = Segment(rightPoint,rightPoint - Vec2f(rightPoint[0]-leftPoint[0],0) * 0.25f);
         
         displacementPt = rightPoint;
         index = -1;
@@ -379,10 +379,10 @@ namespace pyr {
         vectorSegs.push_back(rightSeg);
         vectorSegs.push_back(topSeg);
         vectorSegs.push_back(leftSeg);
-        vectorSegs.push_back(bottomRightSeg);
-        vectorSegs.push_back(bottomLeftSeg);
-        vectorSegs.push_back(topRightSeg);
-        vectorSegs.push_back(topLeftSeg);
+        //vectorSegs.push_back(bottomRightSeg);
+        //vectorSegs.push_back(bottomLeftSeg);
+        //vectorSegs.push_back(topRightSeg);
+        //vectorSegs.push_back(topLeftSeg);
         //the<VisDebug>().addSegment(bottomSeg.v1,bottomSeg.v2,Vec3f(1,0,0));
         //the<VisDebug>().addSegment(rightSeg.v1,rightSeg.v2,Vec3f(0,1,0));
         //the<VisDebug>().addSegment(topSeg.v1,topSeg.v2,Vec3f(0,0,1));
@@ -535,7 +535,20 @@ namespace pyr {
             return -1.0f;
         }
         float t = ((seg2.v1[1] - seg1.v1[1])*x2 + (seg1.v1[0] - seg2.v1[0])*y2)/den;
-        float r = ((seg1.v1[0] - seg2.v1[0]) + t * x1)/x2;
+        float r;
+        if(x2 != 0) {
+             r = ((seg1.v1[0] - seg2.v1[0]) + t * x1)/x2;
+        }
+        else {
+            float y = seg1.v1[1] * (1 - t) + seg1.v2[1] * t;
+            if(y >= std::min(seg2.v1[1], seg2.v2[1]) && y <= std::max(seg2.v1[1], seg2.v2[1])) {
+                r = 0.5f;
+            }
+            else {
+                r = -1.0f;
+            }
+
+        }
 
         //float t = t0[0];
         //float r = t0[1];

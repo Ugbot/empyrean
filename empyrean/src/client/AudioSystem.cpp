@@ -46,6 +46,7 @@ namespace pyr {
                 PYR_LOG(_logger, WARN, "Could not open sound file: " << filename);
                 throw std::runtime_error("Could not open sound file: " + filename);
             }
+             _sounds[filename] = effect;
         }
         effect->play();
     }

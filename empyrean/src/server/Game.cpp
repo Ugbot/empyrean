@@ -402,7 +402,7 @@ namespace pyr {
         PlayerBehaviorPtr attackerBehavior = cd->behavior;
         PYR_ASSERT(attackerBehavior, "GameConnectionData does not have an associated entity");
 
-        float damageMod = 1.0f;
+        float damageMod = 5.0f;
 
         if(p->name() == "Double") {
             damageMod = 6.0f;

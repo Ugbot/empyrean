@@ -234,8 +234,13 @@ namespace pyr {
             invokeTransition<LobbyState>();
         }
         
+        if(_inputAttack->getDelta() < -gmtl::GMTL_EPSILON) {
+            the<AudioSystem>().playSound("sounds/attack.wav");
+            sc.sendAttack("Attack");
+        }
+
         // interpret attack and jump commands for combos
-        comboInterpreter(dt);
+        //comboInterpreter(dt);
 
         _im.update(dt);
     }
