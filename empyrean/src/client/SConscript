@@ -15,11 +15,11 @@ SOURCES = Split("""
     Main.cpp
     MenuState.cpp
     Model.cpp
+    ModelRenderer.cpp
     ParticleEmitter.cpp
     ParticleSystem.cpp
     Player.cpp
     Profiler.cpp
-    Renderer.cpp
     Scene.cpp
     SDLUtility.cpp
     ServerConnection.cpp
