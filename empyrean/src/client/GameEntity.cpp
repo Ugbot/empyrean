@@ -13,8 +13,6 @@
 #include "ResourceManager.h"
 #include "VecMath.h"
 #include "Log.h"
-#include "ArmorPool.h"
-#include "WeaponPool.h"
 
 const int FALLING_SPEED = 0;
 
@@ -25,55 +23,12 @@ namespace pyr {
     {
         _direction = 90;
 
-        // Initializing frenzy! // TEMP TESTING -> real values commented out
-        _currentEther = 25; //0;
-        _maxEther = 100; //0;
-        _currentVitality = 10; //0;
-        _maxVitality = 100; //0;
-        _armor = the<ArmorPool>().getArmor("Leather");
-        _meleeWeapon = the<WeaponPool>().getWeapon("Short Sword");
-        _rangeWeapon = the<WeaponPool>().getWeapon("Pistol");
-
         // initialize other values
         _jumpStart = false;
         _attackStart = false;
-        getHeight() = 1.9f;
-        getWidth() = 0.3f;
+        //getHeight() = 1.9f;
+        //getWidth() = 0.3f;
         startStandState();
-    }
-
-    GameEntity::~GameEntity() {
-        delete _armor;
-        delete _meleeWeapon;
-        delete _rangeWeapon;
-    }
-
-    void GameEntity::decrVitality(int decr) {
-        _currentVitality -= decr;
-        if (_currentVitality < 0) {
-            _currentVitality = 0;
-        }
-    }
-
-    void GameEntity::incrVitality(int incr) {
-        _currentVitality += incr;
-        if (_currentVitality > _maxVitality) {
-            _currentVitality = _maxVitality;
-        }
-    }
-
-    void GameEntity::decrEther(int decr) {
-        _currentEther -= decr;
-        if (_currentEther < 0) {
-            _currentEther = 0;
-        }
-    }
-
-    void GameEntity::incrEther(int incr) {
-        _currentEther += incr;
-        if (_currentEther > _maxEther) {
-            _currentEther = _maxEther;
-        }
     }
 
     void GameEntity::draw() {
@@ -137,7 +92,7 @@ namespace pyr {
         Vec2f precollideposition = getPos();
         Vec2f precollidevelocity = getVel();
 
-        _lastCD = collide(dt, origPos, getPos(), getVel(), getWidth(), getHeight(), terrain);
+        //_lastCD = collide(dt, origPos, getPos(), getVel(), getWidth(), getHeight(), terrain);
 
         // If you are higher than you once were so you were forced up and you were falling
         // (before the collision) This means that you hit a surface below you so therefore
@@ -159,8 +114,8 @@ namespace pyr {
             GameEntity* gentity = dynamic_cast<GameEntity*>(itr->second);
             if(gentity) {
                 if(gentity->getPos() != getPos()) { // if the entities aren't in the same exact position
-                    collideWithEntity(getPos(), getVel(), getWidth(), getHeight(), 
-                         gentity->getPos(), gentity->getVel(), gentity->getWidth(),gentity->getHeight());
+                    //collideWithEntity(getPos(), getVel(), getWidth(), getHeight(), 
+                    //     gentity->getPos(), gentity->getVel(), gentity->getWidth(),gentity->getHeight());
                 }
 
             }
@@ -357,13 +312,4 @@ namespace pyr {
         correctDirection(xvel);
     }
 
-    void GameEntity::getVitalityUpdate(int& current, int& max) {
-        current = _currentVitality;
-        max = _maxVitality;
-    }
-
-    void GameEntity::getEtherUpdate(int& current, int& max) {
-        current = _currentEther;
-        max = _maxEther;
-    }
 }

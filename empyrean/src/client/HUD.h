@@ -7,6 +7,7 @@
 
 namespace pyr {
     class Entity;
+    class Player;
     class Texture;
 
     class HUD {
@@ -15,15 +16,15 @@ namespace pyr {
         HUD();
         ~HUD(){}
 
+    public:
+        void draw(gltext::FontRendererPtr rend, Player& player); 
+
+    private:
         void drawVitalityBar(float vitPerc);
         void drawEtherBar(float ethPerc);
         void calcBar();
         void drawBar(float perc);
 
-    public:
-        void draw(gltext::FontRendererPtr rend, Entity* ent); 
-
-    private:
         std::vector<Vec2f> _vertsLeft;
         std::vector<Vec2f> _vertsRight;
         Vec2f _vitCenter;

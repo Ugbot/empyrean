@@ -1,7 +1,8 @@
 #include "HUD.h"
 #include "GameEntity.h"
-#include "OpenGL.h"
 #include "GLUtility.h"
+#include "OpenGL.h"
+#include "Player.h"
 #include "Texture.h"
 
 namespace pyr {
@@ -29,13 +30,10 @@ namespace pyr {
             _thumbnail = Texture::create("images/MikeThumbnail.jpg");
         }
         
-    void HUD::draw(gltext::FontRendererPtr rend, Entity* ent) {
-        PYR_ASSERT(ent!=0,"Null entity passed to HUD!");
-
+    void HUD::draw(gltext::FontRendererPtr rend, Player& player) {
         int vitality, ether, maxVitality, maxEther;
-        GameEntity* gent = dynamic_cast<GameEntity*>(ent);
-        gent->getVitalityUpdate(vitality,maxVitality);
-        gent->getEtherUpdate(ether,maxEther);
+        player.getVitalityUpdate(vitality,maxVitality);
+        player.getEtherUpdate(ether,maxEther);
         PYR_ASSERT(maxVitality>0,"Invalid maximum vitality!");
         PYR_ASSERT(maxEther>0,"Invalid maximum ether!");
 

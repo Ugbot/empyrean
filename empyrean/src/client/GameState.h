@@ -4,6 +4,7 @@
 #include <gltext.h>
 #include <vector>
 #include "InputManager.h"
+#include "Player.h"
 #include "State.h"
 
 namespace pyr {
@@ -36,6 +37,8 @@ namespace pyr {
         Input* _input3;
         Input* _input4;
         Input* _inputJoyAttack;
+
+        Player _player;
 
         Zeroed<int> _lastJoyX;
         Inited<bool, false> _showPlayerData;

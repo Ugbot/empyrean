@@ -37,7 +37,6 @@ namespace pyr {
         };
 
         GameEntity();
-        ~GameEntity();
 
         void draw();
         void update(float dt, const Map* terrain);
@@ -45,19 +44,6 @@ namespace pyr {
         typedef std::map<u16, ClientEntity*> EntityMap;
         void collideWithOthers(EntityMap entities);
 
-        void getVitalityUpdate(int& current, int& max);
-        void getEtherUpdate(int& current, int& max);
-        void decrVitality(int decr);
-        void incrVitality(int incr);
-        void decrEther(int decr);
-        void incrEther(int incr);
-
-        float& getHeight()                    { return _height; }
-        const float& getHeight()     const    { return _height; }
-
-        float& getWidth()                    { return _width; }
-        const float& getWidth()     const    { return _width; }
-        
         u16& getJumping()                    { return _jumping; }
         const u16& getJumping()     const    { return _jumping; }
 
@@ -103,20 +89,6 @@ namespace pyr {
         // Character Information
         float _direction;
         Zeroed<u16> _jumping;
-        int _maxVitality;
-        int _currentVitality;
-        int _maxEther;
-        int _currentEther;
-        Weapon* _meleeWeapon;
-        Weapon* _rangeWeapon;
-        Armor* _armor;
-        
-        // Height and Width of Entity used for collision
-        Zeroed<float> _height; 
-        Zeroed<float> _width; 
-
-        
-        
     };
 
 }

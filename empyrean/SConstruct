@@ -187,7 +187,6 @@ if env.get('distcc'):
     env['CC']  = ['$(', 'distcc', '$)', env['CC']]
     env['CXX'] = ['$(', 'distcc', '$)', env['CXX']]
 
-print env['USE_EXTGL']
 Export('env')
 
 # Process subdirectories.

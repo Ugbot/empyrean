@@ -51,9 +51,9 @@ namespace pyr {
         Scene& scene = the<Scene>();
         scene.draw();
 
-        if (GameEntity* entity = dynamic_cast<GameEntity*>(scene.getFocus())) {
-            the<HUD>().draw(_renderer, entity);
+        the<HUD>().draw(_renderer, _player);
 
+        if (GameEntity* entity = dynamic_cast<GameEntity*>(scene.getFocus())) {
             if (_showPlayerData) {
                 Application& app = the<Application>();
                 glEnable(GL_BLEND);
@@ -79,20 +79,17 @@ namespace pyr {
         sc.update();
 
         // Effect the player's vitality
-        GameEntity* gent = dynamic_cast<GameEntity*>(the<Scene>().getFocus());
-        if (gent) {
-            if (_input1->getValue() == 1) {
-                gent->decrVitality(2);
-            }
-            if (_input2->getValue() == 1) {
-                gent->incrVitality(2);
-            }
-            if (_input3->getValue() == 1) {
-                gent->decrEther(1);
-            }
-            if (_input4->getValue() == 1) {
-                gent->incrEther(1);
-            }
+        if (_input1->getValue() == 1) {
+            _player.decrVitality(2);
+        }
+        if (_input2->getValue() == 1) {
+            _player.incrVitality(2);
+        }
+        if (_input3->getValue() == 1) {
+            _player.decrEther(1);
+        }
+        if (_input4->getValue() == 1) {
+            _player.incrEther(1);
         }
 
         // move to the right!

@@ -130,10 +130,22 @@
 			Name="files"
 			Filter="">
 			<File
+				RelativePath="..\..\src\client\AppearanceFactory.cpp">
+			</File>
+			<File
+				RelativePath="..\..\src\client\AppearanceFactory.h">
+			</File>
+			<File
 				RelativePath="..\..\src\client\Application.cpp">
 			</File>
 			<File
 				RelativePath="..\..\src\client\Application.h">
+			</File>
+			<File
+				RelativePath="..\..\src\client\Cal3DAppearance.cpp">
+			</File>
+			<File
+				RelativePath="..\..\src\client\Cal3DAppearance.h">
 			</File>
 			<File
 				RelativePath="..\..\src\client\ClientEntity.h">
@@ -191,6 +203,12 @@
 			</File>
 			<File
 				RelativePath="..\..\src\client\ParticleSystem.h">
+			</File>
+			<File
+				RelativePath="..\..\src\client\Player.cpp">
+			</File>
+			<File
+				RelativePath="..\..\src\client\Player.h">
 			</File>
 			<File
 				RelativePath="..\..\src\client\Profiler.cpp">

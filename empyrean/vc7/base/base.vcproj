@@ -110,9 +110,6 @@
 			Name="files"
 			Filter="cpp;c;cxx;def;odl;idl;hpj;bat;asm">
 			<File
-				RelativePath="..\..\src\base\Appearance.cpp">
-			</File>
-			<File
 				RelativePath="..\..\src\base\Appearance.h">
 			</File>
 			<File
