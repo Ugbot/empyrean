@@ -24,8 +24,8 @@
  *
  * -----------------------------------------------------------------
  * File:          $RCSfile: WidgetContainer.h,v $
- * Date modified: $Date: 2003-09-22 23:45:02 $
- * Version:       $Revision: 1.7 $
+ * Date modified: $Date: 2003-09-23 00:36:30 $
+ * Version:       $Revision: 1.8 $
  * -----------------------------------------------------------------
  *
  ************************************************************** phui-cpr-end */
@@ -99,7 +99,7 @@ namespace phui {
         WidgetPtr mModalWidget;
     };
 
-    typedef RefPtr<WidgetContainer> WidgetContainerPtr;
+    typedef pyr::RefPtr<WidgetContainer> WidgetContainerPtr;
 }
 
 #endif

@@ -24,8 +24,8 @@
  *
  * -----------------------------------------------------------------
  * File:          $RCSfile: Window.h,v $
- * Date modified: $Date: 2003-09-22 23:45:02 $
- * Version:       $Revision: 1.4 $
+ * Date modified: $Date: 2003-09-23 00:36:30 $
+ * Version:       $Revision: 1.5 $
  * -----------------------------------------------------------------
  *
  ************************************************************** phui-cpr-end */
@@ -43,11 +43,6 @@ namespace phui
    class Window : public WidgetContainer
    {
    public:
-      /**
-       * Creates a window with the given title.
-       *
-       * @param   title          the title for the window
-       */
       Window(const std::string& title = "", LayoutPtr layout = 0);
 
       void draw();
@@ -85,7 +80,7 @@ namespace phui
       std::list<WindowListenerPtr> mListeners;
    };
 
-   typedef RefPtr<Window> WindowPtr;
+   typedef pyr::RefPtr<Window> WindowPtr;
 }
 
 #endif

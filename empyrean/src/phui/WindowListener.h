@@ -24,8 +24,8 @@
  *
  * -----------------------------------------------------------------
  * File:          $RCSfile: WindowListener.h,v $
- * Date modified: $Date: 2003-07-22 03:24:31 $
- * Version:       $Revision: 1.1 $
+ * Date modified: $Date: 2003-09-23 00:36:30 $
+ * Version:       $Revision: 1.2 $
  * -----------------------------------------------------------------
  *
  ************************************************************** phui-cpr-end */
@@ -72,11 +72,12 @@ namespace phui
    /**
     * Interface to a class that wishes to receive events from a window.
     */
-   class WindowListener : public RefCounted
+   class WindowListener : public pyr::RefCounted
    {
-   public:
+   protected:
       virtual ~WindowListener() {}
 
+   public:
       /**
        * Notifies this listener that the source window has opened.
        *
@@ -106,7 +107,7 @@ namespace phui
       virtual void onWindowUnfocused(const WindowEvent& evt) = 0;
    };
 
-   typedef RefPtr<WindowListener> WindowListenerPtr;
+   typedef pyr::RefPtr<WindowListener> WindowListenerPtr;
 }
 
 #endif

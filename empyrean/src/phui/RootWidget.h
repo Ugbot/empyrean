@@ -24,8 +24,8 @@
  *
  * -----------------------------------------------------------------
  * File:          $RCSfile: RootWidget.h,v $
- * Date modified: $Date: 2003-08-12 20:58:02 $
- * Version:       $Revision: 1.2 $
+ * Date modified: $Date: 2003-09-23 00:36:30 $
+ * Version:       $Revision: 1.3 $
  * -----------------------------------------------------------------
  *
  ************************************************************** phui-cpr-end */
@@ -79,7 +79,7 @@ namespace phui
       InputModifiers mModifiers;
    };
 
-   typedef RefPtr<RootWidget> RootWidgetPtr;
+   typedef pyr::RefPtr<RootWidget> RootWidgetPtr;
 }
 
 #endif

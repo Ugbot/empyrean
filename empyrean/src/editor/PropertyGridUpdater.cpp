@@ -1,8 +1,7 @@
-
-#include "PropertyGridUpdater.h"
-
-#include "wx.h"
 #include "MapElement.h"
+#include "PropertyGridUpdater.h"
+#include "Utility.h"
+#include "wx.h"
 
 namespace pyr {
 

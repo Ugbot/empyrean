@@ -10,7 +10,7 @@ namespace phui {
 
     class WidgetContainer;
 
-    class Layout : public RefCounted {
+    class Layout : public pyr::RefCounted {
     public:
         /** container is not a smart pointer because this is called indirectly
          * from WidgetContainer's constructor, which causes the container to be
@@ -18,7 +18,7 @@ namespace phui {
         virtual void layout(WidgetContainer* container) = 0;
     };
     
-    typedef RefPtr<Layout> LayoutPtr;
+    typedef pyr::RefPtr<Layout> LayoutPtr;
         
 }
 

@@ -24,8 +24,8 @@
  *
  * -----------------------------------------------------------------
  * File:          $RCSfile: Label.cpp,v $
- * Date modified: $Date: 2003-08-05 05:00:28 $
- * Version:       $Revision: 1.2 $
+ * Date modified: $Date: 2003-09-23 00:36:30 $
+ * Version:       $Revision: 1.3 $
  * -----------------------------------------------------------------
  *
  ************************************************************** phui-cpr-end */
@@ -35,12 +35,9 @@
 
 namespace phui
 {
-   Label::Label()
-   {}
-
    Label::Label(const std::string& text)
-      : mText(text)
    {
+      mText = text;
       setBackgroundColor(NONE);
    }
 

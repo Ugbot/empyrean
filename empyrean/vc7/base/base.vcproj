@@ -218,6 +218,12 @@
 				RelativePath="..\..\src\base\ReaderThread.h">
 			</File>
 			<File
+				RelativePath="..\..\src\base\RefCounted.h">
+			</File>
+			<File
+				RelativePath="..\..\src\base\RefPtr.h">
+			</File>
+			<File
 				RelativePath="..\..\src\base\ResourceManager.cpp">
 			</File>
 			<File

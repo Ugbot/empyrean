@@ -182,12 +182,6 @@
 				RelativePath="..\..\src\phui\Rect.h">
 			</File>
 			<File
-				RelativePath="..\..\src\phui\RefCounted.h">
-			</File>
-			<File
-				RelativePath="..\..\src\phui\RefPtr.h">
-			</File>
-			<File
 				RelativePath="..\..\src\phui\RootWidget.cpp">
 			</File>
 			<File

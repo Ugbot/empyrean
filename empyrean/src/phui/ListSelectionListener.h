@@ -24,8 +24,8 @@
  *
  * -----------------------------------------------------------------
  * File:          $RCSfile: ListSelectionListener.h,v $
- * Date modified: $Date: 2003-07-22 03:24:31 $
- * Version:       $Revision: 1.1 $
+ * Date modified: $Date: 2003-09-23 00:36:30 $
+ * Version:       $Revision: 1.2 $
  * -----------------------------------------------------------------
  *
  ************************************************************** phui-cpr-end */
@@ -82,11 +82,12 @@ namespace phui
    /**
     * Interface to a class that wishes to receive list selection events from a widgets.
     */
-   class ListSelectionListener : public RefCounted
+   class ListSelectionListener : public pyr::RefCounted
    {
-   public:
+   protected:
       virtual ~ListSelectionListener() {}
-
+   
+   public:
       /**
        * Notifies this listener that the source object has fired the given
        * list selection event.
@@ -96,7 +97,7 @@ namespace phui
       virtual void onListSelection(const ListSelectionEvent& evt) = 0;
    };
 
-   typedef RefPtr<ListSelectionListener> ListSelectionListenerPtr;
+   typedef pyr::RefPtr<ListSelectionListener> ListSelectionListenerPtr;
 }
 
 #endif

@@ -23,7 +23,7 @@ namespace phui {
         pyr::Texture* _texture;
     };
     
-    typedef RefPtr<Picture> PicturePtr;
+    typedef pyr::RefPtr<Picture> PicturePtr;
 }
 
 

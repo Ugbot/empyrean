@@ -24,8 +24,8 @@
  *
  * -----------------------------------------------------------------
  * File:          $RCSfile: Label.h,v $
- * Date modified: $Date: 2003-07-22 03:24:31 $
- * Version:       $Revision: 1.1 $
+ * Date modified: $Date: 2003-09-23 00:36:30 $
+ * Version:       $Revision: 1.2 $
  * -----------------------------------------------------------------
  *
  ************************************************************** phui-cpr-end */
@@ -44,43 +44,18 @@ namespace phui
    class Label : public Widget
    {
    public:
-      /// Creates a new label with no text at (0,0) with size (0,0).
-      Label();
+      Label(const std::string& text = "");
 
-      /**
-       * Creates a new label with the given text at (0,0) with size (0,0).
-       *
-       * @param text   the text for the label, defaults to the no label
-       */
-      Label(const std::string& text);
-
-      /**
-       * Draws this label with its text.
-       */
       virtual void draw();
 
-      /**
-       * Sets the text on this label to the given value.
-       *
-       * @param text      the text for this label
-       */
       void setText(const std::string& text);
-
-      /**
-       * Gets the text on this label.
-       *
-       * @return  the text for this label
-       */
       const std::string& getText() const;
 
    private:
-      /**
-       * The text on this label.
-       */
       std::string mText;
    };
 
-   typedef RefPtr<Label> LabelPtr;
+   typedef pyr::RefPtr<Label> LabelPtr;
 }
 
 #endif

@@ -24,8 +24,8 @@
  *
  * -----------------------------------------------------------------
  * File:          $RCSfile: Widget.h,v $
- * Date modified: $Date: 2003-09-22 23:45:02 $
- * Version:       $Revision: 1.7 $
+ * Date modified: $Date: 2003-09-23 00:36:30 $
+ * Version:       $Revision: 1.8 $
  * -----------------------------------------------------------------
  *
  ************************************************************** phui-cpr-end */
@@ -50,7 +50,7 @@ namespace phui
    /**
     * Abstract base class for all Widgets.
     */
-   class Widget : public RefCounted
+   class Widget : public pyr::RefCounted
    {
    protected:
       ~Widget() { }
@@ -279,7 +279,7 @@ namespace phui
       friend class WidgetContainer;
    };
 
-   typedef RefPtr<Widget> WidgetPtr;
+   typedef pyr::RefPtr<Widget> WidgetPtr;
 }
 
 #endif

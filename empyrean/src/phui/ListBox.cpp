@@ -24,8 +24,8 @@
  *
  * -----------------------------------------------------------------
  * File:          $RCSfile: ListBox.cpp,v $
- * Date modified: $Date: 2003-08-16 02:12:53 $
- * Version:       $Revision: 1.3 $
+ * Date modified: $Date: 2003-09-23 00:36:30 $
+ * Version:       $Revision: 1.4 $
  * -----------------------------------------------------------------
  *
  ************************************************************** phui-cpr-end */
@@ -39,8 +39,9 @@
 namespace phui
 {
    ListBox::ListBox()
-      : mSelectedItem(-1)
-   {}
+   {
+      mSelectedItem = -1;
+   }
 
    void ListBox::draw()
    {
@@ -168,8 +169,7 @@ namespace phui
 
    void ListBox::removeListSelectionListener(ListSelectionListenerPtr listener)
    {
-      ListenerIter itr;
-      itr = std::find(mListeners.begin(), mListeners.end(), listener);
+      ListenerIter itr = std::find(mListeners.begin(), mListeners.end(), listener);
       if (itr != mListeners.end())
       {
          mListeners.erase(itr);

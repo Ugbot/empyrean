@@ -81,18 +81,18 @@ namespace pyr {
         void createLoginScreen();
         
     
-        phui::RefPtr<MenuScreen> _screen;
+        RefPtr<MenuScreen> _screen;
         
-        phui::RefPtr<MainScreen>         _mainScreen;
-        phui::RefPtr<ConnectScreen>      _connectScreen;
-        phui::RefPtr<ConnectingScreen>   _connectingScreen;
-        phui::RefPtr<JoinGameScreen>     _joinGameScreen;
-        phui::RefPtr<JoiningGameScreen>  _joiningGameScreen;
-        phui::RefPtr<LoginScreen>        _loginScreen;
-        phui::RefPtr<LoggingInScreen>    _loggingInScreen;
-        phui::RefPtr<LobbyScreen>        _lobbyScreen;
-        phui::RefPtr<NewCharacterScreen> _newCharacterScreen;
-        phui::RefPtr<NewGameScreen>      _newGameScreen;
+        RefPtr<MainScreen>         _mainScreen;
+        RefPtr<ConnectScreen>      _connectScreen;
+        RefPtr<ConnectingScreen>   _connectingScreen;
+        RefPtr<JoinGameScreen>     _joinGameScreen;
+        RefPtr<JoiningGameScreen>  _joiningGameScreen;
+        RefPtr<LoginScreen>        _loginScreen;
+        RefPtr<LoggingInScreen>    _loggingInScreen;
+        RefPtr<LobbyScreen>        _lobbyScreen;
+        RefPtr<NewCharacterScreen> _newCharacterScreen;
+        RefPtr<NewGameScreen>      _newGameScreen;
     };
 
 }

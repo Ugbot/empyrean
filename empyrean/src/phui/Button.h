@@ -24,8 +24,8 @@
  *
  * -----------------------------------------------------------------
  * File:          $RCSfile: Button.h,v $
- * Date modified: $Date: 2003-08-11 23:19:57 $
- * Version:       $Revision: 1.6 $
+ * Date modified: $Date: 2003-09-23 00:36:30 $
+ * Version:       $Revision: 1.7 $
  * -----------------------------------------------------------------
  *
  ************************************************************** phui-cpr-end */
@@ -112,7 +112,7 @@ namespace phui
       ListenerList mListeners;
    };
 
-   typedef RefPtr<Button> ButtonPtr;
+   typedef pyr::RefPtr<Button> ButtonPtr;
 }
 
 #endif

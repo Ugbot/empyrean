@@ -2,8 +2,10 @@
 #define PYR_MAP_ELEMENT_H
 
 
+#include <vector>
 #include <gmtl/Vec.h>
-#include "Utility.h"
+#include "RefCounted.h"
+#include "RefPtr.h"
 
 
 namespace pyr {
@@ -88,7 +90,6 @@ namespace pyr {
 
     class GroupElement : public MapElement {
     public:
-
         std::vector<MapElementPtr> children;
 
         virtual void handleVisitor(MapVisitor* v);

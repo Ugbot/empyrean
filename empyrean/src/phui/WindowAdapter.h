@@ -24,8 +24,8 @@
  *
  * -----------------------------------------------------------------
  * File:          $RCSfile: WindowAdapter.h,v $
- * Date modified: $Date: 2003-07-22 03:24:31 $
- * Version:       $Revision: 1.1 $
+ * Date modified: $Date: 2003-09-23 00:36:30 $
+ * Version:       $Revision: 1.2 $
  * -----------------------------------------------------------------
  *
  ************************************************************** phui-cpr-end */
@@ -79,7 +79,7 @@ namespace phui
       void onWindowUnfocused(const WindowEvent& evt) {}
    };
 
-   typedef RefPtr<WindowAdapter> WindowAdapterPtr;
+   typedef pyr::RefPtr<WindowAdapter> WindowAdapterPtr;
 }
 
 #endif

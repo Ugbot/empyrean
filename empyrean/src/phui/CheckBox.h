@@ -24,8 +24,8 @@
  *
  * -----------------------------------------------------------------
  * File:          $RCSfile: CheckBox.h,v $
- * Date modified: $Date: 2003-08-08 03:09:44 $
- * Version:       $Revision: 1.2 $
+ * Date modified: $Date: 2003-09-23 00:36:30 $
+ * Version:       $Revision: 1.3 $
  * -----------------------------------------------------------------
  *
  ************************************************************** phui-cpr-end */
@@ -60,7 +60,7 @@ namespace phui
       std::string mText;
    };
 
-   typedef RefPtr<CheckBox> CheckBoxPtr;
+   typedef pyr::RefPtr<CheckBox> CheckBoxPtr;
 }
 
 #endif

@@ -20,6 +20,7 @@
 #include "Widget.h"
 #include "Window.h"
 #include "WindowAdapter.h"
+#include "Version.h"
 
 
 #endif

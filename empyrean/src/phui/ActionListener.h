@@ -24,8 +24,8 @@
  *
  * -----------------------------------------------------------------
  * File:          $RCSfile: ActionListener.h,v $
- * Date modified: $Date: 2003-08-11 23:19:57 $
- * Version:       $Revision: 1.2 $
+ * Date modified: $Date: 2003-09-23 00:36:30 $
+ * Version:       $Revision: 1.3 $
  * -----------------------------------------------------------------
  *
  ************************************************************** phui-cpr-end */
@@ -72,10 +72,10 @@ namespace phui
    /**
     * Interface to a class that wishes to receive action events from a widgets.
     */
-   class ActionListener : public RefCounted
+   class ActionListener : public pyr::RefCounted
    {
    protected:
-      virtual ~ActionListener() {}
+      ~ActionListener() {}
       
    public:
       /**
@@ -86,12 +86,15 @@ namespace phui
        */
       virtual void onAction(const ActionEvent& evt) = 0;
    };
-   typedef RefPtr<ActionListener> ActionListenerPtr;
+   typedef pyr::RefPtr<ActionListener> ActionListenerPtr;
    
    
    template<typename T>
    class MethodActionListener : public ActionListener
    {
+   protected:
+      ~MethodActionListener() { }
+   
    public:
       typedef void (T::*Method)(const ActionEvent&);
    
