@@ -1,4 +1,3 @@
-#include <gltext.h>
 #include <stdlib.h>
 #include <sstream>
 
