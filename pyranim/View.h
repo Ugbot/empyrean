@@ -19,6 +19,13 @@ public:
 };
 typedef std::vector<StatusListener*> StatusListenerList;
 
+class ToolListener {
+public:
+    virtual ~ToolListener() {}
+    virtual void notify(int newTool) = 0;
+};
+typedef std::vector<ToolListener*> ToolListenerList;
+
 class Model;
 class Camera;
 
@@ -33,7 +40,7 @@ public:
     void setSize(int w, int h);
     void addViewListener(ViewListener *listener);
     void addStatusListener(StatusListener *listener);
-    //void getViewListenerList(ViewListenerList &listenerList);
+    void addToolListener(ToolListener *listener);
     void setCurrent();
     void navMouseDown(int x, int y);
     void navMouseMove(int x, int y);
@@ -41,6 +48,9 @@ public:
     void mouseDown(int x, int y);
     void mouseMove(int x, int y);
     void mouseUp(int x, int y);
+
+    int getToolMode() const;
+    void setToolMode(int tool);
 
     void notifyViewListeners();
 
@@ -71,6 +81,7 @@ protected:
     double m_groundRes;
     ViewListenerList   m_viewListeners;
     StatusListenerList m_statusListeners;
+    ToolListenerList m_toolListeners;
     int m_navMode;
     int m_toolMode;
     double m_navCircleRad;
@@ -84,6 +95,7 @@ protected:
     void drawSkeleton();
     void drawNavCircle() const;
     void notifyStatusListeners(const char *msg);
+    void notifyToolListeners(int newTool);
     void recalcNavCircle();
     double getViewDepth() const;
 

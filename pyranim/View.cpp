@@ -61,6 +61,9 @@ View::~View() {
     for(int i = 0; i < (int) m_statusListeners.size(); i ++) {
         delete m_statusListeners[i];
     }
+    for(int i = 0; i < (int) m_toolListeners.size(); i ++) {
+        delete m_toolListeners[i];
+    }
     delete m_camera;
     delete m_rotWidget;
 }
@@ -272,6 +275,10 @@ void View::addStatusListener(StatusListener *listener) {
     m_statusListeners.push_back(listener);
 }
 
+void View::addToolListener(ToolListener *listener) {
+    m_toolListeners.push_back(listener);
+}
+
 void View::setCurrent() {
     assert(0); // XXX - Implement me.
 }
@@ -409,6 +416,15 @@ void View::mouseUp(int x, int y) {
     }
 }
 
+int View::getToolMode() const {
+    return m_toolMode;
+}
+
+void View::setToolMode(int toolMode) {
+    m_toolMode = toolMode;
+    notifyToolListeners(toolMode);
+}
+
 void View::notifyViewListeners() {
     for(int i = 0; i < (int) m_viewListeners.size(); i ++) {
         m_viewListeners[i]->notify();
@@ -418,6 +434,12 @@ void View::notifyViewListeners() {
 void View::notifyStatusListeners(const char *msg) {
     for(int i = 0; i < (int) m_statusListeners.size(); i ++) {
         m_statusListeners[i]->notify(msg);
+    }
+}
+
+void View::notifyToolListeners(int newTool) {
+    for(int i = 0; i < (int) m_toolListeners.size(); i ++) {
+        m_toolListeners[i]->notify(newTool);
     }
 }
 

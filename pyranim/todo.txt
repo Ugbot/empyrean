@@ -67,7 +67,12 @@ The implementation schedule:
 
 12/23/02 (3242 LOC, 92858 bytes)
 
-- Improve joint drawing.
+- Improve joint drawing.  (Highlighting off by one?)
+
+12/25/02
+
+- Checked into CVS for first time.
+- Started tool callback implementation.
 
 --- WE ARE HERE ---
 

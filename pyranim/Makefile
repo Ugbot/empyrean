@@ -20,7 +20,7 @@ OBJS=$(CPP_SRCS:%.cpp=%.o)
 all: $(TARGET)
 
 run: $(TARGET)
-	python pyranim.py walk1.csf
+	python pyranim.py c:/src/pyrdata/walk1.csf
 
 count:
 	wc `find . -name "*.cpp"` \
