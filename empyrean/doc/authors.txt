@@ -1,0 +1,6 @@
+Name            Role            School                      Contribution Period
+--              --              --                          --
+Corey Annis     Artist          University of Tennessee     Summer 2002 - Summer 2003
+Chad Austin     Project Lead    Iowa State University       Summer 2002 - Present
+Andy Friesen    Developer       ****                        Summer 2002 - Fall 2003
+Bryan Walter    Developer       Iowa State University       Fall 2003 - Present
