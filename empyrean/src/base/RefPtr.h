@@ -8,35 +8,6 @@
 
 namespace pyr {
 
-    /**
-     * Don't use this type in your code.  It's there to prevent 'delete',
-     * ref(), and unref() from being called on RefPtr objects.
-     *
-     * Note: This technique inspired by Mozilla's nsCOMPtr.
-     */
-    template<typename T>
-    class RefDerivedSafe : public T {
-    protected:
-        RefDerivedSafe();
-
-    private:
-        RefDerivedSafe<T>& operator=(const T&);
-
-        /// Prevents calling delete on a RefPtr.
-        void operator delete(void*);
-
-#if 0   // ref() and unref() are already private in RefCounted.  Uncomment
-        // this if that ever changes.
-
-        /// Let RefPtr manage ref() for you.
-        using T::ref;
-
-        /// Let RefPtr manage unref() for you.
-        using T::unref;
-#endif
-    };
-
-
     /// A container-safe smart pointer used for refcounted classes.
     template<typename T>
     class RefPtr {
@@ -97,7 +68,7 @@ namespace pyr {
             return *this;
         }
 
-        RefDerivedSafe<T>* operator->() const {
+        T* operator->() const {
             PYR_ASSERT(get(), "Accessing member of null pointer!");
             return get();
         }
@@ -117,10 +88,10 @@ namespace pyr {
             return (get() ? &this_type::_ptr : 0);
         }
 
-        RefDerivedSafe<T>* get() const {
+        T* get() const {
             PYR_ASSERT(!_ptr || _ptr->getRefCount() > 0,
                        "Dereferencing pointer with refCount <= 0");
-            return reinterpret_cast<RefDerivedSafe<T>*>(_ptr.get());
+            return _ptr.get();
         }
 
     private:
