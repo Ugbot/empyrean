@@ -7,7 +7,7 @@ namespace pyr {
      *
      * Represents a matrix of pixels, stored in some hardware-friendly format.
      */
-    /* interface */ class Image {
+    class Image {
     public:
         virtual ~Image(){}
 

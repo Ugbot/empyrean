@@ -3,14 +3,14 @@
 
 #include "Application.h"
 #include "extgl.h"
-#include "IntroState.h"
+#include "GameState.h"
 #include "Profiler.h"
 #include "NSPRUtility.h"
 #include "Font.h"
 
 namespace pyr {
 
-    typedef IntroState InitialState;
+    typedef GameState InitialState;
 
 
     Application* Application::_instance = 0;

@@ -10,8 +10,8 @@
 namespace pyr {
 
     /**
-     * From Loki (Modern C++ Design).  Used to generate a unique type
-     * based on another.
+     * From Loki (Modern C++ Design).  Used to generate an empty,
+     * unique type based on another.
      */
     template<typename T>
     struct Type2Type {

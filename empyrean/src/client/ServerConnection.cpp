@@ -102,7 +102,8 @@ namespace pyr {
 
         Entity* entity = new PlayerEntity(
             new Model(p->getAppearance()),
-            new CellShadeRenderer());
+            new DefaultRenderer());
+//            new CellShadeRenderer());
         entity->setPos(p->getPos());
         entity->setVel(p->getVel());
         

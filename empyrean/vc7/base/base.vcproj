@@ -143,6 +143,15 @@
 				RelativePath="..\..\src\base\LokiTypeInfo.h">
 			</File>
 			<File
+				RelativePath="..\..\src\base\Map.cpp">
+			</File>
+			<File
+				RelativePath="..\..\src\base\Map.h">
+			</File>
+			<File
+				RelativePath="..\..\src\base\MapElement.h">
+			</File>
+			<File
 				RelativePath="..\..\src\base\Mutex.h">
 			</File>
 			<File

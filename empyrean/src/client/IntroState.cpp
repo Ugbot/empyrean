@@ -1,4 +1,5 @@
 #include "extgl.h"
+#include "GameState.h"
 #include "IntroState.h"
 #include "MenuState.h"
 #include "Texture.h"
@@ -30,13 +31,15 @@ namespace pyr {
     
     void IntroState::onKeyPress(SDLKey /*key*/, bool down) {
         if (down) {
-            invokeTimedTransition<MenuState>(1);
+            //invokeTimedTransition<MenuState>(1);
+            invokeTimedTransition<GameState>(1);
         }
     }
     
     void IntroState::onMousePress(Uint8 /*button*/, bool down, int, int) {
         if (down) {
-            invokeTimedTransition<MenuState>(1);
+            //invokeTimedTransition<MenuState>(1);
+            invokeTimedTransition<GameState>(1);
         }
     }
 

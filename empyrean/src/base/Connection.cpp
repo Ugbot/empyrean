@@ -14,8 +14,8 @@ namespace pyr {
         _tcpSocket = socket;
         _reader = new ReaderThread(socket);
         _writer = new WriterThread(socket);
-        _readerThread = new Thread(_reader);
-        _writerThread = new Thread(_writer);
+        _readerThread = new Thread(_reader, PR_PRIORITY_HIGH);
+        _writerThread = new Thread(_writer, PR_PRIORITY_HIGH);
         
         _opaque = 0;
     }

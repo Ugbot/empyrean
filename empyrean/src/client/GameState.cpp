@@ -12,7 +12,6 @@
 #include "ParticleSystem.h"
 #include "ParticleEmitter.h"
 #include "Profiler.h"
-#include "PlayerEntity.h"
 #include "ServerConnection.h"
 #include "Texture.h"
 
@@ -72,7 +71,8 @@ namespace pyr {
         sc.setForce(_inputRight->getValue() - _inputLeft->getValue());
 
         if (_inputQuit->getValue() >= 0.50f) {
-            invokeTransition<MenuState>();
+            quit();
+            //invokeTransition<MenuState>();
         }
     }
     

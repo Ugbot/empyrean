@@ -24,12 +24,6 @@ namespace pyr {
 
         virtual void draw(float x, float y, float width, float height);
 
-        // This makes no goddamn sense to me whatsoever.  Image already defines this exact method.
-        // Yet I get errors if it's not here too.  What the hell.
-        virtual void draw(float x, float y) {
-            draw(x, y, (float)width(), (float)height());
-        }
-
         virtual int width();
         virtual int height();
 

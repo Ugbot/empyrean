@@ -1,15 +1,8 @@
 import sys
 import os
 import string
-import SCons
 
 Default('build')
-
-def RequireList(env, var):
-    if not env.Dictionary().has_key(var):
-        env[var] = []
-    elif not SCons.Util.is_List(env[var]):
-        env[var] = [env[var]]
 
 # Courtesy of Ben Scott
 def ParseConfig(env, command, options):
@@ -30,45 +23,33 @@ def ParseConfig(env, command, options):
         option = arg[1:2]
         if switch == '-':
             if option == 'I':
-                RequireList(env, 'CPPPATH')
-                env['CPPPATH'].append(arg[2:])
+                env.Append(CPPPATH = [arg[2:]])
             elif option == 'L':
-                RequireList(env, 'LIBPATH')
-                env['LIBPATH'].append(arg[2:])
+                env.Append(LIBPATH = [arg[2:]])
             elif option == 'l':
-                RequireList(env, 'LIBS')
-                env['LIBS'].append(arg[2:])
+                env.Append(LIBS = [arg[2:]])
             elif arg[0:11] == '-Wl,-rpath,':
-                RequireList(env, 'LINKFLAGS')
-                env['LINKFLAGS'].append(arg)
+                env.Append(LINKFLAGS = [arg])
             else:
-                RequireList(env, 'CXXFLAGS')
-                env['CXXFLAGS'].append(arg)
+                env.Append(CXXFLAGS = [arg])
         else:
             # Must be a static library, add it to the libs
-            RequireList(env, 'LIBS')
-            env['LIBS'].append(arg)
+            env.Append(LIBS = [arg])
 
-        RequireList(env, 'LIBS')
-        env['LIBS'].extend(['SDL', 'SDLmain'])
-        
 def SetupCal3D(env):
-    RequireList(env, 'LIBS')
-    env['LIBS'].append('cal3d')    
+    env.Append(LIBS = ['cal3d'])
 
 def SetupCorona(env):
-    RequireList(env, 'LIBS')
-    env['LIBS'].extend(['corona', 'png', 'z', 'jpeg'])
+    env.Append(LIBS = ['corona', 'png', 'z', 'jpeg'])
 
 def SetupFreeType(env):
     ParseConfig(env, 'freetype-config', Split('--cflags --libs'))
 
 def SetupGL(env):
-    RequireList(env, 'LIBS')
     if sys.platform == 'cygwin':
-        env['LIBS'].extend(['glu32', 'opengl32'])
+        env.Append(LIBS = ['glu32', 'opengl32'])
     else:
-        env['LIBS'].extend(['GLU', 'GL'])
+        env.Append(LIBS = ['GLU', 'GL'])
 
 def SetupNSPR(env):
     # @todo  make it only include /usr/mozilla...  on debian
@@ -79,9 +60,11 @@ def SetupNSPR(env):
 
 def SetupSDL(env):
     if sys.platform == 'cygwin':
-        env.Append(CPPPATH = '/usr/local/include/SDL')
+        env.Append(CPPPATH = '/usr/local/include/SDL',
+                   LIBS = ['SDL', 'SDLmain'])
     else:
         ParseConfig(env, 'sdl-config', Split('--cflags --libs'))
+
 
 Export('SetupCal3D SetupCorona SetupFreeType SetupGL SetupNSPR SetupSDL')
 

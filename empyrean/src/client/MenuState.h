@@ -7,8 +7,6 @@
 
 namespace pyr {
 
-    class Texture;
-
     class MenuState : public State {
     public:
         MenuState();

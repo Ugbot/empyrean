@@ -2,8 +2,8 @@
 <VisualStudioProject
 	ProjectType="Visual C++"
 	Version="7.00"
-	Name="server"
-	ProjectGUID="{084A19A1-07D9-4C88-BA1F-B47A04427F6D}"
+	Name="editor"
+	ProjectGUID="{C85FCCC5-1494-4AEE-9CE7-8808B322F33A}"
 	Keyword="Win32Proj">
 	<Platforms>
 		<Platform
@@ -20,11 +20,10 @@
 				Name="VCCLCompilerTool"
 				Optimization="0"
 				AdditionalIncludeDirectories="../../src/third-party/include,../../src/base"
-				PreprocessorDefinitions="_CONSOLE;WIN32;_DEBUG;NOMINMAX"
+				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS"
 				MinimalRebuild="TRUE"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
-				RuntimeTypeInfo="TRUE"
 				UsePrecompiledHeader="0"
 				WarningLevel="3"
 				Detect64BitPortabilityProblems="FALSE"
@@ -33,13 +32,12 @@
 				Name="VCCustomBuildTool"/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="../base/Debug/base.lib nspr4.lib"
-				OutputFile="../bin/$(OutDir)/server.exe"
+				AdditionalDependencies="wxmswd.lib opengl32.lib comctl32.lib rpcrt4.lib ws2_32.lib"
+				OutputFile="../bin/$(OutDir)/editor.exe"
 				LinkIncremental="2"
-				AdditionalLibraryDirectories="../../src/third-party/lib"
 				GenerateDebugInformation="TRUE"
-				ProgramDatabaseFile="$(OutDir)/server.pdb"
-				SubSystem="1"
+				ProgramDatabaseFile="$(OutDir)/editor.pdb"
+				SubSystem="2"
 				TargetMachine="1"/>
 			<Tool
 				Name="VCMIDLTool"/>
@@ -68,11 +66,10 @@
 				InlineFunctionExpansion="1"
 				OmitFramePointers="TRUE"
 				AdditionalIncludeDirectories="../../src/third-party/include,../../src/base"
-				PreprocessorDefinitions="_CONSOLE;WIN32;NDEBUG;NOMINMAX"
+				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS"
 				StringPooling="TRUE"
 				RuntimeLibrary="2"
 				EnableFunctionLevelLinking="TRUE"
-				RuntimeTypeInfo="TRUE"
 				UsePrecompiledHeader="0"
 				WarningLevel="3"
 				Detect64BitPortabilityProblems="FALSE"
@@ -81,12 +78,11 @@
 				Name="VCCustomBuildTool"/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="../base/Release/base.lib nspr4.lib"
-				OutputFile="../bin/$(OutDir)/server.exe"
+				AdditionalDependencies="wxmsw.lib opengl32.lib comctl32.lib rpcrt4.lib ws2_32.lib"
+				OutputFile="../bin/$(OutDir)/editor.exe"
 				LinkIncremental="1"
-				AdditionalLibraryDirectories="../../src/third-party/lib"
 				GenerateDebugInformation="TRUE"
-				SubSystem="1"
+				SubSystem="2"
 				OptimizeReferences="2"
 				EnableCOMDATFolding="2"
 				TargetMachine="1"/>
@@ -111,25 +107,50 @@
 			Name="files"
 			Filter="">
 			<File
-				RelativePath="..\..\src\server\ListenerThread.cpp">
+				RelativePath="..\..\src\editor\Editor.cpp">
 			</File>
 			<File
-				RelativePath="..\..\src\server\ListenerThread.h">
+				RelativePath="..\..\src\editor\Editor.h">
 			</File>
 			<File
-				RelativePath="..\..\src\server\Main.cpp">
+				RelativePath="..\..\src\editor\Main.cpp">
 			</File>
 			<File
-				RelativePath="..\..\src\server\ServerEntity.h">
+				RelativePath="..\..\src\editor\MainFrame.cpp">
 			</File>
 			<File
-				RelativePath="..\..\src\server\UIDGenerator.h">
+				RelativePath="..\..\src\editor\MainFrame.h">
 			</File>
 			<File
-				RelativePath="..\..\src\server\World.cpp">
+				RelativePath="..\..\src\editor\MapView.cpp">
 			</File>
 			<File
-				RelativePath="..\..\src\server\World.h">
+				RelativePath="..\..\src\editor\MapView.h">
+			</File>
+			<File
+				RelativePath="..\..\src\editor\RectangleTool.cpp">
+			</File>
+			<File
+				RelativePath="..\..\src\editor\RectangleTool.h">
+			</File>
+			<File
+				RelativePath="..\..\src\editor\Tool.h">
+			</File>
+			<File
+				RelativePath="..\..\src\editor\TranslateTool.h">
+			</File>
+			<File
+				RelativePath="..\..\src\editor\wx.h">
+			</File>
+		</Filter>
+		<Filter
+			Name="resources"
+			Filter="">
+			<File
+				RelativePath="editor.rc">
+			</File>
+			<File
+				RelativePath="resource.h">
 			</File>
 		</Filter>
 	</Files>
