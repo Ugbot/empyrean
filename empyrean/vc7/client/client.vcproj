@@ -117,6 +117,9 @@
 				RelativePath="..\..\src\client\Application.h">
 			</File>
 			<File
+				RelativePath="..\..\src\client\Assert.h">
+			</File>
+			<File
 				RelativePath="..\..\src\client\FPSCounter.h">
 			</File>
 			<File
