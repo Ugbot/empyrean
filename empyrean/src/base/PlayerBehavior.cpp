@@ -20,51 +20,52 @@ namespace pyr {
 
         pos += vel * dt;
         vel[1] += constants::GRAVITY * dt;                      // gravity
+
+        const float mu = 0.4;
+        const float acc = mu * constants::GRAVITY;
+        
+        if(_desiredVelocity != 0) {
+            vel[0] = _desiredVelocity;
+        }
+
+        if(vel[0] > 0) {
+            vel[0] += acc * dt;
+            if(vel[0] < 0) {
+                vel[0] = 0;
+            }
+        }
+        
+        if(vel[0] < 0) {
+            vel[0] -= acc * dt;
+            if(vel[0] > 0) {
+                vel[0] = 0;
+            }
+        }                        
+
         if (vel[1] < constants::TERMINAL_VELOCITY) { // terminal velocity
             vel[1] = constants::TERMINAL_VELOCITY;
         }
 
-        // For testing to see if jumping is done.
-        const Vec2f precollidePosition = pos;
-        const Vec2f precollideVelocity = vel;
-
-        /// @todo Save the collision data for debugging.
-        collide(dt, origPos, pos, vel, entity->getBounds(), env.map);
-
-        const int FALLING_SPEED = 0;
-
-        // If you are higher than you once were so you were forced up and you were falling
-        // (before the collision) This means that you hit a surface below you so therefore
-        // reset jumping
-        if (precollidePosition[1] < pos[1] &&
-            precollideVelocity[1] < FALLING_SPEED) {
-             _jumping = 0;
-             if (entity->getVel()[0] == 0) {
-                beginAnimationCycle(entity, "idle");
-             } else {
-                beginAnimationCycle(entity, "walk");
-             }
-        }
     }
 
     void PlayerBehavior::handleEvent(Entity* entity, const std::string& event) {
         const float jumpSpeed = 8;
-        const float speed = 2;
-
+        const float speed = 3;
+       
         if (event == "Begin Right") {
-            entity->getVel()[0] = speed;
+            _desiredVelocity = speed;
             sendAppearanceCommand(entity, "Face Left");
             beginAnimationCycle(entity, "walk");
         }
 
         if (event == "Begin Left") {
-            entity->getVel()[0] = -speed;
+            _desiredVelocity = -speed;
             sendAppearanceCommand(entity, "Face Right");
             beginAnimationCycle(entity, "walk");
         }
 
         if (event == "End Right" || event == "End Left") {
-            entity->getVel()[0] = 0;
+            _desiredVelocity = 0;
             beginAnimationCycle(entity, "idle");
         }
 
@@ -74,6 +75,10 @@ namespace pyr {
                 ++_jumping;
                 beginAnimationCycle(entity, "strut");
             }
+        }
+
+        if (event == "Reset Jumping") {
+            _jumping = 0;
         }
 
         if (event == "Attack") {

@@ -1,5 +1,6 @@
 #include <stdexcept>
 #include "Connection.h"
+#include "Collider.h"
 #include "Game.h"
 #include "MapLoader.h"
 #include "PacketTypes.h"
@@ -40,7 +41,6 @@ namespace pyr {
                 float height = 1.9f;
                 entity->setBounds(BoundingRectangle(Vec2f(-width / 2, 0), Vec2f(width / 2, height)));
                 entity->setPos(elt->pos);
-                addEntity(entity);
             }
         }
     }
@@ -54,14 +54,19 @@ namespace pyr {
 
     void Game::update(float dt) {
         ConnectionHolder::update();
-        
+        std::vector<Entity*> entityVector;
         Environment env;
         env.map = _map.get();
         env.entities = std::vector<const Entity*>(_entities.begin(), _entities.end());
 
         for (size_t i = 0; i < _entities.size(); ++i) {
             _entities[i]->update(dt, env);
+            entityVector.push_back(_entities[i]);
+        }
 
+        resolveCollisions(dt, _map.get(),entityVector);
+
+        for (size_t i = 0; i < _entities.size(); ++i) {
             // Send all appearance updates to all of the clients.
             ServerAppearance* appearance = _entities[i]->getServerAppearance();
             std::vector<Packet*> packets;
@@ -69,11 +74,6 @@ namespace pyr {
             for (size_t i = 0; i < packets.size(); ++i) {
                 sendAll(packets[i]);
             }
-        }
-
-        std::list<Entity*> list(_entities.begin(), _entities.end());
-        for (size_t i = 0; i < _entities.size(); ++i) {
-            _entities[i]->collideWithOthers(list);
         }
 
         for (size_t i = 0; i < _entities.size(); ++i) {

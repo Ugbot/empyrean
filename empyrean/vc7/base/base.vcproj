@@ -239,6 +239,12 @@
 				RelativePath="..\..\src\base\Material.h">
 			</File>
 			<File
+				RelativePath="..\..\src\base\MonsterBehavior.cpp">
+			</File>
+			<File
+				RelativePath="..\..\src\base\MonsterBehavior.h">
+			</File>
+			<File
 				RelativePath="..\..\src\base\MultiTextureImage.cpp">
 			</File>
 			<File

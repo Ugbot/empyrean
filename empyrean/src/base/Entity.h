@@ -46,10 +46,7 @@ namespace pyr {
         void setBounds(const BoundingRectangle& br) { _bounds = br; }
         BoundingRectangle& getBounds()              { return _bounds; }
         const BoundingRectangle& getBounds() const  { return _bounds; }
-
-        typedef std::list<Entity*> EntityList;
-        void collideWithOthers(EntityList entities);
-
+        
     private:
         ScopedPtr<Behavior> _behavior;
         ScopedPtr<Appearance> _appearance;

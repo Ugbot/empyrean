@@ -1,7 +1,10 @@
 #include "Collider.h"
 #include "CollisionBox.h"
+#include "Constants.h"
+#include "Entity.h"
 #include "Map.h"
 #include "MapVisitor.h"
+#include "PlayerBehavior.h"
 
 namespace pyr {
 
@@ -81,11 +84,25 @@ namespace pyr {
         float _plane;
     };
 
-    CollisionData collide(float dt, const Vec2f& origPos, Vec2f& newPos, Vec2f& vel,
-                          const BoundingRectangle& bounds, const Map* terrain) {
-                          
-        CollisionBox newBox(newPos + bounds.min, newPos + bounds.max);
+    namespace collision {
+        const int FALLING_SPEED = 0;
+        const int REGION_UNASSIGNED = -1;
+        const float REGION_RADIUS = 2;
+        const int REGION_END = -2;
+    }
 
+    struct CollisionRegion {
+        std::vector<int> indici;
+    };
+
+
+    //CollisionData collideWithWorld(float dt, const Vec2f& origPos, Vec2f& newPos, 
+    //                               Vec2f& vel, const BoundingRectangle& bounds, const Map* terrain) {
+    
+    CollisionData collideWithWorld(float dt, Entity* ent, const Map* terrain) {
+        CollisionBox newBox(ent->getPos() + ent->getBounds().min, 
+                            ent->getPos() + ent->getBounds().max);
+        
         std::vector<Segment> segs;
         SegmentExtractor extractor(segs, 0);
         terrain->handleVisitor(extractor);
@@ -93,33 +110,148 @@ namespace pyr {
         CollisionData rv;
         newBox.getIntersectingSegs(rv.interesting, segs);
 
-        Vec2f displacement = newBox.getDisplacement(dt,vel,rv.interesting, rv.points);
-
-        newPos += displacement;
-
+        newBox.collideWithStationary(dt,ent->getVel(),rv.interesting, rv.points);
+        
+        if(gmtl::length(newBox.getDisplacement()) > 0) {
+            Behavior* beh = ent->getBehavior();
+            PlayerBehavior* pb = dynamic_cast<PlayerBehavior*>(beh);
+            if(pb) {
+                pb->handleEvent(ent, "Reset Jumping");
+            }
+        }
+        
+        ent->getPos() += newBox.getDisplacement();
+              
         return rv;
     };
 
     
-    void collideWithEntity(Vec2f& entityPos, Vec2f& entityVel, const BoundingRectangle& bounds, 
-                           Vec2f& otherPos, Vec2f& otherVel, const BoundingRectangle& otherBounds) {
+    void collideWithEntity(Entity* ent1, Entity* ent2) {
         
-        CollisionBox entityBox(entityPos + bounds.min, entityPos + bounds.max);
-        CollisionBox otherBox(otherPos + otherBounds.min, otherPos + otherBounds.max);
+        CollisionBox entityBox(ent1->getPos() + ent1->getBounds().min, ent1->getPos() + ent1->getBounds().max);
+        CollisionBox otherBox(ent2->getPos() + ent2->getBounds().min, ent2->getPos() + ent2->getBounds().max);
         
-        std::vector<Segment> segs;
-        otherBox.segment(segs);
-
         CollisionData rv;
-        entityBox.getIntersectingSegs(rv.interesting, segs);
 
-        if(!segs.empty()) {
-            Vec2f displacement = entityBox.getDisplacement(0,entityVel,rv.interesting, rv.points);
-            entityPos += displacement;
-        }
-        
+        entityBox.collideWithDynamic(0,ent1->getVel(),ent2->getVel(), otherBox, rv.points);
+        ent1->getPos() += entityBox.getDisplacement();
+        ent2->getPos() += otherBox.getDisplacement();
     };
 
-       
+    void resolveCollisions(float dt, Map* terrain, std::vector<Entity*>& ents) {
+        int* entityRegionAssignment = new int[ents.size()];
+        std::vector<CollisionRegion> regions;
+
+        // Clear region assignments
+        for (size_t i = 0; i < ents.size(); ++i) {
+            entityRegionAssignment[i] = collision::REGION_UNASSIGNED; 
+        }
+    
+        int regionNumber = 0;
+        // Classify the entities into different regions (this is to speed up collisions between entities)
+        for (size_t i = 0; i < ents.size(); ++i) {
+            if(entityRegionAssignment[i] == collision::REGION_UNASSIGNED) {
+                CollisionRegion currentRegion;
+                for(size_t j = 0; j < ents.size(); ++j) {
+                    if(gmtl::length(ents[i]->getPos() - ents[j]->getPos()) < collision::REGION_RADIUS) {
+                        entityRegionAssignment[j] = regionNumber;
+                        currentRegion.indici.push_back((int) j);
+                    }
+                }
+                regionNumber++;
+                regions.push_back(currentRegion);
+            }
+        }    
+
+        // Collisions
+        for (size_t i = 0; i < regions.size(); ++i) {
+            if(regions[i].indici.size() == 1) {  // Simply collide with the ground
+                int index = regions[i].indici[0];
+                collideWithWorld(dt,ents[index],terrain);
+            }
+            else { // More than one entity in the area so need to collide with the other entities in the area
+                for(size_t j = 0; j < regions[i].indici.size(); ++j) {
+                    for(size_t k = 0; k < regions[i].indici.size(); ++k) {
+                        if(j!=k) {  // Don't Collide with yourself
+                            // Ultimately collide with others here
+                            int index1 = regions[i].indici[j];
+                            int index2 = regions[i].indici[k];
+                            collideWithEntity(ents[index1],ents[index2]);
+                        }
+                    }
+                }
+
+                for(size_t j = 0; j < regions[i].indici.size(); ++j) {
+                    // Collide everyone with the ground after all
+                    int index = regions[i].indici[j];
+                    collideWithWorld(dt,ents[index],terrain);
+                }
+            }
+        }
+
+    };    
+        /*
+        // Clear region assignments
+        for (size_t i = 0; i < ents.size(); ++i) {
+            ents[i].region = collision::REGION_UNASSIGNED;
+        }
+        
+        std::vector<region> regions;
+
+        // Classify the entities into different regions (this is to speed up collisions between entities)
+        for (size_t i = 0; i < ents.size(); ++i) {
+            if(ents[i].region == collision::REGION_UNASSIGNED) {
+                region currentRegion;
+                currentRegion.indici.push_back(i);
+                for(size_t j = 0; j < ents.size(); ++j) {
+                    if(vecDistance(*(ents[i].pos), *(ents[j].pos)) < collision::REGION_RADIUS) {
+                        ents[j].region = i;
+                        currentRegion.indici.push_back(j);
+                    }
+                }
+                regions.push_back(currentRegion);
+            }
+        }
+
+        // Do collision on each of the regions
+        for (size_t i = 0; i < regions.size(); ++i) {
+            if(regions[i].indici.size() == 1) {  // Simply collide with the ground
+                int index = regions[i].indici[0];
+                collide(dt,*(ents[index].pos),*(ents[index].vel),ents[index].width, ents[index].height, terrain);
+            }
+            else {
+                for(size_t j = 0; j < regions[i].indici.size(); ++j) {
+                    for(size_t k = 0; k < regions[i].indici.size(); ++k) {
+                        if(j!=k) {  // Don't Collide with yourself
+                            // Ultimately collide with others here          
+                        }
+                    }
+                }
+
+                for(size_t j = 0; j < regions[i].indici.size(); ++j) {
+                    // Collide everyone with the ground after all
+                    int index = regions[i].indici[j];
+                    collide(dt,*(ents[index].pos),*(ents[index].vel),ents[index].width, ents[index].height, terrain);
+                }
+            }
+        }
+        */
+
+
+    //// For testing to see if jumping is done
+    //Vec2f precollideposition = getPos();
+    //Vec2f precollidevelocity = getVel();
+
+    //_lastCD = collide(dt, origPos, getPos(), getVel(), getWidth(), getHeight(), terrain);
+
+    //// If you are higher than you once were so you were forced up and you were falling 
+    //// (before the collision) This means that you hit a surface below you so therefore 
+    //// reset jumping
+    //if((precollideposition[1]-getPos()[1]) < 0 && precollidevelocity[1] < FALLING_SPEED) {
+    //        getJumping() = 0;
+    //}
+
+    //}
+    //}
 
 }

@@ -47,8 +47,6 @@ namespace pyr {
             vel[1] = constants::TERMINAL_VELOCITY;
         }
 
-        /// @todo Save the collision data for debugging.
-        collide(dt, origPos, pos, vel, entity->getBounds(), env.map);
     }
 
 }

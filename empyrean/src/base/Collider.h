@@ -1,25 +1,29 @@
 #ifndef PYR_COLLIDER_H
 #define PYR_COLLIDER_H
 
+#include <map>
 #include <vector>
 #include "BoundingRectangle.h"
 #include "CollisionBox.h"
+#include "Types.h"
 #include "VecMath.h"
 
 namespace pyr {
 
     class Map;
+    class Entity;
 
     struct CollisionData {
         std::vector<Segment> interesting;
         std::vector<Vec2f>   points;
     };
 
-    CollisionData collide(float dt, const Vec2f& origPos, Vec2f& newPos, Vec2f& vel,
-                          const BoundingRectangle& bounds, const Map* terrain);
+    CollisionData collideWithWorld(float dt, Entity* entity, const Map* terrain);
 
-    void collideWithEntity(Vec2f& entityPos, Vec2f& entityVel, const BoundingRectangle& bounds, 
-                           Vec2f& otherPos, Vec2f& otherVel, const BoundingRectangle& otherBounds);
+    void collideWithEntity(Entity* ent1, Entity* ent2);
+
+    void resolveCollisions(float dt, Map* terrain, std::vector<Entity*>& ents);
+
 }
 
 #endif

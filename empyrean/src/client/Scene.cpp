@@ -1,5 +1,6 @@
 #include <stdexcept>
 #include "ClientEntity.h"
+#include "Collider.h"
 #include "GLUtility.h"
 #include "MapLoader.h"
 #include "MapRenderer.h"
@@ -82,27 +83,27 @@ namespace pyr {
     }
 
     void Scene::update(float dt) {
-        Entity::EntityList entityList;
+        std::vector<Entity*> entityVector;
+        
         for (EntityMap::iterator itr = _entities.begin();
              itr != _entities.end(); ++itr) {
-            entityList.push_back(itr->second);
+            entityVector.push_back(itr->second);
         }
 
         Environment env;
         env.map = _map.get();
-        env.entities = std::vector<const Entity*>(entityList.begin(), entityList.end());
+        env.entities = std::vector<const Entity*>(entityVector.begin(), entityVector.end());
+
 
         // Update all entities (regardless of collision with others)
         for (EntityMap::iterator itr = _entities.begin();
              itr != _entities.end(); ++itr) {
             itr->second->update(dt, env);
+            entityVector.push_back(itr->second);
         }
-        // Now that everyone has moved do a collision amongst entities (game entities that is)
-        for (EntityMap::iterator itr = _entities.begin();
-             itr != _entities.end(); ++itr) {
-            Entity* entity = itr->second;
-            entity->collideWithOthers(entityList);
-        }
+        
+        resolveCollisions(dt,_map.get(),entityVector);
+
     }
     
     void Scene::addEntity(u16 id, ClientEntity* entity) {

@@ -24,6 +24,7 @@ namespace pyr {
 
     private:
         Zeroed<int> _jumping;
+        Zeroed<float> _desiredVelocity;
     };
 
 }
