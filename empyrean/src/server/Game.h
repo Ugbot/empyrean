@@ -11,8 +11,8 @@
 
 namespace pyr {
 
+    class PlayerEventPacket;
     class ServerEntity;
-    class SetVelocityPacket;
 
     class Game : public ConnectionHolder {
     public:
@@ -37,7 +37,7 @@ namespace pyr {
         void connectionAdded(Connection* connection);
         void connectionRemoved(Connection* connection);
 
-        void handleSetVelocity(Connection*, SetVelocityPacket* p);
+        void handlePlayerEvent(Connection* c, PlayerEventPacket* p);
 
         std::string _name;
         std::string _password;

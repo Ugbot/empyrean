@@ -25,15 +25,17 @@ namespace pyr {
         }
     
         void setPos(const gmtl::Vec2f& pos) { _pos = pos; }
+        gmtl::Vec2f& getPos()               { return _pos; }
         const gmtl::Vec2f& getPos() const   { return _pos; }
 
         void setVel(const gmtl::Vec2f& vel) { _vel = vel; }
+        gmtl::Vec2f& getVel()               { return _vel; }
         const gmtl::Vec2f& getVel() const   { return _vel; }
     
         void update(float dt) {
             _pos += _vel * dt;
             _pos[1] = std::max(0.0f, _pos[1]);
-            //_vel[1] -= 9.81f * dt;
+            _vel[1] -= 9.81f * dt;
         }
         
     private:

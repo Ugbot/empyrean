@@ -51,7 +51,7 @@ namespace pyr {
         virtual void connectionRemoved(Connection* connection) = 0;
         
     private:
-        void detachConnection(size_t index);
+        Connection* detachConnection(size_t index);
         void removeConnection(size_t index);
 
         std::vector<Connection*> _connections;

@@ -74,16 +74,15 @@ namespace pyr {
         delete p;
     }
     
-    void ConnectionHolder::detachConnection(size_t index) {
+    Connection* ConnectionHolder::detachConnection(size_t index) {
         Connection* c = getConnection(index);
         _connections.erase(_connections.begin() + index);
         connectionRemoved(c);
+        return c;
     }
     
     void ConnectionHolder::removeConnection(size_t index) {
-        Connection* c = getConnection(index);
-        detachConnection(index);
-        delete c;
+        delete detachConnection(index);
     }
     
 }

@@ -95,11 +95,22 @@ namespace pyr {
     #define PYR_NEW_CHARACTER_RESPONSE_PACKET_NAME NewCharacterResponsePacket
     #define PYR_NEW_CHARACTER_RESPONSE_PACKET(_) \
         _(field)(u16, code)
+        
+    // Player Event codes
+    enum {
+        PE_NONE,
+        PE_BEGIN_RIGHT,
+        PE_END_RIGHT,
+        PE_BEGIN_LEFT,
+        PE_END_LEFT,
+        PE_JUMP,
+        PE_ATTACK,
+    };
 
     // client -> server
-    #define PYR_SET_VELOCITY_PACKET_NAME SetVelocityPacket
-    #define PYR_SET_VELOCITY_PACKET(_) \
-        _(field)(gmtl::Vec2f, vel)
+    #define PYR_PLAYER_EVENT_PACKET_NAME PlayerEventPacket
+    #define PYR_PLAYER_EVENT_PACKET(_) \
+        _(field)(u16, code)
         
     // server -> client
     #define PYR_SET_PLAYER_PACKET_NAME SetPlayerPacket
@@ -137,7 +148,7 @@ namespace pyr {
         _(PYR_JOIN_GAME_RESPONSE_PACKET)        \
         _(PYR_NEW_CHARACTER_PACKET)             \
         _(PYR_NEW_CHARACTER_RESPONSE_PACKET)    \
-        _(PYR_SET_VELOCITY_PACKET)              \
+        _(PYR_PLAYER_EVENT_PACKET)              \
         _(PYR_SET_PLAYER_PACKET)                \
         _(PYR_ENTITY_ADDED_PACKET)              \
         _(PYR_ENTITY_REMOVED_PACKET)            \

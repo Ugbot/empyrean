@@ -9,6 +9,7 @@
 #include "MenuState.h"
 #include "Model.h"
 #include "Renderer.h"
+#include "PacketTypes.h"
 #include "ParticleSystem.h"
 #include "ParticleEmitter.h"
 #include "Profiler.h"
@@ -21,11 +22,10 @@ namespace pyr {
     GameState::GameState() {
         PYR_PROFILE_BLOCK("GameState::GameState");
         
-        _inputMLeft  = &_im.getInput("MouseLeft");
-        _inputMRight = &_im.getInput("MouseRight");
         _inputLeft   = &_im.getInput("Left");
         _inputRight  = &_im.getInput("Right");
-        _inputSpace  = &_im.getInput("Space");
+        _inputJump   = &_im.getInput("Space");
+        _inputAttack = &_im.getInput("RCtrl");
         _inputQuit   = &_im.getInput("Escape");
 
         gltext::FontPtr font = gltext::OpenFont("fonts/Vera.ttf", 16);
@@ -55,21 +55,41 @@ namespace pyr {
     void GameState::update(float dt) {
         PYR_PROFILE_BLOCK("GameState::update");
         
-        _im.update(dt);
-        
         the<Scene>().update(dt);
 
         ServerConnection& sc = the<ServerConnection>();
         sc.update();
 
-        float dx = _inputRight->getValue() - _inputLeft->getValue();
-        float dy = _inputSpace->getValue() * 2 - 1;
-        sc.setVelocity(gmtl::Vec2f(dx, dy));
-
+        // move to the right!
+        if (_inputRight->getDelta() > gmtl::GMTL_EPSILON) {
+            sc.sendEvent(PE_BEGIN_RIGHT);
+        } else if (_inputRight->getDelta() < -gmtl::GMTL_EPSILON) {
+            sc.sendEvent(PE_END_RIGHT);
+        }
+        
+        // move to the left!
+        if (_inputLeft->getDelta() > gmtl::GMTL_EPSILON) {
+            sc.sendEvent(PE_BEGIN_LEFT);
+        } else if (_inputLeft->getDelta() < -gmtl::GMTL_EPSILON) {
+            sc.sendEvent(PE_END_LEFT);
+        }
+        
+        // jump!
+        if (_inputJump->getDelta() > gmtl::GMTL_EPSILON) {
+            sc.sendEvent(PE_JUMP);
+        }
+        
+        // attack!
+        if (_inputAttack->getDelta() > gmtl::GMTL_EPSILON) {
+            sc.sendEvent(PE_ATTACK);
+        }
+        
         if (_inputQuit->getValue() >= 0.50f) {
             sc.disconnect();
             invokeTransition<MenuState>();
         }
+
+        _im.update(dt);
     }
     
     void GameState::onKeyPress(SDLKey key, bool down) {

@@ -71,7 +71,7 @@ namespace pyr {
         connection->setOpaque(cd);
 
         // add packet handlers
-        connection->definePacketHandler(this, &Game::handleSetVelocity);
+        connection->definePacketHandler(this, &Game::handlePlayerEvent);
         
         addEntity(entity);
         
@@ -102,9 +102,33 @@ namespace pyr {
         connection->setOpaque(0);
     }
 
-    void Game::handleSetVelocity(Connection* c, SetVelocityPacket* p) {
+    void Game::handlePlayerEvent(Connection* c, PlayerEventPacket* p) {
         ConnectionData* cd = getData(c);
-        cd->playerEntity->setVel(p->vel());
+        ServerEntity* entity = cd->playerEntity;
+        
+        const float speed = 2;
+    
+        switch (p->code()) {
+            case PE_BEGIN_RIGHT:
+                entity->getVel()[0] = speed;
+                break;
+                
+            case PE_BEGIN_LEFT:
+                entity->getVel()[0] = -speed;
+                break;
+                
+            case PE_END_RIGHT:
+            case PE_END_LEFT:
+                entity->getVel()[0] = 0;
+                break;
+                
+            case PE_JUMP:
+                entity->getVel()[1] = 8;
+                break;
+                
+            case PE_ATTACK:
+                break;
+        }
     }
     
 }

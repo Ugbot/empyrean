@@ -21,11 +21,10 @@ namespace pyr {
         
     private:
         InputManager _im;
-        Input* _inputMLeft;
-        Input* _inputMRight;
 	Input* _inputLeft;
 	Input* _inputRight;
-        Input* _inputSpace;
+        Input* _inputJump;
+        Input* _inputAttack;
         Input* _inputQuit;
         
         gltext::FontRendererPtr _renderer;

@@ -17,7 +17,7 @@ namespace pyr {
             _lastInterval = dt;
         }
     
-        float getValue() {
+        float getValue() const {
             return _value;
         }
         
@@ -25,12 +25,16 @@ namespace pyr {
             _value = value;
         }
         
-        float getDelta() {
+        float getDelta() const {
             if (_lastInterval == 0) {
                 return 0;
             } else {
-                return (_value - _lastValue) / _lastInterval;
+                return getRawDelta() / _lastInterval;
             }
+        }
+        
+        float getRawDelta() const {
+            return _value - _lastValue;
         }
         
     private:

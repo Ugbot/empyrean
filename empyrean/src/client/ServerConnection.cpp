@@ -123,8 +123,8 @@ namespace pyr {
         return sendPacket(new NewCharacterPacket(name));
     }
 
-    bool ServerConnection::setVelocity(const gmtl::Vec2f& vel) {
-        return sendPacket(new SetVelocityPacket(vel));
+    bool ServerConnection::sendEvent(u16 event) {
+        return sendPacket(new PlayerEventPacket(event));
     }
 
     bool ServerConnection::sendPacket(Packet* p) {

@@ -31,6 +31,7 @@ namespace pyr {
         // Provide client-side estimation of server physics model.
 	getPos() += getVel() * dt;
 	getPos()[1] = std::max(getPos()[1], 0.0f);
+	getVel()[1] -= 9.81f * dt;
 	
         if (_state) {
             (this->*_state)(dt);

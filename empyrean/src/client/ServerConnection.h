@@ -65,16 +65,12 @@ namespace pyr {
         bool login(const std::string& user,
                    const std::string& pass,
                    bool newuser);
-
         bool say(const std::string& text);
-        
         bool joinGame(const std::string& name,
                       const std::string& password,
                       bool newGame);
-                      
         bool newCharacter(const std::string& name);
-
-        bool setVelocity(const gmtl::Vec2f& vel);
+        bool sendEvent(u16 event);
 
     private:
         /**

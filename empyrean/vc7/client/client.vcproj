@@ -151,9 +151,6 @@
 				RelativePath="..\..\src\client\FPSCounter.h">
 			</File>
 			<File
-				RelativePath="..\..\src\client\Image.h">
-			</File>
-			<File
 				RelativePath="..\..\src\client\Input.h">
 			</File>
 			<File
