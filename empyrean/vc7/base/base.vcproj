@@ -110,6 +110,12 @@
 			Name="files"
 			Filter="cpp;c;cxx;def;odl;idl;hpj;bat;asm">
 			<File
+				RelativePath="..\..\src\base\ArmorPool.cpp">
+			</File>
+			<File
+				RelativePath="..\..\src\base\ArmorPool.h">
+			</File>
+			<File
 				RelativePath="..\..\src\base\BufferParser.h">
 			</File>
 			<File
@@ -339,6 +345,12 @@
 			</File>
 			<File
 				RelativePath="..\..\src\base\VecMath.h">
+			</File>
+			<File
+				RelativePath="..\..\src\base\WeaponPool.cpp">
+			</File>
+			<File
+				RelativePath="..\..\src\base\WeaponPool.h">
 			</File>
 			<File
 				RelativePath="..\..\src\base\WriterThread.cpp">

@@ -12,6 +12,8 @@ namespace pyr {
     class Renderer;
     class InputManager;
     class Input;
+    class Weapon;
+    class Armor;
 
     /** Represents a local player.
      *
@@ -37,6 +39,7 @@ namespace pyr {
         };
 
         GameEntity(Model* model, Renderer* renderer);
+        ~GameEntity();
 
         void draw();
         void update(float dt, const Map* terrain);
@@ -110,6 +113,9 @@ namespace pyr {
         int _currentVitality;
         int _maxEther;
         int _currentEther;
+        Weapon* _meleeWeapon;
+        Weapon* _rangeWeapon;
+        Armor* _armor;
         
         // Height and Width of Entity used for collision
         Zeroed<float> _height; 

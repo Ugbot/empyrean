@@ -13,6 +13,8 @@
 #include "ResourceManager.h"
 #include "VecMath.h"
 #include "Log.h"
+#include "ArmorPool.h"
+#include "WeaponPool.h"
 
 const int FALLING_SPEED = 0;
 
@@ -28,11 +30,22 @@ namespace pyr {
         _maxEther = 100; //0;
         _currentVitality = 10; //0;
         _maxVitality = 100; //0;
+        _armor = the<ArmorPool>().getArmor("Leather");
+        _meleeWeapon = the<WeaponPool>().getWeapon("Short Sword");
+        _rangeWeapon = the<WeaponPool>().getWeapon("Pistol");
+
+        // initialize other values
         _jumpStart = false;
         _attackStart = false;
         getHeight() = 1.9f;
         getWidth() = 0.3f;
         startStandState();
+    }
+
+    GameEntity::~GameEntity() {
+        delete _armor;
+        delete _meleeWeapon;
+        delete _rangeWeapon;
     }
 
     void GameEntity::decrVitality(int decr) {
@@ -104,6 +117,11 @@ namespace pyr {
     }
 
     void GameEntity::update(float dt, const Map* terrain) {
+        // TEMP!!
+        std::cout << "I have two weapons! They are : " << _meleeWeapon->_name;
+        std::cout << " and " << _rangeWeapon->_name << std::endl;
+        std::cout << "I am wearing armor that is : " << _armor->_name << std::endl;
+
         // Provide client-side estimation of server physics model.
         Vec2f origPos = getPos();
         
