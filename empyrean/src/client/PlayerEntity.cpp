@@ -1,3 +1,4 @@
+#include <algorithm>
 #include <gmtl/gmtl.h>
 #include <cal3d/cal3d.h>
 

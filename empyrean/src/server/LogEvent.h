@@ -9,7 +9,7 @@
 namespace pyr {
 
     BEGIN_DECLARE_EVENT_TYPES()
-        DECLARE_EVENT_TYPE(EVT_LOG, wxEVT_USER_FIRST)
+        DECLARE_LOCAL_EVENT_TYPE(EVT_LOG, wxEVT_USER_FIRST)
     END_DECLARE_EVENT_TYPES()
 
     class LogEvent : public wxEvent {

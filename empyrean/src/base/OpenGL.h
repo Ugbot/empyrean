@@ -4,7 +4,9 @@
 
 #if defined(WIN32) || defined(_WIN32)
     #include <windows.h>
-    #define PYR_USE_EXTGL
+    #ifndef PYR_USE_EXTGL
+        #define PYR_USE_EXTGL
+    #endif
 #endif
 
 #ifdef PYR_USE_EXTGL

@@ -28,7 +28,6 @@ SOURCES = Split("""
 if base_env['USE_EXTGL']:
     SOURCES.append('extgl.c')
 
-env = base_env.Copy()
-TOOLS['NSPR'](env)
+env = base_env.Copy(tools = [TOOLS[n] for n in ['NSPR', 'Corona']])
 
 env.Library('base', SOURCES)

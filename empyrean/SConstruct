@@ -6,17 +6,29 @@ import SCons.Errors
 
 Default('build')
 
+_cache = {}
+def CachedWhereIs(command):
+    if command in _cache.keys():
+        return _cache[command]
+
+    where = WhereIs(command)
+    if where:
+        print "ParseConfig:", str(command), "found at", where
+    else:
+        print "ParseConfig:", str(command), "not found in PATH"
+    _cache[command] = where
+    return where
+
 
 # Courtesy of Ben Scott
 def ParseConfig(env, command, options):
     "Parses xxx-config style output for compilation directives"
 
     # Run the command
-    where = WhereIs(command)
+    where = CachedWhereIs(command)
     if not where:
-        print "Looked for " + str(command) + " but could not find it in PATH"
         raise SCons.Errors.UserError, ('%s not found in PATH' % command)
-    print "Found " + str(command) + ": " + where
+
     cmd = where + ' ' + string.join(options)
     params = string.split(os.popen(cmd).read())
 
@@ -49,12 +61,17 @@ def SetupCorona(env):
         ParseConfig(env, 'corona-config', ['--cxxflags', '--libs'])
     except SCons.Errors.UserError, e:
         env.Append(LIBS = ['corona', 'jpeg', 'png', 'z'])
+        
+    if env['PLATFORM'] == 'cygwin':
+        env.Append(CPPDEFINES = ['COR_CALL='])
 
 def SetupExpat(env):
     env.Append(LIBS = ['expat'])
 
 def SetupGLText(env):
-    env.Append(LIBS = ['gltext'])
+    if env['PLATFORM'] == 'cygwin':
+        env.Append(CPPDEFINES = ['GLTEXT_CALL=', 'GLTEXT_DECL='])
+    env.Append(LIBS = ['gltext', 'freetype', 'z'])
 
 def SetupOpenGL(env):
     if env['PLATFORM'] == 'cygwin':
@@ -116,7 +133,7 @@ Export('TOOLS')
 base_env = Environment(ENV = os.environ)
 
 if base_env['PLATFORM'] == 'cygwin':
-    base_env.Append(CCFLAGS = ['-DWIN32', '-D_WIN32', '-DCYGWIN'],
+    base_env.Append(CPPDEFINES = ['WIN32', '_WIN32', 'CYGWIN', 'NOMINMAX'],
                     CPPPATH = ['#/third-party-cygwin/include'],
                     LIBPATH = ['#/third-party-cygwin/lib'])
 
