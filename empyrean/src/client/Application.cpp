@@ -29,6 +29,9 @@ namespace pyr {
         _lastX = 0;
         _lastY = 0;
         _currentState = new InitialState();
+        
+        _totalFadeTime = 0;
+        _currentFadeTime = 0;
     }
     
     void Application::resize(int width, int height) {
@@ -38,7 +41,10 @@ namespace pyr {
     
     void Application::draw() {
         if (_currentState) {
-            _currentState->draw();
+            _currentState->draw(0);
+        }
+        if (_fadingState && _totalFadeTime != 0) {
+            _fadingState->draw(_currentFadeTime / _totalFadeTime);
         }
     }
     
@@ -49,6 +55,14 @@ namespace pyr {
         if (_nextState) {
             _currentState = _nextState;
             _currentState->onMouseMove(_lastX, _lastY);
+        }
+        if (_fadingState) {
+            _currentFadeTime += dt;
+            if (_currentFadeTime > _totalFadeTime) {
+                _fadingState = 0;
+                _totalFadeTime = 0;
+                _currentFadeTime = 0;
+            }
         }
     }
     
@@ -73,7 +87,14 @@ namespace pyr {
     }
     
     void Application::invokeTransition(State* state) {
+        invokeTimedTransition(state, 0);
+    }
+    
+    void Application::invokeTimedTransition(State* state, float seconds) {
         _nextState = state;
+        _fadingState = _currentState;
+        _totalFadeTime = seconds;
+        _currentFadeTime = 0;
     }
     
     bool Application::shouldQuit() {

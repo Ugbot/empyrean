@@ -12,7 +12,7 @@ namespace pyr {
     public:
         GameState();
         
-        void draw();
+        void draw(float fade);
         void update(float dt);
         
         void onKeyPress(SDLKey key, bool down);
@@ -25,6 +25,7 @@ namespace pyr {
         Input* _inputY;
         Input* _inputLeft;
         Input* _inputRight;
+        Input* _inputQuit;
         
         float _rotation;
     };

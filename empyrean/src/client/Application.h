@@ -34,6 +34,7 @@ namespace pyr {
         void onMouseMove(int x, int y);
         
         void invokeTransition(State* state);
+        void invokeTimedTransition(State* state, float seconds);
         bool shouldQuit();
 
     private:
@@ -50,6 +51,9 @@ namespace pyr {
                 
         ScopedPtr<State> _currentState;
         ScopedPtr<State> _nextState;
+        ScopedPtr<State> _fadingState;
+        float _totalFadeTime;
+        float _currentFadeTime;
     };
     
 }

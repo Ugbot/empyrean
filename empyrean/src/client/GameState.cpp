@@ -11,10 +11,14 @@ namespace pyr {
         _inputY     = &_im.getInput("MouseY");
         _inputLeft  = &_im.getInput("MouseLeft");
         _inputRight = &_im.getInput("MouseRight");
+        _inputQuit  = &_im.getInput("Escape");
         _rotation = 0;
     }
     
-    void GameState::draw() {
+    void GameState::draw(float /*fade*/) {
+        glDisable(GL_TEXTURE_2D);
+        glDisable(GL_BLEND);
+        
         glClear(GL_COLOR_BUFFER_BIT);
         
         glMatrixMode(GL_PROJECTION);
@@ -42,6 +46,10 @@ namespace pyr {
         _im.update(dt);
         _rotation += _inputLeft->getValue()  * dt * 50;
         _rotation -= _inputRight->getValue() * dt * 50;
+        
+        if (_inputQuit->getValue() >= 0.50f) {
+            quit();
+        }
     }
     
     void GameState::onKeyPress(SDLKey key, bool down) {
