@@ -10,6 +10,13 @@
 namespace pyr {
 
     World::~World() {
+        // Delete the games and then the connections because the games
+        // hold references to connections.
+        while (!_games.empty()) {
+            delete _games[0];
+            _games.erase(_games.begin());
+        }
+
         while (!_connections.empty()) {
             removeConnection(0);
         }
