@@ -22,6 +22,7 @@ namespace pyr {
         if (!block) {
             block = new ProfileBlock;
             _blocks[name] = block;
+            block->current = false;
         }
 
         PYR_ASSERT(!block->current, "Block can't be profiled recursively.");
