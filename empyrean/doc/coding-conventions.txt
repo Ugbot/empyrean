@@ -1,0 +1,112 @@
+Class names:            ThisIsAClass
+Members:                _chadAustin
+Functions/Methods:      functionCall
+Locals/Args:            whatever the hell you want
+
+----
+
+Indentation:  4 characters
+Tabs:         8 spaces (for compatibility with less/cvs)
+
+----
+
+Bracing style:
+
+        // always use braces, even for one statement.
+        if (hello) {
+            foo();
+        }
+
+----
+
+Method/Member Ordering:
+
+In most cases, methods and fields in objects should be ordered in the
+following manner:
+
+   1. public
+   2. protected
+   3. private
+
+Most people looking at a class only care about its external
+interface. A few less care about the protected interface. Even fewer
+the private implementation.
+
+Everything should be private unless you really need it protected or
+public.
+
+----
+
+Format constructor member initialization like the following. It's so
+much easier to read.
+
+Class::Class(int field1, int field2)
+    : BaseClass(field1, field2)
+    , _field1(field1)
+    , _field2(field2)
+{
+    // Since these are ints, initialization and then copy
+    // is basically free.
+    _field1 = field1;
+}
+
+But really, constructor member initialization isn't even that useful,
+so whatever.
+
+----
+
+Whitespace:
+
+if (foo(bar() + 2).baz(cat, dog)) {
+}
+
+Hopefully that's a good enough description.  Within reason.  Doesn't
+matter *that* much.
+
+----
+
+Filenames:
+
+Same as class, unless it's just a collection of stuff, like Utility.h.
+Limit implementation in header files if possible.  Only headers you
+need to reduce compile times.  You can often get rid of them with
+forward declarations:
+
+namespace pyr {
+
+    class Map;  //#include "Map.h"
+
+    Map* foo();  // Don't need full specification of Map.
+}
+
+----
+
+Files:
+
+Avoid making lines longer than 80 characters if you can.  They make
+reading CVS diffs kinda difficult.
+
+----
+
+Includes:
+
+#include <iostream>
+#include <SDL/SystemHeader.h>
+#include "LocalHeader.h"
+
+Try to do them in alphabetical order, especially for large lists.
+
+----
+
+Comments:
+
+Use doxygen comments if possible.
+
+Descriptive rather than declarative comments.  If you can get rid of a
+comment by changing a function or variable name, or reordering the
+code, do so.
+
+----
+
+Most of all, be reasonable.  We all break rules sometimes, and the
+ultimate rule is readability and clarity.
