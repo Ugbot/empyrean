@@ -7,4 +7,7 @@ Here is a site discussing a few 3D animation formats:
 How Kevin Meinert used 3ds to make aki:
     http://mantis.subatomicglue.com/twiki/bin/view/Main/HowToCal3D
 
+OBJ importer for 3ds max:
+    http://www.handyarchive.com/Multimedia/3D-Modeling-CAD/11091-OBJ-Import-for-3D-Studio-MAX.html
+
 I'll go ahead and add those URLs to some directory in CVS.
