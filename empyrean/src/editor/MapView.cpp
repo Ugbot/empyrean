@@ -4,6 +4,7 @@
 #include "MainFrame.h"
 //#include "RectangleTool.h"
 #include "Texture.h"
+#include "MapRenderer.h"
 
 namespace pyr {
 
@@ -29,8 +30,6 @@ namespace pyr {
         //_tool = new DefaultTool(_mainFrame);
 
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-
-        _testTex = TexManager::instance().loadTex("images\\pointer.png");
     }
 
     MapView::~MapView() {
@@ -121,8 +120,15 @@ namespace pyr {
     
     void MapView::draw() {
 
-        /*glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-        const Map* map = getMap();
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+        glEnable(GL_TEXTURE_2D);
+        glEnable(GL_BLEND);
+        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+        MapRenderer r;
+        getMap()->getRoot()->handleVisitor(&r);
+        /*const Map* map = getMap();
 
         glEnable(GL_TEXTURE_2D);
         glEnable(GL_BLEND);

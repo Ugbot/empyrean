@@ -8,4 +8,12 @@ namespace pyr {
     Map::Map()
         : _root(new GroupElement)
     {}
+
+    Map::~Map() {
+        ;
+    }
+
+    RefPtr<GroupElement> Map::getRoot() const {
+        return _root;
+    }
 }

@@ -18,9 +18,9 @@ namespace pyr {
         Map();
         Map(const std::string& fileName);
         //Map(std::istream& file);
-        //~Map();
+        ~Map();
 
-        RefPtr<GroupElement> getRoot();
+        RefPtr<GroupElement> getRoot() const;
 
         void save(const std::string& fileName);
     private:

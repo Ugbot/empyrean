@@ -4,6 +4,7 @@
 #include <stack>
 #include "wx.h"
 #include "Command.h"
+#include "Utility.h"
 
 namespace pyr {
 
@@ -51,7 +52,7 @@ namespace pyr {
         std::stack<pyr::Command*> _redoList;
         void clearList(std::stack<pyr::Command*>& list); // deletes and clears
 
-        Map* _map;
+        ScopedPtr<Map> _map;
         
         DECLARE_EVENT_TABLE()
     };

@@ -152,6 +152,9 @@
 				RelativePath="..\..\src\base\extgl.h">
 			</File>
 			<File
+				RelativePath="..\..\src\base\GLUtility.h">
+			</File>
+			<File
 				RelativePath="..\..\src\base\LokiTypeInfo.h">
 			</File>
 			<File
@@ -165,6 +168,12 @@
 			</File>
 			<File
 				RelativePath="..\..\src\base\MapFile.h">
+			</File>
+			<File
+				RelativePath="..\..\src\base\MapRenderer.cpp">
+			</File>
+			<File
+				RelativePath="..\..\src\base\MapRenderer.h">
 			</File>
 			<File
 				RelativePath="..\..\src\base\MapVisitor.h">

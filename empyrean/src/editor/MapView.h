@@ -36,8 +36,6 @@ namespace pyr {
         MainFrame* _mainFrame;
         ScopedPtr<Tool> _tool;
 
-        Texture* _testTex;
-    
         DECLARE_EVENT_TABLE()
     };
 

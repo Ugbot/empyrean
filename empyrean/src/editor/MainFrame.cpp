@@ -3,6 +3,8 @@
 #include "RectangleTool.h"
 #include "TranslateTool.h"
 #include "ObstructionTool.h"
+#include "MapFile.h"
+#include "MapElement.h"
 
 namespace pyr {
 
@@ -29,12 +31,25 @@ namespace pyr {
     
     MainFrame::MainFrame()
         : wxFrame(0, -1, "pyrEdit", wxDefaultPosition, wxSize(640, 480))
-        , _map(0)
+        , _map(new Map)
     {
         createMenu();
         createToolBars();
         createContents();
         createStatusBar();
+
+        // Test code, to get a map
+        GroupElement* mapRoot = _map->getRoot().get();
+        GeometryElement* e = new GeometryElement;
+        e->texture = "images/pointer.png";
+        e->addVert(gmtl::Vec2f(0, 0), gmtl::Vec2f(0, 0), gmtl::Vec4f(1, 1, 1, 1));
+        e->addVert(gmtl::Vec2f(1, 0), gmtl::Vec2f(1, 0), gmtl::Vec4f(1, 1, 1, 1));
+        e->addVert(gmtl::Vec2f(1, 1), gmtl::Vec2f(1, 1), gmtl::Vec4f(1, 1, 1, 1));
+        e->addVert(gmtl::Vec2f(0, 1), gmtl::Vec2f(0, 1), gmtl::Vec4f(1, 1, 1, 1));
+        e->addTri(0, 1, 2);
+        e->addTri(0, 2, 3);
+        mapRoot->children.push_back(e);
+        //mapRoot->pos = gmtl::Vec2f(-1, 0);
     }
 
     MainFrame::~MainFrame() {
@@ -43,13 +58,13 @@ namespace pyr {
     }
 
     const Map* MainFrame::getMap() const {
-        return _map;
+        return _map.get();
     }
 
     void MainFrame::handleCommand(::pyr::Command* cmd) {
         clearList(_redoList);
         _undoList.push(cmd);
-        bool refresh = cmd->perform(_map);
+        bool refresh = cmd->perform(_map.get());
         if (refresh) {
             _mapView->Refresh();
         }
@@ -134,10 +149,10 @@ namespace pyr {
             _splitter, -1, wxDefaultPosition, wxDefaultSize,
             wxSP_3D | wxSP_LIVE_UPDATE | wxCLIP_CHILDREN);
         
-        _mapTree = new wxTreeCtrl(split2, -1);
+        _mapTree = new wxTreeCtrl(split2, -1, wxDefaultPosition, wxDefaultSize, wxTR_DEFAULT_STYLE | wxTR_HIDE_ROOT);
         wxTreeItemId root = _mapTree->AddRoot("Root");
-        _mapTree->AppendItem(root, "Part 1");
-        _mapTree->AppendItem(root, "Part 2");
+        _mapTree->AppendItem(root, "Map");
+        _mapTree->AppendItem(root, "Imports");
 
         _propertiesGrid = new wxGrid(split2, -1);
         _propertiesGrid->CreateGrid(0, 2);
@@ -198,7 +213,7 @@ namespace pyr {
             ::pyr::Command* c = _undoList.top();
             _undoList.pop();
             _redoList.push(c);
-            bool refresh = c->undo(_map);
+            bool refresh = c->undo(_map.get());
             if (refresh) {
                 _mapView->Refresh();
             }
@@ -210,7 +225,7 @@ namespace pyr {
             pyr::Command* c = _redoList.top();
             _redoList.pop();
             _undoList.push(c);
-            bool refresh = c->perform(_map);
+            bool refresh = c->perform(_map.get());
             if (refresh) {
                 _mapView->Refresh();
             }

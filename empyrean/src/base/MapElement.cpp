@@ -104,9 +104,5 @@ namespace pyr {
 
     void GroupElement::handleVisitor(MapVisitor* v) {
         v->visitGroup(this);
-
-        for (unsigned i = 0; i < children.size(); i++) {
-            children[i]->handleVisitor(v);
-        }
     }
 }
