@@ -25,6 +25,7 @@ namespace pyr {
         void save(const std::string& fileName);
     private:
         // The root should always be a GroupElement
+        // aegis - Why?  Does it matter?
         RefPtr<GroupElement> _root;
     };
 

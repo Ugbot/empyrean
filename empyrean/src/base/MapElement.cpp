@@ -4,21 +4,6 @@
 
 namespace pyr {
 
-    MapElement::MapElement()
-        : _refCount(0)
-    {}
-
-    void MapElement::ref() { 
-        _refCount++;
-    }
-
-    void MapElement::unref() {
-        --_refCount;
-        if (_refCount < 1) {
-            delete this;
-        }
-    }
-
     bool GeometryElement::Triangle::operator == (const GeometryElement::Triangle& rhs) const { 
         // There shouldn't be any repeat indeces, so we can just see if there's
         // any commonality between each vertex

@@ -14,16 +14,10 @@ namespace pyr {
     public:
         gmtl::Vec2f pos;
 
-        MapElement();
         virtual void handleVisitor(MapVisitor* v) = 0;
-        virtual void ref();
-        virtual void unref();
 
     protected:
         virtual ~MapElement() {}
-
-    private:
-        int _refCount;
     };
 
     typedef RefPtr<MapElement> MapElementPtr;
