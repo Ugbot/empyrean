@@ -12,7 +12,7 @@ namespace pyr {
             _barRadius = 20.0f;
             _barLongStraight = 50.0f;
             _barShortStraight = 5.0f;
-            _barHeight = 5.0f;
+            _barHeight = 6.0f;
             _numSegsInCurves = 30;
             _barBufferX = 10;
             _barBufferY = 10;
@@ -229,6 +229,7 @@ namespace pyr {
         }
  
         // Calc the straight portion 
+        _vertsRight.push_back(Vec2f(centerX, _barHeight + _barBufferY));
         _vertsRight.push_back(Vec2f(centerX + _barLongStraight, _barHeight + _barBufferY));
         
         // LEFT SIDE
@@ -244,6 +245,7 @@ namespace pyr {
         }
 
         // Calc the straight portion 
+        _vertsLeft.push_back(Vec2f(centerX, _barBufferY));
         _vertsLeft.push_back(Vec2f(centerX + _barLongStraight, _barBufferY));
      }
 };

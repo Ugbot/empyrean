@@ -61,7 +61,7 @@ namespace pyr {
         glTexCoord2f(1 + focusX / width, 0 + focusY / height); glVertex2f(width, 0);
         glEnd();
         
-        glTranslatef(width / 2 - focusX, height / 2 - focusY, 0);
+        glTranslatef(width / 2 - focusX, height / 4 - focusY, 0);
 
         glEnable(GL_DEPTH_TEST);
 
