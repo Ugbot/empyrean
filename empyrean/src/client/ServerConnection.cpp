@@ -22,7 +22,7 @@ namespace pyr {
         _status = CONNECTING;
         _loginFailed = false;
         _connectionMaker = new ServerConnectionThread(server, port);
-        _connectionThread = new Thread(_connectionMaker, PR_PRIORITY_HIGH);
+        _connectionThread = new Thread("ConnectionMaker", _connectionMaker, PR_PRIORITY_HIGH);
     }
 
     void ServerConnection::disconnect() {

@@ -28,8 +28,8 @@ namespace pyr {
         _tcpSocket = socket;
         _reader = new ReaderThread(socket);
         _writer = new WriterThread(socket);
-        _readerThread = new Thread(_reader, PR_PRIORITY_HIGH);
-        _writerThread = new Thread(_writer, PR_PRIORITY_HIGH);
+        _readerThread = new Thread("PacketReader", _reader, PR_PRIORITY_HIGH);
+        _writerThread = new Thread("PacketWriter", _writer, PR_PRIORITY_HIGH);
 
         _closing = false;
     }

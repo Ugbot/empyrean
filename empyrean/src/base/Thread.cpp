@@ -4,17 +4,38 @@
 #include "Error.h"
 #include "Mutex.h"
 #include "Thread.h"
+#include "ThreadStorage.h"
 #include "Log.h"
 
 namespace pyr {
 
     namespace {
         Logger& _logger = Logger::get("pyr.Thread");
+
+        struct CurrentThread {
+            Zeroed<Thread*> thread;
+        };
+        ThreadStorage<CurrentThread> _currentThread;
     }
 
-    Thread::Thread(Runnable* runnable, PRThreadPriority priority) {
-        _runnable = runnable;
-    
+
+    const string& Thread::getCurrentThreadName() {
+        static const string mainName("Main");
+        Thread* current = _currentThread->thread;
+        return current ? current->getName() : mainName;
+    }
+
+    Thread* Thread::getCurrentThread() {
+        return _currentThread->thread;
+    }
+
+
+    Thread::Thread(
+        const string& name,
+        Runnable* runnable,
+        PRThreadPriority priority)
+    : _name(name)
+    , _runnable(runnable) {
         PR_AtomicSet(&_shouldQuit, 0);
         _stopped = 0;
         
@@ -72,6 +93,7 @@ namespace pyr {
     
     void Thread::threadRoutine() {
         PYR_EXCEPTION_TRAP({
+            _currentThread->thread = this;
             _runnable->run(this);
         })
         PR_AtomicSet(&_stopped, 1);

@@ -1,6 +1,8 @@
 #include <iostream>
 #include "Connection.h"
+#include "Log.h"
 #include "PacketTypes.h"
+#include "Platform.h"
 #include "ScopedPtr.h"
 #include "ServerSocket.h"
 #include "Socket.h"
@@ -30,8 +32,10 @@ int run() {
     return 0;
 }
 
-int main() {
+int main(int argc, char** argv) {
     PYR_EXCEPTION_TRAP({
+        setStartDirectory(argc, argv);
+        initializeLog("packetServer.log", "packetServer.log.config");
         return run();
     })
 }

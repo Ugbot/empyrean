@@ -25,21 +25,26 @@ namespace pyr {
     }
 
     void WriterThread::run(Thread* thread) {
+        PYR_LOG_SCOPE(_logger, INFO, "WriterThread::run");
         while (!thread->shouldQuit()) {
-            _outgoingLock->lock();
-            while (_outgoing.empty()) {
-                _packetsAvailable->wait(0.5f);
-                if (thread->shouldQuit()) {
-                    _outgoingLock->unlock();
-                    return;
+            PacketPtr p;  // The packet we get.
+
+            PYR_SYNCHRONIZED(_outgoingLock, {
+                while (_outgoing.empty()) {
+                    _packetsAvailable->wait(0.5f);
+                    if (thread->shouldQuit()) {
+                        return;
+                    }
                 }
-            }
 
-            // write a single packet
-            PacketPtr p = _outgoing.front();
-            _outgoing.pop();
+                p = _outgoing.front();
+                _outgoing.pop();
 
-            _outgoingLock->unlock();
+                PYR_LOG(_logger, VERBOSE) << "Pulled packet from queue:";
+                p->log();
+            })
+
+            PYR_ASSERT(p, "Read a null packet out of the writer queue.");
 
             ByteBuffer out;
             p->serialize(out);
@@ -54,7 +59,8 @@ namespace pyr {
             ) {
                 break;
             }
-            
+
+            PYR_LOG(_logger, VERBOSE) << "Wrote packet to socket.";            
         }
     }
     
@@ -65,12 +71,20 @@ namespace pyr {
     }
 
     void WriterThread::addPackets(const std::vector<PacketPtr>& packets) {
+        if (packets.empty()) {
+            return;
+        }
+
+        PYR_LOG_SCOPE(_logger, INFO, "WriterThread::addPackets");
+
         PYR_SYNCHRONIZED(_outgoingLock, {
+            PYR_LOG(_logger, VERBOSE) << "Queuing packets...";
             for (size_t i = 0; i < packets.size(); ++i) {
                 PYR_LOG(_logger, INFO) << "Queueing packet for writing:";
                 packets[i]->log();
                 _outgoing.push(packets[i]);
             }
+            PYR_LOG(_logger, VERBOSE) << "Notifying writer thread.";
 
             _packetsAvailable->notify();
         })

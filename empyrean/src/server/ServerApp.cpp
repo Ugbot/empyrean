@@ -99,7 +99,7 @@ namespace pyr {
     
     void ServerApp::start() {
         PYR_SERVER_LOG() << "Starting...";
-        _serverThread = new Thread(new ServerThread());
+        _serverThread = new Thread("Server", new ServerThread());
         PYR_SERVER_LOG() << "Started";
     }
     

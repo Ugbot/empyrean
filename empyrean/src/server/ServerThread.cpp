@@ -21,7 +21,7 @@ namespace pyr {
 
         int port = the<Configuration>().serverPort;
         ListenerThread* listener = new ListenerThread(port);
-        ScopedPtr<Thread> thread(new Thread(listener, PR_PRIORITY_HIGH));
+        ScopedPtr<Thread> thread(new Thread("Listener", listener, PR_PRIORITY_HIGH));
 
         PYR_SERVER_LOG() << "Listening on port " << port;
 

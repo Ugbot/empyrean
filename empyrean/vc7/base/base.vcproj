@@ -417,6 +417,9 @@
 			<File
 				RelativePath="..\..\src\base\Thread.h">
 			</File>
+			<File
+				RelativePath="..\..\src\base\ThreadStorage.h">
+			</File>
 		</Filter>
 		<Filter
 			Name="render"

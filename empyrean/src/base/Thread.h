@@ -4,6 +4,7 @@
 
 #include "IncludeNSPR.h"
 #include "ScopedPtr.h"
+#include "Types.h"
 
 
 namespace pyr {
@@ -14,6 +15,11 @@ namespace pyr {
     class Runnable {
     public:
         virtual ~Runnable() { }
+
+        /**
+         * The 'thread' argument could be replaced by
+         * Thread::getCurrentThread...
+         */
         virtual void run(Thread* thread) = 0;
     };
 
@@ -31,9 +37,29 @@ namespace pyr {
      */
     class Thread {
     public:
+        /**
+         * Returns a pointer to the Thread object representing the current
+         * thread.  If the current thread was created by means of something
+         * other than this class (such as the main thread), returns 0.
+         */
+        static Thread* getCurrentThread();
+
+        /**
+         * Returns the name of the current thread.  If the current thread was
+         * created by something other than this class, returns "Main".
+         */
+        static const string& getCurrentThreadName();
+
+
         /// @throws std::runtime_error if thread cannot be created
-        Thread(Runnable* runnable, PRThreadPriority priority = PR_PRIORITY_NORMAL);
+        Thread(const string& name,
+               Runnable* runnable,
+               PRThreadPriority priority = PR_PRIORITY_NORMAL);
         ~Thread();
+
+        const string& getName() const {
+            return _name;
+        }
         
         /**
          * Notifies the thread that it should stop execution by setting
@@ -59,6 +85,8 @@ namespace pyr {
     private:
         void threadRoutine();
         static void PR_CALLBACK threadRoutine(void* self);
+
+        string _name;
         
         ScopedPtr<Runnable> _runnable;
         
