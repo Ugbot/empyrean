@@ -99,7 +99,7 @@ namespace pyr {
         LabelPtr nameLabel = new Label("Name");
         nameLabel->setPositionAndSize(0, 0, 512, 192);
         
-        _name = new TextField();
+        _name = new TextField(Configuration::instance().getUsername());
         _name->setPositionAndSize(512, 0, 512, 192);
         
         LabelPtr passwordLabel = new Label("Password");

@@ -36,9 +36,22 @@ namespace pyr {
         _(string)(12, password)             \
         _(field)(u8, newAccount)
         
+
+    // Login Response codes    
+    enum {
+        LR_LOGGED_IN,  // success
+    
+        LR_INVALID_USERNAME,
+        LR_NO_ACCOUNT,
+        LR_INVALID_PASSWORD,
+        LR_ACCOUNT_TAKEN,
+        LR_ALREADY_LOGGED_IN,
+    };
+    
     #define PYR_LOGIN_RESPONSE_PACKET_NAME LoginResponsePacket
     #define PYR_LOGIN_RESPONSE_PACKET(_)    \
-        _(field)(u16, entityID)
+        _(field)(u16, response)
+        
         
     #define PYR_PING_PACKET_NAME PingPacket
     #define PYR_PING_PACKET(_)

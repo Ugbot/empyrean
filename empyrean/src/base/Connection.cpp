@@ -56,5 +56,9 @@ namespace pyr {
     bool Connection::isClosed() {
         return (!_readerThread->isRunning() && !_writerThread->isRunning());
     }
+    
+    std::string Connection::getAddress() {
+        return _tcpSocket->getAddress();
+    }
 
 }

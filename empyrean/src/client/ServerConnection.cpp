@@ -84,8 +84,9 @@ namespace pyr {
     }
             
     void ServerConnection::handleLoginResponse(Connection*, LoginResponsePacket* p) {
-        _loggedIn = true;
-        _entityID = p->entityID();
+        if (p->response() == LR_LOGGED_IN) {
+            _loggedIn = true;
+        }
     }
 
     void ServerConnection::handleEntityAdded(Connection*, EntityAddedPacket* p) {

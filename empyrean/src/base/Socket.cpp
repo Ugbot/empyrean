@@ -1,7 +1,8 @@
 #include <prerror.h>
 #include <prnetdb.h>
-#include "Socket.h"
 #include "NSPRUtility.h"
+#include "Socket.h"
+#include "Types.h"
 
 
 namespace pyr {
@@ -49,7 +50,7 @@ namespace pyr {
     }
     
     /**
-     * @returns  0 if read timed out, -1 if error, and number of bytes
+     * @returns  0 if eof or error, -1 if timed out, and number of bytes
      *           read otherwise
      */
     int Socket::read(void* buffer, int size, float timeout) {
@@ -80,6 +81,18 @@ namespace pyr {
             //throwNSPRError("Unknown error");
         }
         return sent;
+    }
+    
+    std::string Socket::getAddress() {
+        PRNetAddr addr;
+        if (PR_GetSockName(_socket, &addr) == PR_SUCCESS) {
+            char str[80];
+            u8* ip = (u8*)&addr.inet.ip;
+            sprintf(str, "%d.%d.%d.%d", ip[0], ip[1], ip[2], ip[3]);
+            return str;
+        } else {
+            return "";
+        }
     }
 
 }

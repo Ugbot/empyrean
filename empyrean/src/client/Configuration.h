@@ -24,6 +24,8 @@ namespace pyr {
         std::string getServer();
         int getPort();
         
+        std::string getUsername();
+        
     private:
         static Configuration* _instance;
     };

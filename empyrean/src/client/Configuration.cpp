@@ -34,5 +34,9 @@ namespace pyr {
     int Configuration::getPort() {
         return 8765;
     }
+    
+    std::string Configuration::getUsername() {
+        return "aegis";
+    }
 
 }

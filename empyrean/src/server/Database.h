@@ -10,8 +10,17 @@ namespace pyr {
 
     class Account {
     public:
+        Account(const std::string& username, const std::string& password) {
+            _username = username;
+            _password = password;
+        }
+    
         const std::string& getUsername() const {
             return _username;
+        }
+        
+        const std::string& getPassword() const {
+            return _password;
         }
         
     private:
@@ -32,13 +41,15 @@ namespace pyr {
 
     class Database {
     public:
-        void addAccount(const Account& account);
+        ~Database();
+    
+        void addAccount(Account* account);
         Account* getAccount(const std::string& username);
     
     private:
-        std::vector<Account>   _accounts;
-        std::vector<Character> _characters;
-        std::vector<Game>      _games;
+        std::vector<Account*>   _accounts;
+        std::vector<Character*> _characters;
+        std::vector<Game*>      _games;
     };
 
 }

@@ -2,6 +2,7 @@
 #include "Configuration.h"
 #include "Connection.h"
 #include "ListenerThread.h"
+#include "Log.h"
 #include "NSPRUtility.h"
 #include "ServerThread.h"
 #include "World.h"
@@ -17,6 +18,10 @@ namespace pyr {
         /// @todo IS THIS A LEAK?
         ListenerThread* listener = new ListenerThread(port);
         ScopedPtr<Thread> thread(new Thread(listener, PR_PRIORITY_HIGH));
+        
+        char str[80];
+        sprintf(str, "%d", port);
+        logMessage("Listening on port " + std::string(str));
         
         float last = getNow();
         while (!shouldQuit()) {

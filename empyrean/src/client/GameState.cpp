@@ -38,14 +38,12 @@ namespace pyr {
             new Model("models/paladin/paladin.cfg"),
             new DefaultRenderer());
         Scene::instance().addEntity(0, _player);
-
-//        ServerConnection& sc = ServerConnection::instance();
-//        sc.connect("localhost", 8765, &_scene);
-//        sc.login("aegis", "wazaa");
+        
+        // assume already logged in
     }
 
     GameState::~GameState() {
-//        ServerConnection::instance().disconnect();
+        ServerConnection::instance().disconnect();
     }
 
     void GameState::draw(float fade) {
@@ -74,8 +72,8 @@ namespace pyr {
         _im.update(dt);
         Scene::instance().update(dt);
 
-//        ServerConnection& sc = ServerConnection::instance();
-//        sc.update();
+        ServerConnection& sc = ServerConnection::instance();
+        sc.update();
 //        sc.setForce(_inputRight->getValue() - _inputLeft->getValue());
 
         float dx = _inputRight->getValue() - _inputLeft->getValue();

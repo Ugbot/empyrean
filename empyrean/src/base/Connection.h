@@ -85,13 +85,12 @@ namespace pyr {
         /// Returns true if the connection has been closed.
         bool isClosed();
         
-        void setOpaque(void* opaque) {
-            _opaque = opaque;
-        }
+        /// Returns the address of the connection.
+        std::string getAddress();
         
-        void* getOpaque() const {
-            return _opaque;
-        }
+        
+        void setOpaque(void* opaque) { _opaque = opaque;  }
+        void* getOpaque() const      { return _opaque;    }
         
     private:
         typedef std::map<TypeInfo, PacketHandler*> HandlerMap;

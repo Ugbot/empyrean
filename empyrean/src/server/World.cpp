@@ -14,13 +14,6 @@ namespace pyr {
     }
     
     void World::update(float dt) {
-        // update entities
-        for (EntityMap::iterator itr = _entities.begin();
-             itr != _entities.end(); ++itr)
-        {
-            itr->second->update(dt);
-        }
-        
         // update connections
         for (unsigned i = 0; i < _connections.size(); ++i) {
             Connection* c = _connections[i];
@@ -33,36 +26,23 @@ namespace pyr {
             
             c->processIncomingPackets();
             
-            // if the connection is logged in, update all entities
-            ConnectionData* cd = (ConnectionData*)c->getOpaque();
-            if (cd->loggedIn) {
-                for (EntityMap::iterator itr = _entities.begin();
-                    itr != _entities.end(); ++itr)
-                {
-                    c->sendPacket(new UpdatePacket(
-                        itr->first,
-                        itr->second->getPos(),
-                        itr->second->getVel()));
-                }
-            }
-            
-            // XXX so disconnection happens right away...
+
+            // XXX so disconnection isn't delayed...
             c->sendPacket(new PingPacket());
         }
     }
     
     void World::addConnection(Connection* connection) {
-        logMessage("Connection!");
+        logMessage("Connection from address " + connection->getAddress());
 
-        ConnectionData* cd = new ConnectionData();
+        ConnectionData* cd = new ConnectionData;
         cd->loggedIn = false;
-        cd->entityID = 0;
+        cd->account = 0;
         connection->setOpaque(cd);
-        
+
         // set up packet handlers
         connection->definePacketHandler(this, &World::handleLogin);
-	connection->definePacketHandler(this, &World::handlePlayerState);
-    
+
         // add the connection to the list of connections
         _connections.push_back(connection);
     }
@@ -71,10 +51,6 @@ namespace pyr {
         Connection* connection = _connections[index];
         
         ConnectionData* cd = (ConnectionData*)connection->getOpaque();
-        if (cd->loggedIn) {
-            removeEntity(cd->entityID);
-            _uidGenerator.release(cd->entityID);
-        }
         delete cd;
         
         _connections.erase(_connections.begin() + index);
@@ -85,78 +61,45 @@ namespace pyr {
     
     void World::handleLogin(Connection* c, LoginPacket* p) {
         ConnectionData* cd = (ConnectionData*)c->getOpaque();
-        if (!cd->loggedIn) {
-            logMessage("Login: " + p->username() + " | " + p->password());
+        if (cd->loggedIn) {
+            c->sendPacket(new LoginResponsePacket(LR_ALREADY_LOGGED_IN));
+            logMessage(p->username() + " attempted to log in twice!");
+            return;
+        }
 
-            cd->loggedIn = true;
-            cd->entityID = _uidGenerator.reserve();
-            c->sendPacket(new LoginResponsePacket(cd->entityID));
-            
-            // make sure this connection sees the other entities too
-            for (EntityMap::iterator itr = _entities.begin();
-                itr != _entities.end(); ++itr)
-            {
-                c->sendPacket(new EntityAddedPacket(
-                    itr->second->getAppearance(),
-                    itr->first,
-                    itr->second->getPos(),
-                    itr->second->getVel()));
+        /// @todo  test for invalid username
+        /// @todo  test for already logged in
+        
+        Account* account = _database.getAccount(p->username());
+        if (p->newAccount()) {
+            if (account) {
+                c->sendPacket(new LoginResponsePacket(LR_ACCOUNT_TAKEN));
+                logMessage(p->username() + ": account taken!");
+            } else {
+                account = new Account(p->username(), p->password());
+                _database.addAccount(account);
+                cd->account = account;
+                cd->loggedIn = true;
+                c->sendPacket(new LoginResponsePacket(LR_LOGGED_IN));
+                logMessage(p->username() + " new account, logged in");
             }
-            
-            // add new avatar entity to world
-            ServerEntity* se = new ServerEntity();
-            addEntity(cd->entityID, se);
+            return;
+        }
+        
+        if (!account) {
+            c->sendPacket(new LoginResponsePacket(LR_NO_ACCOUNT));
+            logMessage(p->username() + " doesn't exist");
         } else {
-            logMessage("Already logged in!");
-	}
-    }
-
-    void World::handlePlayerState(Connection* c, PlayerStatePacket* p) {
-        logMessage("handlePlayerState");
-	ConnectionData* cd = (ConnectionData*)c->getOpaque();
-	if (cd->loggedIn) {
-	    logMessage("Player state update");
-	    ServerEntity* entity = getEntity(cd->entityID);
-	    if (entity) {
-		entity->setVel(gmtl::Vec2f(p->force() * 50, 0));
-	    } else {
-	        logMessage("- Unknown entity");
-	    }
-	}
-    }
-    
-    void World::addEntity(u16 id, ServerEntity* entity) {
-        PYR_ASSERT(_entities.count(id) == 0, "Entity can't be added twice");
-        
-        for (unsigned i = 0; i < _connections.size(); ++i) {
-            Connection* c = _connections[i];
-            ConnectionData* cd = (ConnectionData*)c->getOpaque();
-            if (cd->loggedIn) {
-                c->sendPacket(new EntityAddedPacket(
-                    entity->getAppearance(),
-                    id,
-                    entity->getPos(),
-                    entity->getVel()));
+            if (p->password() == account->getPassword()) {
+                cd->account = account;
+                cd->loggedIn = true;
+                c->sendPacket(new LoginResponsePacket(LR_LOGGED_IN));
+                logMessage(p->username() + " logged in");
+            } else {
+                c->sendPacket(new LoginResponsePacket(LR_INVALID_PASSWORD));
+                logMessage(p->username() + " invalid password");
             }
         }
-        _entities[id] = entity;
-    }
-    
-    void World::removeEntity(u16 id) {
-        PYR_ASSERT(_entities.count(id) >= 1, "Entity can't be removed twice");
-        _entities.erase(id);
-        
-        for (unsigned i = 0; i < _connections.size(); ++i) {
-            Connection* c = _connections[i];
-            ConnectionData* cd = (ConnectionData*)c->getOpaque();
-            if (cd->loggedIn) {
-                c->sendPacket(new EntityRemovedPacket(id));
-            }
-        }
-    }
-
-    ServerEntity* World::getEntity(u16 id) {
-	return (_entities.count(id) ? _entities[id] : 0);
     }
 
 }
