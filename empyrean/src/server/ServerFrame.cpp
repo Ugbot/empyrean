@@ -1,3 +1,4 @@
+#include "Configuration.h"
 #include "Error.h"
 #include "Log.h"
 #include "LogEvent.h"
@@ -20,6 +21,8 @@ namespace pyr {
     
 
     BEGIN_EVENT_TABLE(ServerFrame, wxFrame)
+        EVT_CLOSE(ServerFrame::onClose)
+    
         EVT_MENU(ID_SERVER_START,   ServerFrame::onStart)
         EVT_MENU(ID_SERVER_STOP,    ServerFrame::onStop)
         EVT_MENU(ID_SERVER_RESTART, ServerFrame::onRestart)
@@ -34,7 +37,9 @@ namespace pyr {
     
     
     ServerFrame::ServerFrame()
-        : wxFrame(0, -1, "Empyrean Server")
+        : wxFrame(0, -1, "Empyrean Server",
+                  the<Configuration>().windowPosition,
+                  the<Configuration>().windowSize)
     {
         createMenu();
         createContents();
@@ -70,6 +75,14 @@ namespace pyr {
     
     void ServerFrame::createStatusBar() {
         CreateStatusBar();
+    }
+    
+    void ServerFrame::onClose(wxCloseEvent& evt) {
+        PYR_BEGIN_EXCEPTION_TRAP()
+            the<Configuration>().windowPosition = GetPosition();
+            the<Configuration>().windowSize     = GetSize();
+            Destroy();
+        PYR_END_EXCEPTION_TRAP()
     }
     
     void ServerFrame::onStart() {

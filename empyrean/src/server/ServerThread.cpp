@@ -13,7 +13,7 @@ namespace pyr {
     void ServerThread::run() {
         World world;
 
-        int port = Configuration::instance().getServerPort();
+        int port = the<Configuration>().serverPort;
         
         /// @todo IS THIS A LEAK?
         ListenerThread* listener = new ListenerThread(port);
@@ -31,7 +31,7 @@ namespace pyr {
             
             std::vector<Connection*> connections;
             listener->getConnections(connections);
-            for (unsigned i = 0; i < connections.size(); ++i) {
+            for (size_t i = 0; i < connections.size(); ++i) {
                 world.addConnection(connections[i]);
             }
             

@@ -1,3 +1,4 @@
+#include <memory>
 #include <stdio.h>
 #include "Configuration.h"
 #include "XMLParser.h"
@@ -20,8 +21,8 @@ namespace pyr {
     
     void Configuration::load() {
         try {
-            XMLNode* root = XMLParser().parse(FILENAME);
-            if (root) {
+            std::auto_ptr<XMLNode> root(XMLParser().parse(FILENAME));
+            if (root.get()) {
                 for (size_t i = 0; i < root->getChildCount(); ++i) {
                     XMLNode* child = root->getChild(i);
                     std::string attr = child->getAttr("name");
@@ -38,12 +39,11 @@ namespace pyr {
                         username = value;
                     }
                 }
-                delete root;
             }
         }
         catch (const XMLParseError& e) {
             throw ConfigurationError(
-                "Error read client configuration: " + std::string(e.what()));
+                "Error reading client configuration: " + std::string(e.what()));
         }
     }
     

@@ -159,15 +159,18 @@ namespace pyr {
         }
     }
     
+#else
+
+    inline void setStartDirectory() {
+    }
+    
 #endif
 
 
 /// main() needs to be defined with argc and argv so SDL works right.
 int main(int /*argc*/, char* /*argv*/[]) {
 
-#ifdef WIN32
     setStartDirectory();
-#endif
 
     PYR_BEGIN_EXCEPTION_TRAP()
 
@@ -186,6 +189,7 @@ int main(int /*argc*/, char* /*argv*/[]) {
 
     int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
         #ifdef CYGWIN
+            /// @todo parse lpCommandStr
             int __argc = 1;
             char* __argv[] = {"client"};
         #endif

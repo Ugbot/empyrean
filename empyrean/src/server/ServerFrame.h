@@ -19,6 +19,8 @@ namespace pyr {
         void createContents();
         void createStatusBar();
         
+        void onClose(wxCloseEvent& evt);
+        
         void onStart();
         void onStop();
         void onRestart();
