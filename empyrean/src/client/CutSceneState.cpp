@@ -9,7 +9,7 @@ namespace pyr {
     CutSceneState::CutSceneState() {
         static const std::string images[] = {
             "warrior1.jpg",
-            "Caphriel3.jpg",
+            "Caphriel3.JPG",
             "ninja1.jpg",
             "Robot3.jpg",
             "levelOneColor.jpg",

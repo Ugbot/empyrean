@@ -2,7 +2,7 @@ Import('*')
 
 Install(env, Split("""
     warrior1.jpg
-    Caphriel3.jpg
+    Caphriel3.JPG
     levelOneColor.jpg
     ninja1.jpg
     Robot3.jpg
