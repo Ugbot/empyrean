@@ -2,9 +2,9 @@
 #define PYR_WORLD_H
 
 
+#include <map>
 #include <vector>
 #include "UIDGenerator.h"
-#include "Mutex.h"
 #include "Types.h"
 
 
@@ -12,14 +12,10 @@ namespace pyr {
 
     class Connection;
     class LoginPacket;
+    class ServerEntity;
 
+    /// @note This class is designed to run within one thread.
     class World {
-    public:
-        static World& instance();
-        
-    private:
-        static void destroy();
-        
     public:
         ~World();
     
@@ -31,18 +27,21 @@ namespace pyr {
             bool loggedIn;
             u16 entityID;
         };
-    
+        
         void removeConnection(unsigned index);
     
         void handleLogin(Connection* c, LoginPacket* p);
         
-    
-        static World* _instance;
-    
+        void addEntity(u16 id, ServerEntity* entity);
+        void removeEntity(u16 id);
+        
+    private:
         std::vector<Connection*> _connections;
-        Mutex _connectionsLock;
         
         UIDGenerator<u16> _uidGenerator;
+        
+        typedef std::map<u16, ServerEntity*> EntityMap;
+        EntityMap _entities;
     };
 
 }

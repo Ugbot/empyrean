@@ -37,15 +37,8 @@ namespace pyr {
     }
     
     Socket* ServerSocket::accept(float timeout) {
-        PRIntervalTime interval;
-        if (timeout < 0) {
-            interval = PR_INTERVAL_NO_TIMEOUT;
-        } else {
-            interval = PR_MicrosecondsToInterval(PRUint32(timeout * 1000000));
-        }
-        
         PRNetAddr address; // of connecting socket
-        PRFileDesc* fd = PR_Accept(_socket, &address, interval);
+        PRFileDesc* fd = PR_Accept(_socket, &address, secondsToInterval(timeout));
         return (fd ? new Socket(fd) : 0);
     }
 

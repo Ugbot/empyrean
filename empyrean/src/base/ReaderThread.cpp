@@ -15,8 +15,8 @@ namespace pyr {
 
         while (!shouldQuit()) {
             u8 buffer[1024];
-            int read = _socket->read(buffer, sizeof(buffer));
-            if (read == 0) {
+            int read = _socket->read(buffer, sizeof(buffer), 0.5f);
+            if (read < 0) {
                 break;
             }
             

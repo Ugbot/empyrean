@@ -99,6 +99,8 @@ namespace pyr {
         if (e) {
             e->setPos(p->getPos());
             e->setVel(p->getVel());
+        } else {
+            std::cout << "Ignoring update packet with invalid entity id" << std::endl;
         }
     }
 

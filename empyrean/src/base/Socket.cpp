@@ -48,17 +48,8 @@ namespace pyr {
         }
     }
     
-    int Socket::read(void* buffer, int size) {
-        int read = PR_Recv(_socket, buffer, size, 0, PR_INTERVAL_NO_TIMEOUT);
-        // if the peer closed the connection or we were interrupted
-        if (read < 0 && PR_GetError() == PR_PENDING_INTERRUPT_ERROR) {
-            return 0;
-            //throwNSPRError("Interrupt occurred");
-        } else if (read < 0) {
-            return 0;
-            //throwNSPRError("PR_Recv: Unknown error");
-        }
-        return read;
+    int Socket::read(void* buffer, int size, float timeout) {
+        return PR_Recv(_socket, buffer, size, 0, secondsToInterval(timeout));
     }
     
     int Socket::write(const void* buffer, int size) {

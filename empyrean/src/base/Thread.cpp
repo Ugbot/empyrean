@@ -17,7 +17,6 @@ namespace pyr {
         return (_thread ? _thread->shouldQuit() : true);
     }
     
-
     Thread::Thread(Runnable* runnable, PRThreadPriority priority) {
         _object = runnable;
         _object->setThread(this);

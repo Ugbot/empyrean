@@ -26,7 +26,7 @@ namespace pyr {
     };
 
     /**
-     * Thread-derived classes should not be allocated on the stack.
+     * Thread objects should not be allocated on the stack.
      * The creator of the thread is responsible for deleting it.
      * While the thread may stop execution, the Thread object will
      * not be destroyed automatically.

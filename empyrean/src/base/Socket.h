@@ -15,7 +15,7 @@ namespace pyr {
         ~Socket();
         
         /// if this returns 0, the socket has been disconnected
-        int read(void* buffer, int size);
+        int read(void* buffer, int size, float timeout = -1);
         
         /// if this returns 0, the socket has been disconnected
         int write(const void* buffer, int size);

@@ -2,47 +2,35 @@
 #include "Connection.h"
 #include "LoginPacket.h"
 #include "LoginResponsePacket.h"
-#include "ScopedLock.h"
+#include "ServerEntity.h"
 #include "UpdatePacket.h"
 #include "World.h"
 
 
 namespace pyr {
 
-    World* World::_instance = 0;
-
-    World& World::instance() {
-        if (!_instance) {
-            _instance = new World();
-            atexit(destroy);
-        }
-        return *_instance;
-    }
-    
-    void World::destroy() {
-        delete _instance;
-        _instance = 0;
-    }
-    
     World::~World() {
-        ScopedLock lock(_connectionsLock);
         while (!_connections.empty()) {
             removeConnection(0);
         }
     }
     
     void World::update(float dt) {
-        ScopedLock lock(_connectionsLock);
+        
+    
+    
         for (unsigned i = 0; i < _connections.size(); ++i) {
             Connection* c = _connections[i];
-            ConnectionData* cd = (ConnectionData*)c->getOpaque();
             
+            // if the connection is dead, it must be removed
             if (c->isClosed()) {
                 removeConnection(i);
                 continue;
             }
+            
             c->processIncomingPackets();
             
+            ConnectionData* cd = (ConnectionData*)c->getOpaque();
             if (cd->loggedIn) {
                 gmtl::Vec2f pos, vel;
                 c->sendPacket(new UpdatePacket(0, pos, vel));
@@ -54,6 +42,7 @@ namespace pyr {
         std::cout << "Connection!" << std::endl;
         
         ConnectionData* cd = new ConnectionData();
+        cd->loggedIn = false;
         cd->entityID = _uidGenerator.reserve();
         connection->setOpaque(cd);
         
@@ -61,17 +50,16 @@ namespace pyr {
         connection->definePacketHandler(this, &World::handleLogin);
     
         // add the connection to the list of connections
-        ScopedLock lock(_connectionsLock);
         _connections.push_back(connection);
     }
     
-    /**
-     * Called inside of update(), so no need to lock _connections.
-     */
     void World::removeConnection(unsigned index) {
         Connection* connection = _connections[index];
         
         ConnectionData* cd = (ConnectionData*)connection->getOpaque();
+        if (cd->loggedIn) {
+            removeEntity(cd->entityID);
+        }
         _uidGenerator.release(cd->entityID);
         delete cd;
         
@@ -82,13 +70,24 @@ namespace pyr {
     }
     
     void World::handleLogin(Connection* c, LoginPacket* p) {
-        std::cout << "Login: "
-                  << p->getUsername() << " | " << p->getPassword()
-                  << std::endl;
-                  
         ConnectionData* cd = (ConnectionData*)c->getOpaque();
-        cd->loggedIn = true;
-        c->sendPacket(new LoginResponsePacket(cd->entityID));
+        if (!cd->loggedIn) {
+            std::cout << "Login: "
+                      << p->getUsername() << " | " << p->getPassword()
+                      << std::endl;
+                  
+            cd->loggedIn = true;
+            c->sendPacket(new LoginResponsePacket(cd->entityID));
+            
+            ServerEntity* se = new ServerEntity();
+            addEntity(cd->entityID, se);
+        }
+    }
+    
+    void World::addEntity(u16 id, ServerEntity* entity) {
+    }
+    
+    void World::removeEntity(u16 id) {
     }
 
 }

@@ -13,9 +13,10 @@ namespace pyr {
     
 
     void runServer() {
-        World& world = World::instance();
+        World world;
     
-        ScopedPtr<Thread> listener(new Thread(new ListenerThread(PORT)));
+        ListenerThread* listener = new ListenerThread(PORT);
+        ScopedPtr<Thread> thread(new Thread(listener));
         
         float last = getNow();
         for (;;) {
@@ -23,8 +24,14 @@ namespace pyr {
             float dt = now - last;
             last = now;
             
+            std::vector<Connection*> connections;
+            listener->getConnections(connections);
+            for (unsigned i = 0; i < connections.size(); ++i) {
+                world.addConnection(connections[i]);
+            }
+            
             world.update(dt);
-            PR_Sleep(PR_MillisecondsToInterval(20));
+            PR_Sleep(secondsToInterval(0.020f));
         }
     }
 }

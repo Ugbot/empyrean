@@ -23,7 +23,7 @@ namespace pyr {
         while (!shouldQuit()) {
             _outgoingLock->lock();
             while (_outgoing.empty()) {
-                _packetsAvailable->wait(1);
+                _packetsAvailable->wait(0.5f);
                 if (shouldQuit()) {
                     break;
                 }

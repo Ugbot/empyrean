@@ -1,5 +1,6 @@
 #include "Connection.h"
 #include "ListenerThread.h"
+#include "ScopedLock.h"
 #include "ServerSocket.h"
 #include "World.h"
 
@@ -12,11 +13,18 @@ namespace pyr {
     
     void ListenerThread::run() {
         while (!shouldQuit()) {
-            Socket* socket = _listener->accept(1);
+            Socket* socket = _listener->accept(0.5f);
             if (socket) {
-                World::instance().addConnection(new Connection(socket));
+                ScopedLock lock(_connectionsLock);
+                _connections.push_back(new Connection(socket));
             }
         }
+    }
+    
+    void ListenerThread::getConnections(std::vector<Connection*>& connections) {
+        ScopedLock lock(_connectionsLock);
+        connections = _connections;
+        _connections.clear();
     }
 
 }

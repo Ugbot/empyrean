@@ -120,6 +120,9 @@
 				RelativePath="..\..\src\server\Main.cpp">
 			</File>
 			<File
+				RelativePath="..\..\src\server\ServerEntity.h">
+			</File>
+			<File
 				RelativePath="..\..\src\server\UIDGenerator.h">
 			</File>
 			<File
