@@ -13,8 +13,8 @@ namespace pyr {
     PlayerEntity::PlayerEntity(Model* model, Renderer* renderer) {
         _model = model;
         _renderer = renderer;
-	_direction = 0;
-	
+        _direction = 0;
+
         startStandState();
     }
 
@@ -22,20 +22,18 @@ namespace pyr {
         glEnable(GL_DEPTH_TEST);
         glRotatef(_direction + 180, 0, 1, 0);
         glRotatef(90, 1, 0, 0);
-        //glScalef(0.01f, 0.01f, 0.01f);
+        glScalef(1, 1, -1);
         _renderer->draw(_model);
         glDisable(GL_DEPTH_TEST);
     }
 
     void PlayerEntity::update(float dt) {
 	setPos(getPos() + getVel() * dt);
-	if (_state) {
-	    (this->*_state)(dt);
-	}
+        if (_state) {
+            (this->*_state)(dt);
+        }
         _model->update(dt);
     }
-
-    static const float vel = 70.0f;
 
     void PlayerEntity::startStandState() {
         _model->getModel().getMixer()->clearCycle(0, 0.0f);

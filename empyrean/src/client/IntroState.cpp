@@ -1,3 +1,4 @@
+#include "GLUtility.h"
 #include "IntroState.h"
 #include "MenuState.h"
 #include "OpenGL.h"

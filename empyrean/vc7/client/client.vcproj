@@ -151,9 +151,6 @@
 				RelativePath="..\..\src\client\FPSCounter.h">
 			</File>
 			<File
-				RelativePath="..\..\src\client\GLUtility.h">
-			</File>
-			<File
 				RelativePath="..\..\src\client\Image.h">
 			</File>
 			<File
@@ -255,9 +252,6 @@
 			</File>
 			<File
 				RelativePath="..\..\src\client\MenuState.h">
-			</File>
-			<File
-				RelativePath="..\..\src\client\State.cpp">
 			</File>
 			<File
 				RelativePath="..\..\src\client\State.h">

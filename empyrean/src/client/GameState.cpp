@@ -48,7 +48,7 @@ namespace pyr {
             setOrthoProjection(float(app.getWidth()), float(app.getHeight()));
             glTranslatef(app.getWidth() / 2.0f, 0, 0);
             glColor3f(1, 1, 1);
-            GLTEXT_STREAM(_renderer) << "(" << entity->getPos() << ")";
+            GLTEXT_STREAM(_renderer) << entity->getPos();
         }
     }
 
@@ -64,7 +64,7 @@ namespace pyr {
 
         float dx = _inputRight->getValue() - _inputLeft->getValue();
         float dy = _inputSpace->getValue() * 2 - 1;
-        sc.setVelocity(gmtl::Vec2f(dx * 50, dy * 10));
+        sc.setVelocity(gmtl::Vec2f(dx, dy));
 
         if (_inputQuit->getValue() >= 0.50f) {
             sc.disconnect();

@@ -23,21 +23,37 @@ namespace pyr {
     }
     
     void Scene::draw() {
-        glMatrixMode(GL_PROJECTION);
-        glLoadIdentity();
-        glOrtho(0, 400, 300, 0, -100, 100);
+        // Nominal viewport is 12 meters wide and 9 meters high.
+        const float width = 12.0f;
+        const float height = 9.0f;
+        setOrthoProjection(width, height);
+        // flip upside-down.  this could go into setOrthoProjection as an option
+        glScalef(1, -1, 1);
+        glTranslatef(0, -height, 0);
         
-        glMatrixMode(GL_MODELVIEW);
-        glLoadIdentity();
+        float focusX = 0;
+        float focusY = 0;
+        if (_focus) {
+            focusX = _focus->getPos()[0];
+            focusY = _focus->getPos()[1];
+        }
 
         glDisable(GL_DEPTH_TEST);
-        glEnable(GL_TEXTURE_2D);
         glDisable(GL_BLEND);
 
         glClear(GL_DEPTH_BUFFER_BIT);
-        _backdrop->drawRectangle(0, 0, 400, 300);
+
+        // draw background
+        glEnable(GL_TEXTURE_2D);
+        _backdrop->bind();
+        glBegin(GL_TRIANGLE_FAN);
+        glTexCoord2f(0 + focusX / width, 0 + focusY / height); glVertex2f(0,     0);
+        glTexCoord2f(0 + focusX / width, 1 + focusY / height); glVertex2f(0,     height);
+        glTexCoord2f(1 + focusX / width, 1 + focusY / height); glVertex2f(width, height);
+        glTexCoord2f(1 + focusX / width, 0 + focusY / height); glVertex2f(width, 0);
+        glEnd();
         
-        glTranslatef(200, 150, 0);
+        glTranslatef(width / 2 - focusX, height / 2 - focusY, 0);
 
         EntityMap::iterator itr = _entities.begin();
         for (; itr != _entities.end(); ++itr) {

@@ -3,6 +3,7 @@
 #include "ConnectingScreen.h"
 #include "ErrorScreen.h"
 #include "GameState.h"
+#include "GLUtility.h"
 #include "JoinGameScreen.h"
 #include "JoiningGameScreen.h"
 #include "LobbyScreen.h"

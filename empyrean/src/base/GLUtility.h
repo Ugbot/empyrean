@@ -8,6 +8,15 @@
 
 namespace pyr {
 
+    inline void setOrthoProjection(float width, float height) {
+        glMatrixMode(GL_PROJECTION);
+        glLoadIdentity();
+        gluOrtho2D(0, width, height, 0);
+        
+        glMatrixMode(GL_MODELVIEW);
+        glLoadIdentity();
+    }
+        
     inline void glTranslate(const gmtl::Vec2f& vec) {
         glTranslatef(vec[0], vec[1], 0);
     }

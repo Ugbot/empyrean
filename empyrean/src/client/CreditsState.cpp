@@ -1,4 +1,5 @@
 #include "CreditsState.h"
+#include "GLUtility.h"
 #include "MenuState.h"
 #include "OpenGL.h"
 
