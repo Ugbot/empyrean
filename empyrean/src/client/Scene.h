@@ -36,6 +36,8 @@ namespace pyr {
         Entity* getFocus() const;
         
     private:
+        void addParticles(MapElementPtr elt);
+
         typedef std::map<u16, Entity*> EntityMap;
 
         Entity* _focus;

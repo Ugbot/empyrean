@@ -3,6 +3,8 @@
 #include "GLUtility.h"
 #include "MapLoader.h"
 #include "MapRenderer.h"
+#include "ParticleEmitter.h"
+#include "ParticleSystem.h"
 #include "Renderer.h"
 #include "Scene.h"
 #include "Texture.h"
@@ -19,6 +21,8 @@ namespace pyr {
         if (!_map) {
             throw std::runtime_error("Loading maps/map1.obj failed");
         }
+
+        addParticles(_map->getRoot());
     }
     
     Scene::~Scene() {
@@ -109,6 +113,26 @@ namespace pyr {
     
     Entity* Scene::getFocus() const {
         return _focus;
+    }
+
+    void Scene::addParticles(MapElementPtr elt) {
+        static u16 id = 65535;  /// @todo WARNING: HACK!
+
+        if (elt && elt->properties["particles"] == "true") {
+            ParticleSystem* ps = new ParticleSystem;
+            ps->setPos(elt->pos);
+            addEntity(id--, ps);
+
+            ParticleEmitter* pe = new ParticleEmitter(ps);
+            addEntity(id--, pe);
+        }
+
+        GroupElementPtr g = dynamic_cast<GroupElement*>(elt.get());
+        if (g) {
+            for (size_t i = 0; i < g->children.size(); ++i) {
+                addParticles(g->children[i]);
+            }
+        }
     }
     
 }

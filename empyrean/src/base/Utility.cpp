@@ -17,6 +17,8 @@ namespace pyr {
     string trimString(const string& s) {
         string t;
 
+        /// @todo Use isspace instead of testing against ' ' ?
+
         // Find the first nonwhitespace character
         for (unsigned int i = 0; i < s.length(); i++) {
             if (s[i] != ' ') {
@@ -26,9 +28,9 @@ namespace pyr {
         }
 
         // Find the last nonwhitespace character
-        for (int i = int(t.length() - 1); i >= 0; i++) {
+        for (int i = int(t.length() - 1); i >= 0; i--) {
             if (t[i] != ' ') {
-                t = t.substr(0,i);
+                t = t.substr(0,i+1);
                 return t;
             }
         }

@@ -4,6 +4,32 @@
 #include <commctrl.h>
 
 
+// I'm not quite ready to depend on empyrean's base library yet...
+std::string trimString(const std::string& s) {
+    std::string t = s;
+
+    // Find the first nonwhitespace character
+    for (size_t i = 0; i < t.length(); i++) {
+        if (!isspace(t[i])) {
+            t = t.substr(i);
+            break;
+        }
+    }
+
+    // Find the last nonwhitespace character
+    for (int i = int(t.length() - 1); i >= 0; i--) {
+        if (!isspace(t[i])) {
+            t = t.substr(0,i+1);
+            return t;
+        }
+    }
+
+    // if we've made it this far, then every character in the
+    // string is whitespace.
+    return "";
+}
+
+
 class Exporter : public SceneExport {
 public:
     int ExtCount()                  { return 1; }
@@ -55,7 +81,8 @@ public:
             }
             std::string key(line.begin(), line.begin() + eq);
             std::string value(line.begin() + eq + 1, line.end());
-            out << "    <property key=\"" << key << "\" value=\"" << value << "\"/>\n";
+            out << "    <property key=\"" << trimString(key)
+                << "\" value=\"" << trimString(value) << "\"/>\n";
         }
 
         out << "  </node>\n";

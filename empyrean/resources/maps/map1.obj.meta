@@ -9,4 +9,7 @@
   </node>
   <node name="start" position="-14.345 -5.55933e-006 127.183">
   </node>
+  <node name="Particle1" position="13.8006 -1.08461e-007 2.48131">
+    <property key="particles" value="true"/>
+  </node>
 </map-metadata>
