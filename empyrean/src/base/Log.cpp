@@ -1,5 +1,5 @@
 //#define PYR_LOG_TO_STDOUT
-#define PYR_LOG_TO_WIN32_DEBUGGER
+//#define PYR_LOG_TO_WIN32_DEBUGGER
 
 #if defined(WIN32)
 #include <windows.h>

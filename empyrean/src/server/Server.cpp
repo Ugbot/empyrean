@@ -23,6 +23,8 @@ namespace pyr {
     }
 
     void Server::update(float dt) {
+        PYR_LOG_BLOCK("Server::update");
+
         ConnectionHolder::update();
 
         // update games

@@ -67,7 +67,7 @@ namespace pyr {
                 //packets[i]->log();
                 _outgoing.push(packets[i]);
             }
-            
+
             _packetsAvailable->notify();
         })
     }

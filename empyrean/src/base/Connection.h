@@ -130,7 +130,7 @@ namespace pyr {
          */
         void processIncomingPackets();
 
-        /// Adds a packet to the outgoing queue, taking ownership of it.
+        /// Adds a packet to the outgoing queue.
         void sendPacket(PacketPtr packet);
 
         /// Begins disconnecting.

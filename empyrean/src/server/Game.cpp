@@ -14,6 +14,8 @@
 namespace pyr {
 
     Game::Game(const std::string& name, const std::string& password) {
+        PYR_LOG_BLOCK("Game::Game");
+
         definePacketHandler(this, &Game::handlePlayerEvent);
         definePacketHandler(this, &Game::handleHUDUpdate);
         definePacketHandler(this, &Game::handlePlayerAttack);
@@ -73,10 +75,12 @@ namespace pyr {
     }
 
     Game::~Game() {
+        PYR_LOG_BLOCK("Game::~Game");
         clearConnections();
     }
 
     void Game::update(float dt) {
+        PYR_LOG_BLOCK("Game::update");
         ConnectionHolder::update();
 
         Environment env;

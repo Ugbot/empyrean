@@ -3,15 +3,16 @@
 #include "Connection.h"
 #include "Constants.h"
 #include "ListenerThread.h"
+#include "Log.h"
 #include "NSPRUtility.h"
 #include "Server.h"
 #include "ServerLog.h"
 #include "ServerThread.h"
-#include "Log.h"
 
 namespace pyr {
 
     void ServerThread::run(Thread* self) {
+        PYR_LOG_BLOCK("ServerThread::run");
         Server server;
 
         int port = the<Configuration>().serverPort;
@@ -23,14 +24,19 @@ namespace pyr {
         float last = getNow();
         float accumulatedTime = 0;
         while (!self->shouldQuit()) {
+            PYR_LOG_BLOCK("ServerThread: update loop");
+
             float now = getNow();
             float dt = now - last;
             last = now;
 
-            std::vector<Connection*> connections;
-            listener->getConnections(connections);
-            for (size_t i = 0; i < connections.size(); ++i) {
-                server.addConnection(connections[i]);
+            {
+                PYR_LOG_BLOCK("ServerThread: get connections");
+                std::vector<Connection*> connections;
+                listener->getConnections(connections);
+                for (size_t i = 0; i < connections.size(); ++i) {
+                    server.addConnection(connections[i]);
+                }
             }
 
             if (dt > constants::DT_CAP) {

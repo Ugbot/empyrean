@@ -19,6 +19,7 @@ namespace pyr {
     }
     
     void ConnectionHolder::update() {
+        PYR_LOG_BLOCK("ConnectionHolder::update");
         for (size_t i = 0; i < getConnectionCount(); ++i) {
             Connection* c = getConnection(i);
             

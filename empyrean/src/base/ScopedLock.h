@@ -27,10 +27,12 @@ namespace pyr {
     private:    
         Mutex* _mutex;
     };
-    
-    
+        
+    #define PYR_SYNCHRONIZE_SCOPE(mutex)        \
+        ScopedLock PYR_UNIQUE_NAME()(mutex)
+        
     #define PYR_SYNCHRONIZED(mutex, block) {    \
-        ScopedLock PYR_UNIQUE_NAME()(mutex);    \
+        PYR_SYNCHRONIZE_SCOPE(mutex);           \
         block                                   \
     }
 
