@@ -13,7 +13,8 @@ namespace pyr {
     MenuState::MenuState() {
         showPointer();
 
-        phui::PicturePtr background = new phui::Picture("images/title/title_composite.tga");
+        phui::PicturePtr background = new phui::Picture(
+	    "images/title/title_composite.tga");
         background->setPositionAndSize(0, 0, 1024, 768);
         background->add(new MainMenuWindow(this));
         

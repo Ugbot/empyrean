@@ -54,6 +54,7 @@ namespace pyr {
         void inheritLevel();
         void setLevel(LogLevel level);
         
+	void clearAllWriters();
         void addWriter(const LogWriterPtr& writer);
         void removeWriter(const LogWriterPtr& writer);
         
@@ -145,10 +146,11 @@ namespace pyr {
         string _name;
     };
 
-    #define PYR_LOG_SCOPE(logger, level, name) ::pyr::LogScope PYR_UNIQUE_NAME()(logger, level, name);
+    #define PYR_LOG_SCOPE(logger, level, name) \
+	::pyr::LogScope PYR_UNIQUE_NAME()(logger, level, name);
     
     
-    void initializeLog(const string& configFile);
+    void initializeLog(const string& logFile, const string& configFile);
 
 };
 

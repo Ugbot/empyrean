@@ -9,7 +9,10 @@ namespace pyr {
 
     bool Editor::OnInit() {
         PYR_EXCEPTION_TRAP({
-            initializeLog(getStartDirectory(argc, argv) + "/editor.log.config");
+	    string startDirectory = getStartDirectory(argc, argv);
+            initializeLog(
+		startDirectory + "/editor.log",
+		startDirectory + "/editor.log.config");
         
             setStartDirectory(argc, argv);
         

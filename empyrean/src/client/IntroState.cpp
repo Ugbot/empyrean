@@ -10,9 +10,9 @@ namespace pyr {
 
     class MenuState;
 
-    IntroState::IntroState()
-        : _image(Texture::create("images/intro.tga"))
-    {
+    IntroState::IntroState() 
+    : _image(Texture::create("images/intro.tga")) {
+	showPointer();
         the<AudioSystem>().playMusic("music/minorTune.mp3");
     }
 

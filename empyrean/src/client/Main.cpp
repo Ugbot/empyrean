@@ -155,7 +155,10 @@ namespace pyr {
     }
 
     void runClient(int argc, char* argv[]) {
-        initializeLog(getStartDirectory(argc, argv) + "/client.log.config");
+	string startDirectory = getStartDirectory(argc, argv);
+        initializeLog(
+	    startDirectory + "/client.log",
+	    startDirectory + "/client.log.config");
 
         // Set start directory.
         setStartDirectory(argc, argv);

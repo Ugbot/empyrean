@@ -53,6 +53,8 @@ namespace pyr {
     void Application::draw() {
         PYR_PROFILE_BLOCK("Application::draw");
 
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
         if (_currentState) {
             _currentState->draw();
 

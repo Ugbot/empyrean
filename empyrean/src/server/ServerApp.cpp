@@ -23,7 +23,10 @@ namespace pyr {
 
     bool ServerApp::OnInit() {
         PYR_EXCEPTION_TRAP({
-            initializeLog(getStartDirectory(argc, argv) + "/server.log.config");
+	    string startDirectory = getStartDirectory(argc, argv);
+            initializeLog(
+		startDirectory + "/server.log",
+		startDirectory + "/server.log.config");
 
             _startDirectory = getCurrentDirectory();
             setStartDirectory(argc, argv);

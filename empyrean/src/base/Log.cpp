@@ -1,11 +1,13 @@
 #include <iostream>
 #include "Log.h"
+#include "ScopedPtr.h"
 #include "ThreadStorage.h"
+#include "XMLParser.h"
 
 
 namespace pyr {
 
-    const LogLevel DefaultLevel = INFO;
+    const LogLevel DefaultLevel = WARN;
 
     // Store the current indentation per-thread.  Otherwise threads mess with each other.
     const size_t INDENT_SIZE = 2;
@@ -91,6 +93,10 @@ namespace pyr {
         updateActualLevel();
     }
 
+    void Logger::clearAllWriters() {
+	_writers.clear();
+    }
+
     void Logger::addWriter(const LogWriterPtr& writer) {
         _writers.insert(writer);
     }
@@ -152,7 +158,75 @@ namespace pyr {
     }
 
 
-    void initializeLog(const string& configFile) {
+
+    namespace {
+	Logger& _logLogger = Logger::get("pyr.Log");
+	typedef std::map<string, LogWriterPtr> WriterMap;
+
+	void setLoggerLevel(Logger& logger, const string& level) {
+	    if (level == "ALL")          logger.setLevel(ALL);
+	    else if (level == "VERBOSE") logger.setLevel(VERBOSE);
+	    else if (level == "INFO")    logger.setLevel(INFO);
+	    else if (level == "WARN")    logger.setLevel(WARN);
+	    else if (level == "ERROR")   logger.setLevel(ERROR);
+	    else if (level == "FATAL")   logger.setLevel(FATAL);
+	    else if (level == "OFF")     logger.setLevel(OFF);
+	    else PYR_LOG(_logLogger, ERROR) << "Invalid logger level: " << level;
+	}
+
+	void setLoggerWriters(Logger& logger, const WriterMap& map,
+			      const string& writers
+	) {
+	}
+    }
+
+    void initializeLog(const string& logFile, const string& configFile) {
+	try {
+	    WriterMap writerMap;
+	    
+	    ScopedPtr<XMLNode> root(parseXMLFile(configFile));
+	    if (root->getName() != "LogConfiguration") {
+		PYR_LOG(_logLogger, ERROR) << "Invalid log configuration file root node name: " << root->getName();
+	    }
+	    for (size_t i = 0; i < root->getChildCount(); ++i) {
+		XMLNode* child = root->getChild(i);
+
+		// Is it an appender specification?
+		if (child->getName() == "Writer") {
+		    
+		}
+
+		// Is it a logger specification?
+		if (child->getName() == "Logger") {
+		    if (child->hasAttr("name")) {
+			Logger& logger = Logger::get(child->getAttr("name"));
+			if (child->hasAttr("level")) {
+			    setLoggerLevel(logger, child->getAttr("level"));
+			}
+			if (child->hasAttr("writers")) {
+			    setLoggerWriters(logger, writerMap, child->getAttr("appenders"));
+			}
+		    } else {
+			_logLogger.log(ERROR, "Logger node has no name attribute.");
+		    }
+		} else if (child->getName() == "Writer") {
+		    
+		}
+	    }
+	}
+	catch (const XMLParseError&) {
+	    // File didn't exist or was invalid XML, so set up a reasonable
+	    // configuration.
+	    FILE* file = fopen(logFile.c_str(), "w");
+	    if (!file) {
+		PYR_LOG(_logLogger, ERROR) << "Error opening log file: "
+					   << logFile;
+	    } else {
+		Logger& logger = Logger::get("");
+		logger.clearAllWriters();
+		logger.addWriter(new FileWriter(file));
+	    }
+	}
     }
 
 #if 0
