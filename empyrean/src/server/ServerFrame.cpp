@@ -22,6 +22,10 @@ namespace pyr {
         createContents();
         createStatusBar();
     }
+
+    void ServerFrame::log(const std::string& s) {
+        _contents->AppendToPage(("<p>" + s + "</p>").c_str());
+    }
     
     void ServerFrame::createMenu() {
         wxMenu* serverMenu = new wxMenu;
@@ -44,9 +48,10 @@ namespace pyr {
     }
     
     void ServerFrame::onStart() {
-        
+        log("Starting...");
     }
     
     void ServerFrame::onStop() {
+        log("Stopping...");
     }
 }

@@ -4,12 +4,25 @@
 
 namespace pyr {
 
+    Server::Server() {
+        _frame = 0;
+    }
+
     bool Server::OnInit() {
         wxInitAllImageHandlers();
-        
-        ServerFrame* frame = new ServerFrame();
-        frame->Show(true);
+
+        _frame = new ServerFrame();
+        _frame->Show(true);
+
+        log("Welcome to Empyrean");
+
         return true;
+    }
+
+    void Server::log(const std::string& s) {
+        if (_frame) {
+            _frame->log(s);
+        }
     }
 
 }
