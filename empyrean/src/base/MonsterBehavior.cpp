@@ -44,7 +44,7 @@ namespace pyr {
         pos += vel * dt;
         vel[1] += constants::GRAVITY * dt;           // gravity
 
-        const float mu = 0.8;
+        const float mu = 0.8f;
         const float acc = mu * constants::GRAVITY;
 
         if(vel[0] > 0) {
