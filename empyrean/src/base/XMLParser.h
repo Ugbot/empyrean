@@ -87,6 +87,10 @@ namespace pyr {
         XMLNode* _lastTextNode;
     };
 
+    inline XMLNode* parseXMLFile(const std::string& filename) {
+        return XMLParser().parse(filename);
+    }
+
 }
 
 

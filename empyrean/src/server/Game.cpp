@@ -1,18 +1,23 @@
 #include <stdexcept>
 #include "Connection.h"
 #include "Game.h"
+#include "MapLoader.h"
 #include "PacketTypes.h"
 #include "ServerEntity.h"
-#include "OBJLoader.h"
 
 namespace pyr {
 
     Game::Game(const std::string& name, const std::string& password) {
         _name = name;
         _password = password;
-        _map = loadOBJFile("maps/map1.obj");
+        _map = loadMap("maps/map1.obj");
         if (!_map) {
             throw std::runtime_error("Loading maps/map1.obj failed");
+        }
+
+        MapElementPtr start = _map->findElementByName("start");
+        if (start) {
+            _startPosition = start->pos;
         }
     }
     
@@ -52,6 +57,9 @@ namespace pyr {
     }
     
     void Game::addEntity(ServerEntity* entity) {
+        // Not sure if this is the right place to do this.
+        entity->setPos(_startPosition);
+
         _entities.push_back(entity);
     }
     

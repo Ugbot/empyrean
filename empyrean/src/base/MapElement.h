@@ -2,6 +2,7 @@
 #define PYR_MAP_ELEMENT_H
 
 
+#include <map>
 #include <string>
 #include <vector>
 #include "Material.h"
@@ -24,9 +25,15 @@ namespace pyr {
         ~MapElement() {}
 
     public:
-        std::string name;
+        typedef std::map<std::string, std::string> PropertyMap;
 
+        std::string name;
         Vec2f pos;
+        PropertyMap properties;
+
+        void addProperty(const std::string& k, const std::string& v) {
+            properties[k] = v;
+        }
 
         /**
          * Allows more convenient syntax when creating MapVisitors on
@@ -70,10 +77,7 @@ namespace pyr {
     typedef RefPtr<GeometryElement> GeometryElementPtr;
 
 
-    /**
-     * This statement may be false: Render state changing nodes should
-     * inherit GroupElement.
-     */
+    /// A MapElement with children.
     class GroupElement : public MapElement {
     public:
         std::vector<MapElementPtr> children;
@@ -81,6 +85,14 @@ namespace pyr {
         virtual void handleVisitor(MapVisitor& v);
     };
     typedef RefPtr<GroupElement> GroupElementPtr;
+
+
+    /// A MapElement that is just a placeholder or dummy.
+    class DummyElement : public MapElement {
+    public:
+        virtual void handleVisitor(MapVisitor& v);
+    };
+    typedef RefPtr<DummyElement> DummyElementPtr;
 
 }
 

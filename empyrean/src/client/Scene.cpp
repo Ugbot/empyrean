@@ -1,8 +1,8 @@
 #include <stdexcept>
 #include "Entity.h"
 #include "GLUtility.h"
+#include "MapLoader.h"
 #include "MapRenderer.h"
-#include "OBJLoader.h"
 #include "Renderer.h"
 #include "Scene.h"
 #include "Texture.h"
@@ -15,7 +15,7 @@ namespace pyr {
     Scene::Scene() {
         _focus = 0;
         _backdrop = Texture::create("images/stars.tga");
-        _map = loadOBJFile("maps/map1.obj");
+        _map = loadMap("maps/map1.obj");
         if (!_map) {
             throw std::runtime_error("Loading maps/map1.obj failed");
         }

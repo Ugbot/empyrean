@@ -45,6 +45,7 @@ namespace pyr {
         std::vector<ServerEntity*> _entities;
     
         ScopedPtr<Map> _map;
+        Vec2f _startPosition;
 
         UIDGenerator<u16> _idGenerator;
     };

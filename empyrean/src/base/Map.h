@@ -29,8 +29,11 @@ namespace pyr {
         void handleVisitor(MapVisitor& visitor) const {
             getRoot()->handleVisitor(visitor);
         }
+
+        MapElementPtr findElementByName(const std::string& name) const;
         
     private:
+
         // The root should always be a GroupElement.  It's rather convenient
         // to be able to assume that the root has children.
         GroupElementPtr _root;

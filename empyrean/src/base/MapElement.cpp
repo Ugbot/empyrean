@@ -11,4 +11,8 @@ namespace pyr {
     void GroupElement::handleVisitor(MapVisitor& v) {
         v.visitGroup(this);
     }
+
+    void DummyElement::handleVisitor(MapVisitor& v) {
+        v.visitDummy(this);
+    }
 }

@@ -2,7 +2,7 @@ Import('*')
 
 Install(env, Split("""
     CLOUD2.JPG
-    map1.meta
     map1.mtl
     map1.obj
+    map1.obj.meta
 """))

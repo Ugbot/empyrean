@@ -3,13 +3,15 @@
 
 namespace pyr {
 
-    class GroupElement;
+    class DummyElement;
     class GeometryElement;
+    class GroupElement;
 
     class MapVisitor {
     public:
-        virtual void visitGroup(GroupElement* e) = 0;
-        virtual void visitGeometry(GeometryElement* e) = 0;
+        virtual void visitDummy(DummyElement* e) { }
+        virtual void visitGeometry(GeometryElement* e) { };
+        virtual void visitGroup(GroupElement* e) { };
     };
 
 }

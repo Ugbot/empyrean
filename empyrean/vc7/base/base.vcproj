@@ -182,6 +182,9 @@
 				RelativePath="..\..\src\base\LokiTypeInfo.h">
 			</File>
 			<File
+				RelativePath="..\..\src\base\Map.cpp">
+			</File>
+			<File
 				RelativePath="..\..\src\base\Map.h">
 			</File>
 			<File
@@ -189,6 +192,12 @@
 			</File>
 			<File
 				RelativePath="..\..\src\base\MapElement.h">
+			</File>
+			<File
+				RelativePath="..\..\src\base\MapLoader.cpp">
+			</File>
+			<File
+				RelativePath="..\..\src\base\MapLoader.h">
 			</File>
 			<File
 				RelativePath="..\..\src\base\MapRenderer.cpp">
