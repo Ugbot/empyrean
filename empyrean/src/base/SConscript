@@ -1,6 +1,7 @@
 Import('base_env TOOLS')
 
 SOURCES = Split("""
+    ArmorPool.cpp
     ByteBuffer.cpp
     Canvas.cpp
     Collider.cpp
@@ -27,6 +28,7 @@ SOURCES = Split("""
     Texture.cpp
     Thread.cpp
     Utility.cpp
+    WeaponPool.cpp
     WriterThread.cpp
     XMLParser.cpp
 """)
