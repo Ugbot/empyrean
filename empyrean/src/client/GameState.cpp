@@ -111,10 +111,9 @@ namespace pyr {
         
         // jump!
         if (_inputJump->getDelta() > gmtl::GMTL_EPSILON) {
-           Entity* entity = the<Scene>().getFocus();
-
-            if(entity) {
-                if(entity->jump()) {
+            GameEntity* gentity = dynamic_cast<GameEntity*>(the<Scene>().getFocus());
+            if(gentity) {
+                if(gentity->jump()) {
                     sc.sendEvent(PE_JUMP);
                 }
             }
@@ -122,7 +121,12 @@ namespace pyr {
         
         // attack!
         if (_inputAttack->getDelta() > gmtl::GMTL_EPSILON) {
-            sc.sendEvent(PE_ATTACK);
+            GameEntity* gentity = dynamic_cast<GameEntity*>(the<Scene>().getFocus());
+            if(gentity) {
+                if(gentity->attack()) {
+                    sc.sendEvent(PE_ATTACK);
+                }
+            }
         }
 
         // Input with Joystick
@@ -155,9 +159,9 @@ namespace pyr {
        
         // jump!
         if (_inputJoyJump->getDelta() > gmtl::GMTL_EPSILON) {
-            Entity* entity = the<Scene>().getFocus();
-            if(entity) {
-                if(entity->jump()) {
+            GameEntity* gentity = dynamic_cast<GameEntity*>(the<Scene>().getFocus());
+            if(gentity) {
+                if(gentity->jump()) {
                     sc.sendEvent(PE_JUMP);
                 }
             }
@@ -165,7 +169,12 @@ namespace pyr {
         
         // attack!
         if (_inputJoyAttack->getDelta() > gmtl::GMTL_EPSILON) {
-            sc.sendEvent(PE_ATTACK);
+            GameEntity* gentity = dynamic_cast<GameEntity*>(the<Scene>().getFocus());
+            if(gentity) {
+                if(gentity->attack()) {
+                    sc.sendEvent(PE_ATTACK);
+                }
+            }
         }
 
         // Start

@@ -14,6 +14,8 @@
 #include "VecMath.h"
 #include "Log.h"
 
+const int FALLING_SPEED = 0;
+
 namespace pyr {
 
     GameEntity::GameEntity(Model* model, Renderer* renderer) {
@@ -27,7 +29,9 @@ namespace pyr {
         _currentVitality = 10; //0;
         _maxVitality = 100; //0;
         _jumpStart = false;
-
+        _attackStart = false;
+        getHeight() = 1.9f;
+        getWidth() = 0.3f;
         startStandState();
     }
 
@@ -102,23 +106,23 @@ namespace pyr {
     void GameEntity::update(float dt, const Map* terrain) {
         // Provide client-side estimation of server physics model.
         Vec2f origPos = getPos();
-
+        
         getPos() += getVel() * dt;
         getVel()[1] -= 9.81f * dt;             // gravity
         if(getVel()[1] < -56) {                // terminal velocity
             getVel()[1] = -56;
         }
-        float height = 1.9f;
-        float width = 0.3f;
-
+       
         // For testing to see if jumping is done
-        Vec2f precollide = getPos();
+        Vec2f precollideposition = getPos();
+        Vec2f precollidevelocity = getVel();
 
-        _lastCD = collide(dt, origPos, getPos(), getVel(), width, height, terrain);
+        _lastCD = collide(dt, origPos, getPos(), getVel(), getWidth(), getHeight(), terrain);
 
-        // If you are higher than you once were so you were forced up.  This generally means that you
-        // hit a surface below you so therefore reset jumping
-        if((precollide[1]-getPos()[1]) < 0 && getVel()[1] == 0) {
+        // If you are higher than you once were so you were forced up and you were falling 
+        // (before the collision) This means that you hit a surface below you so therefore 
+        // reset jumping
+        if((precollideposition[1]-getPos()[1]) < 0 && precollidevelocity[1] < FALLING_SPEED) {
              getJumping() = 0;
         }
 
@@ -128,23 +132,134 @@ namespace pyr {
         _model->update(dt);
     }
 
+    // Action Functions
     bool GameEntity::jump() {
          if(getJumping() < 2) {
             getJumping()++;
             getVel()[1] = 8;
-            startJumpAction();
+            _jumpStart = true;
             return true;
         }
         return false;
     }
-    
-    void GameEntity::startJumpAction() {
-        _jumpStart = true;   
+        
+    bool GameEntity::attack() {
+        if(_attackStart) {
+            return false; // already attacking can't attack right now
+        }
+        
+        _attackStart = true;
+        return true;
     }
 
-    // Utitlity phase out state function
-    void GameEntity::phaseOutState(State name) {
+    // Utitlity Animation functions
+    void GameEntity::phaseOutAnimation(Animation name) {
         _model->getModel().getMixer()->clearCycle((int) name, 0.0f);
+    }
+
+    void GameEntity::correctDirection(float xvel) {
+        if (xvel > 0) {
+            _direction = 90;
+        } else if (xvel < 0) {
+            _direction = -90;
+        }
+    }
+
+    // Attack state transition in
+    void GameEntity::startAttackState() {
+        _model->getModel().getMixer()->blendCycle(ATTACKING, 1.0f, 10.0f);
+        _attackingStartTime = 0;
+        _state = &GameEntity::updateAttackState;
+    }
+
+    // Attack state
+    //
+    // Entered From: Jump Start, Jumping, Walking, Standing
+    // Transitions to: Jump Start, Jumping, Walking, Standing
+    // Purpose: Attacking animation
+    //
+    void GameEntity::updateAttackState(float dt) {
+        float xvel = getVel()[0];
+        if(_attackingStartTime > 0.5) {
+            _attackStart = false;
+            phaseOutAnimation(ATTACKING);
+            if (_jumpStart) {
+                startJumpStartState();
+            }
+            else if(getJumping() > 0) {
+                startJumpState();
+            }
+            else if (gmtl::Math::abs(xvel) > gmtl::GMTL_EPSILON) {
+                startWalkState();
+            }
+            else {
+                startStandState();
+            }
+        }
+        correctDirection(xvel);
+    }
+    
+    // Jump state transition in
+    void GameEntity::startJumpState() {
+        _model->getModel().getMixer()->blendCycle(JUMPING, 1.0f, 10.0f);
+        _jumpStart = false;
+        _state = &GameEntity::updateJumpState;
+    }
+
+    // Jump state
+    //
+    // Entered From: Jump Start State
+    // Transitions to: Walking, Standing, Attacking
+    // Purpose: Main Part of Jump Animation
+    //
+    void GameEntity::updateJumpState(float dt) {
+        float xvel = getVel()[0];
+        if(_attackStart) {
+            phaseOutAnimation(JUMPING);
+            startAttackState();
+        }
+        else if(_jumpStart) {
+           phaseOutAnimation(JUMPING);
+           startJumpStartState();
+        }
+        else if(getJumping() == 0) {
+            phaseOutAnimation(JUMPING);
+            if (gmtl::Math::abs(xvel) > gmtl::GMTL_EPSILON) {
+                startWalkState();
+            }
+            else {            
+                startStandState();
+            }
+        }
+        correctDirection(xvel);
+    }
+
+    // Jump start state transition in
+    void GameEntity::startJumpStartState() {
+        _model->getModel().getMixer()->blendCycle(JUMPSTART, 1.0f, 10.0f);
+        _jumpStart = false;
+        _state = &GameEntity::updateJumpStartState;
+        _jumpStartTime = 0;
+    }
+
+    // Jump start state
+    //
+    // Entered From: Walking and Standing
+    // Transitions to: Jump state after initial jump animation and Attacking
+    // Purpose: Start the jump animation
+    //
+    void GameEntity::updateJumpStartState(float dt) {
+        float xvel = getVel()[0];
+        _jumpStartTime += dt;
+        if(_attackStart) {
+            phaseOutAnimation(JUMPSTART);
+            startAttackState();
+        }
+        else if(_jumpStartTime > 0.5) {
+            phaseOutAnimation(JUMPSTART);
+            startJumpState();
+        }
+        correctDirection(xvel);
     }
 
     // Stand state transition in
@@ -154,41 +269,24 @@ namespace pyr {
     }
     
     // Stand state
+    //
+    // Entered From: Walking and Jumping
+    // Transitions to: Walking and Jump Start and Attacking
+    // Purpose: Idle animation
+    //
     void GameEntity::updateStandState(float dt) {
         float xvel = getVel()[0];
-        if (_jumpStart) {
-            phaseOutState(STANDING);
-            startJumpState();
+        if(_attackStart) {
+            phaseOutAnimation(STANDING);
+            startAttackState();
+        }
+        else if (_jumpStart) {
+            phaseOutAnimation(STANDING);
+            startJumpStartState();
         }
         else if (gmtl::Math::abs(xvel) > gmtl::GMTL_EPSILON) {
-            phaseOutState(STANDING);
+            phaseOutAnimation(STANDING);
             startWalkState();
-        }
-    }
-
-    // Jump state transition in
-    void GameEntity::startJumpState() {
-        _model->getModel().getMixer()->blendCycle(JUMPSTART, 1.0f, 10.0f);
-        _jumpStart = false;
-        _state = &GameEntity::updateJumpState;
-    }
-
-    // Jump state
-    void GameEntity::updateJumpState(float dt) {
-        float xvel = getVel()[0];
-        if(getJumping() == 0) {
-            phaseOutState(JUMPSTART);
-            if (gmtl::Math::abs(xvel) > gmtl::GMTL_EPSILON) {
-                startWalkState();
-            }
-            else {            
-                startStandState();
-            }
-        }
-        else if (xvel > 0) {
-            _direction = 90;
-        } else if (xvel < 0) {
-            _direction = -90;
         }
     }
 
@@ -199,19 +297,25 @@ namespace pyr {
     }
 
     // Walk state
+    //
+    // Entered From: Jump State and Stand state
+    // Transitions to: Standing and Jump Start and Attacking
+    // Purpose: Walking animation
+    //
     void GameEntity::updateWalkState(float dt) {
         float xvel = getVel()[0];
-        if (_jumpStart) {
-            phaseOutState(WALKING);
-            startJumpState();
-        } else if (gmtl::Math::abs(xvel) < gmtl::GMTL_EPSILON) {
-            phaseOutState(WALKING);
-            startStandState();
-        } else if (xvel > 0) {
-            _direction = 90;
-        } else {
-            _direction = -90;
+        if(_attackStart) {
+            phaseOutAnimation(WALKING);
+            startAttackState();
         }
+        else if (_jumpStart) {
+            phaseOutAnimation(WALKING);
+            startJumpStartState();
+        } else if (gmtl::Math::abs(xvel) < gmtl::GMTL_EPSILON) {
+            phaseOutAnimation(WALKING);
+            startStandState();
+        } 
+        correctDirection(xvel);
     }
 
     void GameEntity::getVitalityUpdate(int& current, int& max) {

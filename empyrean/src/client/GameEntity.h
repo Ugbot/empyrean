@@ -27,12 +27,12 @@ namespace pyr {
     class GameEntity : public Entity {
     public:
 
-        enum State {
-            WALKING,
-            STANDING,
-            JUMPSTART,
+        enum Animation {
+            ATTACKING,
             JUMPING,
-            ATTACKING
+            JUMPSTART,
+            STANDING,
+            WALKING     
         };
 
         GameEntity(Model* model, Renderer* renderer);
@@ -47,19 +47,35 @@ namespace pyr {
         void decrEther(int decr);
         void incrEther(int incr);
  
-        bool jump();
-        void startJumpAction();
+        float& getHeight()                    { return _height; }
+        const float& getHeight()     const    { return _height; }
 
+        float& getWidth()                    { return _width; }
+        const float& getWidth()     const    { return _width; }
+        
+        u16& getJumping()                    { return _jumping; }
+        const u16& getJumping()     const    { return _jumping; }
+
+        bool jump();
+        bool attack();
+        
     private:
         typedef void (GameEntity::*StateHandler)(float dt);
         StateHandler _state;
 
         void changeState(StateHandler* newstate);
 
-        void phaseOutState(State name);
+        void phaseOutAnimation(Animation name);
+        void correctDirection(float xvel);
+
+        void startAttackState();
+        void updateAttackState(float dt);
 
         void startJumpState();
         void updateJumpState(float dt);
+
+        void startJumpStartState();
+        void updateJumpStartState(float dt);
 
         void startStandState();
         void updateStandState(float dt);
@@ -74,13 +90,26 @@ namespace pyr {
         /// Data from last collision detection test.  Used for debug drawing.
         CollisionData _lastCD;
 
+        // Jumping animation information
+        bool _jumpStart;
+        float _jumpStartTime;
+
+        // Character Information
         float _direction;
+        Zeroed<u16> _jumping;
         int _maxVitality;
         int _currentVitality;
         int _maxEther;
         int _currentEther;
-        bool _jumpStart;
-        State _currentState;
+        
+        // Height and Width of Entity used for collision
+        Zeroed<float> _height; 
+        Zeroed<float> _width; 
+
+        // Attacking information
+        bool _attackStart;
+        float _attackingStartTime;
+        
     };
 
 }
