@@ -114,7 +114,7 @@
 				RelativePath="..\..\src\server\ConnectionThread.cpp">
 			</File>
 			<File
-				RelativePath="ConnectionThread.h">
+				RelativePath="..\..\src\server\ConnectionThread.h">
 			</File>
 			<File
 				RelativePath="..\..\src\server\Main.cpp">

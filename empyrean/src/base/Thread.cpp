@@ -23,9 +23,9 @@ namespace pyr {
         catch (const std::exception& e) {
             error("Caught exception: " + std::string(e.what()));
         }
-        catch (...) {
-            error("Caught unknown exception");
-        }
+//        catch (...) {
+//            error("Caught unknown exception");
+//        }
         return EXIT_FAILURE;
     }
 

@@ -129,9 +129,9 @@ int main() {
         pyr::error(e.what());
         pyr::Profiler::dump();
     }
-    catch (...) {
-        pyr::error("Unknown exception");
-    }
+//    catch (...) {
+//        pyr::error("Unknown exception");
+//    }
     
     pyr::Profiler::dump();
     return EXIT_FAILURE;

@@ -55,9 +55,9 @@ int main(int /*argc*/, char* /*argv*/[]) {
     catch (const std::exception& e) {
         pyr::error("Caught exception: " + std::string(e.what()));
     }
-    catch (...) {
-        pyr::error("Caught unknown exception");
-    }
+//    catch (...) {
+//        pyr::error("Caught unknown exception");
+//    }
     
     return EXIT_FAILURE;
 }
