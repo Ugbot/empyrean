@@ -10,16 +10,14 @@ namespace pyr {
 
     World::~World() {
         clearConnections();
-    
-        while (!_games.empty()) {
-            delete _games[0];
-            _games.erase(_games.begin());
-        }
+        
+        for_each(_games.begin(), _games.end(), delete_function<Game>);
+        _games.clear();
     }
-    
+
     void World::update(float dt) {
         ConnectionHolder::update();
-    
+
         // update games
         for (unsigned i = 0; i < _games.size(); ++i) {
             Game* g = _games[i];

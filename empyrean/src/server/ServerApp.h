@@ -1,5 +1,5 @@
-#ifndef PYR_SERVER_H
-#define PYR_SERVER_H
+#ifndef PYR_SERVER_APP_H
+#define PYR_SERVER_APP_H
 
 
 #include <string>
@@ -13,22 +13,23 @@ namespace pyr {
     class ServerFrame;
     class Thread;
 
-    class Server : public wxApp {
+    /// Main application class for server.
+    class ServerApp : public wxApp {
     public:
-        Server();
+        ServerApp();
 
         bool OnInit();
         int OnExit();
-        
+
         void log(const std::string& s);
-        
+
         bool isRunning();
         void start();
         void stop();
-        
+
     private:
         std::string getDatabaseFilename();
-    
+
         ServerFrame* _frame;
         ScopedPtr<Thread> _serverThread;
     };
@@ -36,7 +37,7 @@ namespace pyr {
 }
 
 
-DECLARE_APP(pyr::Server)
+DECLARE_APP(pyr::ServerApp)
 
 
 #endif

@@ -1,4 +1,4 @@
-#include "Server.h"
+#include "ServerApp.h"
 
 
-IMPLEMENT_APP(pyr::Server)
+IMPLEMENT_APP(pyr::ServerApp)

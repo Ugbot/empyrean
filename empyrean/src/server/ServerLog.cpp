@@ -1,7 +1,6 @@
-#include "ServerLog.h"
-#include "Server.h"
 #include "Log.h"
-
+#include "ServerApp.h"
+#include "ServerLog.h"
 
 namespace pyr {
 

@@ -4,7 +4,7 @@
 #include "ServerLog.h"
 #include "LogEvent.h"
 #include "Platform.h"
-#include "Server.h"
+#include "ServerApp.h"
 #include "ServerFrame.h"
 #include "ServerThread.h"
 #include "Log.h"
@@ -12,7 +12,7 @@
 
 namespace pyr {
 
-    Server::Server() {
+    ServerApp::ServerApp() {
         // Give the UI thread high priority so the world update thread
         // and connections don't starve it.
         PR_SetThreadPriority(PR_GetCurrentThread(), PR_PRIORITY_HIGH);
@@ -21,7 +21,7 @@ namespace pyr {
         _serverThread = 0;
     }
 
-    bool Server::OnInit() {
+    bool ServerApp::OnInit() {
         PYR_BEGIN_EXCEPTION_TRAP()
         
             // Prepare the log file
@@ -59,7 +59,7 @@ namespace pyr {
         return false;
     }
     
-    int Server::OnExit() {
+    int ServerApp::OnExit() {
         PYR_BEGIN_EXCEPTION_TRAP()
             setStartDirectory(argc, argv);
             _frame = 0;
@@ -69,7 +69,7 @@ namespace pyr {
         return 0;
     }
     
-    void Server::log(const std::string& s) {
+    void ServerApp::log(const std::string& s) {
         if (_frame) {
             // Use the wxWindows event system so logging can be used from
             // multiple threads.
@@ -78,7 +78,7 @@ namespace pyr {
         }
     }
 
-    bool Server::isRunning() {
+    bool ServerApp::isRunning() {
         if (_serverThread) {
             if (_serverThread->isRunning()) {
                 return true;
@@ -91,19 +91,19 @@ namespace pyr {
         }
     }
     
-    void Server::start() {
+    void ServerApp::start() {
         PYR_SERVER_LOG() << "Starting...";
         _serverThread = new Thread(new ServerThread());
         PYR_SERVER_LOG() << "Started";
     }
     
-    void Server::stop() {
+    void ServerApp::stop() {
         PYR_SERVER_LOG() << "Stopping...";
         _serverThread = 0;
         PYR_SERVER_LOG() << "Stopped";
     }
     
-    std::string Server::getDatabaseFilename() {
+    std::string ServerApp::getDatabaseFilename() {
         return "database.xml";
     }
     

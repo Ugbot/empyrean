@@ -10,6 +10,7 @@ namespace pyr {
 
     class LogEvent;
 
+    /// Main, top-level window for server.
     class ServerFrame : public wxFrame {
     public:
         ServerFrame();

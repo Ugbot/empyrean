@@ -2,7 +2,7 @@
 #include "Error.h"
 #include "Log.h"
 #include "LogEvent.h"
-#include "Server.h"
+#include "ServerApp.h"
 #include "ServerFrame.h"
 
 
@@ -60,23 +60,23 @@ namespace pyr {
         databaseMenu->Append(ID_DATABASE_ACCOUNTS,   "&Accounts...");
         databaseMenu->Append(ID_DATABASE_CHARACTERS, "&Characters...");
         databaseMenu->Append(ID_DATABASE_GAMES,      "&Games...");
-    
+
         wxMenuBar* menuBar = new wxMenuBar;
         menuBar->Append(serverMenu,   "&Server");
         menuBar->Append(databaseMenu, "&Database");
         SetMenuBar(menuBar);
     }
-    
+
     void ServerFrame::createContents() {
         _contents = new wxHtmlWindow(
             this, -1, wxDefaultPosition, wxDefaultSize,
             wxHW_SCROLLBAR_AUTO | wxSUNKEN_BORDER);
     }
-    
+
     void ServerFrame::createStatusBar() {
         CreateStatusBar();
     }
-    
+
     void ServerFrame::onClose(wxCloseEvent& evt) {
         PYR_BEGIN_EXCEPTION_TRAP()
             the<Configuration>().windowPosition = GetPosition();
@@ -84,19 +84,19 @@ namespace pyr {
             Destroy();
         PYR_END_EXCEPTION_TRAP()
     }
-    
+
     void ServerFrame::onStart() {
         PYR_BEGIN_EXCEPTION_TRAP()
             wxGetApp().start();
         PYR_END_EXCEPTION_TRAP()
     }
-    
+
     void ServerFrame::onStop() {
         PYR_BEGIN_EXCEPTION_TRAP()
             wxGetApp().stop();
         PYR_END_EXCEPTION_TRAP()
     }
-    
+
     void ServerFrame::onRestart() {
         onStop();
         onStart();

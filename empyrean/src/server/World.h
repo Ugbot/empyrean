@@ -17,7 +17,11 @@ namespace pyr {
     class Packet;
     class SayPacket;
 
-    /// @note This class is designed to run within one thread.
+    /**
+     * Represents the actual server and server-logic.
+     *
+     * @note This class is designed to run within one thread.
+     */
     class World : public ConnectionHolder {
     public:
         ~World();
