@@ -115,16 +115,15 @@ namespace pyr {
         T* _array;
     };
     
-    template <typename T>
-        class RefPtr;
+    template <typename T> class RefPtr;
     
     class RefCounted {
-        template<typename T>
-            friend class RefPtr;
+        template<typename T> friend class RefPtr;
+        
     public:
-        RefCounted()
-            : _refCount (0)
-        {}
+        RefCounted() {
+            _refCount = 0;
+        }
 
     protected:
         /**
@@ -135,7 +134,8 @@ namespace pyr {
          * empty, protected destructor as well.
          */
         virtual ~RefCounted() { }
-
+        
+    private:
         /**
          * Add a reference to the internal reference count.
          */
