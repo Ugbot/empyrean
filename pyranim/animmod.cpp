@@ -59,29 +59,6 @@ private:
     StatusListenerImpl& operator=(const StatusListenerImpl &);
 };
 
-class ToolListenerImpl : public ToolListener {
-public:
-    ToolListenerImpl(PyObject *obj) {
-        m_obj = obj;
-        Py_INCREF(m_obj);
-    }
-    virtual ~ToolListenerImpl() {
-        Py_DECREF(m_obj);
-    }
-    virtual void notify(int newTool) {
-        if(PyObject_CallFunction(m_obj, "i", newTool) == 0) {
-            printf("ToolListenerImpl CallFunction failed.\n");
-            fflush(stdout);
-        }
-    }
-protected:
-    PyObject *m_obj;
-private:
-    // Not implemented:
-    ToolListenerImpl(const ToolListenerImpl &);
-    ToolListenerImpl& operator=(const ToolListenerImpl &);
-};
-
 
 /*** Model declarations. */
 
@@ -172,7 +149,6 @@ static PyObject *s_view_addViewListener     (PyObject *self, PyObject *args);
 //static PyObject *s_view_removeViewListener  (PyObject *self, PyObject *args);
 static PyObject *s_view_addStatusListener   (PyObject *self, PyObject *args);
 //static PyObject *s_view_removeStatusListener(PyObject *self, PyObject *args);
-static PyObject *s_view_addToolListener     (PyObject *self, PyObject *args);
 static PyObject *s_view_setCurrent          (PyObject *self, PyObject *args);
 static PyObject *s_view_navMouseDown        (PyObject *self, PyObject *args);
 static PyObject *s_view_navMouseMove        (PyObject *self, PyObject *args);
@@ -180,6 +156,8 @@ static PyObject *s_view_navMouseUp          (PyObject *self, PyObject *args);
 static PyObject *s_view_mouseDown           (PyObject *self, PyObject *args);
 static PyObject *s_view_mouseMove           (PyObject *self, PyObject *args);
 static PyObject *s_view_mouseUp             (PyObject *self, PyObject *args);
+static PyObject *s_view_getToolMode         (PyObject *self, PyObject *args);
+static PyObject *s_view_setToolMode         (PyObject *self, PyObject *args);
 
 struct AnimModView {
     PyObject_HEAD
@@ -215,7 +193,6 @@ static PyMethodDef s_viewMethods[] = {
     //{"removeViewListener", (PyCFunction)s_view_removeViewListener,  MV, ""},
     {"addStatusListener" , (PyCFunction)s_view_addStatusListener,   MV, ""},
     //{"removeViewListener", (PyCFunction)s_view_removeStatusListener,MV, ""},
-    {"addToolListener"   , (PyCFunction)s_view_addToolListener,     MV, ""},
     {"setCurrent"        , (PyCFunction)s_view_setCurrent,          MV, ""},
     {"navMouseDown"      , (PyCFunction)s_view_navMouseDown,        MV, ""},
     {"navMouseMove"      , (PyCFunction)s_view_navMouseMove,        MV, ""},
@@ -223,6 +200,8 @@ static PyMethodDef s_viewMethods[] = {
     {"mouseDown"         , (PyCFunction)s_view_mouseDown,           MV, ""},
     {"mouseMove"         , (PyCFunction)s_view_mouseMove,           MV, ""},
     {"mouseUp"           , (PyCFunction)s_view_mouseUp,             MV, ""},
+    {"getToolMode"       , (PyCFunction)s_view_getToolMode,         MV, ""},
+    {"setToolMode"       , (PyCFunction)s_view_setToolMode,         MV, ""},
 };
 #undef MV
 
@@ -503,6 +482,7 @@ static PyObject *s_view_setPosition       (PyObject *self, PyObject *args) {
         return NULL;
     }
     AnimModView *v = s_castView(self, "self");
+    if(!v) return NULL;
     v->m_view->setPosition(IPoint(posX, posY, posZ));
     Py_INCREF(Py_None);
     return Py_None;
@@ -515,6 +495,7 @@ static PyObject *s_view_setDirection      (PyObject *self, PyObject *args) {
         return NULL;
     }
     AnimModView *v = s_castView(self, "self");
+    if(!v) return NULL;
     v->m_view->setDirection(IVector(dirX, dirY, dirZ));
     Py_INCREF(Py_None);
     return Py_None;
@@ -525,6 +506,7 @@ static PyObject *s_view_initGL            (PyObject *self, PyObject *args) {
         return NULL;
     }
     AnimModView *v = s_castView(self, "self");
+    if(!v) return NULL;
     v->m_view->initGL();
     Py_INCREF(Py_None);
     return Py_None;
@@ -611,22 +593,6 @@ static PyObject *s_view_addStatusListener (PyObject *self, PyObject *args) {
     return Py_None;
 }*/
 
-static PyObject *s_view_addToolListener (PyObject *self, PyObject *args) {
-    PyObject *obj;
-    if(!PyArg_ParseTuple(args, "O:view_addToolListener", &obj)) {
-        return NULL;
-    }
-    if(!PyCallable_Check(obj)) {
-        PyErr_Format(PyExc_ValueError, "listener is not a callable object.");
-        return NULL;
-    }
-    AnimModView *v = s_castView(self, "self");
-    if(!v) return NULL;
-    v->m_view->addToolListener(new ToolListenerImpl(obj));
-    Py_INCREF(Py_None);
-    return Py_None;
-}
-
 static PyObject *s_view_setCurrent        (PyObject *self, PyObject *args) {
     if(!PyArg_ParseTuple(args, ":view_setCurrent")) {
         return NULL;
@@ -710,6 +676,28 @@ static PyObject *s_view_mouseUp           (PyObject *self, PyObject *args) {
     return Py_None;
 }
 
+static PyObject *s_view_getToolMode    (PyObject *self, PyObject *args) {
+    if(!PyArg_ParseTuple(args, ":view_getToolMode")) {
+        return NULL;
+    }
+    AnimModView *v = s_castView(self, "self");
+    if(!v) return NULL;
+    int toolMode = v->m_view->getToolMode();
+    return Py_BuildValue("i", toolMode);
+}
+
+static PyObject *s_view_setToolMode    (PyObject *self, PyObject *args) {
+    int toolMode;
+    if(!PyArg_ParseTuple(args, "i:view_setToolMode",
+                         &toolMode)) {
+        return NULL;
+    }
+    AnimModView *v = s_castView(self, "self");
+    if(!v) return NULL;
+    v->m_view->setToolMode(toolMode);
+    Py_INCREF(Py_None);
+    return Py_None;
+}
 
 /*** Anim implementation. */
 

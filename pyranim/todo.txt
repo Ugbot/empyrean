@@ -67,17 +67,26 @@ The implementation schedule:
 
 12/23/02 (3242 LOC, 92858 bytes)
 
-- Improve joint drawing.  (Highlighting off by one?)
+- Improve joint drawing.
 
 12/25/02
 
 - Checked into CVS for first time.
 - Started tool callback implementation.
 
+12/31/02
+
+- Make icons.
+
+1/1/03
+
+- Tool selection working.
+
 --- WE ARE HERE ---
 
 - Draw rotation widget.
 - Rotation widget interaction?
+- Joint drawing off by one?
 - Position widget?
 - Compute skeleton joint angles for current view.
 - Load animation.

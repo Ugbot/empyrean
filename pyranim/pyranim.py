@@ -15,13 +15,16 @@ class PyrFrame(wxFrame):
         wxFrame.__init__(self, None, -1, 'PyrAnim', size=(500,500),
                          style=wxDEFAULT_FRAME_STYLE |
                          wxNO_FULL_REPAINT_ON_RESIZE)
-
         self.model = animmod.Model()
-        self.view = ViewCanvas(self, self.model)
+        self.views = []
 
         def statusHandler(text, self=self):
             self.SetStatusText(text)
-        self.view.setStatusHandler(statusHandler)
+
+        view = ViewCanvas(self, self.model)
+        view.setStatusHandler(statusHandler)
+        self.views.append(view)
+        self.currView = self.views[0]
 
         menuBar = wxMenuBar()
         
@@ -45,17 +48,46 @@ class PyrFrame(wxFrame):
         self.SetMenuBar(menuBar)
         self.CreateStatusBar()
 
+        # Set up toolbar.
+        tb = self.CreateToolBar(wxTB_HORIZONTAL | wxNO_BORDER | wxTB_FLAT)
+
+        def loadBitmap(name):
+            im = wxImage('resources/' + name + '.bmp')
+            return wxBitmapFromImage(im)
+
+        tbID = wxNewId()
+        tb.AddRadioLabelTool(tbID, 'Select', loadBitmap('SelectTool16'),
+                             wxNullBitmap, 'Select', 'Select')
+        EVT_TOOL(self, tbID, self.OnToolSelectClick)
+
+        tbID = wxNewId()
+        tb.AddRadioLabelTool(tbID, 'Rotate', loadBitmap('RotateTool16'),
+                             wxNullBitmap, 'Rotate', 'Rotate')
+        EVT_TOOL(self, tbID, self.OnToolRotateClick)
+
+        tb.Realize()
+
         if len(sys.argv) > 1:
             self.model.loadSkeleton(sys.argv[1])
 
     def OnFileOpenSkeleton(self, event):
-        self.model.loadSkeleton("walk1.csf")
+        self.model.loadSkeleton('walk1.csf')
 
     def OnFileOpenMesh(self, event):
-        self.model.loadMesh("walk1.cmf")
+        self.model.loadMesh('walk1.cmf')
 
     def OnFileExit(self, event):
         self.Close()
+
+    def __setTool(self, tool):
+        for view in self.views:
+            view.setTool(tool)
+
+    def OnToolSelectClick(self, event):
+        self.__setTool(0)
+
+    def OnToolRotateClick(self, event):
+        self.__setTool(1)
 
 class ViewCanvas(wxGLCanvas):
     def __init__(self, parent, model):
@@ -143,6 +175,9 @@ class ViewCanvas(wxGLCanvas):
             self.view.mouseMove(event.GetX(), event.GetY())
         else:
             self.view.navMouseMove(event.GetX(), event.GetY())
+
+    def setTool(self, tool):
+        self.view.setToolMode(tool)
 
 
 class PyrApp(wxApp):

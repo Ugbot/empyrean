@@ -61,9 +61,6 @@ View::~View() {
     for(int i = 0; i < (int) m_statusListeners.size(); i ++) {
         delete m_statusListeners[i];
     }
-    for(int i = 0; i < (int) m_toolListeners.size(); i ++) {
-        delete m_toolListeners[i];
-    }
     delete m_camera;
     delete m_rotWidget;
 }
@@ -109,7 +106,7 @@ void View::draw() {
     }
     drawSkeleton();
 
-    if(m_toolMode == TOOL_ROTATE && m_rotWidgetActive) {
+    if(m_toolMode == TOOL_ROTATE && m_selectedJoint != -1) {
         m_rotWidget->draw();
     }
 }
@@ -275,10 +272,6 @@ void View::addStatusListener(StatusListener *listener) {
     m_statusListeners.push_back(listener);
 }
 
-void View::addToolListener(ToolListener *listener) {
-    m_toolListeners.push_back(listener);
-}
-
 void View::setCurrent() {
     assert(0); // XXX - Implement me.
 }
@@ -390,14 +383,13 @@ void View::mouseDown(int x, int y) {
     if(m_toolMode == TOOL_SELECT) {
         m_selectedJoint = getClickedJoint(x, y);
         notifyViewListeners();
-        printf("selected: %d\n", m_selectedJoint);
-        fflush(stdout);
     } else if(m_toolMode == TOOL_ROTATE) {
         if(m_rotWidget->mouseDown(x, y)) {
             m_rotWidgetActive = true;
         } else {
             m_rotWidgetActive = false;
-            // XXX - joint selection?
+            m_selectedJoint = getClickedJoint(x, y);
+            notifyViewListeners();
         }
     }
 }
@@ -422,7 +414,12 @@ int View::getToolMode() const {
 
 void View::setToolMode(int toolMode) {
     m_toolMode = toolMode;
-    notifyToolListeners(toolMode);
+
+    if(m_toolMode == TOOL_SELECT) {
+    } else if(m_toolMode == TOOL_ROTATE) {
+    }
+
+    redraw();
 }
 
 void View::notifyViewListeners() {
@@ -434,12 +431,6 @@ void View::notifyViewListeners() {
 void View::notifyStatusListeners(const char *msg) {
     for(int i = 0; i < (int) m_statusListeners.size(); i ++) {
         m_statusListeners[i]->notify(msg);
-    }
-}
-
-void View::notifyToolListeners(int newTool) {
-    for(int i = 0; i < (int) m_toolListeners.size(); i ++) {
-        m_toolListeners[i]->notify(newTool);
     }
 }
 
