@@ -20,7 +20,7 @@
 				Name="VCCLCompilerTool"
 				Optimization="0"
 				AdditionalIncludeDirectories="../../third-party-vc7/include"
-				PreprocessorDefinitions="WIN32;WIN32_LEAN_AND_MEAN;_DEBUG;_LIB;NOMINMAX;BOOST_PYTHON_STATIC_LIB;BOOST_PYTHON_STATIC_MODULE"
+				PreprocessorDefinitions="WIN32;WIN32_LEAN_AND_MEAN;_DEBUG;_LIB;NOMINMAX;BOOST_PYTHON_STATIC_LIB;BOOST_PYTHON_STATIC_MODULE;GLEW_STATIC"
 				GeneratePreprocessedFile="0"
 				MinimalRebuild="TRUE"
 				BasicRuntimeChecks="3"
@@ -67,7 +67,7 @@
 				InlineFunctionExpansion="1"
 				OmitFramePointers="TRUE"
 				AdditionalIncludeDirectories="../../third-party-vc7/include"
-				PreprocessorDefinitions="WIN32;WIN32_LEAN_AND_MEAN;NDEBUG;_LIB;NOMINMAX;BOOST_PYTHON_STATIC_LIB;BOOST_PYTHON_STATIC_MODULE"
+				PreprocessorDefinitions="WIN32;WIN32_LEAN_AND_MEAN;NDEBUG;_LIB;NOMINMAX;BOOST_PYTHON_STATIC_LIB;BOOST_PYTHON_STATIC_MODULE;GLEW_STATIC"
 				GeneratePreprocessedFile="0"
 				StringPooling="TRUE"
 				RuntimeLibrary="2"
@@ -186,12 +186,6 @@
 			</File>
 			<File
 				RelativePath="..\..\src\base\Error.h">
-			</File>
-			<File
-				RelativePath="..\..\src\base\extgl.c">
-			</File>
-			<File
-				RelativePath="..\..\src\base\extgl.h">
 			</File>
 			<File
 				RelativePath="..\..\src\base\GLUtility.cpp">
@@ -451,6 +445,19 @@
 			<File
 				RelativePath="..\..\src\base\XMLParser.h">
 			</File>
+			<Filter
+				Name="glew"
+				Filter="">
+				<File
+					RelativePath="..\..\src\base\glew.c">
+				</File>
+				<File
+					RelativePath="..\..\src\base\glew.h">
+				</File>
+				<File
+					RelativePath="..\..\src\base\wglew.h">
+				</File>
+			</Filter>
 		</Filter>
 	</Files>
 	<Globals>

@@ -265,6 +265,8 @@ int main(int argc, char* argv[]) {
 
 #if defined(WIN32) && !defined(_CONSOLE)
 
+    #include <windows.h>
+
     #ifdef __CYGWIN__
     extern "C" __declspec(dllimport) int __argc;
     extern "C" __declspec(dllimport) char* __argv[];
