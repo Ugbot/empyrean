@@ -75,6 +75,8 @@ namespace pyr {
             cmd->setX(atof(v.c_str()));
         } else if (n == "y") {
             cmd->setY(atof(v.c_str()));
+        } else if (n == "z") {
+            cmd->setZ(atoi(v.c_str()));
         } else if (n == "width") {
             cmd->setWidth(atof(v.c_str()));
         } else if (n == "height") {
@@ -225,6 +227,7 @@ namespace pyr {
         properties["filename"] = rect.name;
         properties["x"] = local::ftoa(rect.x);
         properties["y"] = local::ftoa(rect.y);
+        properties["z"] = itos(rect.z);
         properties["width"] = local::ftoa(rect.width);
         properties["height"] = local::ftoa(rect.height);
         setPropertiesGrid(properties);

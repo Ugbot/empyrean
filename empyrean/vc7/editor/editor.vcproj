@@ -19,7 +19,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="../../third-party-vc7/include,../../src/base"
+				AdditionalIncludeDirectories="../../third-party-vc7/include,../../src/base,$(WXWIN)/include"
 				PreprocessorDefinitions="WIN32;WIN32_LEAN_AND_MEAN;_DEBUG;_WINDOWS"
 				GeneratePreprocessedFile="0"
 				MinimalRebuild="TRUE"
@@ -83,7 +83,7 @@
 				Name="VCCustomBuildTool"/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="wxmsw.lib opengl32.lib comctl32.lib rpcrt4.lib ws2_32.lib jpeg.lib png.lib tiff.lib zlib.lib corona.lib"
+				AdditionalDependencies="wxmsw.lib opengl32.lib comctl32.lib rpcrt4.lib ws2_32.lib jpeg.lib png.lib tiff.lib zlib.lib corona.lib ../base/Release/base.lib"
 				OutputFile="../bin/$(OutDir)/editor.exe"
 				LinkIncremental="1"
 				AdditionalLibraryDirectories="../../third-party-vc7/lib"
