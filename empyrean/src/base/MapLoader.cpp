@@ -10,11 +10,11 @@
 
 namespace pyr {
 
-    void loadMetaData(Map* map, const std::string& filename) {
+    void loadMetaData(MapPtr map, PathHandler& ph, const std::string& filename) {
         ScopedPtr<XMLNode> metaroot;
 
         try {
-            metaroot = parseXMLFile(filename);
+            metaroot = parseXMLFile(ph.findFile(filename));
             if (!metaroot) {
                 return;
             }
@@ -44,7 +44,7 @@ namespace pyr {
                     float x, y, z;
                     if (ss >> x >> y >> z) {
                         // 3ds max to Empyrean coordinate change.
-                        elt->pos = Vec2f(x, z);
+                        elt->pos = Vec2f(x, y);
                     }
                 }
 
@@ -101,10 +101,12 @@ namespace pyr {
                 }
 
                 result->addElement(elt);
+
+                if (child->hasAttr("meta")) {
+                    loadMetaData(result, ph, child->getAttr("meta"));
+                }
             }
         }
-
-        //loadMetaData(map, filename + ".meta");
 
         return result;
     }

@@ -9,47 +9,41 @@
   </node>
   <node name="Line04" position="27.8393 17.8492 9.62532">
   </node>
-<!--
-  <node name="Dummy01" position="-32.0946 -8.37314e-008 1.91555">
+  <node name="Dummy01" position="10 2 0">
     <property key="entity" value="true"/>
     <property key="behavior" value="python"/>
     <property key="behaviorResource" value="maps/entity.py"/>
     <property key="appearance" value="cal3d"/>
     <property key="appearanceResource" value="models/paladin/paladin.cal3d"/>
   </node>
--->
-  <node name="MOUSE" position="-28.0946 -8.37314e-008 1.91555">
+  <node name="MOUSE" position="15 2 0">
     <property key="entity" value="true"/>
     <property key="behavior" value="python"/>
     <property key="behaviorResource" value="maps/entity.py"/>
     <property key="appearance" value="obj"/>
     <property key="appearanceResource" value="maps/MOUSE_Final.obj"/>
   </node>
-<!--
-  <node name="Gargon" position="-16.0946 -8.37314e-008 1.91555">
+  <node name="Gargon" position="20 2 0">
     <property key="entity" value="true"/>
     <property key="behavior" value="python"/>
     <property key="behaviorResource" value="maps/entity.py"/>
     <property key="appearance" value="obj"/>
     <property key="appearanceResource" value="maps/gargon.skeleton.obj"/>
   </node>
--->
-  <node name="Fish" position="-6.0946 -8.37314e-008 1.91555">
+  <node name="Fish" position="25 2 0">
     <property key="entity" value="true"/>
     <property key="behavior" value="python"/>
     <property key="behaviorResource" value="maps/entity.py"/>
     <property key="appearance" value="obj"/>
     <property key="appearanceResource" value="maps/fish-smoothed2.obj"/>
   </node>
-  <node name="Dummy02" position="6.18181 -3.89528e-007 8.91136">
+  <node name="Dummy02" position="6.18181 13.89528 8.91136">
     <property key="enemy" value="true"/>
   </node>
-  <node name="Dummy03" position="43.4006 1.16142e-007 -2.65701">
+  <node name="Dummy03" position="43.4006 11.16142 -2.65701">
     <property key="enemy" value="true"/>
   </node>
-  <node name="Dummy04" position="30.3564 9.47228e-008 -2.16701">
+  <node name="Dummy04" position="30.3564 19.47228 -2.16701">
     <property key="enemy" value="true"/>
-  </node>
-  <node name="Plane01" position="9.75583 19.6469 5.54371">
   </node>
 </map-metadata>
