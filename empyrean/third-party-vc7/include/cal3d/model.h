@@ -15,7 +15,7 @@
 // Includes                                                                   //
 //****************************************************************************//
 
-#include "global.h"
+#include "cal3d/global.h"
 
 //****************************************************************************//
 // Forward declarations                                                       //
@@ -24,6 +24,7 @@
 class CalCoreModel;
 class CalSkeleton;
 class CalMixer;
+class CalMorphTargetMixer;
 class CalPhysique;
 class CalSpringSystem;
 class CalRenderer;
@@ -44,6 +45,7 @@ protected:
   CalCoreModel *m_pCoreModel;
   CalSkeleton *m_pSkeleton;
   CalMixer *m_pMixer;
+  CalMorphTargetMixer *m_pMorphTargetMixer;
   CalPhysique *m_pPhysique;
   CalSpringSystem *m_pSpringSystem;
   CalRenderer *m_pRenderer;
@@ -64,6 +66,7 @@ public:
   CalCoreModel *getCoreModel();
   CalMesh *getMesh(int coreMeshId);
   CalMixer *getMixer();
+  CalMorphTargetMixer *getMorphTargetMixer();
   CalPhysique *getPhysique();
   CalRenderer *getRenderer();
   CalSkeleton *getSkeleton();
@@ -74,6 +77,7 @@ public:
   void setMaterialSet(int setId);
   void setUserData(Cal::UserData userData);
   void update(float deltaTime);
+  void disableInternalData();
 };
 
 #endif

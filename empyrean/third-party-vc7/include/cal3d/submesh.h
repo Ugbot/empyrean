@@ -15,8 +15,8 @@
 // Includes                                                                   //
 //****************************************************************************//
 
-#include "global.h"
-#include "vector.h"
+#include "cal3d/global.h"
+#include "cal3d/vector.h"
 
 //****************************************************************************//
 // Forward declarations                                                       //
@@ -44,6 +44,14 @@ public:
     CalVector force;
   } PhysicalProperty;
 
+  /// The submesh TangentSpace.
+  struct TangentSpace
+  {
+    CalVector tangent;
+    float crossFactor;
+  };
+
+
   /// The submesh Face.
   typedef struct
   {
@@ -53,8 +61,10 @@ public:
 // member variables
 protected:
   CalCoreSubmesh *m_pCoreSubmesh;
+  std::vector<float> m_vectorMorphTargetWeight;
   std::vector<CalVector> m_vectorVertex;
   std::vector<CalVector> m_vectorNormal;
+  std::vector<std::vector<TangentSpace> > m_vectorvectorTangentSpace;
   std::vector<Face> m_vectorFace;
   std::vector<PhysicalProperty> m_vectorPhysicalProperty;
   int m_vertexCount;
@@ -76,12 +86,23 @@ public:
   int getFaceCount();
   int getFaces(CalIndex *pFaceBuffer);
   std::vector<CalVector>& getVectorNormal();
+  std::vector<std::vector<TangentSpace> >& getVectorVectorTangentSpace();
   std::vector<PhysicalProperty>& getVectorPhysicalProperty();
   std::vector<CalVector>& getVectorVertex();
   int getVertexCount();
   bool hasInternalData();
+  void disableInternalData();
   void setCoreMaterialId(int coreMaterialId);
   void setLodLevel(float lodLevel);
+  bool isTangentsEnabled(int mapId);
+  bool enableTangents(int mapId, bool enabled);
+  std::vector<float>& getVectorWeight();
+  void setMorphTargetWeight(int blendId,float weight);
+  float getMorphTargetWeight(int blendId);
+  float getBaseWeight();
+  int getMorphTargetWeightCount();
+  std::vector<float>& getVectorMorphTargetWeight();
+
 };
 
 #endif

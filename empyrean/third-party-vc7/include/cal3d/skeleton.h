@@ -15,13 +15,14 @@
 // Includes                                                                   //
 //****************************************************************************//
 
-#include "global.h"
+#include "cal3d/global.h"
 
 //****************************************************************************//
 // Forward declarations                                                       //
 //****************************************************************************//
 
 class CalCoreSkeleton;
+class CalCoreModel;
 class CalBone;
 
 //****************************************************************************//
@@ -54,6 +55,10 @@ public:
   CalCoreSkeleton *getCoreSkeleton();
   std::vector<CalBone *>& getVectorBone();
   void lockState();
+  void getBoneBoundingBox(float *min, float *max);
+  void calculateBoundingBox();
+
+
 
 // DEBUG-CODE
   int getBonePoints(float *pPoints);

@@ -15,7 +15,7 @@
 // Includes                                                                   //
 //****************************************************************************//
 
-#include "global.h"
+#include "cal3d/global.h"
 
 //****************************************************************************//
 // Forward declarations                                                       //
@@ -37,6 +37,7 @@ class CAL3D_API CalPhysique
 // member variables
 public:
   CalModel *m_pModel;
+  bool m_Normalize;
 
 // constructors/destructor
 public:
@@ -45,6 +46,7 @@ public:
 
 // member functions	
 public:
+  int calculateTangentSpaces(CalSubmesh *pSubmesh, int mapId, float *pTangentSpaceBuffer);
   int calculateNormals(CalSubmesh *pSubmesh, float *pNormalBuffer);
   int calculateVertices(CalSubmesh *pSubmesh, float *pVertexBuffer);
   int calculateVerticesAndNormals(CalSubmesh *pSubmesh, float *pVertexBuffer);
@@ -52,6 +54,7 @@ public:
   bool create(CalModel *pModel);
   void destroy();
   void update();
+  void setNormalization(bool normalize);
 };
 
 #endif

@@ -15,33 +15,38 @@
 // Includes                                                                   //
 //****************************************************************************//
 
-#include "animation.h"
-#include "animation_action.h"
-#include "animation_cycle.h"
-#include "bone.h"
-#include "coreanimation.h"
-#include "corebone.h"
-#include "corekeyframe.h"
-#include "corematerial.h"
-#include "coremesh.h"
-#include "coremodel.h"
-#include "coreskeleton.h"
-#include "coresubmesh.h"
-#include "coretrack.h"
-#include "error.h"
-#include "loader.h"
-#include "matrix.h"
-#include "mesh.h"
-#include "mixer.h"
-#include "model.h"
-#include "physique.h"
-#include "quaternion.h"
-#include "renderer.h"
-#include "saver.h"
-#include "skeleton.h"
-#include "springsystem.h"
-#include "submesh.h"
-#include "vector.h"
+#include "cal3d/animation.h"
+#include "cal3d/animation_action.h"
+#include "cal3d/animation_cycle.h"
+#include "cal3d/bone.h"
+#include "cal3d/coreanimation.h"
+#include "cal3d/corebone.h"
+#include "cal3d/corekeyframe.h"
+#include "cal3d/corematerial.h"
+#include "cal3d/coremesh.h"
+#include "cal3d/coremodel.h"
+#include "cal3d/coremorphanimation.h"
+#include "cal3d/coreskeleton.h"
+#include "cal3d/coresubmesh.h"
+#include "cal3d/coresubmorphtarget.h"
+#include "cal3d/coretrack.h"
+#include "cal3d/datasource.h"
+#include "cal3d/error.h"
+#include "cal3d/loader.h"
+#include "cal3d/matrix.h"
+#include "cal3d/mesh.h"
+#include "cal3d/mixer.h"
+#include "cal3d/model.h"
+#include "cal3d/morphtargetmixer.h"
+#include "cal3d/physique.h"
+#include "cal3d/quaternion.h"
+#include "cal3d/renderer.h"
+#include "cal3d/saver.h"
+#include "cal3d/skeleton.h"
+#include "cal3d/springsystem.h"
+#include "cal3d/streamsource.h"
+#include "cal3d/submesh.h"
+#include "cal3d/vector.h"
 
 #endif
 
@@ -50,7 +55,10 @@
   * <center>
   *   \image html ../../shared/cal3d.gif
   *   <p>
-  *   &copy; 2001, 2002 Bruno Heidelberger
+  *   &copy; 2001 - 2003 Bruno Heidelberger
+  *   <p>
+  *     Answers to many frequently asked questions about Cal3D can be found
+  *     in the <a href="./cal3dfaq.html">Cal3D FAQ</a>.
   *   <p>
   *     Permission is granted to copy, distribute and/or modify this document
   *     under the terms of the GNU Free Documentation License, Version 1.1 or

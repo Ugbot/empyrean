@@ -15,7 +15,7 @@
 // Includes                                                                   //
 //****************************************************************************//
 
-#include "global.h"
+#include "cal3d/global.h"
 
 //****************************************************************************//
 // Forward declarations                                                       //
@@ -77,6 +77,7 @@ public:
   float getTime();
   Type getType();
   float getWeight();
+  void setTime(float time);
 };
 
 #endif

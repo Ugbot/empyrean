@@ -1,6 +1,6 @@
 //****************************************************************************//
-// springsystem.h                                                             //
-// Copyright (C) 2001, 2002 Bruno 'Beosil' Heidelberger                       //
+// coremorphanimation.h                                                       //
+// Copyright (C) 2003 Steven Geens                                            //
 //****************************************************************************//
 // This library is free software; you can redistribute it and/or modify it    //
 // under the terms of the GNU Lesser General Public License as published by   //
@@ -8,8 +8,8 @@
 // your option) any later version.                                            //
 //****************************************************************************//
 
-#ifndef CAL_SPRINGSYSTEM_H
-#define CAL_SPRINGSYSTEM_H
+#ifndef CAL_COREMORPHANIMATION_H
+#define CAL_COREMOPRHANIMATION_H
 
 //****************************************************************************//
 // Includes                                                                   //
@@ -18,46 +18,32 @@
 #include "cal3d/global.h"
 
 //****************************************************************************//
-// Forward declarations                                                       //
-//****************************************************************************//
-
-class CalModel;
-class CalSubmesh;
-
-//****************************************************************************//
 // Class declaration                                                          //
 //****************************************************************************//
 
  /*****************************************************************************/
-/** The spring system class.
+/** The core morph animation class.
   *****************************************************************************/
 
-class CAL3D_API CalSpringSystem
+class CAL3D_API CalCoreMorphAnimation
 {
 // member variables
-public:
-  CalModel *m_pModel;
+protected:
+  std::vector<int> m_vectorCoreMeshID;
+  std::vector<int> m_vectorMorphTargetID;
 
 // constructors/destructor
 public:
-  CalSpringSystem();
-  virtual ~CalSpringSystem();
+  CalCoreMorphAnimation();
+  virtual ~CalCoreMorphAnimation();
 
 // member functions	
 public:
-  void calculateForces(CalSubmesh *pSubmesh, float deltaTime);
-  void calculateVertices(CalSubmesh *pSubmesh, float deltaTime);
-  bool create(CalModel *pModel);
+  bool addMorphTarget(int coreMeshID,int morphTargetID);
+  bool create();
   void destroy();
-  void update(float deltaTime);
-
-  /* DEBUG CODE ********************
-  struct
-  {
-    float x, y, z, radius;
-  } Sphere;
-  void setSphere(float x, float y, float z, float radius) { Sphere.x = x; Sphere.y = y; Sphere.z = z; Sphere.radius = radius; };
-  *********************************/
+  std::vector<int>& getVectorCoreMeshID();
+  std::vector<int>& getVectorMorphTargetID();
 };
 
 #endif

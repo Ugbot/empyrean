@@ -1,5 +1,5 @@
 //****************************************************************************//
-// springsystem.h                                                             //
+// morphtargetmixer.h                                                         //
 // Copyright (C) 2001, 2002 Bruno 'Beosil' Heidelberger                       //
 //****************************************************************************//
 // This library is free software; you can redistribute it and/or modify it    //
@@ -8,8 +8,8 @@
 // your option) any later version.                                            //
 //****************************************************************************//
 
-#ifndef CAL_SPRINGSYSTEM_H
-#define CAL_SPRINGSYSTEM_H
+#ifndef CAL_MORPHTARGETMIXER_H
+#define CAL_MORPHTARGETMIXER_H
 
 //****************************************************************************//
 // Includes                                                                   //
@@ -22,42 +22,38 @@
 //****************************************************************************//
 
 class CalModel;
-class CalSubmesh;
 
 //****************************************************************************//
 // Class declaration                                                          //
 //****************************************************************************//
 
  /*****************************************************************************/
-/** The spring system class.
+/** The morph target mixer class.
   *****************************************************************************/
-
-class CAL3D_API CalSpringSystem
+class CAL3D_API CalMorphTargetMixer
 {
 // member variables
-public:
+protected:
+  std::vector<float> m_vectorCurrentWeight;
+  std::vector<float> m_vectorEndWeight;
+  std::vector<float> m_vectorDuration;
   CalModel *m_pModel;
 
 // constructors/destructor
 public:
-  CalSpringSystem();
-  virtual ~CalSpringSystem();
+  CalMorphTargetMixer();
+  virtual ~CalMorphTargetMixer();
 
-// member functions	
+// member functions
 public:
-  void calculateForces(CalSubmesh *pSubmesh, float deltaTime);
-  void calculateVertices(CalSubmesh *pSubmesh, float deltaTime);
+  bool blend(int id, float weight, float delay);
+  bool clear(int id, float delay);
+  float getCurrentWeight(int id);
+  float getCurrentWeightBase();
+  int getMorphTargetCount();
   bool create(CalModel *pModel);
   void destroy();
   void update(float deltaTime);
-
-  /* DEBUG CODE ********************
-  struct
-  {
-    float x, y, z, radius;
-  } Sphere;
-  void setSphere(float x, float y, float z, float radius) { Sphere.x = x; Sphere.y = y; Sphere.z = z; Sphere.radius = radius; };
-  *********************************/
 };
 
 #endif

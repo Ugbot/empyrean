@@ -15,8 +15,14 @@
 // Includes                                                                   //
 //****************************************************************************//
 
-#include "global.h"
-#include "vector.h"
+#include "cal3d/global.h"
+#include "cal3d/vector.h"
+
+//****************************************************************************//
+// Forward declarations                                                       //
+//****************************************************************************//
+
+class CalCoreSubMorphTarget;
 
 //****************************************************************************//
 // Class declaration                                                          //
@@ -35,6 +41,13 @@ public:
   {
     float u, v;
   } TextureCoordinate;
+
+  typedef struct 
+  {
+    CalVector tangent;
+    float crossFactor;  // To get the binormal, use ((N x T) * crossFactor)
+  } TangentSpace;
+
 
   /// The core submesh Influence.
   typedef struct
@@ -76,10 +89,13 @@ public:
 // member variables
 protected:
   std::vector<Vertex> m_vectorVertex;
+  std::vector<bool> m_vectorTangentsEnabled;
+  std::vector<std::vector<TangentSpace> > m_vectorvectorTangentSpace;
   std::vector<std::vector<TextureCoordinate> > m_vectorvectorTextureCoordinate;
   std::vector<PhysicalProperty> m_vectorPhysicalProperty;
   std::vector<Face> m_vectorFace;
   std::vector<Spring> m_vectorSpring;
+  std::vector<CalCoreSubMorphTarget *> m_vectorCoreSubMorphTarget;
   int m_coreMaterialThreadId;
   int m_lodCount;
 
@@ -99,17 +115,27 @@ public:
   std::vector<Face>& getVectorFace();
   std::vector<PhysicalProperty>& getVectorPhysicalProperty();
   std::vector<Spring>& getVectorSpring();
+  std::vector<std::vector<TangentSpace> >& getVectorVectorTangentSpace();
   std::vector<std::vector<TextureCoordinate> >& getVectorVectorTextureCoordinate();
   std::vector<Vertex>& getVectorVertex();
   int getVertexCount();
+  bool isTangentsEnabled(int mapId);
+  bool enableTangents(int mapId, bool enabled);
   bool reserve(int vertexCount, int textureCoordinateCount, int faceCount, int springCount);
   void setCoreMaterialThreadId(int coreMaterialThreadId);
   bool setFace(int faceId, const Face& face);
   void setLodCount(int lodCount);
   bool setPhysicalProperty(int vertexId, const PhysicalProperty& physicalProperty);
   bool setSpring(int springId, const Spring& spring);
+  bool setTangentSpace(int vertexId, int textureCoordinateId, const CalVector& tangent, float crossFactor);
   bool setTextureCoordinate(int vertexId, int textureCoordinateId, const TextureCoordinate& textureCoordinate);
   bool setVertex(int vertexId, const Vertex& vertex);
+  int addCoreSubMorphTarget(CalCoreSubMorphTarget *pCoreSubMorphTarget);
+  CalCoreSubMorphTarget *getCoreSubMorphTarget(int id);
+  int getCoreSubMorphTargetCount();
+  std::vector<CalCoreSubMorphTarget *>& getVectorCoreSubMorphTarget();
+protected:
+  void UpdateTangentVector(int v0, int v1, int v2, int channel);
 };
 
 #endif

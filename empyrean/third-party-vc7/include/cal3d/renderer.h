@@ -15,7 +15,7 @@
 // Includes                                                                   //
 //****************************************************************************//
 
-#include "global.h"
+#include "cal3d/global.h"
 
 //****************************************************************************//
 // Forward declarations                                                       //
@@ -42,6 +42,7 @@ public:
 // constructors/destructor
 public:
   CalRenderer();
+  CalRenderer(CalRenderer* pRenderer); 
   virtual ~CalRenderer();
 
 // member functions	
@@ -64,9 +65,13 @@ public:
   int getTextureCoordinates(int mapId, float *pTextureCoordinateBuffer);
   int getVertexCount();
   int getVertices(float *pVertexBuffer);
+  int getTangentSpaces(int mapId, float *pTangentSpaceBuffer);
   int getVerticesAndNormals(float *pVertexBuffer);
   int getVerticesNormalsAndTexCoords(float *pVertexBuffer,int NumTexCoords=1);
+  bool isTangentsEnabled(int mapId);
   bool selectMeshSubmesh(int meshId, int submeshId);
+  void setNormalization(bool normalize);
+
 };
 
 #endif

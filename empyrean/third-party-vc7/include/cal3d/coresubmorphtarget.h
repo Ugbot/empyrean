@@ -1,5 +1,5 @@
 //****************************************************************************//
-// springsystem.h                                                             //
+// coresubmorphtarget.h                                                       //
 // Copyright (C) 2001, 2002 Bruno 'Beosil' Heidelberger                       //
 //****************************************************************************//
 // This library is free software; you can redistribute it and/or modify it    //
@@ -8,58 +8,52 @@
 // your option) any later version.                                            //
 //****************************************************************************//
 
-#ifndef CAL_SPRINGSYSTEM_H
-#define CAL_SPRINGSYSTEM_H
+#ifndef CAL_CORESUBMORPHTARGET_H
+#define CAL_CORESUBMORPHTARGET_H
 
 //****************************************************************************//
 // Includes                                                                   //
 //****************************************************************************//
 
 #include "cal3d/global.h"
-
-//****************************************************************************//
-// Forward declarations                                                       //
-//****************************************************************************//
-
-class CalModel;
-class CalSubmesh;
+#include "cal3d/vector.h"
 
 //****************************************************************************//
 // Class declaration                                                          //
 //****************************************************************************//
 
  /*****************************************************************************/
-/** The spring system class.
+/** The core sub morph target class.
   *****************************************************************************/
 
-class CAL3D_API CalSpringSystem
+class CAL3D_API CalCoreSubMorphTarget
 {
-// member variables
+// misc
 public:
-  CalModel *m_pModel;
+  /// The core sub morph target BlendVertex.
+  typedef struct
+  {
+     CalVector position;
+     CalVector normal;
+  } BlendVertex;
+  
+// member variables
+protected:
+  std::vector<BlendVertex> m_vectorBlendVertex;
 
 // constructors/destructor
 public:
-  CalSpringSystem();
-  virtual ~CalSpringSystem();
+  CalCoreSubMorphTarget();
+  virtual ~CalCoreSubMorphTarget();
 
-// member functions	
+// member functions
 public:
-  void calculateForces(CalSubmesh *pSubmesh, float deltaTime);
-  void calculateVertices(CalSubmesh *pSubmesh, float deltaTime);
-  bool create(CalModel *pModel);
+  bool create();
   void destroy();
-  void update(float deltaTime);
-
-  /* DEBUG CODE ********************
-  struct
-  {
-    float x, y, z, radius;
-  } Sphere;
-  void setSphere(float x, float y, float z, float radius) { Sphere.x = x; Sphere.y = y; Sphere.z = z; Sphere.radius = radius; };
-  *********************************/
+  int getBlendVertexCount();
+  std::vector<BlendVertex>& getVectorBlendVertex();
+  bool reserve(int blendVertexCount);
+  bool setBlendVertex(int vertexId, const BlendVertex& vertex);
 };
-
 #endif
-
 //****************************************************************************//

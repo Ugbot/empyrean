@@ -15,7 +15,7 @@
 // Includes                                                                   //
 //****************************************************************************//
 
-#include "global.h"
+#include "cal3d/global.h"
 
 //****************************************************************************//
 // Forward declarations                                                       //
@@ -58,6 +58,7 @@ public:
   void operator*=(const CalQuaternion& q);
   void operator*=(const CalMatrix &m);
   void operator/=(const float d);
+  bool operator==(const CalVector& v);
   friend CAL3D_API CalVector operator+(const CalVector& v, const CalVector& u);
   friend CAL3D_API CalVector operator-(const CalVector& v, const CalVector& u);
   friend CAL3D_API CalVector operator*(const CalVector& v, const float d);
@@ -71,6 +72,40 @@ public:
   float normalize();
   void set(float vx, float vy, float vz);
 };
+
+ /*****************************************************************************/
+/** The plane class.
+  *****************************************************************************/
+
+
+class CAL3D_API CalPlane
+{
+   public:
+      float a,b,c,d;
+      
+      // These methods are made only to calculate the bounding boxes,
+      // don't use them in you program
+      
+      float eval(CalVector &p);
+      void setPosition(CalVector &p);
+      void setNormal(CalVector &p);
+};
+
+ /*****************************************************************************/
+/** The bounding box class.
+  *****************************************************************************/
+
+
+class CAL3D_API CalBoundingBox
+{
+   public:
+     CalPlane plane[6];
+     
+     void computePoints(CalVector *p);
+   
+};
+
+
 
 #endif
 

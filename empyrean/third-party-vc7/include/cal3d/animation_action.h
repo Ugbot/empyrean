@@ -15,8 +15,8 @@
 // Includes                                                                   //
 //****************************************************************************//
 
-#include "global.h"
-#include "animation.h"
+#include "cal3d/global.h"
+#include "cal3d/animation.h"
 
 //****************************************************************************//
 // Forward declarations                                                       //
@@ -39,8 +39,9 @@ protected:
   float m_delayIn;
   float m_delayOut;
   float m_delayTarget;
+  float m_weightTarget;
 
-// constructors/destructor
+// constructor/destructor
 public:
   CalAnimationAction();
   virtual ~CalAnimationAction();
@@ -49,7 +50,7 @@ public:
 public:
   bool create(CalCoreAnimation *pCoreAnimation);
   void destroy();
-  bool execute(float delayIn, float delayOut);
+  bool execute(float delayIn, float delayOut, float weightTarget = 1.0f);
   bool update(float deltaTime);
 };
 

@@ -15,20 +15,22 @@
 // Includes                                                                   //
 //****************************************************************************//
 
-#include "global.h"
-#include "matrix.h"
-#include "vector.h"
-#include "quaternion.h"
+#include "cal3d/global.h"
+#include "cal3d/matrix.h"
+#include "cal3d/vector.h"
+#include "cal3d/quaternion.h"
 
 //****************************************************************************//
 // Forward declarations                                                       //
 //****************************************************************************//
 
 class CalCoreSkeleton;
+class CalCoreModel;
 
 //****************************************************************************//
 // Class declaration                                                          //
 //****************************************************************************//
+
 
  /*****************************************************************************/
 /** The core bone class.
@@ -50,6 +52,10 @@ protected:
   CalQuaternion m_rotationBoneSpace;
   Cal::UserData m_userData;
 
+  CalBoundingBox m_boundingBox;
+  CalVector m_boundingPosition[6];
+  
+
 // constructors/destructor
 public:
   CalCoreBone();
@@ -64,6 +70,7 @@ public:
   std::list<int>& getListChildId();
   const std::string& getName();
   int getParentId();
+  CalCoreSkeleton *getCoreSkeleton();
   const CalQuaternion& getRotation();
   const CalQuaternion& getRotationAbsolute();
   const CalQuaternion& getRotationBoneSpace();
@@ -78,6 +85,11 @@ public:
   void setTranslation(const CalVector& translation);
   void setTranslationBoneSpace(const CalVector& translation);
   void setUserData(Cal::UserData userData);
+
+  void calculateBoundingBox(CalCoreModel * pCoreModel);
+  CalBoundingBox & getBoundingBox();
+  void getBoundingData(int planeId,CalVector & position); 
+  
 };
 
 #endif

@@ -20,6 +20,11 @@
 #pragma warning(disable : 4786)
 #endif
 
+#if !defined(_WIN32) || defined(__MINGW32__)
+#define stricmp strcasecmp
+#endif
+
+
 //****************************************************************************//
 // Dynamic library export setup                                               //
 //****************************************************************************//
@@ -42,12 +47,15 @@
 // Endianness setup                                                           //
 //****************************************************************************//
 
-#if defined(__i386__) || \
-    defined(__alpha__) || \
-    (defined(__mips__) && defined(MIPSEL)) || \
-    defined(__MIPSEL__) || \
-    (defined(__arm__) && defined(ARMEL)) || \
-    defined(__ARMEL__) || defined(_WIN32)
+#if  defined(__i386__) || \
+     defined(__ia64__) || \
+     defined(WIN32) || \
+     defined(__alpha__) || defined(__alpha) || \
+     defined(__arm__) || \
+    (defined(__mips__) && defined(__MIPSEL__)) || \
+     defined(__SYMBIAN32__) || \
+     defined(__x86_64__) || \
+     defined(__LITTLE_ENDIAN__)
 
 #define CAL3D_LITTLE_ENDIAN
 
@@ -62,15 +70,16 @@
 //****************************************************************************//
 
 // standard includes
-#include <cstdlib>
-#include <cmath>
+#include <stdlib.h>
+#include <math.h>
 
 // debug includes
-#include <cassert>
+#include <assert.h>
 
 // STL includes
 #include <iostream>
 #include <fstream>
+#include <sstream>
 #include <string>
 #include <vector>
 #include <list>
@@ -93,14 +102,20 @@ protected:
 
 // member functions	
 public:
-  static bool readBytes(std::ifstream& file, void *pBuffer, int length);
-  static bool readFloat(std::ifstream& file, float& value);
-  static bool readInteger(std::ifstream& file, int& value);
-  static bool readString(std::ifstream& file, std::string& strValue);
-  static bool writeBytes(std::ofstream& file, const void *pBuffer, int length);
-  static bool writeFloat(std::ofstream& file, float value);
-  static bool writeInteger(std::ofstream& file, int value);
-  static bool writeString(std::ofstream& file, const std::string& strValue);
+  static bool readBytes(std::istream& input, void *pBuffer, int length);
+  static bool readFloat(std::istream& input, float& value);
+  static bool readInteger(std::istream& input, int& value);
+  static bool readString(std::istream& input, std::string& strValue);
+
+  static bool readBytes(char* input, void *pBuffer, int length);
+  static bool readFloat(char* input, float& value);
+  static bool readInteger(char* input, int& value);
+  static bool readString(char* input, std::string& strValue);
+
+  static bool writeBytes(std::ostream& output, const void *pBuffer, int length);
+  static bool writeFloat(std::ostream& output, float value);
+  static bool writeInteger(std::ostream& output, int value);
+  static bool writeString(std::ostream& output, const std::string& strValue);
 };
 
 #endif

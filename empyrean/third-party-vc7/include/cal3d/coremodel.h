@@ -15,7 +15,7 @@
 // Includes                                                                   //
 //****************************************************************************//
 
-#include "global.h"
+#include "cal3d/global.h"
 
 //****************************************************************************//
 // Forward declarations                                                       //
@@ -23,6 +23,7 @@
 
 class CalCoreSkeleton;
 class CalCoreAnimation;
+class CalCoreMorphAnimation;
 class CalCoreMesh;
 class CalCoreMaterial;
 
@@ -41,10 +42,12 @@ protected:
   std::string m_strName;
   CalCoreSkeleton *m_pCoreSkeleton;
   std::vector<CalCoreAnimation *> m_vectorCoreAnimation;
+  std::vector<CalCoreMorphAnimation *> m_vectorCoreMorphAnimation;
   std::vector<CalCoreMesh *> m_vectorCoreMesh;
   std::vector<CalCoreMaterial *> m_vectorCoreMaterial;
   std::map<int, std::map<int, int> > m_mapmapCoreMaterialThread;
   Cal::UserData m_userData;
+  std::map<std::string, int> m_animationHelper;
 
 // constructors/destructor
 public:
@@ -54,13 +57,16 @@ public:
 // member functions
 public:
   int addCoreAnimation(CalCoreAnimation *pCoreAnimation);
+  int addCoreMorphAnimation(CalCoreMorphAnimation *pCoreMorphAnimation);
   int addCoreMaterial(CalCoreMaterial *pCoreMaterial);
   int addCoreMesh(CalCoreMesh *pCoreMesh);
   bool create(const std::string& strName);
   bool createCoreMaterialThread(int coreMaterialThreadId);
   void destroy();
   CalCoreAnimation *getCoreAnimation(int coreAnimationId);
+  CalCoreMorphAnimation *getCoreMorphAnimation(int coreMorphAnimationId);
   int getCoreAnimationCount();
+  int getCoreMorphAnimationCount();
   CalCoreMaterial *getCoreMaterial(int coreMaterialId);
   int getCoreMaterialCount();
   int getCoreMaterialId(int coreMaterialThreadId, int coreMaterialSetId);
@@ -79,6 +85,11 @@ public:
   bool setCoreMaterialId(int coreMaterialThreadId, int coreMaterialSetId, int coreMaterialId);
   void setCoreSkeleton(CalCoreSkeleton *pCoreSkeleton);
   void setUserData(Cal::UserData userData);
+  void addBoneHelper(const std::string& strBoneName, int boneId);
+  void addAnimHelper(const std::string& strAnimName, int animId);
+  int getBoneId(const std::string& strBoneName);
+  int getAnimId(const std::string& strAnimName);
+
 };
 
 #endif

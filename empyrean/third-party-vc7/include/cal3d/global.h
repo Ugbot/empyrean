@@ -21,10 +21,10 @@
 #endif
 
 // platform dependent includes
-#include "platform.h"
+#include "cal3d/platform.h"
 
 //****************************************************************************//
-// 16/32 bits indices stuff                                                                     //
+// Define options
 //****************************************************************************//
 
 //Uncomment this if you want to use 16bit indices or configure the compiler
@@ -53,8 +53,13 @@ namespace Cal
   const char MESH_FILE_MAGIC[4]      = { 'C', 'M', 'F', '\0' };
   const char MATERIAL_FILE_MAGIC[4]  = { 'C', 'R', 'F', '\0' };
 
+  const char SKELETON_XMLFILE_MAGIC[4]  = { 'X', 'S', 'F', '\0' };
+  const char ANIMATION_XMLFILE_MAGIC[4]  = { 'X', 'A', 'F', '\0' };
+  const char MESH_XMLFILE_MAGIC[4]  = { 'X', 'M', 'F', '\0' };
+  const char MATERIAL_XMLFILE_MAGIC[4]  = { 'X', 'R', 'F', '\0' };
+
   // library version
-  const int LIBRARY_VERSION = 799;
+  const int LIBRARY_VERSION = 900;
 
   // file versions
   const int CURRENT_FILE_VERSION = LIBRARY_VERSION;

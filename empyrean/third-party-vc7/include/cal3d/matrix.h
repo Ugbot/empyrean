@@ -15,7 +15,7 @@
 // Includes                                                                   //
 //****************************************************************************//
 
-#include "global.h"
+#include "cal3d/global.h"
 
 //****************************************************************************//
 // Forward declarations                                                       //
@@ -57,6 +57,7 @@ public:
   void operator *= (const CalMatrix &m);
   void operator *= (float factor);
   void blend(float d, const CalMatrix& m);
+  float det();
 };
 
 

@@ -15,7 +15,7 @@
 // Includes                                                                   //
 //****************************************************************************//
 
-#include "global.h"
+#include "cal3d/global.h"
 
 //****************************************************************************//
 // Forward declarations                                                       //
@@ -50,6 +50,7 @@ public:
   CalCoreSubmesh *getCoreSubmesh(int id);
   int getCoreSubmeshCount();
   std::vector<CalCoreSubmesh *>& getVectorCoreSubmesh();
+  int addAsMorphTarget(CalCoreMesh *pCoreMesh);
 };
 
 #endif

@@ -15,17 +15,21 @@
 // Includes                                                                   //
 //****************************************************************************//
 
-#include "global.h"
-#include "vector.h"
-#include "quaternion.h"
-#include "matrix.h"
+#include "cal3d/global.h"
+#include "cal3d/vector.h"
+#include "cal3d/quaternion.h"
+#include "cal3d/matrix.h"
+#include "cal3d/corebone.h"
 
 //****************************************************************************//
 // Forward declarations                                                       //
 //****************************************************************************//
 
-class CalCoreBone;
+//class CalCoreBone;
 class CalSkeleton;
+class CalModel;
+class CalCoreModel;
+//class CalBoundingBox;
 
 //****************************************************************************//
 // Class declaration                                                          //
@@ -50,6 +54,9 @@ protected:
   CalVector m_translationBoneSpace;
   CalQuaternion m_rotationBoneSpace;
   CalMatrix m_transformMatrix;
+  
+  CalBoundingBox m_boundingBox;
+
 
 // constructors/destructor
 public:
@@ -64,15 +71,23 @@ public:
   bool create(CalCoreBone *pCoreBone);
   void destroy();
   CalCoreBone *getCoreBone();
+  void setCoreState();
+  void setCoreStateRecursive();
+  void setRotation(const CalQuaternion& rotation);
   const CalQuaternion& getRotation();
   const CalQuaternion& getRotationAbsolute();
   const CalQuaternion& getRotationBoneSpace();
+  void setTranslation(const CalVector& translation);
   const CalVector& getTranslation();
   const CalVector& getTranslationAbsolute();
   const CalVector& getTranslationBoneSpace();
   const CalMatrix& getTransformMatrix();
   void lockState();
   void setSkeleton(CalSkeleton *pSkeleton);
+  void calculateBoundingBox();
+  CalBoundingBox & getBoundingBox();
+
+
 };
 
 #endif

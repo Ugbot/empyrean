@@ -15,7 +15,7 @@
 // Includes                                                                   //
 //****************************************************************************//
 
-#include "global.h"
+#include "cal3d/global.h"
 
 //****************************************************************************//
 // Forward declarations                                                       //
@@ -57,6 +57,7 @@ public:
   void setLodLevel(float lodLevel);
   void setMaterialSet(int setId);
   void setModel(CalModel *pModel);
+  void disableInternalData();
 };
 
 #endif
