@@ -20,7 +20,7 @@ namespace pyr {
         _inputQuit  = &_im.getInput("Escape");
         _rotation = 0;
 
-        _renderer=new DefaultRenderer;
+        _renderer=new CellShadeRenderer; //new DefaultRenderer;
         _testModel=Model::create("paladin/paladin.cfg");
     }
     

@@ -221,6 +221,7 @@ namespace {
             glEnable(GL_TEXTURE_1D);
             glActiveTextureARB(GL_TEXTURE0_ARB);
             glEnable(GL_TEXTURE_2D);
+            glColor3f(1,1,1);
         }
 
         inline void end() {
@@ -236,6 +237,7 @@ namespace {
         inline void drawVert(float* verts,float* normals,float* texcoords) {
             gmtl::Vec3f v(_mat * gmtl::Vec3f(normals[0],normals[1],normals[2]));
             float light = gmtl::dot(v,_lightVec);
+            if (light<0) light=0;
 
             glMultiTexCoord1fARB(GL_TEXTURE1_ARB, light);
             glTexCoord2fv(texcoords);
@@ -250,20 +252,17 @@ namespace {
     };
 
     // there is no way I'm copy/pasting out those insane goddamn typedef names
-    // Macro for stringizing.  Template function for casting nonsense.
-#define PYR_GET_EXTENSION(name) assign(name, SDL_GL_GetProcAddress(#name))
 
     template <class T>
-    void assign(T d,void* s) {
+    void assign(T& d,void* s) {
         d=(T)s;
     }
 
     void initExtensions() {
-        PYR_GET_EXTENSION(glActiveTextureARB);
-        PYR_GET_EXTENSION(glMultiTexCoord1fARB);
+        assign(glActiveTextureARB,SDL_GL_GetProcAddress("glActiveTextureARB"));
+        assign(glMultiTexCoord1fARB,SDL_GL_GetProcAddress("glMultiTexCoord1fARB"));
     }
 
-#undef PYR_GET_EXTENSION
 };
 
 namespace pyr {
@@ -296,14 +295,14 @@ namespace pyr {
     }
 
     CellShadeRenderer::ShadeTex::ShadeTex() {
-        u32 pixels[32];
+        u8 pixels[32*3];
         int i=0;
-        while (i<1) pixels[i++]=0xFF404040;
-        while (i<13) pixels[i++]=0xFF808080;
-        while (i<32) pixels[i++]=0xFFFFFFFF;
+        while (i<1 *3) pixels[i++]=0x40;
+        while (i<13*3) pixels[i++]=0x80;
+        while (i<32*3) pixels[i++]=0xFF;
         glGenTextures(1,&handle);
         glBindTexture(GL_TEXTURE_1D,handle);
-        glTexImage1D(GL_TEXTURE_1D,0,GL_RGBA,32,0,GL_RGBA,GL_UNSIGNED_BYTE,pixels);
+        glTexImage1D(GL_TEXTURE_1D,0,GL_RGB,32,0,GL_RGB,GL_UNSIGNED_BYTE,pixels);
         glTexParameteri(GL_TEXTURE_1D,GL_TEXTURE_MIN_FILTER,GL_NEAREST);
         glTexParameteri(GL_TEXTURE_1D,GL_TEXTURE_MAG_FILTER,GL_NEAREST);
         glTexParameteri(GL_TEXTURE_1D,GL_TEXTURE_WRAP_R,GL_CLAMP);
