@@ -36,6 +36,7 @@ SOURCES = Split("""
     SDLUtility.cpp
     ServerConnection.cpp
     ServerConnectionThread.cpp
+    State.cpp
     UIState.cpp
 """)
 

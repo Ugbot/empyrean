@@ -1,11 +1,12 @@
 #include "CutSceneState.h"
-#include "GameState.h"
 #include "GLUtility.h"
 #include "PythonScript.h"
 #include "Texture.h"
 
 
 namespace pyr {
+
+    class GameState;
 
     CutSceneState::CutSceneState() {
         _cutScene = new CutScene;

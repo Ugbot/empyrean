@@ -2,11 +2,24 @@
 #define PYR_STATE_H
 
 
-#include "Application.h"
+#include <SDL.h>
 #include "Utility.h"
 
 
 namespace pyr {
+
+    class State;
+
+    /**
+     * This class lets you instantiate states and invoke transitions
+     * without needing to include the state's header directly.  It just
+     * has to be listed in State.cpp.
+     */
+    template<typename T>
+    struct StateFactory {
+        static State* create();
+        static void invokeTransition();
+    };
 
     class State {
     public:
@@ -38,12 +51,10 @@ namespace pyr {
     protected:
         template<typename T>
         static void invokeTransition() {
-            the<Application>().invokeTransition(new T());
+            StateFactory<T>::invokeTransition();
         }
         
-        static void quit() {
-            the<Application>().quit();
-        }
+        static void quit();
         
         void showPointer() { _pointerVisible = true;  }
         void hidePointer() { _pointerVisible = false; }
@@ -51,6 +62,16 @@ namespace pyr {
     private:
         Inited<bool, false> _pointerVisible;
     };
+
+
+    /**
+     * This magic lets us invoke transitions and instantiate states
+     * without needing to include the state class we want to instantiate.
+     */
+    template<typename T>
+    State* instantiateState() {
+        return StateFactory<T>::create();
+    }
 
 }
 

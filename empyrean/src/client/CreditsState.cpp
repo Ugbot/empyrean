@@ -1,11 +1,12 @@
 #include <stdexcept>
 #include "CreditsState.h"
 #include "GLUtility.h"
-#include "MenuState.h"
 #include "OpenGL.h"
 
 
 namespace pyr {
+
+    class MenuState;
 
     CreditsState::CreditsState() {
         _renderer = gltext::CreateRenderer(

@@ -1,4 +1,6 @@
 #include <phui/SDLBridge.h>
+#include "Application.h"
+#include "Profiler.h"
 #include "UIState.h"
 
 
@@ -38,8 +40,8 @@ namespace pyr {
 
     void UIState::onMousePress(Uint8 button, bool down, int x, int y) {
         const phui::Point p(
-            x * 1024 / Application::instance().getWidth(),
-            y * 768 / Application::instance().getHeight());
+            x * 1024 / the<Application>().getWidth(),
+            y * 768  / the<Application>().getHeight());
         if (down) {
             _root->genMouseDownEvent(phui::SDLToPhuiButton(button), p);
         } else {

@@ -5,15 +5,16 @@
 
 #include "Application.h"
 #include "GLUtility.h"
-#include "IntroState.h"
 #include "NSPRUtility.h"
 #include "OpenGL.h"
 #include "Profiler.h"
 #include "Renderer.h"
+#include "State.h"
 #include "Texture.h"
 
 namespace pyr {
 
+    class IntroState;
     typedef IntroState InitialState;
 
 
@@ -21,7 +22,7 @@ namespace pyr {
 
     
     Application::Application() {
-        _currentState = new InitialState();
+        _currentState = instantiateState<InitialState>();
         
         gltext::FontPtr font = gltext::OpenFont("fonts/Vera.ttf", 24);
         _renderer = gltext::CreateRenderer(gltext::TEXTURE, font);

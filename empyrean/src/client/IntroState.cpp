@@ -1,12 +1,13 @@
 #include "GLUtility.h"
 #include "IntroState.h"
-#include "MenuState.h"
 #include "OpenGL.h"
 #include "Renderer.h"
 #include "Texture.h"
 
 
 namespace pyr {
+
+    class MenuState;
 
     IntroState::IntroState() 
         : _image(Texture::create("images/intro.tga"))

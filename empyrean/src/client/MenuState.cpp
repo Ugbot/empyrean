@@ -1,8 +1,4 @@
 #include <phui/SDLBridge.h>
-#include "CreditsState.h"
-#include "CutSceneState.h"
-#include "GameState.h"
-#include "LobbyState.h"
 #include "MainMenuWindow.h"
 #include "MenuState.h"
 #include "ServerConnection.h"
@@ -10,6 +6,9 @@
 
 
 namespace pyr {
+
+    class CreditsState;
+    class LobbyState;
 
     MenuState::MenuState() {
         showPointer();

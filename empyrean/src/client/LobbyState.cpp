@@ -1,12 +1,13 @@
-#include "GameState.h"
 #include "JoinGameWindow.h"
 #include "LobbyState.h"
-#include "MenuState.h"
 #include "NewGameWindow.h"
 #include "ServerConnection.h"
 
 
 namespace pyr {
+
+    class GameState;
+    class MenuState;
 
     LobbyState::LobbyState() {
         showPointer();

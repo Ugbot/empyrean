@@ -1,5 +1,6 @@
 #include <stdexcept>
 #include "AppearanceFactory.h"
+#include "Application.h"
 #include "Constants.h"
 #include "GameState.h"
 #include "GLUtility.h"
