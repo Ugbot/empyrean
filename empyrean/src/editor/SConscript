@@ -20,7 +20,7 @@ SOURCES = Split("""
 """)
 
 env = base_env.Copy()
-for t in Split('PyrBase NSPR Corona wxWindows OpenGL'):
+for t in Split('PyrBase NSPR Corona wxWindows OpenGL Expat'):
     TOOLS[t](env)
 
 if env['PLATFORM'] == 'cygwin':

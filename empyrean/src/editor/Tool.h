@@ -24,7 +24,7 @@ namespace pyr {
         bool alt;
 
         void handleCommand(Command* command) {
-            return cmd->handleCommand(command);
+            cmd->handleCommand(command);
         }
     };
 

@@ -177,7 +177,7 @@ namespace pyr {
         toolbar->AddTool(ID_VIEW_TRANSLATE, PNG_BITMAP("editorrc/view_translate.png"));
         toolbar->AddTool(ID_VIEW_ZOOM,      PNG_BITMAP("editorrc/view_zoom.png"));
         toolbar->AddSeparator();
-        toolbar->AddTool(ID_TOOL_TRANSLATE, NG_BITMAP("editorrc/tool_translate.png"));
+        toolbar->AddTool(ID_TOOL_TRANSLATE, PNG_BITMAP("editorrc/tool_translate.png"));
         toolbar->AddSeparator();
         toolbar->AddTool(ID_TOOL_CREATE_GEOMETRY, PNG_BITMAP("editorrc/tool_translate.png"));
         #endif

@@ -60,6 +60,7 @@ namespace pyr {
                 static float normals[30000][3];
                 int nNormals=r->getNormals(&normals[0][0]);
 
+/*
                 if (cellshade) {
                     gmtl::Matrix44f mat;
                     glGetFloatv(GL_MODELVIEW_MATRIX,const_cast<float*>(mat.getData())); // evil
@@ -84,7 +85,7 @@ namespace pyr {
                     glClientActiveTexture(GL_TEXTURE0_ARB);
                     glActiveTexture(GL_TEXTURE0_ARB);
 
-                } else {
+               } else */ {
                     glEnableClientState(GL_NORMAL_ARRAY);
                     glNormalPointer(GL_FLOAT, 0, &normals[0][0]);
                 }
@@ -106,6 +107,7 @@ namespace pyr {
 
                 glDrawElements(GL_TRIANGLES, nFaces*3, GL_UNSIGNED_INT, &faces[0][0]);
 
+/*
                 if (cellshade) {
                     glClientActiveTexture(GL_TEXTURE1_ARB);
                     glDisableClientState(GL_TEXTURE_COORD_ARRAY);
@@ -113,6 +115,7 @@ namespace pyr {
                     glDisable(GL_TEXTURE_1D);
                     glActiveTexture(GL_TEXTURE0_ARB);
                 }
+*/
             }
         }
 
@@ -223,6 +226,7 @@ namespace pyr {
         }
     };
 
+#if 0
     /** Cell shading algorithm outlined at http://nehe.gamedev.net/tutorials/lesson37.jpg
      *
      * Texture unit 0 is used for the actual model texture.  That hasn't changed.
@@ -283,6 +287,7 @@ namespace pyr {
             glBindTexture(GL_TEXTURE_2D,tex);
         }
     };
+#endif
 
 
     DefaultRenderer::DefaultRenderer() {
@@ -305,6 +310,7 @@ namespace pyr {
         _useVertexArrays = b;
     }
 
+#if 0
     CellShadeRenderer::ShadeTex::ShadeTex() {
         u8 pixels[32*3];
         int i=0;
@@ -347,4 +353,5 @@ namespace pyr {
     void CellShadeRenderer::useVertexArrays(bool b) {
         _useVertexArrays=b;
     }
+#endif
 }
