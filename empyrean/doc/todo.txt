@@ -47,3 +47,5 @@ reduce latency of network operation (condition variable to interrupt sleep
     when packet is recieved?)
 when writing XML, don't do it manually but build a tree and have the tree
     write itself
+namealias support in the resource manager (i.e. IntroImage maps to images/intro.png)
+fonts in resource manager
