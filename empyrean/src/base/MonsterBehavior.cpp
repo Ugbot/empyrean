@@ -27,10 +27,10 @@ namespace pyr {
 
         if (closest) {
             float xvel = 0;
-            if (closest->getPos()[0] > entity->getPos()[0]) {
+            if (closest->getPos()[0] > entity->getPos()[0] + 1.0) {
                 xvel = 1;
             }
-            if (closest->getPos()[0] < entity->getPos()[0]) {
+            if (closest->getPos()[0] < entity->getPos()[0] - 1.0) {
                 xvel = -1;
             }
             entity->getVel()[0] = xvel;
