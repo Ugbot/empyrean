@@ -131,7 +131,7 @@ namespace pyr {
         /**
          * Add a reference to the internal reference count.
          */
-        virtual void ref() {
+        void ref() {
             ++_refCount;
         }
 
@@ -139,7 +139,7 @@ namespace pyr {
          * Remove a reference from the internal reference count.  When this
          * reaches 0, the object is destroyed.
          */
-        virtual void unref() {
+        void unref() {
             if (--_refCount == 0) {
                 delete this;
             }
