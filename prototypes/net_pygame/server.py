@@ -26,10 +26,10 @@ class World:
         l = ScopedLock(self.lock)
 
         for c in self.connections:
-            conn.send('added %d' % c.id)
+            conn.send('added %d %f %f' % (c.id, c.x, c.y))
         self.connections.append(conn)
         for c in self.connections:
-            c.send('added %d' % conn.id)
+            c.send('added %d %f %f' % (conn.id, conn.x, conn.y))
 
     def remove_connection(self, conn):
         l = ScopedLock(self.lock)
@@ -61,6 +61,9 @@ class ConnectionThread(threading.Thread):
     y  = 0.0
     vx = 0.0
     vy = 0.0
+
+    last_x = 0.0
+    last_y = 0.0
 
     def __init__(self, socket):
         threading.Thread.__init__(self)
@@ -121,12 +124,15 @@ class ConnectionThread(threading.Thread):
             pass
 
     def update(self, dt):
+        self.last_x = self.x
+        self.last_y = self.y
         self.x += self.vx * dt
         self.y += self.vy * dt
 
     def broadcast(self, connections):
         for c in connections:
-            self.send("update %d %f %f" % (c.id, c.x, c.y))
+            if c.x != c.last_x or c.y != c.last_y:
+                self.send("update %d %f %f" % (c.id, c.x, c.y))
 
 
 class ListenerThread(threading.Thread):

@@ -25,12 +25,13 @@ class Vec:
 
 
 class Entity:
-    id  = 0
-    pos = Vec(0, 0)
+    # id
+    # pos
 
-    def __init__(self, id):
+    def __init__(self, id, pos):
         self.id = id
-    
+        self.pos = pos
+
 
 class NetworkThread(threading.Thread):
     def __init__(self, listener):
@@ -189,7 +190,9 @@ class Client:
                 self.others[id].pos = Vec(x, y)
             elif command == "added":
                 id = int(args[0])
-                self.others[id] = Entity(id)
+                x = float(args[1])
+                y = float(args[2])
+                self.others[id] = Entity(id, Vec(x, y))
             elif command == "removed":
                 id = int(args[0])
                 del self.others[id]
