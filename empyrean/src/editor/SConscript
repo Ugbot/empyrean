@@ -8,11 +8,15 @@ SOURCES = Split("""
     MapOutliner.cpp
     MapTree.cpp
     MapTreeUpdater.cpp
+    MapUpdateVisitor.cpp
     MapView.cpp
     ObstructionTool.cpp
     PropertyGridUpdater.cpp
     RectangleTool.cpp
     Tool.cpp
+    TranslateViewTool.cpp
+    UpdateGeometryElementCommand.cpp
+    UpdateMapElementCommand.cpp
 """)
 
 env = base_env.Copy()

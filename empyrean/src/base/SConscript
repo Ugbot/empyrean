@@ -5,6 +5,7 @@ SOURCES = Split("""
     Canvas.cpp
     Connection.cpp
     Error.cpp
+    GLUtility.cpp
     MapElement.cpp
     MapFile.cpp
     MapRenderer.cpp

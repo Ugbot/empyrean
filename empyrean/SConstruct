@@ -129,7 +129,8 @@ else:
 if base_env['PLATFORM'] == 'irix':
     base_env.Append(
         CPPPATH = string.split(os.environ['CPLUS_INCLUDE_PATH'], ':'),
-        LIBPATH = string.split(os.environ['LIBRARY_PATH'], ':'))
+        LIBPATH = string.split(os.environ['LIBRARY_PATH'], ':'),
+        LIBS = ['m'])
 
 # Process build options.
 if ARGUMENTS.get('dbg'):

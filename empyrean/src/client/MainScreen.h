@@ -27,7 +27,7 @@ namespace pyr {
             PicturePtr background = new Picture("images/title/title_composite.tga");
             background->setPositionAndSize(0, 0, 1024, 768);
             
-            WindowPtr buttons = new Window(
+            WindowPtr buttons = new phui::Window(
                 "Empyrean",
                 new BoxLayout(BoxLayout::VERTICAL));
             buttons->setPositionAndSize(400, 320, 224, 280);
@@ -79,7 +79,7 @@ namespace pyr {
             buttonPanel->add(cancel);
                         
 
-            _connectWindow = new Window(
+            _connectWindow = new phui::Window(
                 "Connect to Server",
                 new BoxLayout(BoxLayout::VERTICAL));
             _connectWindow->show();
@@ -91,7 +91,7 @@ namespace pyr {
         void createConnectingWindow() {
             using namespace phui;
             
-            _connectingWindow = new Window(
+            _connectingWindow = new phui::Window(
                 "Connecting...",
                 new BoxLayout(BoxLayout::VERTICAL));
             _connectingWindow->add(new Label("Connecting..."));
