@@ -8,10 +8,14 @@
 
 namespace pyr {
 
-    inline void setOrthoProjection(float width, float height) {
+    inline void setOrthoProjection(float width, float height, bool cartesian = false) {
         glMatrixMode(GL_PROJECTION);
         glLoadIdentity();
-        gluOrtho2D(0, width, height, 0);
+        if (cartesian) {
+            gluOrtho2D(0, width, 0, height);
+        } else {
+            gluOrtho2D(0, width, height, 0);
+        }
         
         glMatrixMode(GL_MODELVIEW);
         glLoadIdentity();

@@ -26,10 +26,7 @@ namespace pyr {
         // Nominal viewport is 12 meters wide and 9 meters high.
         const float width = 12.0f;
         const float height = 9.0f;
-        setOrthoProjection(width, height);
-        // flip upside-down.  this could go into setOrthoProjection as an option
-        glScalef(1, -1, 1);
-        glTranslatef(0, -height, 0);
+        setOrthoProjection(width, height, true);
         
         float focusX = 0;
         float focusY = 0;

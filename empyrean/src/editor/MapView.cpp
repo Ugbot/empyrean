@@ -1,11 +1,13 @@
 #include <stdlib.h>
-#include "MapView.h"
-#include "Tool.h"
+#include "GLUtility.h"
 #include "MainFrame.h"
-//#include "RectangleTool.h"
-#include "Texture.h"
-#include "MapRenderer.h"
 #include "MapOutliner.h"
+#include "MapRenderer.h"
+#include "MapView.h"
+#include "Texture.h"
+#include "Tool.h"
+#include "TranslateViewTool.h"
+
 
 namespace pyr {
 
@@ -26,23 +28,20 @@ namespace pyr {
         : wxGLCanvas(parent, -1)
         , _mainFrame(mainFrame)
     {
-        //typedef RectangleTool DefaultTool;
+        typedef TranslateViewTool DefaultTool;
 
-        //_tool = new DefaultTool(_mainFrame);
-
-        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+        _tool = new DefaultTool;
     }
 
     MapView::~MapView() {
     }
     
-    
     const Map* MapView::getMap() const {
         return _mainFrame->getMap();
     }
     
-    
     void MapView::setTool(Tool* tool) {
+        PYR_ASSERT(tool, "No tool passed to setTool");
         _tool = tool;
         Refresh();
     }
@@ -78,7 +77,6 @@ namespace pyr {
         SetCurrent();
         
         draw();
-
         SwapBuffers();
     }
     
@@ -91,8 +89,8 @@ namespace pyr {
     
         ToolEvent te;
         te.cmd = _mainFrame;
-        te.x = float(e.GetX()) / size.x *  2 - 1;
-        te.y = float(e.GetY()) / size.y * -2 + 1;
+        te.pos[0] = float(e.GetX()) / size.x *  2 - 1;
+        te.pos[1] = float(e.GetY()) / size.y * -2 + 1;
         te.leftButton = e.LeftIsDown();
         te.rightButton = e.RightIsDown();
         te.middleButton = e.MiddleIsDown();
@@ -105,12 +103,12 @@ namespace pyr {
         int button = e.GetButton();
         
         if (button == -1) {
-            //repaint = _tool->onMouseMove(te);
+            repaint = _tool->onMouseMove(te);
         } else if (button == 1) {
             if (e.ButtonDown()) {
-                //repaint = _tool->onLeftDown(te);
+                repaint = _tool->onLeftDown(te);
             } else {
-                //repaint = _tool->onLeftUp(te);
+                repaint = _tool->onLeftUp(te);
             }
         }
         
@@ -120,7 +118,13 @@ namespace pyr {
     }
     
     void MapView::draw() {
-
+        // Use these to determine the projection.
+        int w, h;
+        GetClientSize(&w, &h);
+    
+        setOrthoProjection(12, 9, true);
+        glTranslatef(6 - _viewCenter[0], 4.5f - _viewCenter[1], 0);
+    
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
         glEnable(GL_TEXTURE_2D);
@@ -133,18 +137,12 @@ namespace pyr {
         MapOutliner outliner;
         getMap()->getRoot()->handleVisitor(&outliner);
 
-        //_tool->onRender();
-    }
-
-    /*void MapView::drawRect(const Map::Rect* rect) {
-        Texture* t = TexManager::instance().loadTex(rect->name);
-
-        glBindTexture(GL_TEXTURE_2D, t->getHandle());
-        glBegin(GL_QUADS);
-        glTexCoord2f(0, 1); glVertex2f(rect->x, rect->y);
-        glTexCoord2f(1, 1); glVertex2f(rect->x + rect->width, rect->y);
-        glTexCoord2f(1, 0); glVertex2f(rect->x + rect->width, rect->y + rect->height);
-        glTexCoord2f(0, 0); glVertex2f(rect->x, rect->y + rect->height);
+        _tool->onRender();
+        
+        // draw origin
+        glBegin(GL_LINES);
+        glColor3f(1, 0, 0); glVertex2f(0, 0); glVertex2f(1, 0);
+        glColor3f(0, 1, 0); glVertex2f(0, 0); glVertex2f(0, 1);
         glEnd();
-    }*/
+    }
 }
