@@ -1,0 +1,8 @@
+<model scale="0.1">
+  <skeleton file="robot.xsf"/>
+  <mesh file="robot.xmf"/>
+  <animation name="idle" file="robot_idle.xaf"/>
+  <animation name="walk" file="robot_run.xaf"/>
+  <animation name="attack" file="robot_attack.xaf"/>
+  <!-- need jump anims -->
+</model>

@@ -236,6 +236,9 @@ namespace pyr {
         
         if(_inputAttack->getDelta() < -gmtl::GMTL_EPSILON) {
             the<AudioSystem>().playSound("sounds/attack.wav");
+            if (ClientEntityPtr focus = _scene.getFocus()) {
+                focus->beginAnimation("attack");
+            }
             sc.sendAttack("Attack");
         }
 

@@ -323,7 +323,7 @@ namespace pyr {
         ServerEntity* entity = new ServerEntity(
             _idGenerator.reserve(),
             pb,
-            new ServerAppearance("cal3d", "models/paladin/paladin.cal3d"),
+            new ServerAppearance("cal3d", "models/robot/robot.cal3d"),
             // Just pick a character.
             cd->account->getCharacter(0));
         entity->setPos(_startPosition);
