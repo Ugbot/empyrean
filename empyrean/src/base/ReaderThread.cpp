@@ -26,6 +26,8 @@ namespace pyr {
             int read = _socket->read(buffer, sizeof(buffer), 0.5f);
             if (read < 0) {
                 break;
+            } else if (read == 0) {
+                continue;
             }
 
             bb.add(buffer, read);
@@ -52,7 +54,7 @@ namespace pyr {
     }
 
     Packet* ReaderThread::extractPacket(ByteBuffer& bb) {
-        if (bb.getSize() > 4) {
+        if (bb.getSize() >= 4) {
             u16* p_id   = (u16*)bb.getBuffer();
             u16* p_size = (u16*)bb.getBuffer() + 1;
             u16 id   = PR_ntohs(*p_id);
