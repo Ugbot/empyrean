@@ -24,12 +24,14 @@ const int xres=640,yres=480;
 Model model;
 GLuint shadetex;
 bool cellshade=true;
-bool outline=true;
+bool outline=false;
+bool usevertexarrays=false;
 float lodlevel=1.0f;
 Vector<float> lightvec(1,0,1);
 std::map<std::string,GLuint> textures;
 
 PFNGLACTIVETEXTUREARBPROC glActiveTexture;
+PFNGLCLIENTACTIVETEXTUREARBPROC glClientActiveTexture;
 PFNGLMULTITEXCOORD1FARBPROC glMultiTexCoord1f;
 PFNGLMULTITEXCOORD2FARBPROC glMultiTexCoord2f;
 PFNGLMULTITEXCOORD2FVARBPROC glMultiTexCoord2fv;
@@ -79,6 +81,7 @@ int main(int argc,char* args[])
     screen=SDL_SetVideoMode(xres,yres,32,SDL_OPENGL);
 
     assign(glActiveTexture,"glActiveTextureARB");
+    assign(glClientActiveTexture,"glClientActiveTextureARB");
     assign(glMultiTexCoord1f,"glMultiTexCoord1fARB");
     assign(glMultiTexCoord2f,"glMultiTexCoord2fARB");
     assign(glMultiTexCoord2fv,"glMultiTexCoord2fvARB");
@@ -88,9 +91,9 @@ int main(int argc,char* args[])
     glClearDepth(1);
     glEnable(GL_DEPTH_TEST);
     glHint(GL_PERSPECTIVE_CORRECTION_HINT,GL_NICEST);
-    glHint(GL_LINE_SMOOTH_HINT,GL_NICEST);
+//    glHint(GL_LINE_SMOOTH_HINT,GL_NICEST);
     glHint(GL_POLYGON_SMOOTH_HINT,GL_NICEST);
-    glEnable(GL_LINE_SMOOTH);    
+//    glEnable(GL_LINE_SMOOTH);    
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
     gluPerspective(45,1.0*xres/yres,0.1,800);
@@ -122,9 +125,14 @@ int main(int argc,char* args[])
     glTexImage1D(GL_TEXTURE_1D,0,GL_RGBA,32,0,GL_RGBA,GL_UNSIGNED_BYTE,pixels);
     glTexParameteri(GL_TEXTURE_1D,GL_TEXTURE_MIN_FILTER,GL_NEAREST);
     glTexParameteri(GL_TEXTURE_1D,GL_TEXTURE_MAG_FILTER,GL_NEAREST);
-    glEnable(GL_TEXTURE_1D);
-    glEnable(GL_BLEND);
-    glBlendFunc(GL_SRC_ALPHA,GL_ONE_MINUS_SRC_ALPHA);
+//    glEnable(GL_TEXTURE_1D);
+//    glEnable(GL_BLEND);
+//    glBlendFunc(GL_SRC_ALPHA,GL_ONE_MINUS_SRC_ALPHA);
+
+    glEnableClientState(GL_VERTEX_ARRAY);
+    glEnableClientState(GL_NORMAL_ARRAY);
+    glEnableClientState(GL_TEXTURE_COORD_ARRAY);
+    glEnable(GL_TEXTURE_2D);
 
     int time=SDL_GetTicks();
     bool kill=false;
@@ -170,14 +178,14 @@ int main(int argc,char* args[])
 
                 case SDLK_s:
                     cellshade=!cellshade;
-                    if (cellshade)
-                        glDisable(GL_LIGHTING);
-                    else
-                        glEnable(GL_LIGHTING);
                     break;
 
                 case SDLK_o:
                     outline=!outline;
+                    break;
+
+                case SDLK_v:
+                    usevertexarrays=!usevertexarrays;
                     break;
 
                 case SDLK_RIGHTBRACKET:
@@ -226,7 +234,7 @@ int main(int argc,char* args[])
 void Init()
 {
     model.Load("paladin.cfg");
-    model.GetModel().getMixer()->blendCycle(0,1,0.3f);
+    model.GetModel().getMixer()->blendCycle(0,1,4.0f);
     camera.x=camera.y=0; camera.z=-200;
     camera.rx=camera.ry=camera.rz=0;
 }
@@ -303,6 +311,102 @@ struct NoShade
     }
 };
 
+// I cannot fathom why, but this is actually slower than immediate mode! --andy
+void RenderMesh()
+{
+    Matrix<float> curmat;
+
+    glEnableClientState(GL_VERTEX_ARRAY);
+
+    CalRenderer* r=model.GetModel().getRenderer();
+    r->beginRendering();
+
+    if (cellshade)
+    {
+        glGetFloatv(GL_MODELVIEW_MATRIX,curmat.V);
+        curmat.v[3][0]=curmat.v[3][1]=curmat.v[3][2]=0;    // wipe the translation part out
+        glDisable(GL_LIGHTING);
+    }
+    else
+        glEnable(GL_LIGHTING);
+
+    int nMeshes=r->getMeshCount();
+    for (int curmesh=0; curmesh<nMeshes; curmesh++)
+    {
+        int nSubs=r->getSubmeshCount(curmesh);
+
+        for (int cursub=0; cursub<nSubs; cursub++)
+        {
+            r->selectMeshSubmesh(curmesh,cursub);
+
+            static float verts[30000][3];
+            int nVerts=r->getVertices(&verts[0][0]);
+            glVertexPointer(3,GL_FLOAT,0,&verts[0][0]);
+
+            static float normals[30000][3];
+            int nNormals=r->getNormals(&normals[0][0]);
+            if (!cellshade)
+            {
+                glEnableClientState(GL_NORMAL_ARRAY);
+                glNormalPointer(GL_FLOAT,0,&normals[0][0]);
+            }
+
+            if (r->getMapCount())
+            {
+                static float texcoords[30000][2];
+                int nTexcoords=r->getTextureCoordinates(0,&texcoords[0][0]);
+
+                int hTex=(GLuint)r->getMapUserData(0);
+                glEnableClientState(GL_TEXTURE_COORD_ARRAY);
+                glClientActiveTexture(GL_TEXTURE0_ARB);
+                glActiveTexture(GL_TEXTURE0_ARB);
+                glBindTexture(GL_TEXTURE_2D,hTex);
+                glTexCoordPointer(2,GL_FLOAT,0,&texcoords[0][0]);
+            }
+
+            if (cellshade)
+            {
+                // This should be WAY faster than the old way. @_@
+
+                static float texcoords2[30000];
+                for (int i=0; i<nVerts; i++)
+                {
+                    Vector<float> v(curmat*Vector<float>(normals[i]));
+                    float l=v.Dot(lightvec);
+                    if (l<0) l=0;
+                    texcoords2[i]=l;
+                }
+
+                glClientActiveTexture(GL_TEXTURE1_ARB);
+                glActiveTexture(GL_TEXTURE1_ARB);
+                glEnable(GL_TEXTURE_1D);
+                glEnableClientState(GL_TEXTURE_COORD_ARRAY);
+                glBindTexture(GL_TEXTURE_1D,shadetex);
+                glTexCoordPointer(1,GL_FLOAT,0,texcoords2);
+            }
+
+            static int faces[50000][3];
+            int nFaces=r->getFaces(&faces[0][0]);
+
+            glDrawElements(GL_TRIANGLES,nFaces*3,GL_UNSIGNED_INT,&faces[0][0]);
+
+            if (cellshade)
+            {
+                glDisable(GL_TEXTURE_1D);
+                glDisableClientState(GL_TEXTURE_COORD_ARRAY);
+            }
+            else
+                glDisableClientState(GL_NORMAL_ARRAY);
+            if (r->getMapCount())
+                glDisableClientState(GL_TEXTURE_COORD_ARRAY);
+        }
+    }
+
+    r->endRendering();
+
+    glDisableClientState(GL_VERTEX_ARRAY);
+}
+
 template <class T>
 void RenderMesh(T drawvert)
 {
@@ -343,7 +447,6 @@ void RenderMesh(T drawvert)
                 for (int i=0; i<3; i++)
                 {
                     int n=faces[f][i];
-                    //glTexCoord2fv(texcoords[n]);
                     glMultiTexCoord2fv(GL_TEXTURE0_ARB,texcoords[n]);
                     drawvert(normals[n],verts[n]);
                 }
@@ -359,6 +462,11 @@ void RenderMesh(T drawvert)
 
 void RenderOutline()
 {
+    /*
+     * This is far, far too slow, and I'm not entirely sure why.
+     * A quick jaunt to the opengl.org forums netted me a post on
+     * exactly this; GL_LINE is inordinately slow on some hardware.
+     */
     glPushAttrib(GL_ENABLE_BIT);
     glDisable(GL_TEXTURE_1D);
     glDisable(GL_TEXTURE_2D);
@@ -386,13 +494,18 @@ void Render()
     glRotatef(camera.rz,0,0,1);
 
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-    if (cellshade)
-    {
-        RenderMesh(CellShade());
-    }
-    else
-        RenderMesh(GLShade());
 
+    if (usevertexarrays)
+        RenderMesh();
+    else
+    {
+        if (cellshade)
+        {
+            RenderMesh(CellShade());
+        }
+        else
+            RenderMesh(GLShade());
+    }
     if (outline)
         RenderOutline();
 

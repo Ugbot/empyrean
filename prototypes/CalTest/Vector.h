@@ -50,8 +50,8 @@ union Vector
 
     inline void Normalize()
     {
-        T l=(T)sqrt(x*x+y*y+z*z);
-        x/=l;   y/=l;   z/=l;
+        T l=1/T(sqrt(x*x+y*y+z*z));
+        x*=l;   y*=l;   z*=l;
     }
 };
 
