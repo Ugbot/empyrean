@@ -15,6 +15,7 @@ namespace pyr {
     class LoginScreen;
     class LoggingInScreen;
     class LobbyScreen;
+    class NewGameScreen;
 
     class MenuState : public State {
     public:
@@ -57,6 +58,9 @@ namespace pyr {
         void onLobbyQuit();
         void onLobbySay(const std::string& text);
 
+        void onNewGameCreate(const std::string& name, const std::string& password);
+        void onNewGameCancel();
+
     private:
         void createInterface();
         void createMainScreen();
@@ -71,6 +75,7 @@ namespace pyr {
         phui::RefPtr<LoginScreen>      _loginScreen;
         phui::RefPtr<LoggingInScreen>  _loggingInScreen;
         phui::RefPtr<LobbyScreen>      _lobbyScreen;
+        phui::RefPtr<NewGameScreen>    _newGameScreen;
     };
 
 }

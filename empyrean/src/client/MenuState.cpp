@@ -8,6 +8,7 @@
 #include "LoginScreen.h"
 #include "MainScreen.h"
 #include "MenuState.h"
+#include "NewGameScreen.h"
 #include "OptionsState.h"
 #include "ServerConnection.h"
 #include "Texture.h"
@@ -145,7 +146,7 @@ namespace pyr {
     }
 
     void MenuState::onLobbyNewGame() {
-        invokeTransition<GameState>();
+        _screen = _newGameScreen;
     }
 
     void MenuState::onLobbyNewChar() {
@@ -159,6 +160,14 @@ namespace pyr {
     void MenuState::onLobbySay(const std::string& text) {
         ServerConnection::instance().say(text);
     }
+
+    void MenuState::onNewGameCreate(const std::string& name, const std::string& password) {
+        invokeTransition<GameState>();
+    }
+
+    void MenuState::onNewGameCancel() {
+        _screen = _lobbyScreen;
+    }
     
     void MenuState::createInterface() {
         _mainScreen       = new MainScreen(this);
@@ -167,6 +176,7 @@ namespace pyr {
         _loginScreen      = new LoginScreen(this);
         _loggingInScreen  = new LoggingInScreen(this);
         _lobbyScreen      = new LobbyScreen(this);
+        _newGameScreen    = new NewGameScreen(this);
         
         _screen = _mainScreen;
     }
