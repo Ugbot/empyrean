@@ -24,8 +24,8 @@
  *
  * -----------------------------------------------------------------
  * File:          $RCSfile: Label.cpp,v $
- * Date modified: $Date: 2003-09-23 09:24:56 $
- * Version:       $Revision: 1.4 $
+ * Date modified: $Date: 2003-11-09 08:15:56 $
+ * Version:       $Revision: 1.5 $
  * -----------------------------------------------------------------
  *
  ************************************************************** phui-cpr-end */
@@ -63,31 +63,18 @@ namespace phui
       glColor(getForegroundColor());
 
       gltext::FontRendererPtr renderer = getFontRenderer();
-      double labelWidth = double(renderer->getWidth(mText.c_str()));
-      double fontHeight = double(font->getAscent() + font->getDescent());
-
-      //Lets store the Matrix so we don't piss anyone off
-      glPushMatrix();
+      float labelWidth = float(renderer->getWidth(mText.c_str()));
+      float labelHeight = float(renderer->getHeight(mText.c_str()));
 
       //These checks see if the button Label fits inside the
       //button.  If not start in the lower left-hand corner of
       //the button and render the text.
-      double yLoc = (height - fontHeight)/2.0;
-      if (yLoc < 0)
-      {
-         yLoc = 0;
-      }
+      float yLoc = std::max((height - labelHeight) / 2.0f, 0.0f);
+      float xLoc = std::max((width - labelWidth) / 2.0f,   0.0f);
 
-      double xLoc = (width - labelWidth)/2.0;
-      if (xLoc < 0)
-      {
-         xLoc = 0;
-      }
-      glTranslatef(GLfloat(xLoc), GLfloat(yLoc), 0.0f);
-
+      glPushMatrix();
+      glTranslatef(xLoc, yLoc, 0.0f);
       renderer->render(mText.c_str());
-
-      //Lets restore the Matrix
       glPopMatrix();
    }
 

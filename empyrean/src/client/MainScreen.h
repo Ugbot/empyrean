@@ -30,7 +30,7 @@ namespace pyr {
             WindowPtr buttons = new Window(
                 "Empyrean",
                 new BoxLayout(BoxLayout::VERTICAL));
-            buttons->setPositionAndSize(400, 350, 224, 280);
+            buttons->setPositionAndSize(400, 320, 224, 280);
             buttons->show();
         
             ButtonPtr connect = new Button("Connect to Server");
@@ -56,10 +56,10 @@ namespace pyr {
         void createConnectWindow() {
             using namespace phui;
         
-            int width  = Configuration::instance().screenWidth;
-            int height = Configuration::instance().screenHeight;
+            int width  = the<Configuration>().screenWidth;
+            int height = the<Configuration>().screenHeight;
     
-            _server = new TextField(Configuration::instance().server);
+            _server = new TextField(the<Configuration>().server);
             
             WidgetContainerPtr serverPanel = new WidgetContainer(
                 new BoxLayout(BoxLayout::HORIZONTAL));
@@ -83,7 +83,7 @@ namespace pyr {
                 "Connect to Server",
                 new BoxLayout(BoxLayout::VERTICAL));
             _connectWindow->show();
-            _connectWindow->setPositionAndSize(300, 250, 424, 440);
+            _connectWindow->setPositionAndSize(300, 250, 424, 160);
             _connectWindow->add(serverPanel);
             _connectWindow->add(buttonPanel);
         }

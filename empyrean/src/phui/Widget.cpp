@@ -24,8 +24,8 @@
  *
  * -----------------------------------------------------------------
  * File:          $RCSfile: Widget.cpp,v $
- * Date modified: $Date: 2003-09-22 23:45:02 $
- * Version:       $Revision: 1.3 $
+ * Date modified: $Date: 2003-11-09 08:15:56 $
+ * Version:       $Revision: 1.4 $
  * -----------------------------------------------------------------
  *
  ************************************************************** phui-cpr-end */
@@ -35,155 +35,135 @@
 #include "WidgetContainer.h"
 
 
-namespace phui
-{
-   Widget::Widget()
-      : mEnabled(true)
-      , mVisible(true)
-      , mBackgroundColor(BLACK)
-      , mForegroundColor(WHITE)
-   {
-      gltext::FontPtr font = gltext::OpenFont("fonts/Vera.ttf", 18);
-      if (!font)
-      {
-         throw std::runtime_error("phui: Font not found");
-      }
-      setFont(font);  // creates the renderer
+namespace phui {
+
+    Widget::Widget()
+        : mEnabled(true)
+        , mVisible(true)
+        , mBackgroundColor(BLACK)
+        , mForegroundColor(WHITE)
+    {
+        gltext::FontPtr font = gltext::OpenFont("fonts/Vera.ttf", 18);
+        if (!font) {
+            throw std::runtime_error("phui: Font not found");
+        }
+        setFont(font);  // creates the renderer
       
-      mParent = 0;
-   }
+        mParent = 0;
+    }
 
-   const Point& Widget::getPosition() const
-   {
-      return mPosition;
-   }
+    const Point& Widget::getPosition() const {
+        return mPosition;
+    }
 
-   void Widget::setPosition(const Point& p)
-   {
-      mPosition = p;
-   }
-
-   const Size& Widget::getSize() const
-   {
-      return mSize;
-   }
-
-   void Widget::setSize(const Size& size)
-   {
-      mSize = size;
-   }
-
-   const Insets& Widget::getInsets() const
-   {
-      return mInsets;
-   }
-
-   void Widget::setInsets(const Insets& insets)
-   {
-      mInsets = insets;
-   }
-
-   bool Widget::isEnabled() const
-   {
-      return mEnabled;
-   }
-
-   void Widget::setEnabled(bool enabled)
-   {
-      mEnabled = enabled;
-   }
-
-   bool Widget::isVisible() const
-   {
-      return mVisible;
-   }
-
-   void Widget::setVisible(bool visible)
-   {
-      mVisible = visible;
-   }
-
-   void Widget::setBackgroundColor(const Colorf& clr)
-   {
-      mBackgroundColor = clr;
-   }
-
-   const Colorf& Widget::getBackgroundColor() const
-   {
-      return mBackgroundColor;
-   }
-
-   void Widget::setForegroundColor(const Colorf& clr)
-   {
-      mForegroundColor = clr;
-   }
-
-   const Colorf& Widget::getForegroundColor() const
-   {
-      return mForegroundColor;
-   }
-
-   void Widget::setFont(const gltext::FontPtr& font)
-   {
-      mFontRenderer = gltext::CreateRenderer(gltext::TEXTURE, font);
-      if (!mFontRenderer)
-      {
-         throw std::runtime_error("phui: Font renderer creation failed");
-      }
-   }
-
-   gltext::FontPtr Widget::getFont() const
-   {
-      return mFontRenderer->getFont();
-   }
+    void Widget::setPosition(const Point& p) {
+        mPosition = p;
+    }
    
-   const gltext::FontRendererPtr& Widget::getFontRenderer() const
-   {
-      return mFontRenderer;
-   }
+    void Widget::center() {
+        if (mParent) {
+            int x = (mParent->getWidth()  - getWidth())  / 2;
+            int y = (mParent->getHeight() - getHeight()) / 2;
+            setPosition(x, y);
+        }
+    }
 
-   WidgetContainer* Widget::getParent() const
-   {
-      return mParent;
-   }
+    const Size& Widget::getSize() const {
+        return mSize;
+    }
 
-   bool Widget::contains(const Point& p) const
-   {
-      return (p.x >= 0 && p.x < mSize.getWidth() &&
-              p.y >= 0 && p.y < mSize.getHeight());
-   }
+    void Widget::setSize(const Size& size) {
+        mSize = size;
+    }
 
-   Point Widget::getScreenPosition() const
-   {
-      Point p = getPosition();
-      WidgetContainerPtr parent = getParent();
-      while (parent)
-      {
-         p += parent->getPosition();
-         parent = parent->getParent();
-      }
-      return p;
-   }
+    const Insets& Widget::getInsets() const {
+        return mInsets;
+    }
 
-   bool Widget::hasFocus()
-   {
-      WidgetContainerPtr parent = getParent();
-      WidgetPtr child = this;
-      while (parent)
-      {
-         if (parent->getFocus() != child)
-         {
-            return false;
-         }
-         child = parent.get();
-         parent = parent->getParent();
-      }
-      //      puts("A widget has focus!");
-      return true;
-   }
+    void Widget::setInsets(const Insets& insets) {
+        mInsets = insets;
+    }
 
-   void Widget::setParent(WidgetContainer* parent)
-   {
-      mParent = parent;
-   }
+    bool Widget::isEnabled() const {
+        return mEnabled;
+    }
+
+    void Widget::setEnabled(bool enabled) {
+        mEnabled = enabled;
+    }
+
+    bool Widget::isVisible() const {
+        return mVisible;
+    }
+
+    void Widget::setVisible(bool visible) {
+        mVisible = visible;
+    }
+
+    void Widget::setBackgroundColor(const Colorf& clr) {
+        mBackgroundColor = clr;
+    }
+
+    const Colorf& Widget::getBackgroundColor() const {
+        return mBackgroundColor;
+    }
+
+    void Widget::setForegroundColor(const Colorf& clr) {
+        mForegroundColor = clr;
+    }
+
+    const Colorf& Widget::getForegroundColor() const {
+        return mForegroundColor;
+    }
+
+    void Widget::setFont(const gltext::FontPtr& font) {
+        mFontRenderer = gltext::CreateRenderer(gltext::TEXTURE, font);
+        if (!mFontRenderer) {
+            throw std::runtime_error("phui: Font renderer creation failed");
+        }
+    }
+
+    gltext::FontPtr Widget::getFont() const {
+        return mFontRenderer->getFont();
+    }
+   
+    const gltext::FontRendererPtr& Widget::getFontRenderer() const {
+        return mFontRenderer;
+    }
+
+    WidgetContainer* Widget::getParent() const {
+        return mParent;
+    }
+
+    bool Widget::contains(const Point& p) const {
+        return (p.x >= 0 && p.x < mSize.getWidth() &&
+                p.y >= 0 && p.y < mSize.getHeight());
+    }
+
+    Point Widget::getScreenPosition() const {
+        Point p = getPosition();
+        WidgetContainerPtr parent = getParent();
+        while (parent) {
+            p += parent->getPosition();
+            parent = parent->getParent();
+        }
+        return p;
+    }
+
+    bool Widget::hasFocus() {
+        WidgetContainerPtr parent = getParent();
+        WidgetPtr child = this;
+        while (parent) {
+            if (parent->getFocus() != child) {
+                return false;
+            }
+            child = parent.get();
+            parent = parent->getParent();
+        }
+        return true;
+    }
+
+    void Widget::setParent(WidgetContainer* parent) {
+        mParent = parent;
+    }
 }

@@ -24,8 +24,8 @@
  *
  * -----------------------------------------------------------------
  * File:          $RCSfile: Rect.cpp,v $
- * Date modified: $Date: 2003-07-22 03:24:31 $
- * Version:       $Revision: 1.1 $
+ * Date modified: $Date: 2003-11-09 08:15:56 $
+ * Version:       $Revision: 1.2 $
  * -----------------------------------------------------------------
  *
  ************************************************************** phui-cpr-end */
@@ -34,11 +34,11 @@
 namespace phui
 {
    Rect::Rect()
-      : mX(0), mY(0), mWidth(0), mHeight(0)
+      : x(0), y(0), width(0), height(0)
    {}
 
-   Rect::Rect(int x, int y, int width, int height)
-      : mX(x), mY(y), mWidth(width), mHeight(height)
+   Rect::Rect(int x_, int y_, int width_, int height_)
+      : x(x_), y(y_), width(width_), height(height_)
    {}
 
    Rect::Rect(const Rect& rect)
@@ -48,19 +48,19 @@ namespace phui
 
    Rect& Rect::operator=(const Rect& rect)
    {
-      mX = rect.mX;
-      mY = rect.mY;
-      mWidth = rect.mWidth;
-      mHeight = rect.mHeight;
+      x = rect.x;
+      y = rect.y;
+      width  = rect.width;
+      height = rect.height;
       return *this;
    }
 
    bool Rect::operator==(const Rect& rect) const
    {
-      if ( (mX == rect.mX) &&
-           (mY == rect.mY) &&
-           (mWidth == rect.mWidth) &&
-           (mHeight == rect.mHeight) )
+      if ( (x == rect.x) &&
+           (y == rect.y) &&
+           (width  == rect.width) &&
+           (height == rect.height) )
       {
          return true;
       }

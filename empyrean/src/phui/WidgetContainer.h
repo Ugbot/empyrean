@@ -24,8 +24,8 @@
  *
  * -----------------------------------------------------------------
  * File:          $RCSfile: WidgetContainer.h,v $
- * Date modified: $Date: 2003-09-23 09:24:56 $
- * Version:       $Revision: 1.10 $
+ * Date modified: $Date: 2003-11-09 08:15:56 $
+ * Version:       $Revision: 1.11 $
  * -----------------------------------------------------------------
  *
  ************************************************************** phui-cpr-end */
@@ -67,6 +67,7 @@ namespace phui {
         
         /// Overridden so we can do widget layout.
         void setSize(const Size& size);
+        void setSize(int width, int height) { setSize(Size(width, height)); }
 
         void focus(WidgetPtr widget);
         WidgetPtr getFocus();

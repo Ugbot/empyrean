@@ -28,10 +28,10 @@ namespace phui {
             
             for (size_t i = 0; i < container->getNumChildren(); ++i) {
                 Rect r;
-                r.mX      = left;
-                r.mY      = top + i * widget_height;
-                r.mWidth  = s.getWidth() - r.mX - right;
-                r.mHeight = widget_height - _spacing;
+                r.x      = left;
+                r.y      = top + i * widget_height;
+                r.width  = s.getWidth() - r.x - right;
+                r.height = widget_height - _spacing;
                 
                 container->getChild(i)->setPositionAndSize(r);
             }
@@ -41,10 +41,10 @@ namespace phui {
             
             for (size_t i = 0; i < container->getNumChildren(); ++i) {
                 Rect r;
-                r.mX      = right + i * widget_width;
-                r.mY      = top;
-                r.mWidth  = widget_width - _spacing;
-                r.mHeight = s.getHeight() - r.mY - bottom;
+                r.x      = right + i * widget_width;
+                r.y      = top;
+                r.width  = widget_width - _spacing;
+                r.height = s.getHeight() - r.y - bottom;
                 
                 container->getChild(i)->setPositionAndSize(r);
             }

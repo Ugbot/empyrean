@@ -24,8 +24,8 @@
  *
  * -----------------------------------------------------------------
  * File:          $RCSfile: Button.cpp,v $
- * Date modified: $Date: 2003-09-23 08:32:34 $
- * Version:       $Revision: 1.11 $
+ * Date modified: $Date: 2003-11-09 08:15:56 $
+ * Version:       $Revision: 1.12 $
  * -----------------------------------------------------------------
  *
  ************************************************************** phui-cpr-end */
@@ -102,13 +102,13 @@ namespace phui
 
       gltext::FontPtr font = getFont();
       gltext::FontRendererPtr renderer = getFontRenderer();
-      float labelWidth = float(renderer->getWidth(mText.c_str()));
-      float fontHeight = float(font->getAscent() + font->getDescent());
+      float labelWidth  = float(renderer->getWidth(mText.c_str()));
+      float labelHeight = float(renderer->getHeight(mText.c_str()));
       //These checks see if the button Label fits inside the
       //button.  If not start in the lower left-hand corner of
       //the button and render the text.
       float xLoc = std::max((width  - labelWidth) / 2.0f, 0.0f);
-      float yLoc = std::max((height - fontHeight) / 2.0f, 0.0f);
+      float yLoc = std::max((height - labelHeight) / 2.0f, 0.0f);
 
       // draw text shadow
       glColor(BLACK);

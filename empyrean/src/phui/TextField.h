@@ -24,8 +24,8 @@
  *
  * -----------------------------------------------------------------
  * File:          $RCSfile: TextField.h,v $
- * Date modified: $Date: 2003-09-23 00:36:30 $
- * Version:       $Revision: 1.5 $
+ * Date modified: $Date: 2003-11-09 08:15:56 $
+ * Version:       $Revision: 1.6 $
  * -----------------------------------------------------------------
  *
  ************************************************************** phui-cpr-end */
@@ -37,61 +37,37 @@
 
 namespace phui
 {
-   /**
-    * A classic UI textfield widget.
-    */
-   class TextField : public Widget
-   {
-   public:
-      /**
-       * Creates a new button with the given text at (0,0) with size (0,0).
-       *
-       * @param text      the text for the button
-       */
-      TextField(const std::string& text = "");
+    /**
+     * A classic UI textfield widget.
+     */
+    class TextField : public Widget
+    {
+    public:
+        /**
+         * Creates a new button with the given text at (0,0) with size (0,0).
+         *
+         * @param text      the text for the button
+         */
+        TextField(const std::string& text = "");
 
-      /**
-       * Draws this button with its text.
-       */
-      virtual void draw();
+        void draw();
 
-      /**
-       * Sets the text on this field to the given value.
-       *
-       * @param text      the text for this field
-       */
-      void setText(const std::string& text);
+        void setText(const std::string& text);
+        const std::string& getText() const;
 
-      /**
-       * Gets the text on this button.
-       *
-       * @return  the text for this field
-       */
-      const std::string& getText() const;
+        void onKeyDown(InputKey key, InputModifiers modifiers);
 
-      /**
-       * Called whenever a key has been pressed while this box has focus
-       */
-      virtual void onKeyDown(InputKey key, InputModifiers modifiers);
+    private:
+        std::string mText;
 
-   private:
-      /**
-       * The text in this field.
-       */
-      std::string mText;
+        /// Actual cursor position horizontally
+        int mCursorScreenPosition;
 
-      /**
-       * Actual cursor position horizontally
-       */
-      int mCursorScreenPosition;
+        /// Index of character of where cursor is at
+        unsigned int mCursorCharacterPosition;
+    };
 
-      /**
-       * Index of character of where cursor is at
-       */
-      unsigned int mCursorCharacterPosition;
-   };
-
-   typedef pyr::RefPtr<TextField> TextFieldPtr;
+    typedef pyr::RefPtr<TextField> TextFieldPtr;
 }
 
 #endif

@@ -24,8 +24,8 @@
  *
  * -----------------------------------------------------------------
  * File:          $RCSfile: Widget.h,v $
- * Date modified: $Date: 2003-09-23 09:24:56 $
- * Version:       $Revision: 1.9 $
+ * Date modified: $Date: 2003-11-09 08:15:56 $
+ * Version:       $Revision: 1.10 $
  * -----------------------------------------------------------------
  *
  ************************************************************** phui-cpr-end */
@@ -42,244 +42,150 @@
 #include "RefPtr.h"
 #include "Size.h"
 
-namespace phui
-{
-   // forward declare so we can point to our parent
-   class WidgetContainer;
+namespace phui {
 
-   /**
-    * Abstract base class for all Widgets.
-    */
-   class Widget : public pyr::RefCounted
-   {
-   protected:
-      ~Widget() { }
-      
-   public:
-      /**
-       * Creates a new widget with width and height 0 and size (0,0).
-       */
-      Widget();
+    // forward declare so we can point to our parent
+    class WidgetContainer;
 
-      virtual void draw() { };
-      virtual void update(float dt) { };
+    /// Abstract base class for all Widgets.
+    class Widget : public pyr::RefCounted {
+    protected:
+        ~Widget() { }
       
-      virtual bool isFocusable() { return true; }
+    public:
+        /// Creates a new widget with width and height 0 and size (0,0).
+        Widget();
+
+        virtual void draw() { };
+        virtual void update(float dt) { };
+      
+        virtual bool isFocusable() { return true; }
       
 
-      /**
-       * Gets the position of this widget relative to its parent.
-       *
-       * @return  the position of this widget
-       */
-      virtual const Point& getPosition() const;
+        /// Gets the position of this widget relative to its parent.
+        virtual const Point& getPosition() const;
 
-      /**
-       * Sets the position of this widget relative to its parent.
-       *
-       * @param x    the x position of this widget
-       * @param y    the y position of this widget
-       */
-      virtual void setPosition(const Point& p);
-      void setPosition(int x, int y) { setPosition(Point(x, y)); }
+        /// Sets the position of this widget relative to its parent.
+        virtual void setPosition(const Point& p);
+        void setPosition(int x, int y) { setPosition(Point(x, y)); }
       
-      /**
-       * Gets the size of this widget.
-       *
-       * @return  the size of this widget
-       */
-      const Size& getSize() const;
-      int getWidth() const  { return getSize().getWidth(); }
-      int getHeight() const { return getSize().getHeight(); }
-
-      /**
-       * Sets the size of this widget.
-       *
-       * @param size    the new size of the widget
-       */
-      virtual void setSize(const Size& size);
-      void setSize(int w, int h) { setSize(Size(w, h)); }
+        /// Centers the widget within its parent based on its size.
+        void center();
       
-      void setPositionAndSize(const Rect& r)
-      {
-         setPosition(r.mX, r.mY);
-         setSize(r.mWidth, r.mHeight);
-      }
+        const Size& getSize() const;
+        int getWidth() const  { return getSize().getWidth(); }
+        int getHeight() const { return getSize().getHeight(); }
+
+        virtual void setSize(const Size& size);
+        void setSize(int w, int h) { setSize(Size(w, h)); }
       
-      void setPositionAndSize(const Point& pos, const Size& size)
-      {
-         setPosition(pos);
-         setSize(size);
-      }
+        void setPositionAndSize(const Rect& r) {
+            setPosition(r.x, r.y);
+            setSize(r.width, r.height);
+        }
       
-      void setPositionAndSize(int x, int y, int w, int h)
-      {
-         setPosition(x, y);
-         setSize(w, h);
-      }
-
-      /**
-       * Gets the insets for this widget.
-       *
-       * @return  the insets
-       */
-      virtual const Insets& getInsets() const;
-
-      /**
-       * Sets the insets for the widget.
-       *
-       * @param insets     the insets
-       */
-      virtual void setInsets(const Insets& insets);
-
-      /**
-       * Tests if this widget is enabled.
-       *
-       * @return  true if the widget is enabled, false if disabled
-       */
-      virtual bool isEnabled() const;
-
-      /**
-       * Sets the enabled status of this widget.
-       *
-       * @param enabled    true to enabled the widget, false to disable it
-       */
-      virtual void setEnabled(bool enabled);
+        void setPositionAndSize(const Point& pos, const Size& size) {
+            setPosition(pos);
+            setSize(size);
+        }
       
-      void enable()  { setEnabled(true);  }
-      void disable() { setEnabled(false); }
+        void setPositionAndSize(int x, int y, int w, int h) {
+            setPosition(x, y);
+            setSize(w, h);
+        }
 
-      /**
-       * Tests if this widget is visible.
-       *
-       * @return  true if the widget is visible, false otherwise
-       */
-      virtual bool isVisible() const;
+        /// Gets the insets for this widget.
+        virtual const Insets& getInsets() const;
 
-       /**
-       * Shows or hides this component depending on the parameter visible.
-       *
-       * @param visible    true to show this component, false to hide it
-       */
-      virtual void setVisible(bool visible);
+        /// Sets the insets for the widget.
+        virtual void setInsets(const Insets& insets);
 
-      void show() { setVisible(true); }
-      void hide() { setVisible(false); }
-
-      /**
-       * Sets the background color of this widget.
-       *
-       * @param clr     the new background color
-       */
-      virtual void setBackgroundColor(const Colorf& clr);
-
-      /**
-       * Gets the background color of this widget.
-       *
-       * @return  the background color
-       */
-      virtual const Colorf& getBackgroundColor() const;
-
-      /**
-       * Sets the foreground color of this widget.
-       *
-       * @param clr     the new foreground color
-       */
-      virtual void setForegroundColor(const Colorf& clr);
-
-      /**
-       * Gets the foreground color of this widget.
-       *
-       * @return  the foreground color
-       */
-      virtual const Colorf& getForegroundColor() const;
-
-      /**
-       * Sets the font to use for rendering text in this widget.
-       *
-       * @param font    the new font
-       */
-      virtual void setFont(const gltext::FontPtr& font);
-
-      /**
-       * Gets the font for this widget.
-       */
-      virtual gltext::FontPtr getFont() const;
+        virtual bool isEnabled() const;
+        virtual void setEnabled(bool enabled);
       
-      virtual const gltext::FontRendererPtr& getFontRenderer() const;
+        void enable()  { setEnabled(true);  }
+        void disable() { setEnabled(false); }
 
-      /**
-       * Gets the parent container for this widget or NULL if this
-       * widget has no container.
-       */
-      WidgetContainer* getParent() const;
+        /// Tests if this widget is visible.
+        virtual bool isVisible() const;
+        virtual void setVisible(bool visible);
+
+        void show() { setVisible(true); }
+        void hide() { setVisible(false); }
+
+        virtual void setBackgroundColor(const Colorf& clr);
+        virtual const Colorf& getBackgroundColor() const;
+
+        virtual void setForegroundColor(const Colorf& clr);
+        virtual const Colorf& getForegroundColor() const;
+
+        virtual void setFont(const gltext::FontPtr& font);
+        virtual gltext::FontPtr getFont() const;
+
+        virtual const gltext::FontRendererPtr& getFontRenderer() const;
+
+        /**
+         * Gets the parent container for this widget or NULL if this
+         * widget has no container.
+         */
+        WidgetContainer* getParent() const;
       
-      /**
-       * Tests if the given point is contained within this widget where the
-       * point is relative to this widget's coordinate system.
-       *
-       * @param p  the point to test
-       * @return whether the test succeeded or not
-       */
-      bool contains(const Point& p) const;
+        /**
+         * Tests if the given point is contained within this widget where the
+         * point is relative to this widget's coordinate system.
+         *
+         * @param p  the point to test
+         * @return whether the test succeeded or not
+         */
+        bool contains(const Point& p) const;
 
-      /**
-       * Gets the position of the upper-left corner of this widget relative to
-       * the screen's coordinate system.
-       *
-       * @return  the point
-       */
-      Point getScreenPosition() const;
+        /**
+         * Gets the position of the upper-left corner of this widget relative to
+         * the screen's coordinate system.
+         *
+         * @return  the point
+         */
+        Point getScreenPosition() const;
 
-      bool hasFocus();
+        bool hasFocus();
 
-      // external events
-      virtual void onKeyDown(InputKey key, InputModifiers modifiers) { }
-      virtual void onKeyUp(InputKey key, InputModifiers modifiers) { }
-      virtual void onMouseDown(InputButton button, const Point& p) { }
-      virtual void onMouseUp(InputButton button, const Point& p) { }
-      virtual void onMouseMove(const Point& p) { }
+        // external events
+        virtual void onKeyDown(InputKey key, InputModifiers modifiers) { }
+        virtual void onKeyUp(InputKey key, InputModifiers modifiers) { }
+        virtual void onMouseDown(InputButton button, const Point& p) { }
+        virtual void onMouseUp(InputButton button, const Point& p) { }
+        virtual void onMouseMove(const Point& p) { }
       
-   private:
-      /// This method is private and should only be used by WidgetContainer.
-      void setParent(WidgetContainer* parent);
+    private:
+        /// This method is private and should only be used by WidgetContainer.
+        void setParent(WidgetContainer* parent);
 
-   private:
-      /**
-       * The position of the widget in pixels relative to its parent.
-       */
-      Point mPosition;
+    private:
+        /// The position of the widget in pixels relative to its parent.
+        Point mPosition;
 
-      /// The size of the widget in pixels.
-      Size mSize;
+        /// The size of the widget in pixels.
+        Size mSize;
 
-      /**
-       * The insets for this widget.
-       */
-      Insets mInsets;
+        /// The insets for this widget.
+        Insets mInsets;
 
-      /**
-       * Whether this widget is enabled or disabled.
-       */
-      bool mEnabled;
+        bool mEnabled;
+        bool mVisible;
 
-      /**
-       * Whether this widget is visible.
-       */
-      bool mVisible;
+        Colorf mBackgroundColor;
+        Colorf mForegroundColor;
 
-      Colorf mBackgroundColor;
-      Colorf mForegroundColor;
+        gltext::FontRendererPtr mFontRenderer;
 
-      gltext::FontRendererPtr mFontRenderer;
+        /// The parent container for this widget.
+        WidgetContainer* mParent;
 
-      /// The parent container for this widget.
-      WidgetContainer* mParent;
+        /// WidgetContainer calls setParent()
+        friend class WidgetContainer;
+    };
 
-      friend class WidgetContainer;
-   };
-
-   typedef pyr::RefPtr<Widget> WidgetPtr;
+    typedef pyr::RefPtr<Widget> WidgetPtr;
 }
 
 #endif
