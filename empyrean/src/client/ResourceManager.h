@@ -18,8 +18,9 @@ namespace pyr {
 
 
     /**
-     * Should define the following static methods:
+     * Specializations should define the following static methods:
      * T create(const std::string& id);
+     * void destroy(T value);
      */
     template<typename T>
     class CachePolicy;
@@ -43,7 +44,7 @@ namespace pyr {
         ~ResourceCacheImpl() {
             ResourceMap::iterator itr = _cache.begin();
             for (; itr != _cache.end(); ++itr) {
-                delete itr->second;
+                CachePolicy<T>::destroy(itr->second);
             }
         }
     

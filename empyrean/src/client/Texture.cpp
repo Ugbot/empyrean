@@ -17,6 +17,10 @@ namespace pyr {
         static Texture* create(const std::string& id) {
             return new Texture(id);
         }
+        
+        static void destroy(Texture* texture) {
+            delete texture;
+        }
     };
 
 

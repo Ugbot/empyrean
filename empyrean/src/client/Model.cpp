@@ -228,6 +228,10 @@ namespace pyr {
         static Model* create(const string& id) {
             return new Model(id);
         }
+        
+        static void destroy(Model* model) {
+            delete model;
+        }
     };
 
     Model* Model::create(const string& id) {
