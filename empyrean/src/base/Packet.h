@@ -28,6 +28,7 @@ namespace pyr {
         u16 getSize() const { return _size; }
 
         virtual void serialize(ByteBuffer& out) const = 0;
+        virtual Packet* clone() const = 0;
         
     protected:
         void setID(u16 id)     { _id   = id;   }
@@ -50,6 +51,7 @@ namespace pyr {
     #define PYR_SERIALIZE_string(size, name)    out.add_string(name(), size);
     #define PYR_PARSE_string(size, name)        std::string name; bp.read(name, size);
     #define PYR_CREATE_string(size, name)       name,
+    #define PYR_CLONE_string(size, name)        name(),
     #define PYR_CONTENTS_string(size, name)     std::string m_ ## name;
     
     #define PYR_CTOR_ARGS_field(type, name)     const type& name,
@@ -59,6 +61,7 @@ namespace pyr {
     #define PYR_SERIALIZE_field(type, name)     out.add(name());
     #define PYR_PARSE_field(type, name)         type name; bp.read(name);
     #define PYR_CREATE_field(type, name)        name,
+    #define PYR_CLONE_field(type, name)         name(),
     #define PYR_CONTENTS_field(type, name)      type m_ ## name;
     
 
@@ -69,6 +72,7 @@ namespace pyr {
     #define PYR_SERIALIZE(_) PYR_SERIALIZE_ ## _
     #define PYR_PARSE(_)     PYR_PARSE_     ## _
     #define PYR_CREATE(_)    PYR_CREATE_    ## _
+    #define PYR_CLONE(_)     PYR_CLONE_     ## _
     #define PYR_CONTENTS(_)  PYR_CONTENTS_  ## _
     
         
@@ -85,6 +89,7 @@ namespace pyr {
                                                                         \
             void serialize(ByteBuffer& out) const;                      \
             static Packet* create(int size, const void* bytes);         \
+            Packet* clone() const;                                      \
                                                                         \
         private:                                                        \
             body(PYR_CONTENTS)                                          \
@@ -110,6 +115,12 @@ namespace pyr {
             } else {                                                    \
                 return new name(body(PYR_CREATE)  EndOfList());         \
             }                                                           \
+        }                                                               \
+                                                                        \
+        Packet* name::clone() const {                                   \
+            return new name(                                            \
+                body(PYR_CLONE)                                         \
+                EndOfList());                                           \
         }
 
 }

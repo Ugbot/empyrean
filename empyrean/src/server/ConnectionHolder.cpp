@@ -1,5 +1,6 @@
 #include "Connection.h"
 #include "ConnectionHolder.h"
+#include "Packet.h"
 
 
 namespace pyr {
@@ -59,16 +60,18 @@ namespace pyr {
     
     void ConnectionHolder::sendAll(Packet* p) {
         for (size_t i = 0; i < _connections.size(); ++i) {
-            _connections[i]->sendPacket(p);
+            _connections[i]->sendPacket(p->clone());
         }
+        delete p;
     }
     
     void ConnectionHolder::sendAllBut(Connection* c, Packet* p) {
         for (size_t i = 0; i < _connections.size(); ++i) {
             if (_connections[i] != c) {
-                _connections[i]->sendPacket(p);
+                _connections[i]->sendPacket(p->clone());
             }
         }
+        delete p;
     }
     
     void ConnectionHolder::detachConnection(size_t index) {

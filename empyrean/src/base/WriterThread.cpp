@@ -38,6 +38,8 @@ namespace pyr {
             ScopedPtr<Packet> p(_outgoing.front());
             _outgoing.pop();
             
+            _outgoingLock->unlock();
+
             ByteBuffer out;
             p->serialize(out);
             
@@ -48,11 +50,9 @@ namespace pyr {
                 _socket->write(&size, sizeof(size)) != sizeof(size) ||
                 _socket->write(out.getBuffer(), out.getSize()) != out.getSize())
             {
-                _outgoingLock->unlock();
                 break;
             }
             
-            _outgoingLock->unlock();
         }
     }
     
