@@ -163,9 +163,9 @@ namespace pyr {
             the<Configuration>().load();
         }
         catch (const ConfigurationError& e) {
-            PYR_LOG(_logger, WARN)
-                << "Could not load client configuration: " << e.what()
-                << "  That's okay, using defaults.";
+            PYR_LOG(_logger, WARN,
+                "Could not load client configuration: " << e.what()
+                << "  That's okay, using defaults.");
         }
 
         // Register the pyr_client module with the PythonInterpreter.
@@ -208,10 +208,10 @@ namespace pyr {
             throw std::runtime_error(error.c_str());
         }
 
-        PYR_LOG(_logger, INFO) << "GL_VENDOR: " << glGetString(GL_VENDOR);
-        PYR_LOG(_logger, INFO) << "GL_RENDERER: " << glGetString(GL_RENDERER);
-        PYR_LOG(_logger, INFO) << "GL_VERSION: " << glGetString(GL_VERSION);
-        PYR_LOG(_logger, INFO) << "GL_EXTENSIONS: " << glGetString(GL_EXTENSIONS);
+        PYR_LOG(_logger, INFO, "GL_VENDOR: " << glGetString(GL_VENDOR));
+        PYR_LOG(_logger, INFO, "GL_RENDERER: " << glGetString(GL_RENDERER));
+        PYR_LOG(_logger, INFO, "GL_VERSION: " << glGetString(GL_VERSION));
+        PYR_LOG(_logger, INFO, "GL_EXTENSIONS: " << glGetString(GL_EXTENSIONS));
 
         SDL_ShowCursor(SDL_DISABLE);
 
@@ -221,10 +221,10 @@ namespace pyr {
             SDL_JoystickEventState(SDL_ENABLE);
             joystick = SDL_JoystickOpen(0);
 
-            PYR_LOG(_logger, INFO) << "Creating Joystick with name of " << SDL_JoystickName(0);
-            PYR_LOG(_logger, INFO) << "Num Axes " << SDL_JoystickNumAxes(joystick);
-            PYR_LOG(_logger, INFO) << "Num Buttons " << SDL_JoystickNumButtons(joystick);
-            PYR_LOG(_logger, INFO) << "Num Hats " << SDL_JoystickNumHats(joystick);
+            PYR_LOG(_logger, INFO, "Creating Joystick with name of " << SDL_JoystickName(0));
+            PYR_LOG(_logger, INFO, "Num Axes " << SDL_JoystickNumAxes(joystick));
+            PYR_LOG(_logger, INFO, "Num Buttons " << SDL_JoystickNumButtons(joystick));
+            PYR_LOG(_logger, INFO, "Num Hats " << SDL_JoystickNumHats(joystick));
         }
 
         // notify the app of the window size

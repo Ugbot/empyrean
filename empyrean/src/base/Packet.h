@@ -62,7 +62,7 @@ namespace pyr {
     #define PYR_CREATE_string(size, name)       name,
     #define PYR_CLONE_string(size, name)        name(),
     #define PYR_CONTENTS_string(size, name)     std::string m_ ## name;
-    #define PYR_LOG_string(size, name)          PYR_LOG(_logger, INFO) << (#name) << ": " << name();
+    #define PYR_LOG_string(size, name)          PYR_LOG(_logger, INFO, (#name) << ": " << name());
 
     #define PYR_CTOR_ARGS_field(type, name)     const type& name,
     #define PYR_CTOR_INIT_field(type, name)     m_ ## name = name;
@@ -73,7 +73,7 @@ namespace pyr {
     #define PYR_CREATE_field(type, name)        name,
     #define PYR_CLONE_field(type, name)         name(),
     #define PYR_CONTENTS_field(type, name)      type m_ ## name;
-    #define PYR_LOG_field(type, name)           PYR_LOG(_logger, INFO) << (#name) << ": " << promoteForOutput(name());
+    #define PYR_LOG_field(type, name)           PYR_LOG(_logger, INFO, (#name) << ": " << promoteForOutput(name()));
 
     #define PYR_CTOR_ARGS(_) PYR_CTOR_ARGS_ ## _
     #define PYR_CTOR_INIT(_) PYR_CTOR_INIT_ ## _

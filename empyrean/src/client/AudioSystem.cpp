@@ -16,7 +16,7 @@ namespace pyr {
 
         _device = audiere::OpenDevice();
         if (!_device) {
-            PYR_LOG(_logger, WARN) << "Could not open audio device";
+            _logger.log(WARN, "Could not open audio device");
             _device = audiere::OpenDevice("null");
             if (!_device) {
                 throw std::runtime_error("Could not open any audio device.");
@@ -29,10 +29,10 @@ namespace pyr {
 
         _music = audiere::OpenSound(_device, filename.c_str(), true);
         if (!_music) {
-            PYR_LOG(_logger, WARN) << "Could not open music file: " << filename;
+            PYR_LOG(_logger, WARN, "Could not open music file: " << filename);
             throw std::runtime_error("Could not open music file: " + filename);
         }
-		_music->setRepeat(true);
+        _music->setRepeat(true);
         _music->play();
     }
 
@@ -43,7 +43,7 @@ namespace pyr {
         if (!effect) {
             effect = audiere::OpenSoundEffect(_device, filename.c_str(), audiere::MULTIPLE);
             if (!effect) {
-                PYR_LOG(_logger, WARN) << "Could not open sound file: " << filename;
+                PYR_LOG(_logger, WARN, "Could not open sound file: " << filename);
                 throw std::runtime_error("Could not open sound file: " + filename);
             }
         }

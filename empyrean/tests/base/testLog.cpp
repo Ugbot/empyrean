@@ -37,6 +37,9 @@ int main(int argc, char** argv) {
     Logger& root1 = Logger::get("");
     Logger& root2 = Logger::get(".");
     Logger& root3 = Logger::get("");
+    (void)root1;
+    (void)root2;
+    (void)root3;    
     PYR_ASSERT(&root1 == &root2 && &root2 == &root3,
                "'', '.', and '..' aren't equivalent");
 }

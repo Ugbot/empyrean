@@ -47,7 +47,7 @@ namespace pyr {
             // Thus, make a local copy first.
             ReceiverSet r = _receivers;
             
-            PYR_LOG(_logger, INFO) << "Received: " << p->getName();
+            PYR_LOG(_logger, INFO, "Received: " << p->getName());
 
             bool handled = false;
             for (ReceiverSetIter i = r.begin(); i != r.end(); ++i) {
@@ -55,7 +55,7 @@ namespace pyr {
             }
 
             if (!handled) {
-                PYR_LOG(_logger, WARN) << "Unhandled: " << p->getName();
+                PYR_LOG(_logger, WARN, "Unhandled: " << p->getName());
             }
         }
     }

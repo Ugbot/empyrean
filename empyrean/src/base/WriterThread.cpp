@@ -34,7 +34,7 @@ namespace pyr {
                 p = _outgoing.front();
                 _outgoing.pop();
 
-                PYR_LOG(_logger, VERBOSE) << "Pulled packet from queue:";
+                _logger.log(VERBOSE, "Pulled packet from queue:");
                 p->log();
             })
 
@@ -72,13 +72,13 @@ namespace pyr {
         PYR_LOG_SCOPE(_logger, INFO, "WriterThread::addPackets");
 
         PYR_SYNCHRONIZED(_packetsAvailable, {
-            PYR_LOG(_logger, VERBOSE) << "Queuing packets...";
+            _logger.log(VERBOSE, "Queuing packets...");
             for (size_t i = 0; i < packets.size(); ++i) {
-                PYR_LOG(_logger, INFO) << "Queueing packet for writing:";
+                _logger.log(INFO, "Queueing packet for writing:");
                 packets[i]->log();
                 _outgoing.push(packets[i]);
             }
-            PYR_LOG(_logger, VERBOSE) << "Notifying writer thread.";
+            _logger.log(VERBOSE, "Notifying writer thread.");
 
             _packetsAvailable.notify();
         })

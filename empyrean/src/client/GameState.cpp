@@ -227,7 +227,7 @@ namespace pyr {
         if (entity) {
             _scene.removeEntity(p->id());
         } else {
-            PYR_LOG(_logger, WARN) << "Received remove entity packet for nonexistent entity " << p->id();
+            PYR_LOG(_logger, WARN, "Received remove entity packet for nonexistent entity " << p->id());
         }
     }
 
@@ -237,7 +237,7 @@ namespace pyr {
             entity->setPos(p->pos());
             entity->setVel(p->vel());
         } else {
-            PYR_LOG(_logger, WARN) << "Received update entity packet for nonexistent entity " << p->id();
+            PYR_LOG(_logger, WARN, "Received update entity packet for nonexistent entity " << p->id());
         }
     }
 
@@ -250,12 +250,12 @@ namespace pyr {
                 case AP_ANIMATION:       appearance->beginAnimation(p->str()); break;
                 case AP_ANIMATION_CYCLE: appearance->beginAnimationCycle(p->str()); break;
                 default:
-                    PYR_LOG(_logger, WARN) << "Unknown code in appearance packet:";
+                    PYR_LOG(_logger, WARN, "Unknown code in appearance packet:");
                     p->log();
                     break;
             }
         } else {
-            PYR_LOG(_logger, WARN) << "Received appearance packet for nonexistent entity " << p->id();
+            PYR_LOG(_logger, WARN, "Received appearance packet for nonexistent entity " << p->id());
         }
     }
 
@@ -267,7 +267,7 @@ namespace pyr {
             entity->setCurrentEther(p->currEth());
             entity->setMaxEther(p->maxEth());
         } else {
-            PYR_LOG(_logger, WARN) << "Received update entity packet for nonexistent entity " << p->id();
+            PYR_LOG(_logger, WARN, "Received update entity packet for nonexistent entity " << p->id());
         }
     }
 
@@ -301,7 +301,7 @@ namespace pyr {
 
             if(combo != "None") {
                 sc.sendAttack(combo);
-                PYR_LOG(_logger, INFO) << combo << " Special Attack";
+                PYR_LOG(_logger, INFO, combo << " Special Attack");
                 fastCombo.clear();
                 return;
             }

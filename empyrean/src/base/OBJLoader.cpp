@@ -40,7 +40,7 @@ namespace pyr {
         void loadFrom(const string& filename) {
             ifstream file(filename.c_str());
             if (!file) {
-                PYR_LOG(_logger, WARN) << "OBJ material file not found: " << filename;
+                PYR_LOG(_logger, WARN, "OBJ material file not found: " << filename);
                 return;
             }
 
@@ -97,7 +97,7 @@ namespace pyr {
                                     current.texture_scale = Vec2f(sx, sy/*, sz*/);
                                 }
                             } else {
-                                PYR_LOG(_logger, INFO) << "Material referencing texture: " << arg;
+                                PYR_LOG(_logger, INFO, "Material referencing texture: " << arg);
                                 current.texture = arg;
                             }
                         }
@@ -135,7 +135,7 @@ namespace pyr {
                 m->texture = ph.findFile(om->texture);
                 m->texture_offset = om->texture_offset;
                 m->texture_scale  = om->texture_scale;
-                PYR_LOG(_logger, INFO) << "Texture found at: " << m->texture;
+                PYR_LOG(_logger, INFO, "Texture found at: " << m->texture);
             }
             return m;
         }
@@ -217,7 +217,7 @@ namespace pyr {
 
         ifstream file(ph.findFile(filename).c_str());
         if (!file) {
-            PYR_LOG(_logger, WARN) << "OBJ file not found: " << filename;
+            PYR_LOG(_logger, WARN, "OBJ file not found: " << filename);
             return 0;
         }
 
@@ -240,9 +240,9 @@ namespace pyr {
                     string mtlfile;
                     while (ss >> mtlfile) {
                         std::string found = ph.findFile(mtlfile);
-                        PYR_LOG(_logger, INFO)
-                            << "Map referencing material library " << mtlfile
-                            << " found at: " << found;
+                        PYR_LOG(_logger, INFO,
+                                "Map referencing material library " << mtlfile
+                                << " found at: " << found);
                         mtllib.loadFrom(found);
                     }
                 } else if (command == "usemtl") {

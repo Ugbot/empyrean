@@ -89,52 +89,19 @@ namespace pyr {
 
 
     /**
-     * Provides an iostream-like interface to the log.  Use PYR_LOG
-     * instead.
-     */
-    class LogStream : public std::ostringstream {
-    public:
-        LogStream(Logger& logger, LogLevel level)
-        : _logger(logger)
-        , _level(level) {
-        }
-    
-        ~LogStream() {
-            _logger.log(_level, str());
-        }
-
-        /**
-         * This is a little trick to convert an rvalue to an lvalue.
-         * The problem is this: class temporaries created with
-         * LogStream() are rvalues, which means they cannot be
-         * assigned to FontStream& references.  Therefore, temporaries
-         * cannot be used as arguments to the standard operator<<
-         * overloads.
-         *
-         * However!  You CAN call methods on object rvalues and methods
-         * CAN return lvalues!  This method effectively converts *this
-         * from an rvalue to an lvalue using the syntax:
-         * LogStream().get().
-         */
-        LogStream& get() {
-            return *this;
-        }
-        
-    private:
-        Logger& _logger;
-        LogLevel _level;
-    };
-    
-    
-    /**
-     * A convenience macro around pyr::LogStream().  Used as follows:
-     * PYR_LOG() << blah blah blah;
+     * A convenience macro for logging streams.  Used as follows:
+     * PYR_LOG(logger, level, message << stuff);
      *
-     * This is the preferred interface for streaming objects to the log,
-     * although it might be too expensive for logging basic text.  For that,
-     * use logger.log(level, message);
+     * This is the preferred interface for streaming objects to the
+     * log, although it might be too expensive for logging a single
+     * stream.  For that, use logger.log(level, message);
      */
-    #define PYR_LOG(logger, level) ::pyr::LogStream(logger, level).get()
+    #define PYR_LOG(logger, level, stream)              \
+        if ((logger).enabled((level))) {                \
+            std::ostringstream os;                      \
+            os << stream;                               \
+            (logger).log((level), os.str());            \
+        } else PYR_REQUIRE_SEMI
 
     
     class LogScope {

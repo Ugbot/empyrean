@@ -145,7 +145,7 @@ namespace pyr {
 
     void Application::invokeTransition(State* state) {
         PYR_ASSERT(state, "Can't transition to null state");
-	PYR_LOG(_logger, INFO) << "Switching to state: " << state->getName();
+	PYR_LOG(_logger, INFO, "Switching to state: " << state->getName());
         _nextState = state;
     }
     

@@ -179,7 +179,7 @@ namespace pyr {
         if (axis == 0) {
             getInput("JoyX").setValue(value);
         } else {
-            PYR_LOG(_logger, WARN) << "Unknown joystick axis: " << axis;
+            PYR_LOG(_logger, WARN, "Unknown joystick axis: " << axis);
         }
     }
     
@@ -195,7 +195,7 @@ namespace pyr {
                 getInput("JoyStart").setValue(down ? 1.0f : 0.0f);
                 break;
             default:
-                PYR_LOG(_logger, WARN) << "Unknown joystick button: " << button;
+                PYR_LOG(_logger, WARN, "Unknown joystick button: " << button);
                 break;
         }
     }

@@ -185,7 +185,7 @@ namespace pyr {
 	    else if (level == "ERROR")   logger.setLevel(ERROR);
 	    else if (level == "FATAL")   logger.setLevel(FATAL);
 	    else if (level == "OFF")     logger.setLevel(OFF);
-	    else PYR_LOG(_logLogger, ERROR) << "Invalid logger level: " << level;
+	    else PYR_LOG(_logLogger, ERROR, "Invalid logger level: " << level);
 	}
 
         LogWriterPtr getWriter(
@@ -214,9 +214,9 @@ namespace pyr {
                 if (writer) {
                     writerList.push_back(writer);
                 } else {
-                    PYR_LOG(_logLogger, WARN)
-                        << "Can't find writer '" << name << "' for logger '"
-                        << logger.getName() << "'";
+                    PYR_LOG(_logLogger, WARN,
+                        "Can't find writer '" << name << "' for logger '"
+                            << logger.getName() << "'");
                 }
             }
 
@@ -232,8 +232,7 @@ namespace pyr {
         if (FILE* file = fopen(logFile.c_str(), "w")) {
             writer = new FileWriter(file);
         } else {
-            PYR_LOG(_logLogger, ERROR) << "Error opening log file: "
-                                       << logFile;
+            PYR_LOG(_logLogger, ERROR, "Error opening log file: " << logFile);
             writer = new StreamWriter(&std::cout, false);
         }
 
@@ -241,7 +240,7 @@ namespace pyr {
         logger.clearAllWriters();
         logger.addWriter(writer);
 
-        PYR_LOG(_logLogger, WARN) << "Using default log configuration.";
+        _logLogger.log(WARN, "Using default log configuration.");
     }
 
     void initializeLog(const string& logFile, const string& configFile) {
@@ -259,7 +258,7 @@ namespace pyr {
         }
 
         if (root->getName() != "LogConfiguration") {
-            PYR_LOG(_logLogger, ERROR) << "Invalid log configuration file root node name: " << root->getName();
+            PYR_LOG(_logLogger, ERROR, "Invalid log configuration file root node name: " << root->getName());
             return initializeDefaults(logFile);
         }
 
@@ -274,7 +273,7 @@ namespace pyr {
                     if (writer) {
                         writerMap[name] = writer;
                     } else {
-                        PYR_LOG(_logLogger, WARN) << "Could not create writer: " << name;
+                        PYR_LOG(_logLogger, WARN, "Could not create writer: " << name);
                     }
                 } else {
                     _logLogger.log(ERROR, "Writer node has no name and/or no type.");

@@ -31,7 +31,7 @@ namespace pyr {
             bb.add(buffer, read);
 
             while (Packet* p = extractPacket(bb)) {
-                PYR_LOG(_logger, INFO) << "Read packet:" << p->getName();
+                PYR_LOG(_logger, INFO, "Read packet:" << p->getName());
                 p->log();
                 PYR_SYNCHRONIZED(_incomingLock, {
                     _incoming.push(p);

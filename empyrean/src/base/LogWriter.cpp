@@ -112,10 +112,10 @@ namespace pyr {
                 if (file) {
                     return new FileWriter(file);
                 } else {
-                    PYR_LOG(_logger, ERROR) << "Could not open log file: " << filename;
+                    PYR_LOG(_logger, ERROR, "Could not open log file: " << filename);
                 }
             } else {
-                PYR_LOG(_logger, WARN) << "Writer '" << name << "' has no filename attribute.";
+                PYR_LOG(_logger, WARN, "Writer '" << name << "' has no filename attribute.");
             }
         } else if (type == "win32debug") {
 #ifdef WIN32

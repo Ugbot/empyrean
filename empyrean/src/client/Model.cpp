@@ -123,7 +123,7 @@ namespace pyr {
                 } else if (child->getName() == "material") {
                     materials.push_back(child->getAttr("file"));
                 } else if (!child->getName().empty()) {
-                    PYR_LOG(_logger, WARN) << "Unknown child node of model: " << child->getName();
+                    PYR_LOG(_logger, WARN, "Unknown child node of model: " << child->getName());
                 }
             }
 
@@ -151,14 +151,14 @@ namespace pyr {
                 } else if (line[0] == "skeleton") {
                     skeleton=line[1];
                 } else if (line[0] == "animation") {
-                    PYR_LOG(_logger, INFO) << "Pushing " << line[1];
+                    PYR_LOG(_logger, INFO, "Pushing " << line[1]);
                     animations.push_back(line[1]);
                 } else if (line[0] == "mesh") {
                     meshes.push_back(line[1]);
                 } else if (line[0] == "material") {
                     materials.push_back(line[1]);
                 } else {
-                    PYR_LOG(_logger, WARN) << "UNKNOWN " << line[0];
+                    PYR_LOG(_logger, WARN, "UNKNOWN " << line[0]);
                     std::ostringstream ss;
                     ss << "Unkown token \"" << line[0] << "\" on line " << curline << " in " << fname;
                     throw LoadModelError(ss.str().c_str());
@@ -180,7 +180,7 @@ namespace pyr {
                     CalCoreModel& model)
         {
             string path = getPath(filename);
-            PYR_LOG(_logger, INFO) << "Model Load Path " << path;
+            PYR_LOG(_logger, INFO, "Model Load Path " << path);
 
             // Actually load things, now that the config file has been consumed.
             struct CalException {};
@@ -192,7 +192,7 @@ namespace pyr {
 
                 for (u32 i = 0; i < animations.size(); i++) {
                     result=model.loadCoreAnimation(path + animations[i]);
-                    PYR_LOG(_logger, INFO) << "Loading " << animations[i];
+                    PYR_LOG(_logger, INFO, "Loading " << animations[i]);
                     if (result==-1) throw CalException();
                 }
 
@@ -352,7 +352,7 @@ namespace pyr {
             _lastCycle = id;
             _model.getMixer()->blendCycle(id, weight, delay);
         } else {
-            PYR_LOG(_logger, WARN) << "animation '" << animation << "' does not map to an id";
+            PYR_LOG(_logger, WARN, "animation '" << animation << "' does not map to an id");
         }
     }
 
@@ -361,7 +361,7 @@ namespace pyr {
         if (id != -1) {
             _model.getMixer()->executeAction(id, delayIn, delayOut /*, weight*/);
         } else {
-            PYR_LOG(_logger, WARN) << "animation '" << animation << "' does not map to an id";
+            PYR_LOG(_logger, WARN, "animation '" << animation << "' does not map to an id");
         }
     }
 

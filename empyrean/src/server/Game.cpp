@@ -379,7 +379,7 @@ namespace pyr {
     }
     
     void Game::handleAllowUpdates(Connection* c, AllowUpdatesPacket* p) {
-        PYR_LOG(_logger, INFO) << "Allowing updates for connection";
+        _logger.log(INFO, "Allowing updates for connection");
         getData(c)->acceptingUpdates = true;  // maybe allow it to turn off later.
     }
 
@@ -394,15 +394,15 @@ namespace pyr {
 
         if(p->name() == "Double") {
             damageMod = 6.0f;
-            PYR_LOG(_logger, INFO) << "Double";
+            _logger.log(INFO, "Double");
         }
         else if(p->name() == "Super") {
             damageMod = 10.0f;
-            PYR_LOG(_logger, INFO) << "Triple";
+            _logger.log(INFO, "Triple");
         }
         else if(p->name() == "Mix Attack") {
             damageMod = 4.0f;
-            PYR_LOG(_logger, INFO) << "Jump Attack";
+            _logger.log(INFO, "Jump Attack");
         }
 
         // Get the bounding box of the attack
@@ -432,7 +432,7 @@ namespace pyr {
                 CollisionData rv;
                 if (attackArea.findCollision(sidesHit,otherEntityBox,rv.points)) {
                     // An entity is potentially hit!
-                    PYR_LOG(_logger, INFO) << "Found a potential hit!! ";
+                    _logger.log(INFO, "Found a potential hit!! ");
 
                     // Determine the location and hitMod of the hit location
                     /*int hitModifier = */getHitModifier(attackArea,p->type(),rv.points);
@@ -452,8 +452,8 @@ namespace pyr {
                                     wpnAccuracy + /*hitModifier +*/ attSkillMod;
                     int defenderScore = the<Die>().roll(11,60) + _entities[i]->getGameStats()->getAgility() +
                                         armDef + 5*_entities[i]->getGameStats()->getDodgeSkill();
-                    PYR_LOG(_logger, INFO) << "Attacker Score = " << attackScore;
-                    PYR_LOG(_logger, INFO) << "Defender Score = " << defenderScore;
+                    PYR_LOG(_logger, INFO, "Attacker Score = " << attackScore);
+                    PYR_LOG(_logger, INFO, "Defender Score = " << defenderScore);
 
                     // If the attacker does hit, do damage
                     if (attackScore >= defenderScore) {
@@ -465,7 +465,7 @@ namespace pyr {
                         
                         damage = (int) (damage * damageMod);
                         
-                        PYR_LOG(_logger, INFO) << "Did damage = " << damage;
+                        PYR_LOG(_logger, INFO, "Did damage = " << damage);
                         _entities[i]->getGameStats()->changeVitality(-damage);
                         sendAll(new CharacterUpdatedPacket( _entities[i]->getID(),
                                                             _entities[i]->getGameStats()->getCurrentVitality(),

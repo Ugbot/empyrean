@@ -99,10 +99,10 @@ namespace pyr {
 
     void setStartDirectory(const char* argv0) {
         std::string startDir = getStartDirectory(argv0);
-        PYR_LOG(_logger, INFO) << "Setting start directory to: " << startDir;
+        PYR_LOG(_logger, INFO, "Setting start directory to: " << startDir);
         if (!startDir.empty()) {
             if (!setCurrentDirectory(startDir.c_str())) {
-                PYR_LOG(_logger, WARN) << "SetCurrentDirectory(" << startDir << ") failed";
+                PYR_LOG(_logger, WARN, "SetCurrentDirectory(" << startDir << ") failed");
             }
         }
     }
