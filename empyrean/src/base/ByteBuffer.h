@@ -6,6 +6,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <prnetdb.h>
+#include <gmtl/Vec.h>
 #include "Types.h"
 #include "Utility.h"
 
@@ -33,19 +34,24 @@ namespace pyr {
             add(str.get(), size);
         }
         
-        void add_u16(u16 value) {
+        void add(u16 value) {
             value = PR_htons(value);
             add(&value, sizeof(value));
         }
         
-        void add_u32(u32 value) {
+        void add(u32 value) {
             value = PR_htonl(value);
             add(&value, sizeof(value));
         }
         
-        void add_float(float v) {
+        void add(float v) {
             u32* p = (u32*)&v;
-            add_u32(*p);
+            add(*p);
+        }
+        
+        void add(const gmtl::Vec2f& v) {
+            add(v[0]);
+            add(v[1]);
         }
         
         /// Add bytes to the end of the buffer.

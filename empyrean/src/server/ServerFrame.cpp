@@ -64,17 +64,13 @@ namespace pyr {
     
     void ServerFrame::onStart() {
         PYR_BEGIN_EXCEPTION_TRAP()
-            logMessage("Starting...");
             wxGetApp().start();
-            logMessage("Started");
         PYR_END_EXCEPTION_TRAP()
     }
     
     void ServerFrame::onStop() {
         PYR_BEGIN_EXCEPTION_TRAP()
-            logMessage("Stopping...");
             wxGetApp().stop();
-            logMessage("Stopped");
         PYR_END_EXCEPTION_TRAP()
     }
     
@@ -96,7 +92,11 @@ namespace pyr {
     }
     
     void ServerFrame::onLog(LogEvent& evt) {
-        _contents->AppendToPage(("<p>" + evt.getMessage() + "</p>").c_str());
+        wxDateTime time = evt.getTime();
+        _contents->AppendToPage(
+            "<b>" + time.FormatISODate() + "</b> - " +
+            "<b>" + time.FormatISOTime() + "</b> - " +
+            evt.getMessage().c_str() + "<br />");
     }
     
 

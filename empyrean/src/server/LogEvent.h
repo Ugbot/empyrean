@@ -16,6 +16,7 @@ namespace pyr {
     public:
         LogEvent(const std::string& msg) {
             _message = msg;
+            _time = wxDateTime::Now();
             SetEventType(EVT_LOG);
         }
         
@@ -27,8 +28,13 @@ namespace pyr {
             return _message;
         }
         
+        const wxDateTime& getTime() const {
+            return _time;
+        }
+        
     private:
         std::string _message;
+        wxDateTime _time;
     };
 
 }

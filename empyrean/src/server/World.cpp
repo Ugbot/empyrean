@@ -1,13 +1,7 @@
 #include "Connection.h"
-#include "EntityAddedPacket.h"
-#include "EntityRemovedPacket.h"
 #include "Log.h"
-#include "LoginPacket.h"
-#include "LoginResponsePacket.h"
-#include "PingPacket.h"
-#include "PlayerStatePacket.h"
+#include "PacketTypes.h"
 #include "ServerEntity.h"
-#include "UpdatePacket.h"
 #include "World.h"
 
 
@@ -92,7 +86,7 @@ namespace pyr {
     void World::handleLogin(Connection* c, LoginPacket* p) {
         ConnectionData* cd = (ConnectionData*)c->getOpaque();
         if (!cd->loggedIn) {
-            logMessage("Login: " + p->getUsername() + " | " + p->getPassword());
+            logMessage("Login: " + p->username() + " | " + p->password());
 
             cd->loggedIn = true;
             cd->entityID = _uidGenerator.reserve();
@@ -124,7 +118,7 @@ namespace pyr {
 	    logMessage("Player state update");
 	    ServerEntity* entity = getEntity(cd->entityID);
 	    if (entity) {
-		entity->setVel(gmtl::Vec2f(p->getForce() * 50, 0));
+		entity->setVel(gmtl::Vec2f(p->force() * 50, 0));
 	    } else {
 	        logMessage("- Unknown entity");
 	    }

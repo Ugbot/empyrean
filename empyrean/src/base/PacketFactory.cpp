@@ -1,24 +1,12 @@
 #include "PacketFactory.h"
-
-#include "EntityAddedPacket.h"
-#include "EntityRemovedPacket.h"
-#include "LoginPacket.h"
-#include "LoginResponsePacket.h"
-#include "PingPacket.h"
-#include "PlayerStatePacket.h"
-#include "UpdatePacket.h"
+#include "PacketTypes.h"
 
 
 namespace pyr {
 
     PacketFactory::PacketFactory() {
-        registerType<EntityAddedPacket>();
-        registerType<EntityRemovedPacket>();
-        registerType<LoginPacket>();
-        registerType<LoginResponsePacket>();
-        registerType<PingPacket>();
-        registerType<PlayerStatePacket>();
-        registerType<UpdatePacket>();
+        #define PYR_REGISTER(name) registerType<name ## _NAME>();
+        PYR_PACKET_LIST(PYR_REGISTER)
     }
     
     Packet* PacketFactory::create(int id, int size, void* buffer) {

@@ -1,16 +1,11 @@
 #include "Connection.h"
-#include "EntityAddedPacket.h"
-#include "EntityRemovedPacket.h"
-#include "LoginPacket.h"
-#include "LoginResponsePacket.h"
 #include "Model.h"
+#include "PacketTypes.h"
 #include "PlayerEntity.h"
-#include "PlayerStatePacket.h"
 #include "Renderer.h"
 #include "Scene.h"
 #include "ServerConnection.h"
 #include "Socket.h"
-#include "UpdatePacket.h"
 
 
 namespace pyr {
@@ -89,33 +84,33 @@ namespace pyr {
             
     void ServerConnection::handleLoginResponse(Connection*, LoginResponsePacket* p) {
         _loggedIn = true;
-        _entityID = p->getEntityID();
+        _entityID = p->entityID();
     }
 
     void ServerConnection::handleEntityAdded(Connection*, EntityAddedPacket* p) {
-	std::cout << "Adding entity: " << p->getEntityID() << std::endl;
+	std::cout << "Adding entity: " << p->entityID() << std::endl;
 
         Entity* entity = new PlayerEntity(
-            new Model(p->getAppearance()),
+            new Model(p->appearance()),
             new DefaultRenderer());
 //            new CellShadeRenderer());
-        entity->setPos(p->getPos());
-        entity->setVel(p->getVel());
+        entity->setPos(p->pos());
+        entity->setVel(p->vel());
         
-        Scene::instance().addEntity(p->getEntityID(), entity);
+        Scene::instance().addEntity(p->entityID(), entity);
     }
     
     void ServerConnection::handleEntityRemoved(Connection* c, EntityRemovedPacket* p) {
-	std::cout << "Removing entity: " << p->getEntityID() << std::endl;
-        Scene::instance().removeEntity(p->getEntityID());
+	std::cout << "Removing entity: " << p->entityID() << std::endl;
+        Scene::instance().removeEntity(p->entityID());
     }
     
     void ServerConnection::handleUpdate(Connection* c, UpdatePacket* p) {
 	std::cout << "handleUpdate()" << std::endl;
-        Entity* e = Scene::instance().getEntity(p->getEntityID());
+        Entity* e = Scene::instance().getEntity(p->entityID());
         if (e) {
-            e->setPos(p->getPos());
-            e->setVel(p->getVel());
+            e->setPos(p->pos());
+            e->setVel(p->vel());
         } else {
             std::cout << "Ignoring update packet with invalid entity id" << std::endl;
         }

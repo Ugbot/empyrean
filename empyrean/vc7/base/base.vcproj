@@ -21,11 +21,13 @@
 				Optimization="0"
 				AdditionalIncludeDirectories="../../third-party-vc7/include"
 				PreprocessorDefinitions="WIN32;WIN32_LEAN_AND_MEAN;_DEBUG;_LIB;NOMINMAX"
+				GeneratePreprocessedFile="0"
 				MinimalRebuild="TRUE"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
 				RuntimeTypeInfo="TRUE"
 				UsePrecompiledHeader="0"
+				AssemblerOutput="4"
 				WarningLevel="3"
 				Detect64BitPortabilityProblems="FALSE"
 				DebugInformationFormat="4"/>
@@ -66,11 +68,13 @@
 				OmitFramePointers="TRUE"
 				AdditionalIncludeDirectories="../../third-party-vc7/include"
 				PreprocessorDefinitions="WIN32;WIN32_LEAN_AND_MEAN;NDEBUG;_LIB;NOMINMAX"
+				GeneratePreprocessedFile="0"
 				StringPooling="TRUE"
 				RuntimeLibrary="2"
 				EnableFunctionLevelLinking="TRUE"
 				RuntimeTypeInfo="TRUE"
 				UsePrecompiledHeader="0"
+				AssemblerOutput="4"
 				WarningLevel="3"
 				Detect64BitPortabilityProblems="FALSE"
 				DebugInformationFormat="3"/>
@@ -178,6 +182,12 @@
 				RelativePath="..\..\src\base\PacketFactory.h">
 			</File>
 			<File
+				RelativePath="..\..\src\base\PacketTypes.cpp">
+			</File>
+			<File
+				RelativePath="..\..\src\base\PacketTypes.h">
+			</File>
+			<File
 				RelativePath="..\..\src\base\ReaderThread.cpp">
 			</File>
 			<File
@@ -221,34 +231,6 @@
 			</File>
 			<File
 				RelativePath="..\..\src\base\wx.h">
-			</File>
-		</Filter>
-		<Filter
-			Name="packets"
-			Filter="">
-			<File
-				RelativePath="..\..\src\base\EntityAddedPacket.h">
-			</File>
-			<File
-				RelativePath="..\..\src\base\EntityRemovedPacket.h">
-			</File>
-			<File
-				RelativePath="..\..\src\base\LoginPacket.cpp">
-			</File>
-			<File
-				RelativePath="..\..\src\base\LoginPacket.h">
-			</File>
-			<File
-				RelativePath="..\..\src\base\LoginResponsePacket.h">
-			</File>
-			<File
-				RelativePath="..\..\src\base\PingPacket.h">
-			</File>
-			<File
-				RelativePath="..\..\src\base\PlayerStatePacket.h">
-			</File>
-			<File
-				RelativePath="..\..\src\base\UpdatePacket.h">
 			</File>
 		</Filter>
 	</Files>

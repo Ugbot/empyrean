@@ -14,8 +14,8 @@ namespace pyr {
         ~Configuration() { }
         
     public:
-        // immutable for now
         int getServerPort();
+        bool shouldStartServer();
     
     private:
         static Configuration* _instance;

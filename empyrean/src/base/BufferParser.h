@@ -3,6 +3,7 @@
 
 
 #include <prnetdb.h>
+#include <gmtl/Vec.h>
 #include "Types.h"
 #include "Utility.h"
 
@@ -32,28 +33,30 @@ namespace pyr {
             }
         }
         
-        std::string read_string(int size) {
+        void read(std::string& s, int size) {
             ScopedArray<char> str(new char[size + 1]);
             memset(str.get(), 0, size + 1);
             read((u8*)str.get(), size);
-            return str.get();
+            s = str.get();
         }
         
-        u16 read_u16() {
-            u16 u;
+        void read(u16& u) {
             read((u8*)&u, sizeof(u));
-            return PR_ntohs(u);
+            u = PR_ntohs(u);
         }
         
-        u32 read_u32() {
-            u32 u;
+        void read(u32& u) {
             read((u8*)&u, sizeof(u));
-            return PR_ntohl(u);
+            u = PR_ntohl(u);
         }
         
-        float read_float() {
-            u32 u = read_u32();
-            return *(float*)&u;
+        void read(float& f) {
+            read(*(u32*)&f);
+        }
+        
+        void read(gmtl::Vec2f& v) {
+            read(v[0]);
+            read(v[1]);
         }
         
     private:

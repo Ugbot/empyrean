@@ -1,3 +1,4 @@
+#include "Configuration.h"
 #include "Error.h"
 #include "Log.h"
 #include "LogEvent.h"
@@ -9,7 +10,8 @@
 namespace pyr {
 
     Server::Server() {
-        // Give the UI thread high priority.
+        // Give the UI thread high priority so the world update thread
+        // and connections don't starve it.
         PR_SetThreadPriority(PR_GetCurrentThread(), PR_PRIORITY_HIGH);
     
         _frame = 0;
@@ -25,6 +27,11 @@ namespace pyr {
             _frame->Show(true);
 
             logMessage("Welcome to Empyrean!");
+
+            if (Configuration::instance().shouldStartServer()) {
+                start();
+            }
+
             return true;
         
         PYR_END_EXCEPTION_TRAP()
@@ -54,11 +61,15 @@ namespace pyr {
     }
     
     void Server::start() {
+        logMessage("Starting...");
         _serverThread = new Thread(new ServerThread());
+        logMessage("Started");
     }
     
     void Server::stop() {
+        logMessage("Stopping...");
         _serverThread = 0;
+        logMessage("Stopped");
     }
     
 }

@@ -21,11 +21,13 @@
 				Optimization="0"
 				AdditionalIncludeDirectories="../../third-party-vc7/include,../../src/base"
 				PreprocessorDefinitions="_CONSOLE;WIN32;WIN32_LEAN_AND_MEAN;_DEBUG;NOMINMAX"
+				GeneratePreprocessedFile="0"
 				MinimalRebuild="TRUE"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
 				RuntimeTypeInfo="TRUE"
 				UsePrecompiledHeader="0"
+				AssemblerOutput="4"
 				WarningLevel="3"
 				Detect64BitPortabilityProblems="FALSE"
 				DebugInformationFormat="4"/>
@@ -75,11 +77,13 @@
 				OmitFramePointers="TRUE"
 				AdditionalIncludeDirectories="../../third-party-vc7/include,../../src/base"
 				PreprocessorDefinitions="_CONSOLE;WIN32;WIN32_LEAN_AND_MEAN;NDEBUG;NOMINMAX"
+				GeneratePreprocessedFile="0"
 				StringPooling="TRUE"
 				RuntimeLibrary="2"
 				EnableFunctionLevelLinking="TRUE"
 				RuntimeTypeInfo="TRUE"
 				UsePrecompiledHeader="0"
+				AssemblerOutput="4"
 				WarningLevel="3"
 				Detect64BitPortabilityProblems="FALSE"
 				DebugInformationFormat="3"/>
@@ -129,6 +133,9 @@
 			</File>
 			<File
 				RelativePath="..\..\src\server\Configuration.h">
+			</File>
+			<File
+				RelativePath=".\Database.h">
 			</File>
 			<File
 				RelativePath="..\..\src\server\ListenerThread.cpp">

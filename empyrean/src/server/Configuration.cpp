@@ -22,5 +22,9 @@ namespace pyr {
     int Configuration::getServerPort() {
         return 8765;
     }
+    
+    bool Configuration::shouldStartServer() {
+        return true;
+    }
 
 }
