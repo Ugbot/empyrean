@@ -1,4 +1,4 @@
-Import('base_env SetupSDL SetupGL')
+Import('base_env SetupNSPR SetupSDL')
 
 SOURCES = [
     'ByteBuffer.cpp',
@@ -15,7 +15,7 @@ SOURCES = [
     'WriterThread.cpp']
 
 env = base_env.Copy()
+SetupNSPR(env)
 SetupSDL(env)
-SetupGL(env)
 
 env.Library('base', SOURCES)

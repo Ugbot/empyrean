@@ -37,7 +37,7 @@ THE POSSIBILITY OF SUCH DAMAGE.
 #include <stdio.h>
 #include <string.h>
 
-#ifndef _WIN32
+#if !defined(_WIN32) && !defined(CYGWIN)
 #include <GL/glx.h>
 #endif /* _WIN32 */
 

@@ -24,10 +24,15 @@ namespace pyr {
             }
         }
 
-        return ""; // if we've made it this far, then every character in the string is whitespace.
+        // if we've made it this far, then every character in the
+        // string is whitespace.
+        return "";
     }
 
-    vector<string> splitString(const string& s, const string& delimiters=" \n\r\t") {
+    vector<string> splitString(
+      const string& s,
+      const string& delimiters=" \n\r\t")
+    {
         vector<string> sv;
         unsigned int p = 0;
         int pos = 0;
@@ -58,7 +63,7 @@ namespace pyr {
     }
 
     string getExtension(const string& s) {
-        int p=s.rfind('.');
+        int p = s.rfind('.');
         if (p != -1)
             return s.substr(p);
         else
@@ -66,7 +71,7 @@ namespace pyr {
     }
 
     string getPath(const string& s) {
-        int p=s.rfind('/');
+        int p = s.rfind('/');
         if (p != -1)
             return s.substr(0, p + 1 );
         else
@@ -74,7 +79,7 @@ namespace pyr {
     }
 
     string getFilename(const string& s) {
-        int p=s.rfind('/');
+        int p = s.rfind('/');
         if (p != -1)
             return s.substr(p+1);
         else

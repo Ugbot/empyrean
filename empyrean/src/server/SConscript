@@ -1,4 +1,4 @@
-Import('base_env SetupSDL')
+Import('base_env SetupNSPR SetupSDL')
 
 SOURCES = [
     'ListenerThread.cpp',
@@ -7,9 +7,7 @@ SOURCES = [
 
 env = base_env.Copy()
 
-SetupSDL(env)
+SetupNSPR(env)
+env.Append(LIBS = ['base'])
 
-env['LIBPATH'] += ['../base']
-env['LIBS'] += ['base','nspr4']    
-
-env.Program('#/build/server$EXESUF', SOURCES)
+env.Program('#/build/server', SOURCES)

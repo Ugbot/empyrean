@@ -121,7 +121,9 @@ namespace pyr {
 }
 
 
-#ifdef WIN32
+#if defined(WIN32)
+
+    #include <windows.h>
 
     inline void setStartDirectory() {
         // set the current path to where the executable resides
@@ -168,9 +170,11 @@ int main(int /*argc*/, char* /*argv*/[]) {
 
 #if defined(WIN32) && !defined(_CONSOLE)
 
-    #include <windows.h>
-
     int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
+        #ifdef CYGWIN
+            int __argc = 1;
+            char* __argv[] = {"client"};
+        #endif
         return main(__argc, __argv);
     }
     

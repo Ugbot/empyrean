@@ -20,6 +20,7 @@ def ParseConfig(env, command, options):
     if not where:
         print '%s not found in PATH' % command
         sys.exit(-1)
+    print "Found " + str(command) + ": " + where
     cmd = where + ' ' + string.join(options)
     params = string.split(os.popen(cmd).read())
 
@@ -48,15 +49,19 @@ def ParseConfig(env, command, options):
             RequireList(env, 'LIBS')
             env['LIBS'].append(arg)
 
-def SetupSDL(env):
-    if sys.platform == 'cygwin':
-        RequireList(env, 'CPPPATH')
-        env['CPPPATH'].append('/usr/local/include/SDL')
-        
         RequireList(env, 'LIBS')
-        env['LIBS'].extend(['SDL'])
-    else:
-        ParseConfig(env, 'sdl-config', Split('--cflags --libs'))
+        env['LIBS'].extend(['SDL', 'SDLmain'])
+        
+def SetupCal3D(env):
+    RequireList(env, 'LIBS')
+    env['LIBS'].append('cal3d')    
+
+def SetupCorona(env):
+    RequireList(env, 'LIBS')
+    env['LIBS'].extend(['corona', 'png', 'z', 'jpeg'])
+
+def SetupFreeType(env):
+    ParseConfig(env, 'freetype-config', Split('--cflags --libs'))
 
 def SetupGL(env):
     RequireList(env, 'LIBS')
@@ -64,16 +69,32 @@ def SetupGL(env):
         env['LIBS'].extend(['glu32', 'opengl32'])
     else:
         env['LIBS'].extend(['GLU', 'GL'])
-        
 
-base_env = Environment(
-    ENV = os.environ)
+def SetupNSPR(env):
+    # @todo  make it only include /usr/mozilla...  on debian
+    #        check uname's output?
+    env.Append(
+        CPPPATH = '/usr/include/mozilla/nspr',
+        LIBS = 'nspr4')
 
-base_env['CCFLAGS'] += "-Isrc/base -I/usr/include/mozilla/nspr"
-base_env['LIBS'] = ["cal3d", "corona"]
-ParseConfig(base_env, 'freetype-config', Split('--cflags --libs'))
+def SetupSDL(env):
+    if sys.platform == 'cygwin':
+        env.Append(CPPPATH = '/usr/local/include/SDL')
+    else:
+        ParseConfig(env, 'sdl-config', Split('--cflags --libs'))
 
-Export('base_env SetupSDL SetupGL')
+Export('SetupCal3D SetupCorona SetupFreeType SetupGL SetupNSPR SetupSDL')
 
+base_env = Environment(ENV = os.environ)
+base_env.Append(CPPPATH = Dir('src/base'),
+                LIBPATH = Dir('src/base'))
+
+if sys.platform == 'cygwin':
+    base_env.Append(CCFLAGS = ['-DCOR_CALL=', '-DWIN32', '-D_WIN32',
+                               '-DCYGWIN'],
+                    CPPPATH = [Dir('third-party/include')],
+                    LIBPATH = [Dir('third-party/lib')])
+
+Export('base_env')
 
 SConscript(dirs = ['src'])

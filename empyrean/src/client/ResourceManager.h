@@ -42,7 +42,7 @@ namespace pyr {
     class ResourceCacheImpl : public ResourceCache {
     public:
         ~ResourceCacheImpl() {
-            ResourceMap::iterator itr = _cache.begin();
+            typename ResourceMap::iterator itr = _cache.begin();
             for (; itr != _cache.end(); ++itr) {
                 CachePolicy<T>::destroy(itr->second);
             }

@@ -223,7 +223,7 @@ typedef void GLvoid;
 
 #endif /* _WIN32 */
 
-#ifndef _WIN32
+#if !defined(_WIN32) && !defined(CYGWIN)
 #include <GL/glx.h>
 #endif /* _WIN32 */
 

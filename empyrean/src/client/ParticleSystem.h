@@ -27,7 +27,7 @@ namespace pyr {
 
     private:
         struct Particle {
-            friend ParticleSystem;
+            friend class ParticleSystem;
 
         protected:
             gmtl::Vec2f _pos;
