@@ -171,6 +171,12 @@
 				RelativePath="..\..\src\client\Profiler.h">
 			</File>
 			<File
+				RelativePath="..\..\src\client\Renderer.cpp">
+			</File>
+			<File
+				RelativePath="..\..\src\client\Renderer.h">
+			</File>
+			<File
 				RelativePath="..\..\src\client\ResourceManager.cpp">
 			</File>
 			<File

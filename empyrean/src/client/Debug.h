@@ -19,7 +19,7 @@
                 __asm int 3                  \
             } PYR_REQUIRE_SEMI
         
-    #elif
+    #else
     
         #define PYR_ASSERT(condition, label) \
             assert((condition) && (label))
