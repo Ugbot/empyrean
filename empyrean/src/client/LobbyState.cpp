@@ -52,8 +52,6 @@ namespace pyr {
         UIState::update(dt);
 
         ServerConnection& sc = the<ServerConnection>();
-        sc.update();
-
         if (!sc.isConnected()) {
             // Show error message and quit.
         }

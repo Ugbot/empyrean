@@ -2,6 +2,7 @@
 #define PYR_BUFFER_PARSER_H
 
 
+#include <string>
 #include <prnetdb.h>
 #include <gmtl/Vec.h>
 #include "ScopedArray.h"

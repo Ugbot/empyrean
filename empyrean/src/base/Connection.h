@@ -5,6 +5,7 @@
 #include <set>
 #include <map>
 #include "LokiTypeInfo.h"
+#include "Packet.h"
 #include "RefCounted.h"
 #include "RefPtr.h"
 #include "Thread.h"
@@ -15,7 +16,6 @@ namespace pyr {
 
     class ByteBuffer;
     class Connection;
-    class Packet;
     class ReaderThread;
     class Socket;
     class WriterThread;
@@ -76,6 +76,13 @@ namespace pyr {
      * Then register yourself with a Connection.
      */
     class PacketReceiver {
+    protected:
+        /**
+         * This destructor is primarily here so that we can see the real
+         * handler type in the debugger.
+         */
+        virtual ~PacketReceiver() { }
+    
     public:
         /// Returns true if the packet was handled.
         bool receivePacket(Connection* c, Packet* p);
@@ -123,7 +130,7 @@ namespace pyr {
         void processIncomingPackets();
 
         /// Adds a packet to the outgoing queue, taking ownership of it.
-        void sendPacket(Packet* packet);
+        void sendPacket(PacketPtr packet);
 
         /// Begins disconnecting.
         void close();

@@ -9,6 +9,7 @@
 #include "OpenGL.h"
 #include "Profiler.h"
 #include "Renderer.h"
+#include "ServerConnection.h"
 #include "State.h"
 #include "Texture.h"
 
@@ -76,6 +77,10 @@ namespace pyr {
 
     void Application::update(float dt) {
         PYR_PROFILE_BLOCK("Application::update");
+        
+        // Update the ServerConnection before updating the states, since
+        // network traffic can be considered input.
+        the<ServerConnection>().update();
 
         if (_currentState) {
             _currentState->update(dt);

@@ -58,20 +58,18 @@ namespace pyr {
         return _connections[i];
     }
     
-    void ConnectionHolder::sendAll(Packet* p) {
+    void ConnectionHolder::sendAll(PacketPtr p) {
         for (size_t i = 0; i < _connections.size(); ++i) {
-            _connections[i]->sendPacket(p->clone());
+            _connections[i]->sendPacket(p);
         }
-        delete p;
     }
     
-    void ConnectionHolder::sendAllBut(Connection* c, Packet* p) {
+    void ConnectionHolder::sendAllBut(Connection* c, PacketPtr p) {
         for (size_t i = 0; i < _connections.size(); ++i) {
             if (_connections[i] != c) {
-                _connections[i]->sendPacket(p->clone());
+                _connections[i]->sendPacket(p);
             }
         }
-        delete p;
     }
     
     Connection* ConnectionHolder::detachConnection(size_t index) {

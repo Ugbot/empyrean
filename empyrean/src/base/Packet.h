@@ -5,6 +5,8 @@
 #include "BufferParser.h"
 #include "ByteBuffer.h"
 #include "Log.h"
+#include "RefCounted.h"
+#include "RefPtr.h"
 #include "Types.h"
 
 
@@ -16,14 +18,15 @@ namespace pyr {
             return ID;        \
         }
 
-    class Packet {
+    class Packet : public RefCounted {
+    protected:
+        virtual ~Packet() { }
+    
     public:
         Packet() {
             _id = 0;
             _size = 0;
         }
-
-        virtual ~Packet() { }
 
         u16 getID()   const { return _id;   }
         u16 getSize() const { return _size; }
@@ -40,6 +43,7 @@ namespace pyr {
         u16 _id;
         u16 _size;
     };
+    typedef RefPtr<Packet> PacketPtr;
 
 
     // For an explanation of the magic below, see

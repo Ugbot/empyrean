@@ -50,6 +50,10 @@ namespace pyr {
         /// valid if DISCONNECTED after beginConnecting()
         const std::string& getError();
         
+        /**
+         * States don't have to call this directly.  The Application
+         * takes care of it in its update.
+         */
         void update();
         
         bool addReceiver(PacketReceiver* receiver);

@@ -133,7 +133,6 @@ namespace pyr {
             _connection->sendPacket(p);
             return true;
         } else {
-            delete p;
             return false;
         }
     }

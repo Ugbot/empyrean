@@ -100,7 +100,6 @@ namespace pyr {
         _hud.update(dt);
 
         ServerConnection& sc = the<ServerConnection>();
-        sc.update();
 
         // Affect the player's vitality
         if (_input1->getValue() == 1) {

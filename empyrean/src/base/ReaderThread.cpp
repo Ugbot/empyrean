@@ -33,9 +33,9 @@ namespace pyr {
         }
     }
 
-    std::queue<Packet*> ReaderThread::getPackets() {
+    std::queue<PacketPtr> ReaderThread::getPackets() {
         ScopedLock lock(_incomingLock);
-        std::queue<Packet*> packets = _incoming;
+        std::queue<PacketPtr> packets = _incoming;
         while (!_incoming.empty()) {
             _incoming.pop();
         }

@@ -20,7 +20,7 @@ namespace pyr {
         
         void run(Thread* thread);
         
-        std::queue<Packet*> getPackets();
+        std::queue<PacketPtr> getPackets();
         
     private:
         Packet* extractPacket(ByteBuffer& bb);
@@ -28,7 +28,7 @@ namespace pyr {
         Socket* _socket;
         
         Mutex _incomingLock;
-        std::queue<Packet*> _incoming;
+        std::queue<PacketPtr> _incoming;
         
         PacketFactory _factory;
     };

@@ -9,6 +9,11 @@ namespace pyr {
 
     class ScopedLock {
     public:
+        ScopedLock(Mutex* m) {
+            _mutex = m;
+            _mutex->lock();
+        }
+    
         ScopedLock(Mutex& m) {
             _mutex = &m;
             _mutex->lock();

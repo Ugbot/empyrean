@@ -12,8 +12,6 @@ namespace pyr {
     public:
         MenuState();
 
-        void update(float dt);
-        
         // Main menu callbacks.
         void onOptions();
         void onCredits();

@@ -57,7 +57,8 @@ namespace pyr {
     }
 
     PythonInterpreter::~PythonInterpreter() {
-        Py_Finalize();
+        // Hm, apparently Boost.Python doesn't play nicely with Py_Finalize.
+        //Py_Finalize();
     }
 
     void PythonInterpreter::addSubModule(void (*init)()) {

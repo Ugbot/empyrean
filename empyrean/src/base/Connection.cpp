@@ -34,9 +34,9 @@ namespace pyr {
     }
 
     void Connection::processIncomingPackets() {
-        std::queue<Packet*> packets(_reader->getPackets());
+        std::queue<PacketPtr> packets(_reader->getPackets());
         while (!packets.empty()) {
-            Packet* p = packets.front();
+            PacketPtr p = packets.front();
             packets.pop();
 
             // The set of receivers can easily be changed by the handlers.
@@ -45,19 +45,17 @@ namespace pyr {
             
             bool handled = false;
             for (ReceiverSetIter i = r.begin(); i != r.end(); ++i) {
-                handled |= (*i)->receivePacket(this, p);
+                handled |= (*i)->receivePacket(this, p.get());
             }
             
             if (!handled) {
                 PYR_LOG() << "Unhandled packet: ";
                 p->log();
             }
-            
-            delete p;
         }
     }
 
-    void Connection::sendPacket(Packet* p) {
+    void Connection::sendPacket(PacketPtr p) {
         _writer->addPacket(p);
     }
 

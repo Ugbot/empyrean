@@ -2,6 +2,7 @@
 #include "ByteBuffer.h"
 #include "CondVar.h"
 #include "Packet.h"
+#include "ScopedLock.h"
 #include "Socket.h"
 #include "WriterThread.h"
 
@@ -15,7 +16,6 @@ namespace pyr {
     }
     
     WriterThread::~WriterThread() {
-        // delete outgoing packets?
         delete _packetsAvailable;
         delete _outgoingLock;
     }
@@ -31,9 +31,8 @@ namespace pyr {
                 }
             }
 
-            // write a single packet (which we'll never use again,
-            // so we can delete it)
-            ScopedPtr<Packet> p(_outgoing.front());
+            // write a single packet
+            PacketPtr p(_outgoing.front());
             _outgoing.pop();
 
             _outgoingLock->unlock();
@@ -55,14 +54,14 @@ namespace pyr {
         }
     }
     
-    void WriterThread::addPacket(Packet* packet) {
-        std::vector<Packet*> packets(1);
+    void WriterThread::addPacket(PacketPtr packet) {
+        std::vector<PacketPtr> packets(1);
         packets[0] = packet;
         addPackets(packets);
     }
 
-    void WriterThread::addPackets(const std::vector<Packet*>& packets) {
-        _outgoingLock->lock();
+    void WriterThread::addPackets(const std::vector<PacketPtr>& packets) {
+        ScopedLock lock(_outgoingLock);
 
         for (size_t i = 0; i < packets.size(); ++i) {
             //PYR_LOG() << "Queueing packet for writing:";
@@ -71,7 +70,6 @@ namespace pyr {
         }
         
         _packetsAvailable->notify();
-        _outgoingLock->unlock();
     }
 
 }

@@ -3,12 +3,12 @@
 
 
 #include <vector>
+#include "Packet.h"
 
 
 namespace pyr {
 
     class Connection;
-    class Packet;
     
     /**
      * Base class that represents the owner of a set of connections.  On
@@ -33,11 +33,8 @@ namespace pyr {
         size_t getConnectionCount();
         Connection* getConnection(size_t i);
         
-        /// ConnectionHolder takes ownership of Packet p and deletes it.
-        void sendAll(Packet* p);
-
-        /// ConnectionHolder takes ownership of Packet p and deletes it.
-        void sendAllBut(Connection* c, Packet* p);
+        void sendAll(PacketPtr p);
+        void sendAllBut(Connection* c, PacketPtr p);
         
         /**
          * Called when a connection is added to the holder.  Should

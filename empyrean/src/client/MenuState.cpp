@@ -20,11 +20,6 @@ namespace pyr {
         getRoot()->add(background);
     }
 
-    void MenuState::update(float dt) {
-        UIState::update(dt);
-        ServerConnection::instance().update();
-    }
-
     void MenuState::onOptions() {
         // invokeTransition<OptionsState>();
     }
