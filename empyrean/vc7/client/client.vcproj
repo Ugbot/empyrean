@@ -288,7 +288,28 @@
 			Name="menu screens"
 			Filter="">
 			<File
+				RelativePath="..\..\src\client\ConnectingScreen.h">
+			</File>
+			<File
+				RelativePath="..\..\src\client\ConnectScreen.h">
+			</File>
+			<File
+				RelativePath="..\..\src\client\LobbyScreen.h">
+			</File>
+			<File
+				RelativePath="..\..\src\client\LoggingInScreen.h">
+			</File>
+			<File
+				RelativePath="..\..\src\client\LoginScreen.h">
+			</File>
+			<File
+				RelativePath="..\..\src\client\MainScreen.h">
+			</File>
+			<File
 				RelativePath="..\..\src\client\MenuScreen.h">
+			</File>
+			<File
+				RelativePath="..\..\src\client\NewGameScreen.h">
 			</File>
 		</Filter>
 	</Files>

@@ -42,10 +42,6 @@ namespace pyr {
         // assume already logged in
     }
 
-    GameState::~GameState() {
-        ServerConnection::instance().disconnect();
-    }
-
     void GameState::draw(float fade) {
         PYR_PROFILE_BLOCK("GameState::draw");
         Scene::instance().draw();
