@@ -1,5 +1,7 @@
+#include "Connection.h"
 #include "ListenerThread.h"
 #include "ServerSocket.h"
+#include "World.h"
 
 
 namespace pyr {
@@ -15,8 +17,7 @@ namespace pyr {
                 break;
             }
             
-            // the connection will delete itself
-            //new Connection(socket);
+            World::instance().addConnection(new Connection(socket));
         }
     }
 

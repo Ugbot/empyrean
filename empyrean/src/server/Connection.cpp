@@ -13,9 +13,16 @@ namespace pyr {
         _tcpSocket = socket;
         _reader = new ReaderThread(socket);
         _writer = new WriterThread(socket);
+        
+        _reader->start();
+        _writer->start();
     }
     
     Connection::~Connection() {
+    }
+    
+    bool Connection::isClosed() {
+        return (!_reader->isRunning() && !_writer->isRunning());
     }
 
 }

@@ -23,14 +23,14 @@ namespace pyr {
             bb.add(buffer, read);
             
             while (Packet* p = extractPacket(bb)) {
-                ScopedLock lock(&_incomingLock);
+                ScopedLock lock(_incomingLock);
                 _incoming.push(p);
             }
         }
     }
     
     std::queue<Packet*> ReaderThread::getPackets() {
-        ScopedLock lock(&_incomingLock);
+        ScopedLock lock(_incomingLock);
         std::queue<Packet*> packets = _incoming;
         while (!_incoming.empty()) {
             _incoming.pop();

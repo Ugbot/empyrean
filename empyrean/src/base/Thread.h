@@ -42,6 +42,8 @@ namespace pyr {
          */
         void join();
         
+        bool isRunning();
+        
     protected:
         /// Should be overridden by the deriving class.
         virtual void run() = 0;

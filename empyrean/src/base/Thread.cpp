@@ -55,6 +55,10 @@ namespace pyr {
         }
     }
     
+    bool Thread::isRunning() {
+        return (_started && !_stopped);
+    }
+    
     bool Thread::shouldQuit() {
         return (_shouldQuit != 0);
     }

@@ -25,7 +25,7 @@ namespace pyr {
             last = now;
         
             world.update(dt);
-            PR_Sleep(20);
+            PR_Sleep(PR_MillisecondsToInterval(20));
         }
     }
 }

@@ -2,7 +2,8 @@
 #define PYR_WORLD_H
 
 
-#include <list>
+#include <vector>
+#include "Mutex.h"
 
 
 namespace pyr {
@@ -17,14 +18,16 @@ namespace pyr {
         static void destroy();
         
     public:
+        ~World();
+    
         void update(float dt);
         void addConnection(Connection* connection);
-        void removeConnection(Connection* connection);
         
     private:
         static World* _instance;
     
-        std::list<Connection*> _connections;
+        std::vector<Connection*> _connections;
+        Mutex _connectionsLock;
     };
 
 }

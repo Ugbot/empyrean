@@ -20,6 +20,8 @@ namespace pyr {
         Connection(Socket* socket);
         ~Connection();
         
+        bool isClosed();
+        
     private:
         ScopedPtr<Socket> _tcpSocket;
         
