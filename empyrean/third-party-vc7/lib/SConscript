@@ -11,6 +11,7 @@ SystemRelease = Split("""
 """)
 
 Both = Split("""
+    audiere.dll
     SDL.dll
     corona.dll
     gltext.dll
