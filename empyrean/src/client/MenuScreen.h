@@ -17,6 +17,7 @@ namespace pyr {
                                Application::instance().getHeight())
         {
             _state = state;
+            hidePointer();
         }
         
     protected:
