@@ -33,9 +33,10 @@ namespace pyr {
         // Draw the loss/gain of vitality/ether above the character if needs be.
         if (_timeToShowVitChange > 0 && _vitalityChange != 0) {
             glDisable(GL_TEXTURE_2D);
+            glDisable(GL_LIGHTING);
             glEnable(GL_BLEND);
             glPushMatrix();
-            glTranslatef(-0.1f,getBounds().getHeight()+0.5f,0);
+            glTranslatef(-0.1f, getBounds().getHeight() + 0.5f + 1 - _timeToShowEthChange, 0);
             glScalef(0.02f,-0.02f,0.02f);
             if (_vitalityChange < 0) {
                 glColor3f(1.0f,0.0f,0.0f);
@@ -45,13 +46,15 @@ namespace pyr {
             }
             GLTEXT_STREAM(rend) << abs(_vitalityChange);
             glPopMatrix();
+            glEnable(GL_LIGHTING);
             glEnable(GL_TEXTURE_2D);
         }
         if (_timeToShowEthChange > 0 && _etherChange != 0) {
             glDisable(GL_TEXTURE_2D);
+            glDisable(GL_LIGHTING);
             glEnable(GL_BLEND);
             glPushMatrix();
-            glTranslatef(-0.1f,getBounds().getHeight()+0.5f,0);
+            glTranslatef(-0.1f, getBounds().getHeight() + 0.5f + 1 - _timeToShowEthChange, 0);
             glScalef(0.02f,-0.02f,0.02f);
             if (_etherChange < 0) {
                 glColor3f(0.0f,0.0f,1.0f);
@@ -61,6 +64,7 @@ namespace pyr {
             }
             GLTEXT_STREAM(rend) << abs(_etherChange);
             glPopMatrix();
+            glEnable(GL_LIGHTING);
             glEnable(GL_TEXTURE_2D);
         }
             

@@ -21,9 +21,13 @@ namespace pyr {
 
         ButtonPtr options = new Button("Options");
         options->addListener(this, &MainMenuWindow::onOptions);
+        options->setForegroundColor(Color(0.5f, 0.5f, 0.5f));
+        options->disable();
 
         ButtonPtr credits = new Button("Credits");
         credits->addListener(this, &MainMenuWindow::onCredits);
+        credits->setForegroundColor(Color(0.5f, 0.5f, 0.5f));
+        credits->disable();
 
         ButtonPtr quit = new Button("Quit");
         quit->addListener(this, &MainMenuWindow::onQuit);
