@@ -43,6 +43,13 @@ namespace pyr {
         map->getRoot()->handleVisitor(&updater);
     }
 
+    MapElement* MapTree::getSelection() const {
+        // GetSelection returns a wxTreeItemId, getSelection returns the map element.  GOOD NAME
+        TreeItemData* tid = static_cast<TreeItemData*>(GetItemData(GetSelection()));
+
+        return tid->element;
+    }
+
     void MapTree::onRightClick(wxMouseEvent& event) {
         int flags;
         wxTreeItemId id = HitTest(event.GetPosition(), flags);

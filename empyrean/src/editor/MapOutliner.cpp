@@ -43,7 +43,13 @@ namespace pyr {
 
     void MapOutliner::visitGroup(GroupElement* e) {
         for (unsigned i = 0; i < e->children.size(); i++) {
+            // maybe not so hot if we start recursing out the wazoo.
+            glPushMatrix();
+            glTranslate(e->pos);
+
             e->children[i]->handleVisitor(this);
+
+            glPopMatrix();
         }
     }
 

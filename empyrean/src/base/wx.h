@@ -18,8 +18,11 @@
 // We need to include windows.h for wx-using code to behave properly on
 // Windows.  :(
 #ifdef _MSC_VER
-#include <windows.h>
-#include "wx/msw/winundef.h"
+#   ifndef WIN32_LEAN_AND_MEAN
+#       define WIN32_LEAN_AND_MEAN
+#   endif
+#   include <windows.h>
+#   include <wx/msw/winundef.h>
 #endif
 
 #include <wx/wx.h>

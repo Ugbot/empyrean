@@ -13,8 +13,8 @@ namespace pyr {
      * Therefore, the property grid can be set to relevant values without 
      * resorting to RTTI.
      *
-     * This visitor does not recurse at all.  
-     * theNodeToBeUpdated->handleVisitor(&PropertyGridUpdater());
+     * This visitor does not recurse at all.
+     * theNodeToBeUpdated->handleVisitor(PropertyGridUpdater());
      */
     class PropertyGridUpdater : public MapVisitor {
     public:

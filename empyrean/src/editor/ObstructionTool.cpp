@@ -49,6 +49,7 @@ namespace pyr {
         int best = -1;
         float bestDistance = 9999999999.0f; // really really far away.
 
+        // Cartesian product.  BAD.
         const std::vector<Map::Point>& pts = getMap()->_obstructions.points;
         for (unsigned i = 0; i < pts.size(); i++) {
             float dx = x - pts[i].x;

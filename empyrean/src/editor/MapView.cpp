@@ -31,25 +31,27 @@ namespace pyr {
         typedef TranslateViewTool DefaultTool;
 
         _tool = new DefaultTool;
+
+        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     }
 
     MapView::~MapView() {
     }
-    
+
     const Map* MapView::getMap() const {
         return _mainFrame->getMap();
     }
-    
+
     void MapView::setTool(Tool* tool) {
         PYR_ASSERT(tool, "No tool passed to setTool");
         _tool = tool;
         Refresh();
     }
-    
+
     Tool* MapView::getTool() const {
         return _tool.get();
     }
-    
+
     void MapView::OnSize(wxSizeEvent& e) {
         wxGLCanvas::OnSize(e);
         
@@ -61,13 +63,11 @@ namespace pyr {
             glViewport(0, 0, w, h);
         }
     }
-    
-    
+
     void MapView::OnEraseBackground(wxEraseEvent& e) {
         // avoid flicker by doing nothing
     }
-    
-    
+
     void MapView::OnPaint(wxPaintEvent& e) {
         wxPaintDC dc(this);
 
@@ -75,12 +75,11 @@ namespace pyr {
             return;
         }
         SetCurrent();
-        
+
         draw();
         SwapBuffers();
     }
-    
-    
+
     void MapView::OnMouseEvent(wxMouseEvent& e) {
         wxSize size = GetClientSize();
         if (size.GetX() == 0 || size.GetY() == 0) {
@@ -116,7 +115,7 @@ namespace pyr {
             Refresh();
         }
     }
-    
+
     void MapView::draw() {
         // Use these to determine the projection.
         int w, h;
@@ -132,7 +131,7 @@ namespace pyr {
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
         MapRenderer renderer;
-        getMap()->getRoot()->handleVisitor(&renderer);
+        getMap()->getRoot()->handleVisitor(&renderer); // why do I need to dereference?  I overloaded for MapVisitor&
 
         MapOutliner outliner;
         getMap()->getRoot()->handleVisitor(&outliner);

@@ -1,5 +1,6 @@
 #include "MainFrame.h"
 #include "MapView.h"
+#include "MapUpdateVisitor.h"
 #include "RectangleTool.h"
 #include "TranslateTool.h"
 #include "ObstructionTool.h"
@@ -249,8 +250,11 @@ namespace pyr {
  
         GridEvent e;
         e.cmd = this;
-        e.name = _propertiesGrid->GetCellValue(row, 0).c_str();
-        e.value = _propertiesGrid->GetCellValue(row, 1).c_str();
+        e.name = _propertiesGrid->GetCellValue(row, 0).c_str();     // the property that was changed
+        e.value = _propertiesGrid->GetCellValue(row, 1).c_str();    // the value it was changed to
+
+        MapUpdateVisitor muv(e.name, e.value);
+        _mapTree->getSelection()->handleVisitor(&muv);
 
         bool result = _mapView->getTool()->onPropertiesChanged(e);
         if (result) {
