@@ -28,4 +28,4 @@ def ConvertImage(target, source):
     env.ConvertImage(join(TARGET, Here(), target), source)
 
 Export('Install ConvertImage')
-SConscript(dirs = ['editorrc', 'fonts', 'images', 'models'])
+SConscript(dirs = ['editorrc', 'fonts', 'images', 'maps', 'models'])
