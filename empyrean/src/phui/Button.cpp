@@ -24,8 +24,8 @@
  *
  * -----------------------------------------------------------------
  * File:          $RCSfile: Button.cpp,v $
- * Date modified: $Date: 2003-08-08 04:14:54 $
- * Version:       $Revision: 1.5 $
+ * Date modified: $Date: 2003-08-08 04:55:49 $
+ * Version:       $Revision: 1.6 $
  * -----------------------------------------------------------------
  *
  ************************************************************** phui-cpr-end */
@@ -144,20 +144,23 @@ namespace phui
 
    void Button::onMouseDown(InputButton button, const Point& p)
    {
-      if ((button == BUTTON_LEFT) && (contains(p)))
+      if (button == BUTTON_LEFT && contains(p))
       {
          mButtonDown = true;
          mButtonPressed = true;
-         getParent()->capture(this);
+         if (getParent())
+         {
+            getParent()->capture(this);
+         }
       }
    }
 
    void Button::onMouseMove(const Point& p)
    {
-	   if (mButtonPressed)
+      if (mButtonPressed)
       {
-		   mButtonDown = contains(p);
-	   }
+         mButtonDown = contains(p);
+      }
       else
       {
          mButtonDown = false;
@@ -166,17 +169,17 @@ namespace phui
 
    void Button::onMouseUp(InputButton button, const Point& p)
    {
-      if (mButtonPressed && button == BUTTON_LEFT)
+      // Only fire button pressed event if the mouse was released
+      // inside this button.
+      if (mButtonPressed && button == BUTTON_LEFT && contains(p))
       {
-         // Only fire button pressed event if the mouse was released
-         // inside this button.
-         if (contains(p))
-         {
-            fireActionEvent();
-         }
+         fireActionEvent();
       }
 
-      if (mButtonPressed) getParent()->capture(0);
+      if (mButtonPressed && getParent())
+      {
+         getParent()->capture(0);
+      }
 
       mButtonDown = false;
       mButtonPressed = false;

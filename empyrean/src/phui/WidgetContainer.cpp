@@ -24,8 +24,8 @@
  *
  * -----------------------------------------------------------------
  * File:          $RCSfile: WidgetContainer.cpp,v $
- * Date modified: $Date: 2003-08-08 02:51:24 $
- * Version:       $Revision: 1.2 $
+ * Date modified: $Date: 2003-08-08 04:55:49 $
+ * Version:       $Revision: 1.3 $
  * -----------------------------------------------------------------
  *
  ************************************************************** phui-cpr-end */
@@ -164,28 +164,28 @@ namespace phui
    {
       if (key == KEY_CTRL)
       {
-         mModifiers &= MODIF_CTRL ^ 0xFFFFFFFF;
+         mModifiers &= ~MODIF_CTRL;
       }
       else if (key == KEY_ALT)
       {
-         mModifiers &= MODIF_ALT ^ 0xFFFFFFFF;
+         mModifiers &= ~MODIF_ALT;
       }
       else if (key == KEY_SHIFT)
       {
-         mModifiers &= MODIF_SHIFT ^ 0xFFFFFFFF;
+         mModifiers &= ~MODIF_SHIFT;
       }
 
       if (key == KEY_CAPS_LOCK)
       {
-         mLocks &= ILOCK_CAPS ^ 0xFFFFFFFF;
+         mLocks &= ~ILOCK_CAPS;
       }
       else if (key == KEY_NUM_LOCK)
       {
-         mLocks &= ILOCK_NUM ^ 0xFFFFFFFF;
+         mLocks &= ~ILOCK_NUM;
       }
       else if (key == KEY_SCROLL_LOCK)
       {
-         mLocks &= ILOCK_SCROLL ^ 0xFFFFFFFF;
+         mLocks &= ~ILOCK_SCROLL;
       }
 
       if (WidgetPtr focus = getFocus())

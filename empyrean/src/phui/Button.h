@@ -24,8 +24,8 @@
  *
  * -----------------------------------------------------------------
  * File:          $RCSfile: Button.h,v $
- * Date modified: $Date: 2003-08-08 03:09:44 $
- * Version:       $Revision: 1.4 $
+ * Date modified: $Date: 2003-08-08 04:55:49 $
+ * Version:       $Revision: 1.5 $
  * -----------------------------------------------------------------
  *
  ************************************************************** phui-cpr-end */
@@ -64,10 +64,10 @@ namespace phui
        */
       void onMouseDown(InputButton button, const Point& p);
 
-	  /**
+      /**
        * Called whenever the mouse has moved inside this button. In this case,
-	   * we want to make the button only appear pressed while the mouse is inside
-	   * its rectangle (like a real windows button).
+       * we want to make the button only appear pressed while the mouse is inside
+       * its rectangle (like a real windows button).
        */
       void onMouseMove(const Point& p);
 
