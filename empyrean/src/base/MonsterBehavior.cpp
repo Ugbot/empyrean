@@ -30,9 +30,15 @@ namespace pyr {
             if (closest->getPos()[0] > entity->getPos()[0] + 1.0) {
                 xvel = 1;
             }
-            if (closest->getPos()[0] < entity->getPos()[0] - 1.0) {
+			else if (closest->getPos()[0] > entity->getPos()[0]) {
+				xvel = -1;
+			}
+            else if (closest->getPos()[0] < entity->getPos()[0] - 1.0) {
                 xvel = -1;
             }
+			else if (closest->getPos()[0] < entity->getPos()[0]) {
+				xvel = 1;
+			}
             entity->getVel()[0] = xvel;
         }
 
