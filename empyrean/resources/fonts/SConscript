@@ -1,5 +1,5 @@
-Import('Install')
-Install(Split("""
+Import('*')
+Install(env, Split("""
     COPYRIGHT.TXT
     Vera.ttf
     VeraBI.ttf

@@ -1,5 +1,6 @@
-Import('Install')
-Install(Split("""
+Import('*')
+
+Install(env, Split("""
     paladin.cfg
     paladin.csf
     paladin_arm.raw

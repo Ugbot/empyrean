@@ -1,31 +1,4 @@
-import os
-from os.path import join
-from glob import glob
-from types import ListType
-
 import dumbdbm
 SConsignFile(dbm_module=dumbdbm)
 
-TARGET = ARGUMENTS.get('TARGET', '.')
-Default(TARGET)
-
-env = Environment(ENV=os.environ)
-env['BUILDERS']['ConvertImage'] = Builder(action='corconvert $SOURCE $TARGET')
-
-def Root():
-    return Dir('#')
-
-def Here():
-    return str(Dir('.').get_path(Root()))
-
-def Install(files):
-    if type(files) is not ListType:
-        files = [files]
-    for f in files:
-        env.Install(join(TARGET, Here()), f)
-
-def ConvertImage(target, source):
-    env.ConvertImage(join(TARGET, Here(), target), source)
-
-Export('Install ConvertImage')
-SConscript(dirs = ['editorrc', 'fonts', 'images', 'maps', 'models'])
+SConscript('SConscript')

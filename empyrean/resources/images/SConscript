@@ -1,11 +1,12 @@
-Import('Install ConvertImage')
-Install(Split("""
+Import('*')
+
+Install(env, Split("""
     backdrop.jpg
     menu.png
     particle.png
     pointer.png
 """))
 
-ConvertImage('intro.tga', 'intro.png')
-ConvertImage('stars.tga', 'stars.png')
-ConvertImage('title/title_composite.tga', 'title/title_composite.png')
+ConvertImage(env, 'intro.tga', 'intro.png')
+ConvertImage(env, 'stars.tga', 'stars.png')
+ConvertImage(env, 'title/title_composite.tga', 'title/title_composite.png')

@@ -1,0 +1,39 @@
+import os
+from os.path import join
+from glob import glob
+from types import ListType
+
+base_env = Environment(ENV=os.environ)
+base_env['BUILDERS']['ConvertImage'] = Builder(
+    action='corconvert $SOURCE $TARGET')
+
+def Root():
+    return Dir('#')
+
+def Here():
+    return str(Dir('.').get_path(Root()))
+
+def Install(env, files):
+    if type(files) is not ListType:
+        files = [files]
+    for f in files:
+        env.Install(env['TARGET'].Dir(Here()), f)
+
+def ConvertImage(env, target, source):
+    env.ConvertImage(env['TARGET'].Dir(Here()).File(target), source)
+
+Export('Install ConvertImage')
+
+tdirs = ['../build']
+if base_env.get('PLATFORM') == 'cygwin':
+    tdirs.append('../vc7/bin/Debug')
+    tdirs.append('../vc7/bin/Release')
+
+rdirs = ['editorrc', 'fonts', 'images', 'maps', 'models']
+
+for t in tdirs:
+    dest = Dir(t)
+    Default(dest)
+    env = base_env.Copy(TARGET = dest)
+    Export('env')
+    SConscript(dirs=rdirs)

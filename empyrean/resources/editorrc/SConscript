@@ -1,5 +1,5 @@
-Import('Install')
-Install(Split("""
+Import('*')
+Install(env, Split("""
     new.png
     open.png
     save.png
