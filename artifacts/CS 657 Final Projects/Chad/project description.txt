@@ -1,0 +1,27 @@
+Empyrean - Grass, Trees, Particles, and Glow
+Chad Austin
+2004-11-04
+
+For the CS 657 class final project, I will be adding graphical enhancements to a game I've been working on for a few years, Empyrean.  This project is split into three components.  One involves simulating grass and trees with vertex programs, the second involves a basic particle system, and the third is a full-screen glow effect, showcased in the Guild Wars game.
+
+
+Grass and Trees
+--
+
+I'm not totally sure how this is going to work out, but I think I'll have to specify in the map file a region or volume in which to insert grass.  All surfaces in this volume will have grass automatically generated on them.  The actual grass vertices will be stored in a vertex buffer on the card, and a vertex program will cause them to sway.  (Using program local parameters to control the amount of sway?)  I'm not totally sure about the trees...  I will either have to procedurally generate branches and leaves on a base tree model or deform the vertices on the tree in the same way grass works.  Of course, points farther out from the trunk must move more than points closer in.  I'll consider myself done when there is a tree in the scene that sways back and forth in the wind.  :)
+
+
+Particle System
+--
+
+This will be a basic integration of particle effects into the game system.  Nothing as fancy as ParticleLib, although I will follow the same basic design.  There are two situations where particle systems will be used.  The first is a constant effect, such as a wire in a cave permanently emitting sparks.  This will be a type of entity in the scene and will either be loaded with the map or created by the server using the AddEntity/RemoveEntity protocol.  The other type of effect will be transient, such as a sword slicing through flesh and flinging blood everywhere.  This will be created by the server and have a finite lifetime, at which point it will just go away.
+
+The difference between this particle system and the one in the project is that this one will collide with the geometry in an OBJ file.  I'll have to generate a BSP tree from the geometry and optimize it for ray and segment intersections.
+
+I will implement three kinds of effects: smoke, sparks, and fire.
+
+
+Glow Effect
+--
+
+This postprocessing effect, shown in the upcoming game Guild Wars, adds glowy highlights around everything that's bright in the scene.  I believe it is implemented by rendering the screen into a low-resolution texture as well as the framebuffer, then additively blend the low-resolution texture on top of the screen.  This gives the screen a mystical look.
