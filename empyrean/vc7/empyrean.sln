@@ -51,6 +51,13 @@ Global
 		{084A19A1-07D9-4C88-BA1F-B47A04427F6D}.Release.ActiveCfg = Release|Win32
 		{084A19A1-07D9-4C88-BA1F-B47A04427F6D}.Release.Build.0 = Release|Win32
 	EndGlobalSection
+	GlobalSection(SolutionItems) = postSolution
+		..\doc\build-cygwin.txt = ..\doc\build-cygwin.txt
+		..\doc\build-msvc.txt = ..\doc\build-msvc.txt
+		..\doc\ChangeLog = ..\doc\ChangeLog
+		..\doc\modeling.txt = ..\doc\modeling.txt
+		..\doc\todo.txt = ..\doc\todo.txt
+	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		DPBuild = 5
 	EndGlobalSection
