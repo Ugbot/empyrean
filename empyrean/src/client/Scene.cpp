@@ -169,12 +169,39 @@ namespace pyr {
         _wireframe = !_wireframe;
     }
 
+    void Scene::toggleNormals() {
+        _normals = !_normals;
+    }
+
+    void Scene::toggleCollision() {
+        _collision = !_collision;
+    }
+
     void Scene::drawMap() {
         PYR_PROFILE_BLOCK("Scene::drawMap");
         if (_map) {
             MapRenderer renderer;
             renderer.drawWireframe(_wireframe);
+            renderer.drawNormals(_normals);
             _map->handleVisitor(renderer);
+
+            if (_collision) {
+                glDisable(GL_DEPTH_TEST);
+                glDisable(GL_LIGHTING);
+                if (ClientEntityPtr f = getFocus()) {
+                    std::vector<Segment> segs;
+                    _map->getSegs(segs, f->getPos()[0]);
+                    glColor3f(0, 0, 1);
+                    glBegin(GL_LINES);
+                    for (size_t i = 0; i < segs.size(); ++i) {
+                        glVertex(segs[i].v1);
+                        glVertex(segs[i].v2);
+                    }
+                    glEnd();
+                }
+                glEnable(GL_LIGHTING);
+                glEnable(GL_DEPTH_TEST);
+            }
         }
     }
 

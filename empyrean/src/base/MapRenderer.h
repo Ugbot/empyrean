@@ -12,11 +12,16 @@ namespace pyr {
             _wireframe = wireframe;
         }
 
+        void drawNormals(bool normals) {
+            _normals = normals;
+        }
+
         virtual void visitGroup(GroupElement* e);
         virtual void visitGeometry(GeometryElement* e);
 
     private:
         Inited<bool, false> _wireframe;
+        Inited<bool, false> _normals;
     };
 
 }

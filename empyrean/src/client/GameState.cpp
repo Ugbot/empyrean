@@ -376,12 +376,21 @@ namespace pyr {
 
 
     void GameState::onKeyPress(SDLKey key, bool down) {
-        if (key == SDLK_F2 && down) {
-            _showPlayerData = !_showPlayerData;
-        }
-
-        if (key == SDLK_F3 && down) {
-            _scene.toggleWireframe();
+        if (down) {
+            switch (key) {
+                case SDLK_F2:
+                    _showPlayerData = !_showPlayerData;
+                    break;
+                case SDLK_F3:
+                    _scene.toggleWireframe();
+                    break;
+                case SDLK_F4:
+                    _scene.toggleNormals();
+                    break;
+                case SDLK_F5:
+                    _scene.toggleCollision();
+                    break;
+            }
         }
 
         _im.onKeyPress(key, down);

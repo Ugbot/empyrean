@@ -23,6 +23,11 @@ namespace pyr {
         return Vec2f(a[0] * b[0], a[1] * b[1]);
     }
 
+    inline Vec3f normal(Vec3f v) {
+        normalize(v);
+        return v;
+    }
+
     void MapRenderer::visitGeometry(GeometryElement* e) {
         if (_wireframe) {
             glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
@@ -68,6 +73,17 @@ namespace pyr {
                 for (size_t j = 0; j < 3; ++j) {
                     glNormal(n[tris[i].n[j]]);
                     glVertex(v[tris[i].pos[j]]);
+                }
+            }
+            glEnd();
+        }
+
+        if (_normals) {
+            glBegin(GL_LINES);
+            for (size_t i = 0; i < tris.size(); ++i) {
+                for (size_t j = 0; j < 3; ++j) {
+                    glVertex(v[tris[i].pos[j]]);
+                    glVertex(v[tris[i].pos[j]] + normal(n[tris[i].n[j]]) * 100);
                 }
             }
             glEnd();
