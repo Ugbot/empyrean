@@ -32,6 +32,8 @@ namespace pyr {
 
         glClear(GL_DEPTH_BUFFER_BIT);
         _backdrop->drawRectangle(0, 0, 400, 300);
+        
+        glTranslatef(200, 150, 0);
 
         EntityMap::iterator itr = _entities.begin();
         for (; itr != _entities.end(); ++itr) {

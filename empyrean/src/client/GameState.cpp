@@ -56,9 +56,24 @@ namespace pyr {
         
     void GameState::update(float dt) {
         PYR_PROFILE_BLOCK("GameState::update");
+        
         _im.update(dt);
         _scene.update(dt);
-        ServerConnection::instance().update();
+
+        ServerConnection& sc = ServerConnection::instance();
+        sc.update();
+        
+        float dv = 0;
+        if (_inputLeft->getDelta() < -0.5f) {
+            dv -= 1;
+        } else if (_inputLeft->getDelta() > 0.5f) {
+            dv += 1;
+        }
+        if (_inputRight->getDelta() < -0.5f) {
+            dv += 1;
+        } else if (_inputRight->getDelta() > 0.5f) {
+            dv -= 1;
+        }
 
         if (_inputQuit->getValue() >= 0.50f) {
             invokeTransition<MenuState>();

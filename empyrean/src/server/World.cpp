@@ -1,5 +1,7 @@
 #include <iostream>
 #include "Connection.h"
+#include "EntityAddedPacket.h"
+#include "EntityRemovedPacket.h"
 #include "LoginPacket.h"
 #include "LoginResponsePacket.h"
 #include "ServerEntity.h"
@@ -16,9 +18,14 @@ namespace pyr {
     }
     
     void World::update(float dt) {
+        // update entities
+        for (EntityMap::iterator itr = _entities.begin();
+             itr != _entities.end(); ++itr)
+        {
+            itr->second->update(dt);
+        }
         
-    
-    
+        // update connections
         for (unsigned i = 0; i < _connections.size(); ++i) {
             Connection* c = _connections[i];
             
@@ -30,10 +37,17 @@ namespace pyr {
             
             c->processIncomingPackets();
             
+            // if the connection is logged in, update all entities
             ConnectionData* cd = (ConnectionData*)c->getOpaque();
             if (cd->loggedIn) {
-                gmtl::Vec2f pos, vel;
-                c->sendPacket(new UpdatePacket(0, pos, vel));
+                for (EntityMap::iterator itr = _entities.begin();
+                    itr != _entities.end(); ++itr)
+                {
+                    c->sendPacket(new UpdatePacket(
+                        itr->first,
+                        itr->second->getPos(),
+                        itr->second->getVel()));
+                }
             }
         }
     }
@@ -43,7 +57,7 @@ namespace pyr {
         
         ConnectionData* cd = new ConnectionData();
         cd->loggedIn = false;
-        cd->entityID = _uidGenerator.reserve();
+        cd->entityID = 0;
         connection->setOpaque(cd);
         
         // set up packet handlers
@@ -59,8 +73,8 @@ namespace pyr {
         ConnectionData* cd = (ConnectionData*)connection->getOpaque();
         if (cd->loggedIn) {
             removeEntity(cd->entityID);
+            _uidGenerator.release(cd->entityID);
         }
-        _uidGenerator.release(cd->entityID);
         delete cd;
         
         _connections.erase(_connections.begin() + index);
@@ -77,17 +91,54 @@ namespace pyr {
                       << std::endl;
                   
             cd->loggedIn = true;
+            cd->entityID = _uidGenerator.reserve();
             c->sendPacket(new LoginResponsePacket(cd->entityID));
             
+            // make sure this connection sees the other entities too
+            for (EntityMap::iterator itr = _entities.begin();
+                itr != _entities.end(); ++itr)
+            {
+                c->sendPacket(new EntityAddedPacket(
+                    itr->second->getAppearance(),
+                    itr->first,
+                    itr->second->getPos(),
+                    itr->second->getVel()));
+            }
+            
+            // add new avatar entity to world
             ServerEntity* se = new ServerEntity();
             addEntity(cd->entityID, se);
         }
     }
     
     void World::addEntity(u16 id, ServerEntity* entity) {
+        PYR_ASSERT(_entities.count(id) == 0, "Entity can't be added twice");
+        
+        for (unsigned i = 0; i < _connections.size(); ++i) {
+            Connection* c = _connections[i];
+            ConnectionData* cd = (ConnectionData*)c->getOpaque();
+            if (cd->loggedIn) {
+                c->sendPacket(new EntityAddedPacket(
+                    entity->getAppearance(),
+                    id,
+                    entity->getPos(),
+                    entity->getVel()));
+            }
+        }
+        _entities[id] = entity;
     }
     
     void World::removeEntity(u16 id) {
+        PYR_ASSERT(_entities.count(id) >= 1, "Entity can't be removed twice");
+        _entities.erase(id);
+        
+        for (unsigned i = 0; i < _connections.size(); ++i) {
+            Connection* c = _connections[i];
+            ConnectionData* cd = (ConnectionData*)c->getOpaque();
+            if (cd->loggedIn) {
+                c->sendPacket(new EntityRemovedPacket(id));
+            }
+        }
     }
 
 }
