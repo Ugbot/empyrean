@@ -4,9 +4,9 @@
 //#include "VisDebug.h"
 
 namespace pyr {
- 
+
     CollisionBox::CollisionBox(const Vec2f& lowerLeft, const Vec2f& upperRight) {
-                
+
         _verts[0][0] = lowerLeft[0];
         _verts[0][1] = lowerLeft[1];
 
@@ -23,9 +23,9 @@ namespace pyr {
         _center[1] = (upperRight[1] + lowerLeft[1])/2.0f;
         _displacement = Vec2f(0,0);
     }
-    
+
     CollisionBox::CollisionBox(const Vec2f& bottomcenter, const float width, const float height) {
-        
+
         _verts[0][0] = _verts[3][0] = bottomcenter[0] - width/2;
         _verts[0][1] = _verts[1][1] = bottomcenter[1];
 
@@ -49,7 +49,7 @@ namespace pyr {
             }
         }
     }
-    
+
     Vec2f CollisionBox::findInsideVertex(std::vector<Side>& hitlist) {
         // Find Vertex of my box that is in box 2
         Vec2f insideVertex;
@@ -113,7 +113,7 @@ namespace pyr {
 
     collision::COLLISION_TYPE CollisionBox::collideWithDynamic(float dt, const Vec2f& vel2, CollisionBox& box2, CollisionData& colDat) {
 
-        // Save the velocity to a convenience variable 
+        // Save the velocity to a convenience variable
         Vec2f vel = colDat.velocity;
 
         // Test to see if they are going away from each other if they are.. stop
@@ -135,28 +135,28 @@ namespace pyr {
         // Hitting on a vertex of the boxes is not a collision (for now) nor is complete overlap
         if(points.size() != 2) {
             return collision::NONE;
-        } 
+        }
 
         Vec2f collisionVec =  _center - box2.getCenter();
-		gmtl::normalize(collisionVec);
-        Vec2f xAxis(1,0);		 
+                gmtl::normalize(collisionVec);
+        Vec2f xAxis(1,0);
         /*float axisRot = gmtl::Math::aCos(gmtl::dot(collisionVec,xAxis)/gmtl::length(collisionVec));
         if (collisionVec[1] < 0) {
             axisRot *= -1;
         }
         //gmtl::AxisAngle axisRotMat(axisRot,0,0,1);
-        
+
         gmtl::Matrix22f axisRotMat;
         axisRotMat.set(gmtl::Math::cos(axisRot),gmtl::Math::sin(axisRot),-gmtl::Math::sin(axisRot),gmtl::Math::cos(axisRot));
-        
+
         // Calculate the velocity vectors of the two boxes in the collision coordinate system (collisionVec = new x axis)
         Vec2f velBox1PreCol = axisRotMat * vel;
         Vec2f velBox2PreCol = axisRotMat * vel2;*/
-        
+
         // Calculate the two boxes velocity vectors after the collisions
         float mass1 = 1.0f;
         float mass2 = 1.0f;
-        const float coefOfRest = 0.25f;
+        //const float coefOfRest = 0.25f;
         /*gmtl::Matrix22f A, Ainv, test;
         Vec2f x,b;
         A.set(mass1,mass2,-1,1);
@@ -166,10 +166,10 @@ namespace pyr {
         }
         test = Ainv * A;
         x = Ainv*b;*/
-		float cosVelToX = gmtl::dot(vel,xAxis)/gmtl::length(vel);
-		float momentumComp = mass1*gmtl::length(vel)/(mass1*gmtl::length(vel)+mass2*gmtl::length(vel2));
-		float velComp = -fabs(gmtl::length(vel)*cosVelToX * momentumComp);
-		vel = Vec2f(velComp,0);
+                float cosVelToX = gmtl::dot(vel,xAxis)/gmtl::length(vel);
+                float momentumComp = mass1*gmtl::length(vel)/(mass1*gmtl::length(vel)+mass2*gmtl::length(vel2));
+                float velComp = -fabs(gmtl::length(vel)*cosVelToX * momentumComp);
+                vel = Vec2f(velComp,0);
 
         // Save the new velocity, time, and distance
         //axisRotMat.set(gmtl::Math::cos(-axisRot),gmtl::Math::sin(-axisRot),-gmtl::Math::sin(-axisRot),gmtl::Math::cos(-axisRot));
@@ -179,7 +179,7 @@ namespace pyr {
         if (colDat.time > dt) {
             colDat.time = dt;
         }
-        
+
         if(fabs(this->getCenter()[1] - box2.getCenter()[1]) < 0.5) {
             return collision::ENTITY_HORIZ;
         }
@@ -190,7 +190,7 @@ namespace pyr {
             return collision::ENTITY_BELOW;
         }
     }
-    
+
    bool CollisionBox::collideWithStationary(float dt, CollisionData& colDat, const std::vector<Segment>& segs,
                                         Vec2f& groundVec) {
 
@@ -201,7 +201,7 @@ namespace pyr {
             colDat.type = collision::NOT_MOVING;
             return false;
         }
-     
+
         // Create side point and Segments
         Vec2f topPoint(_center[0], _verts[2][1] - 0.008f);
         Vec2f rightPoint(_verts[2][0], _center[1]);
@@ -211,12 +211,12 @@ namespace pyr {
         Vec2f bottomRightPoint(_verts[2][0], _verts[0][1] + 0.008f);
         Vec2f topLeftPoint(_verts[0][0], _verts[2][1] - 0.008f);
         Vec2f bottomLeftPoint(_verts[0][0], _verts[0][1] + 0.008f);
-  
+
         // Check to see if we are in the ground already
-        
+
         Segment groundDetector;
         groundDetector = Segment(bottomPoint,bottomPoint + Vec2f(0,topPoint[1] - bottomPoint[1]) * 0.45f);
-        
+
         Vec2f displacementPt = bottomPoint;
         int index = -1;
         for(size_t i = 0; i<segs.size(); ++i) {
@@ -229,7 +229,7 @@ namespace pyr {
                 }
             }
         }
-        
+
         if(index != -1) {
                 colDat.displacement = (displacementPt - bottomPoint) * 1.25f;
                 colDat.type = collision::GROUND_BELOW;
@@ -237,7 +237,7 @@ namespace pyr {
                 if(colDat.time > dt) {
                     colDat.time = dt;
                 }
-            
+
                 Segment ground = segs[index];
                 if (ground.v2[0] < ground.v1[0]) {
                     std::swap(ground.v1,ground.v2);
@@ -253,7 +253,7 @@ namespace pyr {
 
         // top detector
         groundDetector = Segment(topPoint,topPoint - Vec2f(0,topPoint[1] - bottomPoint[1]) * 0.25f);
-        
+
         displacementPt = topPoint;
         index = -1;
         for(size_t i = 0; i<segs.size(); ++i) {
@@ -266,7 +266,7 @@ namespace pyr {
                 }
             }
         }
-        
+
         if(index != -1) {
                 colDat.displacement = (displacementPt - topPoint) * 1.05f;
                 colDat.type = collision::GROUND_ABOVE;
@@ -274,7 +274,7 @@ namespace pyr {
                 if(colDat.time > dt) {
                     colDat.time = dt;
                 }
-            
+
                 Segment ground = segs[index];
                 if (ground.v2[0] < ground.v1[0]) {
                     std::swap(ground.v1,ground.v2);
@@ -303,7 +303,7 @@ namespace pyr {
                 }
             }
         }
-        
+
         if(index != -1) {
                 colDat.displacement = (displacementPt - leftPoint) * 1.05f;
                 colDat.type = collision::GROUND_BELOW;
@@ -311,7 +311,7 @@ namespace pyr {
                 if(colDat.time > dt) {
                     colDat.time = dt;
                 }
-            
+
                 Segment ground = segs[index];
                 if (ground.v2[0] < ground.v1[0]) {
                     std::swap(ground.v1,ground.v2);
@@ -327,7 +327,7 @@ namespace pyr {
 
         // right point
         groundDetector = Segment(rightPoint,rightPoint - Vec2f(rightPoint[0]-leftPoint[0],0) * 0.25f);
-        
+
         displacementPt = rightPoint;
         index = -1;
         for(size_t i = 0; i<segs.size(); ++i) {
@@ -340,7 +340,7 @@ namespace pyr {
                 }
             }
         }
-        
+
         if(index != -1) {
                 colDat.displacement = (displacementPt - rightPoint) * 1.05f;
                 colDat.type = collision::GROUND_BELOW;
@@ -348,7 +348,7 @@ namespace pyr {
                 if(colDat.time > dt) {
                     colDat.time = dt;
                 }
-            
+
                 Segment ground = segs[index];
                 if (ground.v2[0] < ground.v1[0]) {
                     std::swap(ground.v1,ground.v2);
@@ -395,7 +395,7 @@ namespace pyr {
         int segIndexHit[8] = { 0, 0, 0, 0, 0, 0, 0, 0 };
         // Go through each segment in the terrain
         for(size_t i = 0; i<segs.size(); ++i) {
-            // Go through each vector segment of the collision box 
+            // Go through each vector segment of the collision box
             for(size_t j = 0; j<vectorSegs.size(); ++j) {
                 //the<VisDebug>().addSegment(segs[i].v1,segs[i].v2,Vec3f(i==0?1.0f:0,i==1?1:0,i>1?1:0));
 
@@ -421,7 +421,7 @@ namespace pyr {
                 isCollision = true;
             }
         }
-        if (!isCollision) {            
+        if (!isCollision) {
             return false;
         }
 
@@ -434,7 +434,7 @@ namespace pyr {
                 }
             }
         }
-    
+
         // Get the ground direction vector
         Segment ground = segs[segIndexHit[isectIndex]];
         if (ground.v2[0] < ground.v1[0]) {
@@ -467,7 +467,7 @@ namespace pyr {
         colDat.displacement = normVec * (sideHitDistance[isectIndex] - 0.01f) * 0.9f;
         PYR_ASSERT(length(colDat.velocity) > 0, "colDat.velocity is zero-length");
         colDat.time = gmtl::length(colDat.displacement)/gmtl::length(colDat.velocity);
-                        
+
         if(gmtl::dot(colDat.velocity, vel) < 0 ) {
             std::cout << "Ah" << std::endl;
         }
@@ -485,24 +485,24 @@ namespace pyr {
         }
 
         colDat.velocity = vel;
-        
-        
+
+
         if(isectIndex == 2) {
-            colDat.type = collision::GROUND_ABOVE;            
+            colDat.type = collision::GROUND_ABOVE;
         }
         else {
             colDat.type = collision::GROUND_BELOW;
         }
-        
+
         return true;
-        
+
     }
 
     bool CollisionBox::interestingSeg(const Segment& seg) {
         if(segmentInside(seg)) {
             return true;
         }
-    
+
         if((seg.v1[0] > _verts[1][0] && seg.v2[0] > _verts[1][0]) ||    // Both to Right
             (seg.v1[0] < _verts[0][0] && seg.v2[0] < _verts[0][0]) ||    // Both to Left
             (seg.v1[1] > _verts[2][1] && seg.v2[1] > _verts[2][1]) ||    // Both Above
@@ -514,7 +514,7 @@ namespace pyr {
     }
 
     float CollisionBox::intersectLine(Vec2f& point, const Segment& seg1, const Segment& seg2) {
-    
+
         float x1 = (seg1.v2[0] - seg1.v1[0]);
         float x2 = (seg2.v2[0] - seg2.v1[0]);
         float y1 = (seg1.v2[1] - seg1.v1[1]);
@@ -555,7 +555,7 @@ namespace pyr {
 
         //float t = t0[0];
         //float r = t0[1];
-    
+
         if( t < 0.005 || t > 1 || r < 0.005 || r > 1) {
             //PYR_LOG() << "t is BAD = " << t;
             // invalid t so no collision
@@ -572,7 +572,7 @@ namespace pyr {
     }
 
     CollisionBox::Side CollisionBox::pointIntersect(std::vector<Vec2f>& points, const Segment& seg) {
-       
+
         std::vector<Segment> segs;
         this->segment(segs);
 
@@ -590,7 +590,7 @@ namespace pyr {
     }
 
     void CollisionBox::segment(std::vector<Segment>& segs) {
-        
+
         for(int i = 0; i < 4; ++i) {
             Segment s(_verts[i],_verts[(i+1)%4]);
             segs.push_back(s);

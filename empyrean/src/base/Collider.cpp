@@ -19,23 +19,23 @@ namespace pyr {
         PhysicsBehaviorSlot* physics = ent->getBehavior()->getSlot<PhysicsBehaviorSlot>();
         PYR_ASSERT(physics,"Passed in a non-physics object to the collider!");
 
-        CollisionBox newBox(ent->getNextPos() + ent->getBounds().min, 
+        CollisionBox newBox(ent->getNextPos() + ent->getBounds().min,
                             ent->getNextPos() + ent->getBounds().max);
-        
+
         // Get the terrain segments
         std::vector<Segment> segs;
         terrain->getSegs(segs,ent->getNextPos()[0]);
-        
+
         // Create the CollisionData to store information about collisions
         CollisionData colDat;
         colDat.velocity = ent->getNextVel();
 
         // Determine which segment if any that the entity collides with
         newBox.collideWithStationary(dt,colDat,segs,physics->groundDir);
-        
+
         // Change the physics info
         if(colDat.type == collision::GROUND_BELOW || colDat.type == collision::NOT_MOVING ||
-           colDat.type == collision::GROUND_HORIZ                                            ) {        
+           colDat.type == collision::GROUND_HORIZ                                            ) {
             // Set the appropriate physics values
             if (physics->inAir) {
                 physics->inAir = false;
@@ -47,7 +47,7 @@ namespace pyr {
             physics->groundNorm = groundNorm;
             //physics->coeffOfFriction = terrain->something(seg);
         }
-      
+
         return colDat;
     };
 
@@ -57,7 +57,7 @@ namespace pyr {
         Vec2f box2Pos = ent2->getNextPos() + dt*ent2->getNextVel();
         CollisionBox entityBox(box1Pos + ent1->getBounds().min, box1Pos + ent1->getBounds().max);
         CollisionBox otherBox(box2Pos + ent2->getBounds().min, box2Pos + ent2->getBounds().max);
-        
+
         // Create the CollisionData to store information about collisions
         CollisionData colDat;
         colDat.velocity = ent1->getNextVel();
@@ -72,20 +72,20 @@ namespace pyr {
         PYR_PROFILE_BLOCK("resolveCollisions");
 
         int recurseDepth = 0;
-        PhysicsBehaviorSlot* physics = 0; 
+        //PhysicsBehaviorSlot* physics = 0;
 
         // Resolve all the entities collisions and set the next values
         for(size_t i = 0; i < ents.size(); ++i) {
             recurseDepth = 0;
             //std::vector<Entity*> noEntityCollision;
-			//noEntityCollision.clear();
+                        //noEntityCollision.clear();
             collideEntity(dt,ents[i],terrain,ents,recurseDepth);
         }
     }
 
     void collideEntity(float dt, Entity* ent, const Map* terrain, const std::vector<Entity*>& ents, int depth) {
         //PYR_PROFILE_BLOCK("collideEntity");
-    
+
         // Check to see if we have recursed too far
         if (++depth > 5) {
             //PYR_ASSERT(0,"test");
@@ -102,7 +102,7 @@ namespace pyr {
                 // Collide with the other entity
                 tempData = collideWithEntity(dt,ent,ents[i]);
 
-                // Save the collision info if it is the first one or would happen sooner 
+                // Save the collision info if it is the first one or would happen sooner
                 if (entColData.time == 0 || (tempData.time > 0 && tempData.time < entColData.time)) {
                     entColData = tempData;
                 }
@@ -137,8 +137,8 @@ namespace pyr {
             collideEntity(dt,ent,terrain,ents,depth);
         }
 
-        return; 
+        return;
     }
 
  }
-  
+
