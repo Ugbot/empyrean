@@ -994,6 +994,34 @@ struct ExtensionTypes SupportedExtensions; /* deprecated, please do not use */
 
 /* getProcAddress */
 
+#ifdef __sgi
+static void * __dlopenGetProcAddress(const char* procName)
+{
+    static void *h = NULL;
+    static void *gpa;
+
+    if (!h)
+    {
+        if (!(h = dlopen(NULL, RTLD_LAZY | RTLD_LOCAL)))
+        {
+            fprintf(stderr,
+                    "E: GLEW failed to dlopen myself: %s.\nAbort.\n",
+                    dlerror());
+            exit(100);
+        }
+
+        gpa = dlsym(h, "glXGetProcAddress");
+        if (gpa)
+            fprintf(stderr, "Got glXGetProcAddress");
+    }
+
+    if (gpa)
+        return ((void* (*)(const char*))gpa)(procName);
+    else
+        return dlsym(h, (const char *)procName);
+}
+#endif
+
 void *extgl_GetProcAddress(char *name)
 {
 #if defined(_WIN32) || defined(__CYGWIN__) || defined(__MINGW32__)
@@ -1007,24 +1035,7 @@ void *extgl_GetProcAddress(char *name)
 
 #elif defined(__sgi)
 
-    void* lib = dlopen("libgl.so", RTLD_LAZY);
-    if (lib)
-    {
-        void* func = dlsym(lib, name);
-        if (!func)
-        {
-            printf("Function %s not found\n", name);
-            extgl_error = 1;
-        }
-        dlclose(lib);
-        return func;
-    }
-    else
-    {
-        printf("libgl.so not loaded\n");
-        extgl_error = 1;
-        return 0;
-    }
+    return __dlopenGetProcAddress(name);
     
 #else
 
