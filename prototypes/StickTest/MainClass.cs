@@ -6,6 +6,7 @@ using System.Drawing;
 using System.Windows.Forms;
 using System.ComponentModel;
 using System.Collections;
+using System.Runtime.InteropServices;
 using CsGL.OpenGL;
 using CsGL.Util;
 
@@ -16,6 +17,9 @@ namespace StickTest
 {
     public class MainClass
     {
+        [DllImport("winmm")]
+            static extern int timeGetTime();
+
         Form form;
         OpenGLControl gl;
         Model model;
@@ -75,8 +79,8 @@ namespace StickTest
             GL.glLightfv(GL.GL_LIGHT1,GL.GL_POSITION,lightpos);
             GL.glEnable(GL.GL_LIGHT1);
 
-            //GL.glEnable(GL.GL_CULL_FACE);
-            //GL.glCullFace(GL.GL_BACK);
+            GL.glEnable(GL.GL_CULL_FACE);
+            GL.glCullFace(GL.GL_BACK);
             GL.glColor3f(1,1,1);
 
             GL.glHint(GL.GL_LINE_SMOOTH_HINT,GL.GL_NICEST);
@@ -125,9 +129,10 @@ namespace StickTest
          * Second, use C++ and not C#.
          * Also vertex/index buffers/arrays.
          */
-        void DrawGLShade(Mesh mesh,int[][] lists,Vector[] verts)
+        void DrawGLShade(Mesh mesh,AnimState.TriangleList[] lists,Vector[] verts)
         {
-/*            GL.glBegin(GL.GL_TRIANGLES);
+            /*            
+            GL.glBegin(GL.GL_TRIANGLES);
             foreach (Mesh.Triangle tri in mesh.triangles)
             {
                 for (int i=0; i<3; i++)
@@ -139,21 +144,23 @@ namespace StickTest
                     GL.glVertex3d(v.x,v.y,v.z);
                 }
             }
-            GL.glEnd();*/
+            GL.glEnd();
+            /*/
 
-            foreach (int[] l in lists)
+            foreach (AnimState.TriangleList curlist in lists)
             {
                 GL.glBegin(GL.GL_TRIANGLE_STRIP);
-                foreach (int i in l)
+                for (int i=0; i<curlist.vertices.Length; i++)
                 {
-                    //Normal n=mesh.normals[i];
-                    Vector v=verts[i];
+                    Normal n=mesh.normals[curlist.normals[i]];
+                    Vector v=verts[curlist.vertices[i]];
 
-                    //GL.glNormal3d(n.x,n.y,n.z);
+                    GL.glNormal3d(n.x,n.y,n.z);
                     GL.glVertex3d(v.x,v.y,v.z);
                 }
                 GL.glEnd();
             }
+            //*/
         }
 
         /*
@@ -257,9 +264,9 @@ namespace StickTest
             foreach (Mesh m in model.meshes)
             {
                 DrawToonShade(m,animstate.GetVerts(i));
-                //GL.glColor3ub(0,0,0);
-                //DrawOutLine(m,animstate.GetVerts(i));
-                //GL.glColor3ub(255,255,255);
+                GL.glColor3ub(0,0,0);
+                DrawOutLine(m,animstate.GetVerts(i));
+                GL.glColor3ub(255,255,255);
                 i++;
             }
             GL.glDisable(GL.GL_TEXTURE_1D);
@@ -287,18 +294,32 @@ namespace StickTest
         {
             const double inc=0.3;
 
+            int time=timeGetTime();
+
+            int curfps=0;
+            int curframes=0;
+            int fpstime=timeGetTime();
+
             while (!kill)
             {
-                time+=inc;
-                while (time>30) time-=30;
+                int t=time;
+                time=timeGetTime();
                 animstate.Animate(inc);
 
                 modelpos.x+=vel;
                 if (modelpos.x>endx) modelpos.x=startx;
 
                 Render();
+                curframes++;
 
-                form.Text=String.Format("{0},{1},{2}    {3},{4},{5}   t={6}",x,y,z,xangle,yangle,zangle,(int)time);
+                if (time-fpstime>1000)
+                {
+                    fpstime=time;
+                    curfps=curframes;
+                    curframes=0;
+                    form.Text=String.Format("{0},{1},{2}    {3},{4},{5}     {6} fps",x,y,z,xangle,yangle,zangle,curfps);
+                }
+                
                 Application.DoEvents();
             }
 

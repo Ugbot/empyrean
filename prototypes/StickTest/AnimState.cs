@@ -114,13 +114,14 @@ namespace StickTest
             }
         }
 
+        // The triangle list stuff really doesn't belong here.  But it doesn't really belong anywhere at the moment.
         public struct TriangleList
         {
             public int[] vertices;
             public int[] normals;
         }
 
-        public class ModelData
+        public class MeshData
         {
             public Vector[] transformedvertices;
             public Vector[] untransformedvertices;
@@ -133,9 +134,10 @@ namespace StickTest
         JointState[] joints;
         JointState rootjoint;
 
-        Vector[][] transformedvertices;
+        /*Vector[][] transformedvertices;
         Vector[][] untransformedvertices;
-        int[][][] trianglelists; // @_@
+        int[][][] trianglelists; // @_@*/
+        MeshData[] meshdata;
 
         JointState FindJointByName(string name)
         {
@@ -169,22 +171,23 @@ namespace StickTest
             /*
              * Initialize the current vertex arrangement.  Basically a copy operation.
              */
-            transformedvertices=new Vector[m.meshes.Length][];
-            untransformedvertices=new Vector[m.meshes.Length][];
+            meshdata=new MeshData[m.meshes.Length];
+
             for (int i=0; i<m.meshes.Length; i++)
             {
+                meshdata[i]=new MeshData();
+
                 Vertex[] verts=m.meshes[i].vertices;
                 Vector[] v=new Vector[verts.Length];
                 for (int j=0; j<v.Length; j++)
                     v[j]=new Vector(verts[j].x,verts[j].y,verts[j].z);
 
-                transformedvertices[i]=v;
-                untransformedvertices[i]=new Vector[verts.Length];  // filled up in UndeformJoint
+                meshdata[i].transformedvertices=v;
+                meshdata[i].untransformedvertices=new Vector[verts.Length];  // filled up in UndeformJoint
             }
 
             UndeformJoint(rootjoint,Matrix.identity);
 
-            trianglelists=new int[model.meshes.Length][][];
             for (int i=0; i<model.meshes.Length; i++)
                 GenerateTriangleLists(i);
 		}
@@ -205,7 +208,7 @@ namespace StickTest
                     Vertex v=mesh.vertices[k];
                     if (joints[v.jointidx]==j)
                     {
-                        untransformedvertices[i][k] = m*new Vector(v.x,v.y,v.z);
+                        meshdata[i].untransformedvertices[k] = m*new Vector(v.x,v.y,v.z);
                     }
                 }
             }
@@ -235,11 +238,11 @@ namespace StickTest
 
                 for (int k=0; k<mesh.vertices.Length; k++)
                 {
-                    Vector v=untransformedvertices[i][k];
+                    Vector v=meshdata[i].untransformedvertices[k];
 
                     if (joints[mesh.vertices[k].jointidx]==j)
                     {
-                        transformedvertices[i][k]=m*new Vector(v.x,v.y,v.z);
+                        meshdata[i].transformedvertices[k]=m*new Vector(v.x,v.y,v.z);
                     }
                 }
             }
@@ -259,7 +262,7 @@ namespace StickTest
         }
         public Vector[] GetVerts(int i)
         {
-            return transformedvertices[i];
+            return meshdata[i].transformedvertices;
         }
         void GenerateTriangleLists(int meshidx)
         {
@@ -270,61 +273,66 @@ namespace StickTest
             // first, get a list of all the triangles
             for (int i=0; i<mesh.triangles.Length; i++)
             {
-                int[] t=(int[])mesh.triangles[i].i.Clone();
-                tris.Add(t);
+                tris.Add(mesh.triangles[i]);
             }
 
             // now, pick a triangle, and find triangles still in the list, that share two vertices.
             // If we find one, add the third vertex to the list, and continue on.  Else add what we've got to list, and start anew.
-            ArrayList cur=new ArrayList(); // list of ints
+            ArrayList curv=new ArrayList(); // list of ints
+            ArrayList curn=new ArrayList();
             while (tris.Count>0)
             {
-                cur.Clear();
-                int[] t=(int[])tris[0];
-                cur.Add(t[0]);
-                cur.Add(t[1]);
-                cur.Add(t[2]);
+                curv.Clear();   curn.Clear();
+                Mesh.Triangle t=(Mesh.Triangle)tris[0];
+                curv.Add(t.i[0]);   curv.Add(t.i[1]);   curv.Add(t.i[2]);
+                curn.Add(t.n[0]);   curn.Add(t.n[1]);   curn.Add(t.n[2]);
+
                 tris.RemoveAt(0);
-                int[] l=(int[])(GenList(cur,tris).ToArray(typeof(int)));    // get a list
-                list.Add(l);
+                TriangleList tlist=GenList(curv,curn,tris,meshidx);
+                list.Add(tlist);
             }
 
-            trianglelists[meshidx]=(int[][])list.ToArray(typeof(int[]));
+            meshdata[meshidx].trianglelists=(TriangleList[])list.ToArray(typeof(TriangleList));
 
             // just for fun -- find out how many lists we have, and how long they are
             
         }
 
         // recursive thinger for grabbing a wad of triangles and arranging them into a list
-        ArrayList GenList(ArrayList inlist,ArrayList tris)
+        TriangleList GenList(ArrayList verts,ArrayList normals,ArrayList tris,int meshidx)
         {
             // get the last two points on the list
-            int[] lastpoints={(int)inlist[inlist.Count-2],(int)inlist[inlist.Count-1]};
+            int[] lastpoints={(int)verts[verts.Count-2],(int)verts[verts.Count-1]};
 
-            foreach (int[] tri in tris)
+            foreach (Mesh.Triangle tri in tris)
             {
                 int shared=0,unsharedidx=-1;
                 for (int i=0; i<3; i++)
-                    if (tri[i]==lastpoints[0] || tri[i]==lastpoints[1])
+                    if (tri.i[i]==lastpoints[0] || tri.i[i]==lastpoints[1])
                         shared++;
                     else
-                        unsharedidx=tri[i];
+                        unsharedidx=i;
 
                 if (shared==2)
                 {
-                    inlist.Add(unsharedidx);
+                    verts.Add(tri.i[unsharedidx]);
+                    normals.Add(tri.n[unsharedidx]);
+                    
                     tris.Remove(tri);
-                    return GenList(inlist,tris);
+                    return GenList(verts,normals,tris,meshidx);
                 }
             }
 
             // can't find any more. :(
-            return inlist;
+            TriangleList list=new TriangleList();
+            list.vertices=(int[])verts.ToArray(typeof(int));
+            list.normals=(int[])normals.ToArray(typeof(int));
+            return list;
         }
 
-        public int[][] GetTriangleLists(int modelidx)
+        public TriangleList[] GetTriangleLists(int modelidx)
         {
-            return trianglelists[modelidx];
+            return meshdata[modelidx].trianglelists;
         }
     }
 }
