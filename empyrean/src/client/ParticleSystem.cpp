@@ -33,7 +33,7 @@ namespace pyr {
     {
     }
 
-    void ParticleSystem::update(float dt) {
+    void ParticleSystem::update(float dt, const Map* /*terrain*/) {
         for (ParticleList::iterator iter = _particles.begin(); iter != _particles.end(); iter++) {
             iter->update(dt);
 

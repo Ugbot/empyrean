@@ -16,7 +16,7 @@ namespace pyr {
     public:
         ParticleSystem();
 
-        virtual void update(float dt);
+        virtual void update(float dt, const Map* terrain);
         virtual void draw();
 
         void spawnParticle(const gmtl::Vec2f& pos,

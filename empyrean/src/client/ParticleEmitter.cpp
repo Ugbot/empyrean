@@ -16,7 +16,7 @@ namespace pyr {
     {
     }
 
-    void ParticleEmitter::update(float dt) {
+    void ParticleEmitter::update(float dt, const Map* /*terrain*/) {
 
         if (_period != 0) {
             _spawnCount += dt;

@@ -3,8 +3,8 @@ import os
 import string
 import SCons.Errors
 
-import dumbdbm
-SConsignFile(dbm_module=dumbdbm)
+#import dumbdbm
+#SConsignFile(dbm_module=dumbdbm)
 
 Default('build')
 
@@ -181,4 +181,4 @@ Export('base_env')
 
 
 # Process subdirectories.
-SConscript(dirs = ['src'])
+SConscript(dirs = ['resources', 'src'])

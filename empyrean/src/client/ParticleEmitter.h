@@ -14,7 +14,7 @@ namespace pyr {
     public:
         ParticleEmitter(ParticleSystem* system);
 
-        virtual void update(float dt);
+        virtual void update(float dt, const Map* terrain);
         virtual void draw();
 
         const Color&    getColor() const;

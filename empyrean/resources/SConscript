@@ -7,8 +7,9 @@ base_env = Environment(ENV=os.environ)
 base_env['BUILDERS']['ConvertImage'] = Builder(
     action='corconvert $SOURCE $TARGET')
 
+root = Dir('.')
 def Root():
-    return Dir('#')
+    return root
 
 def Here():
     return str(Dir('.').get_path(Root()))
@@ -29,11 +30,9 @@ if base_env.get('PLATFORM') == 'cygwin':
     tdirs.append('../vc7/bin/Debug')
     tdirs.append('../vc7/bin/Release')
 
-rdirs = ['editorrc', 'fonts', 'images', 'maps', 'models']
 
-for t in tdirs:
-    dest = Dir(t)
-    Default(dest)
-    env = base_env.Copy(TARGET = dest)
+for t in map(Dir, tdirs):
+    Default(t)
+    env = base_env.Copy(TARGET=t)
     Export('env')
-    SConscript(dirs=rdirs)
+    SConscript(dirs=['editorrc', 'fonts', 'images', 'maps', 'models'])
