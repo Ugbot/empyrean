@@ -9,6 +9,7 @@ namespace pyr {
     namespace constants {
 
         const u16 SERVER_PORT = 14702;
+        const float DT_CAP = 1.0;  // One second.
     
     }
 }

@@ -157,6 +157,12 @@
 				RelativePath="..\..\src\client\GameEntity.h">
 			</File>
 			<File
+				RelativePath="..\..\src\client\HUD.cpp">
+			</File>
+			<File
+				RelativePath="..\..\src\client\HUD.h">
+			</File>
+			<File
 				RelativePath="..\..\src\client\Input.h">
 			</File>
 			<File

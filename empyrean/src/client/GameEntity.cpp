@@ -20,8 +20,43 @@ namespace pyr {
         _model = model;
         _renderer = renderer;
         _direction = 90;
+
+        // Initializing frenzy! // TEMP TESTING -> real values commented out
+        _currentEther = 25; //0;
+        _maxEther = 50; //0;
+        _currentVitality = 10; //0;
+        _maxVitality = 100; //0;
         _jumpStart = false;
+
         startStandState();
+    }
+
+    void GameEntity::decrVitality(int decr) {
+        _currentVitality -= decr;
+        if (_currentVitality < 0) {
+            _currentVitality = 0;
+        }
+    }
+
+    void GameEntity::incrVitality(int incr) {
+        _currentVitality += incr;
+        if (_currentVitality > _maxVitality) {
+            _currentVitality = _maxVitality;
+        }
+    }
+
+    void GameEntity::decrEther(int decr) {
+        _currentEther -= decr;
+        if (_currentEther < 0) {
+            _currentEther = 0;
+        }
+    }
+
+    void GameEntity::incrEther(int incr) {
+        _currentEther += incr;
+        if (_currentEther > _maxEther) {
+            _currentEther = _maxEther;
+        }
     }
 
     void GameEntity::draw() {
@@ -177,5 +212,15 @@ namespace pyr {
         } else {
             _direction = -90;
         }
+    }
+
+    void GameEntity::getVitalityUpdate(int& current, int& max) {
+        current = _currentVitality;
+        max = _maxVitality;
+    }
+
+    void GameEntity::getEtherUpdate(int& current, int& max) {
+        current = _currentEther;
+        max = _maxEther;
     }
 }

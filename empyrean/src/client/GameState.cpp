@@ -1,7 +1,6 @@
 #include <stdexcept>
 #include <gmtl/gmtl.h>
 
-#include "Entity.h"
 #include "GameEntity.h"
 #include "GameState.h"
 #include "GLUtility.h"
@@ -17,6 +16,7 @@
 #include "Scene.h"
 #include "ServerConnection.h"
 #include "Texture.h"
+#include "HUD.h"
 
 namespace pyr {
 
@@ -31,6 +31,10 @@ namespace pyr {
         _inputJoyX   = &_im.getInput("JoyX");
         _inputJoyJump = &_im.getInput("JoyJump");
         _inputJoyStart = &_im.getInput("JoyStart");
+        _input1 = &_im.getInput("1");
+        _input2 = &_im.getInput("2");
+        _input3 = &_im.getInput("3");
+        _input4 = &_im.getInput("4");
         _inputJoyAttack = &_im.getInput("JoyAttack");
         _inputJoyX->setValue(0);
 
@@ -47,17 +51,25 @@ namespace pyr {
         Scene& scene = the<Scene>();
         scene.draw();
         
-        if (_showPlayerData) {
-            if (GameEntity* entity = (GameEntity*) scene.getFocus()) {
-                Application& app = the<Application>();
-                glEnable(GL_BLEND);
-                setOrthoProjection(float(app.getWidth()), float(app.getHeight()));
-                glTranslatef(app.getWidth() / 2.0f, 0, 0);
-                glColor3f(1, 1, 1);
-                GLTEXT_STREAM(_renderer)
-                    << "Position: " << entity->getPos() << "\n"
-                    << "Velocity: " << entity->getVel() << "\n"
-                    << "Jumping: " << entity->getJumping();
+        // Draw entity related stuff
+        if (Entity* entity = scene.getFocus()) {
+            Application& app = the<Application>();
+            
+
+            the<HUD>().draw(_renderer,entity);
+            
+
+            if (_showPlayerData) {
+                if (GameEntity* entity = (GameEntity*) scene.getFocus()) {
+                    Application& app = the<Application>();
+                    glEnable(GL_BLEND);
+                    setOrthoProjection(float(app.getWidth()), float(app.getHeight()));
+                    glTranslatef(app.getWidth() / 2.0f, 0, 0);
+                    GLTEXT_STREAM(_renderer)
+                        << "Position: " << entity->getPos() << "\n"
+                        << "Velocity: " << entity->getVel() << "\n"
+                        << "Jumping: " << entity->getJumping();
+                }
             }
         }
     }
@@ -69,6 +81,21 @@ namespace pyr {
 
         ServerConnection& sc = the<ServerConnection>();
         sc.update();
+
+        // Effect the player's vitality
+        GameEntity* gent = dynamic_cast<GameEntity*>(the<Scene>().getFocus());
+        if (_input1->getValue() == 1) {
+            gent->decrVitality(2);
+        }
+        if (_input2->getValue() == 1) {
+            gent->incrVitality(2);
+        }
+        if (_input3->getValue() == 1) {
+            gent->decrEther(1);
+        }
+        if (_input4->getValue() == 1) {
+            gent->incrEther(1);
+        }
 
         // move to the right!
         if (_inputRight->getDelta() > gmtl::GMTL_EPSILON) {

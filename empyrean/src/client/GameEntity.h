@@ -40,8 +40,14 @@ namespace pyr {
         void draw();
         void update(float dt, const Map* terrain);
 
-        bool jump();
-        
+        void getVitalityUpdate(int& current, int& max);
+        void getEtherUpdate(int& current, int& max);
+        void decrVitality(int decr);
+        void incrVitality(int incr);
+        void decrEther(int decr);
+        void incrEther(int incr);
+ 
+        bool jump();        
         void startJumpAction();
 
     private:
@@ -69,6 +75,10 @@ namespace pyr {
         CollisionData _lastCD;
 
         float _direction;
+        int _maxVitality;
+        int _currentVitality;
+        int _maxEther;
+        int _currentEther;
         bool _jumpStart;
         State _currentState;
     };

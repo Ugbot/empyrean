@@ -31,6 +31,10 @@ namespace pyr {
         Input* _inputJoyX;
         Input* _inputJoyJump;
         Input* _inputJoyStart;
+        Input* _input1;
+        Input* _input2;
+        Input* _input3;
+        Input* _input4;
         Input* _inputJoyAttack;
 
         Zeroed<int> _lastJoyX;

@@ -52,6 +52,7 @@ namespace pyr {
 
         // draw background
         glEnable(GL_TEXTURE_2D);
+        glColor3f(1, 1, 1);
         _backdrop->bind();
         glBegin(GL_TRIANGLE_FAN);
         glTexCoord2f(0 + focusX / width, 0 + focusY / height); glVertex2f(0,     0);

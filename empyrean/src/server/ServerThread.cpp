@@ -1,12 +1,13 @@
 #include <vector>
 #include "Configuration.h"
 #include "Connection.h"
+#include "Constants.h"
 #include "ListenerThread.h"
 #include "NSPRUtility.h"
 #include "ServerLog.h"
 #include "ServerThread.h"
 #include "World.h"
-
+#include "Log.h"
 
 namespace pyr {
 
@@ -32,6 +33,13 @@ namespace pyr {
             listener->getConnections(connections);
             for (size_t i = 0; i < connections.size(); ++i) {
                 world.addConnection(connections[i]);
+            }
+
+            // Cap dt to threshold.
+            if (dt > constants::DT_CAP) {
+                PYR_LOG() << "Warning, time between frames too large.  It was " << dt << " seconds.";
+                PYR_LOG() << "It is now being set to " << constants::DT_CAP;
+                dt = constants::DT_CAP;
             }
             
             world.update(dt);
