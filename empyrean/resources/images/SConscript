@@ -2,7 +2,6 @@ Import('Install ConvertImage')
 Install(Split("""
     backdrop.jpg
     menu.png
-    notyet.png
     particle.png
     pointer.png
 """))

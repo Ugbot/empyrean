@@ -63,14 +63,11 @@ namespace pyr {
     }
     
     void Scene::addEntity(u16 id, Entity* entity) {
-        if (_entities.count(id)) {
-            delete _entities[id];
-        }
+        PYR_ASSERT(_entities.count(id) == 0, "Two entities have same ID");
         _entities[id] = entity;
     }
     
     void Scene::removeEntity(u16 id) {
-        delete _entities[id];
         _entities.erase(id);
     }
     

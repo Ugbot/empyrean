@@ -9,7 +9,6 @@ SOURCES = Split("""
     Main.cpp
     MenuState.cpp
     Model.cpp
-    OptionsState.cpp
     ParticleEmitter.cpp
     ParticleSystem.cpp
     PlayerEntity.cpp
