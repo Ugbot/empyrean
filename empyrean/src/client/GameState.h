@@ -7,8 +7,10 @@
 #include "InputManager.h"
 #include "State.h"
 
-
 namespace pyr {
+
+    class Renderer;
+    class Model;
 
     class GameState : public State {
     public:
@@ -28,6 +30,9 @@ namespace pyr {
         Input* _inputLeft;
         Input* _inputRight;
         Input* _inputQuit;
+
+        Model* _testModel;
+        Renderer* _renderer;
         
         std::vector<Entity*> _entities;
         

@@ -19,10 +19,15 @@ namespace pyr {
         _inputRight = &_im.getInput("MouseRight");
         _inputQuit  = &_im.getInput("Escape");
         _rotation = 0;
+
+        _renderer=new DefaultRenderer;
+        _testModel=Model::create("paladin/paladin.cfg");
     }
     
     void GameState::draw(float fade) {
         PYR_PROFILE_BLOCK("Render");
+
+        _renderer->draw(*_testModel); // note to self: make draw accept a Model* so this looks nicer, as there won't be many (if any at all) models that aren't pointers.
 
         glDisable(GL_TEXTURE_2D);
         glDisable(GL_BLEND);
