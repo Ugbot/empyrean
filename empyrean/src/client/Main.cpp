@@ -37,8 +37,8 @@ namespace pyr {
         SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE,   16);
         SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
 
-        const int width  = 640;
-        const int height = 480;
+        const int width  = 1024;
+        const int height = 768;
         const int bpp    = info->vfmt->BitsPerPixel;
         if (!SDL_SetVideoMode(width, height, bpp, SDL_OPENGL)) {
             throwSDLError("Setting video mode failed");
