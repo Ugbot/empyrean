@@ -5,6 +5,7 @@
 #include <stdexcept>
 #include <string>
 #include <vector>
+#include "Error.h"
 #include "Singleton.h"
 
 
@@ -50,10 +51,7 @@ namespace pyr {
     };
     
     
-    struct DatabaseError : std::runtime_error {
-        DatabaseError(const std::string& what)
-        : std::runtime_error(what) { }
-    };
+    PYR_DEFINE_RUNTIME_ERROR(DatabaseError);
     
 
     class Database {

@@ -2,7 +2,7 @@
 #define PYR_ERROR_H
 
 
-#include <exception>
+#include <stdexcept>
 #include <string>
 
 
@@ -22,6 +22,14 @@
         pyr::error("Caught exception: " + what);    \
     }                                               \
     PYR_CATCH_ALL()
+
+
+/// Defines an exception class that derives from std::runtime_error.
+#define PYR_DEFINE_RUNTIME_ERROR(name)  \
+    struct name : std::runtime_error {  \
+        name(const std::string& what)   \
+        : std::runtime_error(what) { }  \
+    }
 
 
 #if 0
@@ -45,6 +53,11 @@ namespace pyr {
 
     /// At this point in time, error() DOES return.
     void error(const std::string& message);
+    
+    /// So warning can just call error...
+    inline void warning(const std::string& message) {
+        error(message);
+    }
 
 }
 

@@ -77,7 +77,7 @@ namespace pyr {
 
         float dx = _inputRight->getValue() - _inputLeft->getValue();
         float dy = 1 - _inputSpace->getValue() * 2;
-        sc.setVelocity(gmtl::Vec2f(dx * 50, dy * 10));
+        //sc.setVelocity(gmtl::Vec2f(dx * 50, dy * 10));
         //_player->setVel(gmtl::Vec2f(dx * 50, dy * 10));
 
         if (_inputQuit->getValue() >= 0.50f) {

@@ -3,28 +3,31 @@
 
 
 #include <string>
+#include "Error.h"
 #include "Singleton.h"
 #include "Types.h"
 
 
 namespace pyr {
 
-    /// Immutable for now.
+    PYR_DEFINE_RUNTIME_ERROR(ConfigurationError);
+
     class Configuration {
         PYR_DECLARE_SINGLETON(Configuration)
 
-        Configuration()  { }
+        Configuration();
         ~Configuration() { }
         
     public:
-        int getScreenWidth();
-        int getScreenHeight();
-        bool isFullscreen();
+        void load();
+        void save() const;
+    
+        int screenWidth;
+        int screenHeight;
+        bool fullscreen;
         
-        std::string getServer();
-        u16 getPort();
-        
-        std::string getUsername();
+        std::string server;
+        std::string username;
     };
 
 }

@@ -31,6 +31,7 @@ namespace pyr {
     
         void update(float dt) {
             _pos += _vel * dt;
+            _vel[1] -= 9.81f * dt;
         }
         
     private:

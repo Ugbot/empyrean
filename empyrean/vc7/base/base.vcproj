@@ -137,6 +137,9 @@
 				RelativePath="..\..\src\base\Connection.h">
 			</File>
 			<File
+				RelativePath="..\..\src\base\Constants.h">
+			</File>
+			<File
 				RelativePath="..\..\src\base\Debug.h">
 			</File>
 			<File

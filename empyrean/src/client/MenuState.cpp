@@ -11,7 +11,6 @@
 #include "MenuState.h"
 #include "NewCharacterScreen.h"
 #include "NewGameScreen.h"
-#include "OptionsState.h"
 #include "ServerConnection.h"
 #include "Texture.h"
 
@@ -69,7 +68,9 @@ namespace pyr {
     }
     
     void MenuState::onMousePress(Uint8 button, bool down, int x, int y) {
-        const phui::Point p(x, y);
+        const phui::Point p(
+            x * 1024 / Application::instance().getWidth(),
+            y * 768 / Application::instance().getHeight());
         if (down) {
             _screen->genMouseDownEvent(phui::SDLToPhuiButton(button), p);
         } else {
@@ -78,15 +79,14 @@ namespace pyr {
     }
     
     void MenuState::onMouseMove(int x, int y) {
-        _screen->genMouseMoveEvent(phui::Point(x, y));
+        const phui::Point p(
+            x * 1024 / Application::instance().getWidth(),
+            y * 768 / Application::instance().getHeight());
+        _screen->genMouseMoveEvent(p);
     }
     
     void MenuState::onErrorOK() {
         _screen = _mainScreen;
-    }
-    
-    void MenuState::onMainOptions() {
-        invokeTransition<OptionsState>();
     }
     
     void MenuState::onMainQuit() {

@@ -4,10 +4,10 @@
 
 #include <map>
 #include <stack>
-#include <stdexcept>
 #include <string>
 #include <vector>
 #include <expat.h>
+#include "Error.h"
 
 
 namespace pyr {
@@ -58,11 +58,8 @@ namespace pyr {
         std::vector<XMLNode*> _children;
     };
     
-    
-    struct XMLParseError : std::runtime_error {
-        XMLParseError(const std::string& what)
-        : std::runtime_error(what) { }
-    };
+
+    PYR_DEFINE_RUNTIME_ERROR(XMLParseError);    
     
 
     class XMLParser {

@@ -2,6 +2,7 @@
 #define PYR_MAIN_SCREEN_H
 
 
+#include "Constants.h"
 #include "MenuScreen.h"
 #include "MenuState.h"
 #include "Texture.h"
@@ -22,7 +23,7 @@ namespace pyr {
     private:
         void createMainScreen() {
             using namespace phui;
-    
+            
             PicturePtr background = new Picture("images/title/title_composite.tga");
             background->setPositionAndSize(0, 0, 1024, 768);
             
@@ -51,10 +52,10 @@ namespace pyr {
         void createConnectWindow() {
             using namespace phui;
         
-
-            std::string server = Configuration::instance().getServer();
-            std::string port = itos(Configuration::instance().getPort());
-            _server = new TextField(server + ":" + port);
+            int width  = Configuration::instance().screenWidth;
+            int height = Configuration::instance().screenHeight;
+    
+            _server = new TextField(Configuration::instance().server);
             
             WidgetContainerPtr serverPanel = new WidgetContainer(
                 new BoxLayout(BoxLayout::HORIZONTAL));
@@ -98,7 +99,10 @@ namespace pyr {
         }
         
         void onOptions(const phui::ActionEvent&) {
-            getState()->onMainOptions();
+            // Options screen needs to be able to set resolution and whether
+            // or not Empyrean is fullscreen.  For now just modify client.cfg.
+            
+            //getState()->onMainOptions();
         }
         
         void onQuit(const phui::ActionEvent&) {
@@ -114,13 +118,15 @@ namespace pyr {
                 return;
             }
                             
-            int port = Configuration::instance().getPort();
+            int port = constants::SERVER_PORT;
             std::string server = splits[0];
             if (splits.size() > 1) {
                 port = atoi(splits[1].c_str());
             }
             
             endModal();
+            
+            the<Configuration>().server = _server->getText();
             getState()->onConnectConnect(server, port);
         }
         

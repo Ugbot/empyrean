@@ -13,8 +13,7 @@ namespace pyr {
     class MenuScreen : public phui::RootWidget {
     public:
         MenuScreen(MenuState* state)
-            : phui::RootWidget(Application::instance().getWidth(),
-                               Application::instance().getHeight())
+            : phui::RootWidget(1024, 768)
         {
             _state = state;
             hidePointer();

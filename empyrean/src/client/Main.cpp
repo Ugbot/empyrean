@@ -1,8 +1,6 @@
 #include <memory>
 #include <stdexcept>
 #include <string>
-#include <stdlib.h>
-#include <time.h>
 #include <SDL.h>
 
 #ifdef PYR_USE_EXTGL
@@ -21,11 +19,14 @@ namespace pyr {
 
     void runClient() {
         PYR_PROFILE_BLOCK("main");
-
-        // initialize the random number generator in case we ever
-        // decide to use rand()
-        srand(time(0));
         
+        try {
+            the<Configuration>().load();
+        }
+        catch (const ConfigurationError&) {
+            // Could not load configuration.  That's okay, use the defaults.
+        }
+
         initializeSDL(SDL_INIT_NOPARACHUTE | SDL_INIT_VIDEO | SDL_INIT_TIMER);
 
         const SDL_VideoInfo* info = SDL_GetVideoInfo();
@@ -41,12 +42,12 @@ namespace pyr {
         SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
 
         int mode = SDL_OPENGL;
-        if (Configuration::instance().isFullscreen()) {
+        if (the<Configuration>().fullscreen) {
             mode |= SDL_FULLSCREEN;
         }
         
-        const int width  = Configuration::instance().getScreenWidth();
-        const int height = Configuration::instance().getScreenHeight();
+        const int width  = the<Configuration>().screenWidth;
+        const int height = the<Configuration>().screenHeight;
         const int bpp    = info->vfmt->BitsPerPixel;
         if (!SDL_SetVideoMode(width, height, bpp, mode)) {
             throwSDLError("Setting video mode failed");
@@ -125,6 +126,16 @@ namespace pyr {
                 }
             }
             last_time = now;
+        }
+        
+        try {
+            // Perhaps this should be saved right after changes, in case
+            // the program crashes.
+            the<Configuration>().save();
+        }
+        catch (const ConfigurationError& e) {
+            // Display a warning.
+            warning("Saving client configuration failed: " + std::string(e.what()));
         }
     }
 

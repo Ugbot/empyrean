@@ -16,7 +16,7 @@ namespace pyr {
             phui::LabelPtr nameLabel = new phui::Label("Name");
             nameLabel->setPositionAndSize(0, 0, 512, 192);
             
-            _name = new phui::TextField(Configuration::instance().getUsername());
+            _name = new phui::TextField(Configuration::instance().username);
             _name->setPositionAndSize(512, 0, 512, 192);
             
             phui::LabelPtr passwordLabel = new phui::Label("Password");
@@ -47,6 +47,8 @@ namespace pyr {
         
     private:
         void onLogin(const phui::ActionEvent&) {
+            the<Configuration>().username = _name->getText();
+        
             getState()->onLoginLogin(
                 _name->getText(),
                 _password->getText(),

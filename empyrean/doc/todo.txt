@@ -45,3 +45,5 @@ support configuration changes (and save them)
 implement GUI for the server (configuration and database access)
 reduce latency of network operation (condition variable to interrupt sleep
     when packet is recieved?)
+when writing XML, don't do it manually but build a tree and have the tree
+    write itself

@@ -3,7 +3,6 @@
 #include "Game.h"
 #include "Log.h"
 #include "PacketTypes.h"
-#include "ServerEntity.h"
 #include "World.h"
 
 

@@ -34,7 +34,6 @@ namespace pyr {
         
         void onErrorOK();
         
-        void onMainOptions();
         void onMainQuit();
         
         void onConnectConnect(const std::string& server, int port);
