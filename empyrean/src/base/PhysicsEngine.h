@@ -6,14 +6,14 @@
 
 namespace pyr {
 
-    struct Environment;
     class Entity;
+    class Map;
 
     class PhysicsEngine {
         PYR_DECLARE_SINGLETON(PhysicsEngine);
 
     public:
-        void moveEntities(float dt, Environment& env);
+        void moveEntities(float dt, const Map* map, const std::vector<Entity*>& entities);
 
     private:
         PhysicsEngine() {}

@@ -2,13 +2,13 @@
 #define PYR_PLAYER_BEHAVIOR_H
 
 
-#include "Behavior.h"
+#include "PhysicsBehavior.h"
 #include "Utility.h"
 
 
 namespace pyr {
 
-    class PlayerBehavior : public Behavior {
+    class PlayerBehavior : public PhysicsBehavior {
     public:
         PYR_BEHAVIOR_NAME("player");
 
@@ -21,9 +21,6 @@ namespace pyr {
         }
 
         void handleEvent(Entity* entity, const std::string& event);
-
-    private:
-
     };
 
 }

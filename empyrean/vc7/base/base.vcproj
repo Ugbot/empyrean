@@ -290,6 +290,9 @@
 				RelativePath="..\..\src\base\PathHandler.h">
 			</File>
 			<File
+				RelativePath="..\..\src\base\PhysicsBehavior.h">
+			</File>
+			<File
 				RelativePath="..\..\src\base\PhysicsEngine.cpp">
 			</File>
 			<File

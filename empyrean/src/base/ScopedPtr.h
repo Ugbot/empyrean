@@ -8,6 +8,25 @@
 namespace pyr {
 
     /**
+     * Don't use this type in your code.  It's there to prevent 'delete' from
+     * being called on ScopedPtr objects.
+     *
+     * Note: This technique inspired by Mozilla's nsCOMPtr.
+     */
+    template<typename T>
+    class ScopedDerivedSafe : public T {
+    protected:
+        ScopedDerivedSafe();
+
+    private:
+        ScopedDerivedSafe<T>& operator=(const T&);
+
+        /// Prevents calling delete on a ScopedPtr.
+        void operator delete(void*);
+    };
+
+
+    /**
      * This smart pointer is roughly analogous to boost's scoped_ptr
      * and std::auto_ptr.  It has destructive copy, and thus, is not
      * container-safe.
@@ -23,22 +42,22 @@ namespace pyr {
             delete _ptr;
         }
         
-        T* get() const {
-            return _ptr;
+        ScopedDerivedSafe<T>* get() const {
+            return reinterpret_cast<ScopedDerivedSafe<T>*>(_ptr);
         }
         
-        T* operator->() const {
-            PYR_ASSERT(get() != 0, "Can't dereference null pointer");
+        ScopedDerivedSafe<T>* operator->() const {
+            PYR_ASSERT(get() != 0, "Null ScopedPtr dereferenced");
             return get();
         }
     
         T& operator*() {
-            PYR_ASSERT(get() != 0, "Can't dereference null pointer");
+            PYR_ASSERT(get() != 0, "Null ScopedPtr dereferenced");
             return *get();
         }
         
-        operator bool() const {
-            return (_ptr != 0);
+        operator ScopedDerivedSafe<T>*() const {
+            return get();
         }
         
         ScopedPtr<T>& operator=(ScopedPtr<T>& p) {
@@ -68,13 +87,13 @@ namespace pyr {
         return (a.get() == b.get());
     }
 
-    template<typename T>
-    bool operator==(const ScopedPtr<T>& a, T b) {
+    template<typename T, typename U>
+    bool operator==(const ScopedPtr<T>& a, const U* b) {
         return (a.get() == b);
     }
 
-    template<typename T>
-    bool operator==(T a, const ScopedPtr<T>& b) {
+    template<typename T, typename U>
+    bool operator==(const T* a, const ScopedPtr<U>& b) {
         return (a == b.get());
     }
 
@@ -84,13 +103,13 @@ namespace pyr {
         return (a.get() != b.get());
     }
 
-    template<typename T>
-    bool operator!=(const ScopedPtr<T>& a, T b) {
+    template<typename T, typename U>
+    bool operator!=(const ScopedPtr<T>& a, const U* b) {
         return (a.get() != b);
     }
 
-    template<typename T>
-    bool operator!=(T a, const ScopedPtr<T>& b) {
+    template<typename T, typename U>
+    bool operator!=(const T* a, const ScopedPtr<U>& b) {
         return (a != b.get());
     }
 

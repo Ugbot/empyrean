@@ -8,7 +8,7 @@
 
 namespace pyr {
     
-    template <typename T> class RefPtr;
+    template<typename T> class RefPtr;
     
     /**
      * Derive from RefCounted to make your class have reference-counted

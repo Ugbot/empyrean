@@ -2,12 +2,12 @@
 #define PYR_MONSTER_BEHAVIOR_H
 
 
-#include "Behavior.h"
+#include "PhysicsBehavior.h"
 
 
 namespace pyr {
 
-    class MonsterBehavior : public Behavior {
+    class MonsterBehavior : public PhysicsBehavior {
     public:
         PYR_BEHAVIOR_NAME("monster");
         

@@ -178,6 +178,10 @@ namespace pyr {
             mode |= SDL_FULLSCREEN;
         }
 
+        // If we set this before opening the window, the window has
+        // this caption.
+        SDL_WM_SetCaption("Empyrean", 0);
+
         /**
          * @note SDL does silly things when the created window is larger
          * than the desktop.
@@ -200,7 +204,6 @@ namespace pyr {
         PYR_LOG() << "GL_VERSION: " << glGetString(GL_VERSION);
         PYR_LOG() << "GL_EXTENSIONS: " << glGetString(GL_EXTENSIONS);
 
-        SDL_WM_SetCaption("Empyrean", 0);
         SDL_ShowCursor(SDL_DISABLE);
 
         SDL_Joystick* joystick = 0;

@@ -53,7 +53,7 @@ namespace pyr {
         /*collision::COLLISION_TYPE result = */entityBox.collideWithDynamic(0,ent1->getVel(),ent2->getVel(), otherBox, rv.points);
     };
 
-    void resolveCollisions(float dt, const Map* terrain, std::vector<Entity*>& ents) {
+    void resolveCollisions(float dt, const Map* terrain, const std::vector<Entity*>& ents) {
         PYR_PROFILE_BLOCK("resolveCollisions");
 
         int* entityRegionAssignment = new int[ents.size()];

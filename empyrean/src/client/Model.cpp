@@ -35,7 +35,8 @@ namespace pyr {
      *
      */
     class CoreModel : public RefCounted {
-        typedef std::map<std::string,CoreModel*> InstanceMap;
+	private:    
+		typedef std::map<std::string,CoreModel*> InstanceMap;
         
         /// This static data kind of scares me.
         static InstanceMap _instances;
@@ -52,6 +53,7 @@ namespace pyr {
             loadConfigFile(id, _coreModel);
         }
 
+	protected:
         ~CoreModel() {
             // gaaaaay.  But I can find no way to search a std::map for a certain value.
             for (InstanceMap::iterator i = _instances.begin(); i != _instances.end(); i++)
@@ -75,7 +77,8 @@ namespace pyr {
             _coreModel.destroy();
         }
 
-        void loadConfigFile(const string& filename, CalCoreModel& model) {
+	private:
+		void loadConfigFile(const string& filename, CalCoreModel& model) {
             if (getExtension(filename) == ".cfg") {
                 return loadOldConfigFile(filename, model);
             }

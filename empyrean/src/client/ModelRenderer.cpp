@@ -26,8 +26,8 @@ namespace pyr {
         CalRenderer* r = model.getModel().getRenderer();
         r->beginRendering();
 
-        static float ambient[] = { 0.5f, 0.5f, 0.5f, 1.0f };
-        static float diffuse[] = { 1, 1, 1, 1 };
+        //static float ambient[] = { 0.5f, 0.5f, 0.5f, 1.0f };
+        //static float diffuse[] = { 1, 1, 1, 1 };
         static Vec3f lightvec(0.5, 0.5, 1);
         normalize(lightvec);
 

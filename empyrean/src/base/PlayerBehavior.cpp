@@ -10,7 +10,7 @@ namespace pyr {
     PlayerBehavior::PlayerBehavior(const std::string& /*resource*/) {
         // We would like to be able to start in some sort of animation.
         //beginAnimationCycle("idle");
-        _desiredGroundSpeed = 2.0f;
+        setDesiredGroundSpeed(2.0f);
     }
 
     void PlayerBehavior::update(Entity* entity, float dt, const Environment& env) {
@@ -25,11 +25,11 @@ namespace pyr {
         const float mu = 0.8f;
         const float acc = -mu * constants::GRAVITY;
         
-        if(_desiredAccel[0] != 0) {
-            vel[0] = _desiredAccel[0];
+        if(getDesiredAccel()[0] != 0) {
+            vel[0] = getDesiredAccel()[0];
         }
 
-        if(!_jumping) {
+        if(!getJumpNumber()) {
             
             if(vel[0] > 0) {
                 vel[0] += acc * dt;
@@ -57,39 +57,39 @@ namespace pyr {
         const float speed = 2;
        
         if (event == "Begin Right") {
-            _desiredAccel[0] = speed;
-            _facingRight = true;
+            getDesiredAccel()[0] = speed;
+            setFacingRight(true);
             sendAppearanceCommand(entity, "Face Left");
             beginAnimationCycle(entity, "walk");
         }
 
         if (event == "Begin Left") {
-            _desiredAccel[0] = -speed;
-            _facingRight = false;
+            getDesiredAccel()[0] = -speed;
+            setFacingRight(false);
             sendAppearanceCommand(entity, "Face Right");
             beginAnimationCycle(entity, "walk");
         }
 
         if (event == "End Right" || event == "End Left") {
-            _desiredAccel[0] = 0;
+            getDesiredAccel()[0] = 0;
             beginAnimationCycle(entity, "idle");
         }
 
         if (event == "Jump") {
-            if (_jumping < 2) {
+            if (getJumpNumber() < 2) {
                 entity->getVel()[1] = jumpSpeed;
-                ++_jumping;
+                ++getJumping();
                 beginAnimationCycle(entity, "strut");
             }
         }
 
         if (event == "Reset Jumping") {
-            if(_jumping > 0) {
-                if(_desiredAccel[0] > 0) {
+            if(getJumpNumber() > 0) {
+                if(getDesiredAccel()[0] > 0) {
                     sendAppearanceCommand(entity, "Face Left");
                     beginAnimationCycle(entity, "walk");
                 }
-                else if(_desiredAccel[0] < 0) {
+                else if(getDesiredAccel()[0] < 0) {
                     sendAppearanceCommand(entity, "Face Right");
                     beginAnimationCycle(entity, "walk");
                 }
@@ -97,7 +97,7 @@ namespace pyr {
                     beginAnimationCycle(entity, "idle");
                 }
             }
-            _jumping = 0;
+            setJumpNumber(0);
         }
 
         if (event == "Attack") {

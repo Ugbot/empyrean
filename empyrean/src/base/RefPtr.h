@@ -8,6 +8,35 @@
 
 namespace pyr {
 
+    /**
+     * Don't use this type in your code.  It's there to prevent 'delete',
+     * ref(), and unref() from being called on RefPtr objects.
+     *
+     * Note: This technique inspired by Mozilla's nsCOMPtr.
+     */
+    template<typename T>
+    class RefDerivedSafe : public T {
+    protected:
+        RefDerivedSafe();
+
+    private:
+        RefDerivedSafe<T>& operator=(const T&);
+
+        /// Prevents calling delete on a ScopedPtr.
+        void operator delete(void*);
+
+#if 0   // ref() and unref() are already private in RefCounted.  Uncomment
+        // this if that ever changes.
+
+        /// Let RefPtr manage ref() for you.
+        using T::ref;
+
+        /// Let RefPtr manage unref() for you.
+        using T::unref;
+#endif
+    };
+
+
     /// A container-safe smart pointer used for refcounted classes.
     template<typename T>
     class RefPtr {
@@ -39,7 +68,8 @@ namespace pyr {
             }
         }
      
-        RefPtr<T>& operator=(T* ptr) {
+        template<typename U>
+        RefPtr<T>& operator=(U* ptr) {
             if (ptr != _ptr) {
                 if (_ptr) {
                     _ptr->unref();
@@ -52,27 +82,34 @@ namespace pyr {
             return *this;
         }
 
-        RefPtr<T>& operator=(const RefPtr<T>& ptr) {
-            *this = ptr._ptr;
+        template<typename U>
+        RefPtr<T>& operator=(const RefPtr<U>& ptr) {
+            *this = ptr.get();
             return *this;
         }
 
-        T* operator->() const {
-            PYR_ASSERT(_ptr, "Accessing member of null pointer!");
-            return _ptr;
+        /// Need this to override the built-in operator=
+        RefPtr<T>& operator=(const RefPtr<T>& ptr) {
+            *this = ptr.get();
+            return *this;
+        }
+
+        RefDerivedSafe<T>* operator->() const {
+            PYR_ASSERT(get(), "Accessing member of null pointer!");
+            return get();
         }
 
         T& operator*() const {
-            PYR_ASSERT(_ptr, "Dereferencing null pointer!");
-            return *_ptr;
+            PYR_ASSERT(get(), "Dereferencing null pointer!");
+            return *get();
         }
 
-        operator bool() const {
-            return (_ptr != 0);
+        operator RefDerivedSafe<T>*() const {
+            return get();
         }
 
-        T* get() const {
-            return _ptr;
+        RefDerivedSafe<T>* get() const {
+            return reinterpret_cast<RefDerivedSafe<T>*>(_ptr.get());
         }
 
     private:
@@ -85,13 +122,13 @@ namespace pyr {
         return (a.get() == b.get());
     }
 
-    template<typename T>
-    bool operator==(const RefPtr<T>& a, T b) {
+    template<typename T, typename U>
+    bool operator==(const RefPtr<T>& a, const U* b) {
         return (a.get() == b);
     }
 
-    template<typename T>
-    bool operator==(T a, const RefPtr<T>& b) {
+    template<typename T, typename U>
+    bool operator==(const T* a, const RefPtr<U>& b) {
         return (a == b.get());
     }
 
@@ -101,13 +138,13 @@ namespace pyr {
         return (a.get() != b.get());
     }
 
-    template<typename T>
-    bool operator!=(const RefPtr<T>& a, T b) {
+    template<typename T, typename U>
+    bool operator!=(const RefPtr<T>& a, const U* b) {
         return (a.get() != b);
     }
 
-    template<typename T>
-    bool operator!=(T a, const RefPtr<T>& b) {
+    template<typename T, typename U>
+    bool operator!=(const T* a, const RefPtr<U>& b) {
         return (a != b.get());
     }
 

@@ -29,7 +29,7 @@
             } PYR_REQUIRE_SEMI
         
     #else
-    
+
         #include <assert.h>
     
         #define PYR_ASSERT(condition, label) assert((condition) && (label))
