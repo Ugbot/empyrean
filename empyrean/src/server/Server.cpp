@@ -9,6 +9,12 @@
 
 namespace pyr {
 
+    Server::Server() {
+        definePacketHandler(this, &Server::handleLogin);
+        definePacketHandler(this, &Server::handleSay);
+        definePacketHandler(this, &Server::handleJoinGame);
+    }
+
     Server::~Server() {
         clearConnections();
 
@@ -55,11 +61,7 @@ namespace pyr {
             cd->account = 0;
         }
         connection->setData(cd);
-
-        // set up packet handlers
-        connection->definePacketHandler(this, &Server::handleLogin);
-        connection->definePacketHandler(this, &Server::handleSay);
-        connection->definePacketHandler(this, &Server::handleJoinGame);
+        connection->addReceiver(this);
     }
 
     void Server::connectionRemoved(Connection* connection) {
@@ -69,9 +71,7 @@ namespace pyr {
             announceLogout(connection);
         }
 
-        // This might have to explicitly unregister the handlers we set
-        // instead of clearing them all.
-        connection->clearHandlers();
+        connection->removeReceiver(this);
 
         // Don't say the client disconnected if it only went to another
         // ConnectionHolder.

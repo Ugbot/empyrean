@@ -125,7 +125,7 @@ namespace pyr {
         ProfileBlockPtr popBlock();
 
         /// Total time spent profiling.
-        float _totalTime;
+        Zeroed<float> _totalTime;
 
         /// Set of profiled blocks and their names.
         ProfileBlockMap _blocks;

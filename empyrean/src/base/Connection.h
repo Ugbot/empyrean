@@ -2,8 +2,8 @@
 #define PYR_CONNECTION_H
 
 
+#include <set>
 #include <map>
-#include <queue>
 #include "LokiTypeInfo.h"
 #include "RefCounted.h"
 #include "RefPtr.h"
@@ -19,7 +19,7 @@ namespace pyr {
     class ReaderThread;
     class Socket;
     class WriterThread;
-    
+
 
     /// Base class for extra data that can be attached to a connection.
     class ConnectionData {
@@ -72,15 +72,15 @@ namespace pyr {
 
 
     /**
-     * This class represents a packet channel between two computers.
-     * Packets can be sent, and incoming packets are sent to
-     * PacketHandlers.
+     * Derive from this if you want your object to receive packets.
+     * Then register yourself with a Connection.
      */
-    class Connection {
+    class PacketReceiver {
     public:
-        Connection(Socket* socket);
-        ~Connection();
+        /// Returns true if the packet was handled.
+        bool receivePacket(Connection* c, Packet* p);
 
+    protected:
         /**
          * Defines a packet handler that calls a member function
          * on the specified object.
@@ -91,14 +91,30 @@ namespace pyr {
             void (ClassT::*method)(Connection*, PacketT*))
         {
             typedef MethodPacketHandler<PacketT, ClassT> HandlerT;
-
-            TypeInfo ti(typeid(PacketT));
-            _handlers[ti] = new HandlerT(handler, method);
+            _handlers[typeid(PacketT)] = new HandlerT(handler, method);
         }
 
         /// Empty the list of handlers.
         void clearHandlers();
-        
+
+    private:
+        typedef std::map<TypeInfo, PacketHandlerPtr> HandlerMap;
+        typedef HandlerMap::iterator HandlerMapItr;
+
+        HandlerMap _handlers;
+    };
+
+
+    /**
+     * This class represents a packet channel between two computers.
+     * Packets can be sent, and incoming packets are sent to
+     * PacketReceivers.
+     */
+    class Connection {
+    public:
+        Connection(Socket* socket);
+        ~Connection();
+
         /**
          * Call handlers for all available packets in the incoming queue.
          * If a handler is not available for a packet type, put it in the
@@ -118,13 +134,16 @@ namespace pyr {
         /// Returns the address of the connection.
         std::string getPeerAddress();
 
-
         void setData(ConnectionData* data) { _data = data;     }
         ConnectionData* getData() const    { return _data.get(); }
 
+        void addReceiver(PacketReceiver* receiver)    { _receivers.insert(receiver); }
+        void removeReceiver(PacketReceiver* receiver) { _receivers.erase(receiver);  }
+
     private:
-        typedef std::map<TypeInfo, PacketHandlerPtr> HandlerMap;
-        typedef HandlerMap::iterator HandlerMapItr;
+        typedef std::set<PacketReceiver*> ReceiverSet;
+        typedef ReceiverSet::iterator ReceiverSetIter;
+        ReceiverSet _receivers;
 
         ScopedPtr<Socket> _tcpSocket;
 
@@ -132,9 +151,6 @@ namespace pyr {
         WriterThread* _writer;
         ScopedPtr<Thread> _readerThread;
         ScopedPtr<Thread> _writerThread;
-
-        std::vector<Packet*> _unhandledPackets;
-        HandlerMap _handlers;
 
         bool _closing;  // has close() been called?
 

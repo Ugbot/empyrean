@@ -10,6 +10,16 @@
 
 namespace pyr {
 
+    bool PacketReceiver::receivePacket(Connection* c, Packet* p) {
+        PacketHandlerPtr handler = _handlers[typeid(*p)];
+        if (handler) {
+            handler->processPacket(c, p);
+            return true;
+        } else {
+            return false;
+        }
+    }
+
     Connection::Connection(Socket* socket) {
         _tcpSocket = socket;
         _reader = new ReaderThread(socket);
@@ -19,47 +29,46 @@ namespace pyr {
 
         _closing = false;
     }
-    
+
     Connection::~Connection() {
-        std::for_each(_unhandledPackets.begin(), _unhandledPackets.end(),
-                      &delete_function<Packet>);
     }
-    
-    void Connection::clearHandlers() {
-        _handlers.clear();
-    }
-    
+
     void Connection::processIncomingPackets() {
         std::queue<Packet*> packets(_reader->getPackets());
         while (!packets.empty()) {
             Packet* p = packets.front();
             packets.pop();
 
-            TypeInfo ti(typeid(*p));
-            PacketHandlerPtr handler = _handlers[ti];
-            if (handler) {
-                handler->processPacket(this, p);
-                delete p;
-            } else {
-                _unhandledPackets.push_back(p);
+            bool handled = false;
+            for (ReceiverSetIter i = _receivers.begin(); i != _receivers.end(); ++i) {
+                handled |= (*i)->receivePacket(this, p);
             }
+            
+            if (!handled) {
+                PYR_LOG() << "Unhandled packet: ";
+                p->log();
+            }
+            
+            delete p;
         }
     }
-    
+
     void Connection::sendPacket(Packet* p) {
         _writer->addPacket(p);
     }
-    
+
     void Connection::close() {
         _closing = true;
     }
-    
+
     bool Connection::isClosed() {
         return _closing || (!_readerThread->isRunning() || !_writerThread->isRunning());
     }
-    
+
     std::string Connection::getPeerAddress() {
         return _tcpSocket->getPeerAddress();
     }
+    
+
 
 }

@@ -45,11 +45,11 @@ namespace pyr {
         int vitality, ether, maxVitality, maxEther;
         entity->getVitalityUpdate(vitality,maxVitality);
         entity->getEtherUpdate(ether,maxEther);
-        PYR_ASSERT(maxVitality>0,"Invalid maximum vitality!");
-        PYR_ASSERT(maxEther>0,"Invalid maximum ether!");
+        PYR_ASSERT(maxVitality>=0,"Invalid maximum vitality!");
+        PYR_ASSERT(maxEther>=0,"Invalid maximum ether!");
 
         setOrthoProjection(400.0f, 300.0f);
-        
+
         glDisable(GL_TEXTURE_2D);
         glEnable(GL_BLEND);
         glPushMatrix();

@@ -13,14 +13,25 @@ namespace pyr {
 
     PYR_DEFINE_SINGLETON(ServerConnection)
 
-   
+    ServerConnection::ServerConnection() {
+        definePacketHandler(this, &ServerConnection::handleLoginResponse);
+        definePacketHandler(this, &ServerConnection::handleLobby);
+        definePacketHandler(this, &ServerConnection::handleJoinGameResponse);
+        definePacketHandler(this, &ServerConnection::handleSetPlayer);
+        definePacketHandler(this, &ServerConnection::handleEntityAdded);
+        definePacketHandler(this, &ServerConnection::handleEntityRemoved);
+        definePacketHandler(this, &ServerConnection::handleEntityUpdated);
+        definePacketHandler(this, &ServerConnection::handleAppearance);
+        definePacketHandler(this, &ServerConnection::handleCharacterUpdate);
+    }
+
     void ServerConnection::beginConnecting(const std::string& server, int port) {
         _status = CONNECTING;
         _loginFailed = false;
         _connectionMaker = new ServerConnectionThread(server, port);
         _connectionThread = new Thread(_connectionMaker, PR_PRIORITY_HIGH);
     }
-    
+
     void ServerConnection::disconnect() {
         _connection = 0;
         _status = DISCONNECTED;
@@ -49,16 +60,8 @@ namespace pyr {
             if (status == ServerConnectionThread::CONNECT_SUCCEEDED) {
 
                 _connection = new Connection(_connectionMaker->getSocket());
-                _connection->definePacketHandler(this, &ServerConnection::handleLoginResponse);
-                _connection->definePacketHandler(this, &ServerConnection::handleLobby);
-                _connection->definePacketHandler(this, &ServerConnection::handleJoinGameResponse);
-                _connection->definePacketHandler(this, &ServerConnection::handleSetPlayer);
-                _connection->definePacketHandler(this, &ServerConnection::handleEntityAdded);
-                _connection->definePacketHandler(this, &ServerConnection::handleEntityRemoved);
-                _connection->definePacketHandler(this, &ServerConnection::handleEntityUpdated);
-                _connection->definePacketHandler(this, &ServerConnection::handleAppearance);
-                _connection->definePacketHandler(this, &ServerConnection::handleCharacterUpdate);
-                
+                _connection->addReceiver(this);
+
                 _connectionMaker = 0;
                 _connectionThread = 0;
                 _status = CONNECTED;

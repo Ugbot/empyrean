@@ -30,10 +30,10 @@ namespace pyr {
     class SetPlayerPacket;
     class CharacterUpdatedPacket;
     
-    class ServerConnection {
+    class ServerConnection : public PacketReceiver {
         PYR_DECLARE_SINGLETON(ServerConnection)
         
-        ServerConnection() {}
+        ServerConnection();
         ~ServerConnection() {}
 
     public:

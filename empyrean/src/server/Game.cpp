@@ -14,8 +14,14 @@
 namespace pyr {
 
     Game::Game(const std::string& name, const std::string& password) {
+        definePacketHandler(this, &Game::handlePlayerEvent);
+        definePacketHandler(this, &Game::handleHUDUpdate);
+        definePacketHandler(this, &Game::handlePlayerAttack);
+
         _name = name;
         _password = password;
+
+        // Loading below.
 
         _map = loadMap("maps/map2.obj");
         if (!_map) {
@@ -157,11 +163,7 @@ namespace pyr {
         cd->playerEntity = entity;
         cd->behavior = pb;
         connection->setData(cd);
-
-        // Add packet handlers.
-        connection->definePacketHandler(this, &Game::handlePlayerEvent);
-        connection->definePacketHandler(this, &Game::handleHUDUpdate);
-        connection->definePacketHandler(this, &Game::handlePlayerAttack);
+        connection->addReceiver(this);
 
         addEntity(entity);
 
@@ -172,7 +174,7 @@ namespace pyr {
         for (size_t i = 0; i < _entities.size(); ++i) {
             connection->sendPacket(buildEntityAddedPacket(_entities[i]));
         }
-        
+
         connection->sendPacket(new SetPlayerPacket(entity->getID()));
 
         // Send the client its character stats
@@ -198,9 +200,7 @@ namespace pyr {
         // Don't need to delete the behavior, because the entity does
         // that for us.
 
-        // Maybe this will need to specifically unregister handlers as
-        // opposed to clearing them all.
-        connection->clearHandlers();
+        connection->removeReceiver(this);
     }
 
     int Game::getHitModifier(CollisionBox& box, const std::string& attackType, std::vector<Vec2f>& points) {

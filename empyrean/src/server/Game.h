@@ -46,7 +46,7 @@ namespace pyr {
         PlayerBehavior* behavior;
     };
 
-    class Game : public ConnectionHolder {
+    class Game : public ConnectionHolder, public PacketReceiver {
     public:
         Game(const std::string& name, const std::string& password);
         ~Game();
