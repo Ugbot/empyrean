@@ -6,54 +6,46 @@
 #include <string>
 
 namespace pyr {
-    /** A Simple class for figuring out what's going on when, and for how long.
+    /**
+     * A Simple class for figuring out what's going on when, and for
+     * how long.
      * 
-     * This is a bit goofy, but I'll try to explain anyway.  _lastTime is the time
-     * at which the last Process transition occured.  Any time a Profiler is created
-     * or destroyed, it's updated.  When a new profiler is created, the old Process's
-     * time is updated before it's reset. (time spent in that process, not child
-     * Processes) When all the child states are done, and the Profiler is being
-     * destroyed, it holds the time at which the last child process terminated,
-     * (so once more, we get the time spent in the process, and not its children)
+     * This is a bit goofy, but I'll try to explain anyway.  _lastTime
+     * is the time at which the last Process transition occured.  Any
+     * time a Profiler is created or destroyed, it's updated.  When a
+     * new profiler is created, the old Process's time is updated
+     * before it's reset. (time spent in that process, not child
+     * Processes) When all the child states are done, and the Profiler
+     * is being destroyed, it holds the time at which the last child
+     * process terminated, (so once more, we get the time spent in the
+     * process, and not its children)
      *
-     * _lastTime is much simpler.  It holds the time the Profiler was born at.
-     * So, when the Profiler is destroyed, we know how much time was spent in the
-     * Process, as well as all child processes spawned.
+     * _lastTime is much simpler.  It holds the time the Profiler was
+     * born at.  So, when the Profiler is destroyed, we know how much
+     * time was spent in the Process, as well as all child processes
+     * spawned.
      *
-     * _totalTime is the easiest.  Before we nuke the value of _lastTime, we add it
-     * into _totalTime.
+     * _totalTime is the easiest.  Before we nuke the value of
+     * _lastTime, we add it into _totalTime.
+     *
+     * @note  This class is not threadsafe.  Do not use it in different
+     *        threads.
      */
     class Profiler {
     public:
-        struct Process
-        {
-            int time;                               /// Time spent in this process, in milliseconds.
-            int timePlusChildren;                   /// Time spent in this process, and in processes spawned by it. (also in milliseconds)
-            Process()
-                : time(0), timePlusChildren(0) {
+        struct Process {
+            Process() {
+                time = 0;
+                timePlusChildren = 0;
             }
+        
+            /// Time spent in this process, in seconds.
+            float time;
+            
+            /// Time spent in this process, and in processes spawned by it.
+            float timePlusChildren;
         };
 
-    private:
-        /// The process we're tracking right now.
-        Process* _proc;
-        
-        /// The time at which this object was created.
-        int _startTime;
-
-        /// Time since the last process transition
-        static int _lastTime;
-        
-        /// Total number of ticks elapsed with profiling on
-        static int _totalTime;
-        
-        /// Tallied up times for all started processes.
-        static std::map<std::string, Process> _processes;
-        
-        /// "call stack"
-        static std::stack<Process*> _procHistory;
-
-    public:
         Profiler(const std::string& name);
         ~Profiler();
 
@@ -62,11 +54,30 @@ namespace pyr {
 
         /// Dumps the profiling information to a file named profile.html
         static void dump();
+
+    private:
+        /// The process we're tracking right now.
+        Process* _proc;
+        
+        /// The time at which this object was created.
+        float _startTime;
+
+        /// Time since the last process transition
+        static float _lastTime;
+        
+        /// Total number of seconds elapsed with profiling on
+        static float _totalTime;
+        
+        /// Tallied up times for all started processes.
+        static std::map<std::string, Process> _processes;
+        
+        /// "call stack"
+        static std::stack<Process*> _procHistory;
     };
 
 };
 
-#ifdef _DEBUG
+#if defined(DEBUG) || defined(_DEBUG)
 #   define PYR_ENABLE_PROFILE
 #endif
 

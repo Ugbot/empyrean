@@ -1,7 +1,6 @@
 #include <fstream>
-
+#include <prinrval.h>
 #include "Profiler.h"
-#include "SDL.h"
 
 namespace pyr {
     using std::map;
@@ -11,38 +10,41 @@ namespace pyr {
     using std::endl;
 
     // Static things.
-    int                             Profiler::_lastTime;
-    int                             Profiler::_totalTime;
-    map<string, Profiler::Process>  Profiler::_processes;
-    stack<Profiler::Process*>       Profiler::_procHistory;
+    float                          Profiler::_lastTime;
+    float                          Profiler::_totalTime;
+    map<string, Profiler::Process> Profiler::_processes;
+    stack<Profiler::Process*>      Profiler::_procHistory;
+    
+    float getNow() {
+        return float(PR_IntervalToMicroseconds(PR_IntervalNow())) * 1000000.0f;
+    }
 
     Profiler::Profiler(const string& name) {
-        int ticks = SDL_GetTicks();
+        float now = getNow();
 
         if (_procHistory.empty()) {
-            _lastTime = ticks;
-        }
-        else {
-            _procHistory.top()->time += ticks - _lastTime;
-            _totalTime += ticks - _lastTime;
-            _lastTime = ticks;
+            _lastTime = now;
+        } else {
+            _procHistory.top()->time += now - _lastTime;
+            _totalTime += now - _lastTime;
+            _lastTime = now;
         }
 
         _proc = &_processes[name];
-        _startTime = ticks;
+        _startTime = now;
 
         _procHistory.push(_proc);
     }
 
     Profiler::~Profiler() {
-        int ticks = SDL_GetTicks();
+        float now = getNow();
 
-        _proc->time += ticks - _lastTime;
-        _proc->timePlusChildren += ticks - _startTime;
+        _proc->time += now - _lastTime;
+        _proc->timePlusChildren += now - _startTime;
         _procHistory.pop();
 
-        _totalTime += ticks - _lastTime;
-        _lastTime = ticks;
+        _totalTime += now - _lastTime;
+        _lastTime = now;
     }
 
     const std::map<std::string,Profiler::Process>& Profiler::getProfileInfo() {

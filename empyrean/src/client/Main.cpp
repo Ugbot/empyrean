@@ -16,11 +16,11 @@
 namespace pyr {
 
     void runClient() {
+        pyr::Profiler("main");
+
         srand(time(0));
         
         initializeSDL(SDL_INIT_NOPARACHUTE | SDL_INIT_VIDEO | SDL_INIT_TIMER);
-
-        pyr::Profiler("main");
 
         const SDL_VideoInfo* info = SDL_GetVideoInfo();
         if (!info) {
