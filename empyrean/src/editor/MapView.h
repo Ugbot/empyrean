@@ -17,7 +17,7 @@ namespace pyr {
         MapView(wxWindow* parent, MainFrame* mainFrame);
         ~MapView();
 
-        const MapFile* getMap() const;
+        const Map* getMap() const;
         
         void setTool(Tool* tool);
         Tool* getTool() const;
@@ -29,7 +29,7 @@ namespace pyr {
         void OnMouseEvent(wxMouseEvent& e);
         
         void draw();
-        void drawRect(const MapFile::Rect* rect);
+        //void drawRect(const Map::Rect* rect);
 
     private:
 

@@ -2,7 +2,7 @@
 #include "MapView.h"
 #include "Tool.h"
 #include "MainFrame.h"
-#include "RectangleTool.h"
+//#include "RectangleTool.h"
 #include "Texture.h"
 
 namespace pyr {
@@ -24,9 +24,9 @@ namespace pyr {
         : wxGLCanvas(parent, -1)
         , _mainFrame(mainFrame)
     {
-        typedef RectangleTool DefaultTool;
+        //typedef RectangleTool DefaultTool;
 
-        _tool = new DefaultTool(_mainFrame);
+        //_tool = new DefaultTool(_mainFrame);
 
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
@@ -37,7 +37,7 @@ namespace pyr {
     }
     
     
-    const MapFile* MapView::getMap() const {
+    const Map* MapView::getMap() const {
         return _mainFrame->getMap();
     }
     
@@ -105,12 +105,12 @@ namespace pyr {
         int button = e.GetButton();
         
         if (button == -1) {
-            repaint = _tool->onMouseMove(te);
+            //repaint = _tool->onMouseMove(te);
         } else if (button == 1) {
             if (e.ButtonDown()) {
-                repaint = _tool->onLeftDown(te);
+                //repaint = _tool->onLeftDown(te);
             } else {
-                repaint = _tool->onLeftUp(te);
+                //repaint = _tool->onLeftUp(te);
             }
         }
         
@@ -121,15 +121,15 @@ namespace pyr {
     
     void MapView::draw() {
 
-        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-        const MapFile* map = getMap();
+        /*glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+        const Map* map = getMap();
 
         glEnable(GL_TEXTURE_2D);
         glEnable(GL_BLEND);
         glBindTexture(GL_TEXTURE_2D, _testTex->getHandle());
         glColor4f(1, 1, 1, 1);
 
-        for (std::vector<MapFile::Rect>::const_iterator
+        for (std::vector<Map::Rect>::const_iterator
             iter = map->_terrain.rects.begin();
             iter != map->_terrain.rects.end();
             iter++) {
@@ -142,23 +142,23 @@ namespace pyr {
 
         glColor4f(1, 0, 0, 1);
         glBegin(GL_LINES);
-        for (std::vector<MapFile::Obstruction>::const_iterator
+        for (std::vector<Map::Obstruction>::const_iterator
             iter = map->_obstructions.obstructions.begin();
             iter != map->_obstructions.obstructions.end();
             iter++)
         {
-            const MapFile::Point& p1 = map->_obstructions.points[iter->p1];
-            const MapFile::Point& p2 = map->_obstructions.points[iter->p2];
+            const Map::Point& p1 = map->_obstructions.points[iter->p1];
+            const Map::Point& p2 = map->_obstructions.points[iter->p2];
 
             glVertex2f(p1.x, p1.y);
             glVertex2f(p2.x, p2.y);
         }
-        glEnd();
+        glEnd();*/
 
-        _tool->onRender();
+        //_tool->onRender();
     }
 
-    void MapView::drawRect(const MapFile::Rect* rect) {
+    /*void MapView::drawRect(const Map::Rect* rect) {
         Texture* t = TexManager::instance().loadTex(rect->name);
 
         glBindTexture(GL_TEXTURE_2D, t->getHandle());
@@ -168,5 +168,5 @@ namespace pyr {
         glTexCoord2f(1, 0); glVertex2f(rect->x + rect->width, rect->y + rect->height);
         glTexCoord2f(0, 0); glVertex2f(rect->x, rect->y + rect->height);
         glEnd();
-    }
+    }*/
 }

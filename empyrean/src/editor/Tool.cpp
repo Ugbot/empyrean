@@ -15,7 +15,7 @@ namespace pyr {
         return _mainFrame->_mapView;
     }
 
-    const MapFile* Tool::getMap() const {
+    const Map* Tool::getMap() const {
         return _mainFrame->getMap();
     }
 

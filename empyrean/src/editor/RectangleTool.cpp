@@ -1,4 +1,4 @@
-
+#if 0
 #include <map>
 #include <string>
 
@@ -93,14 +93,14 @@ namespace pyr {
 
     void RectangleTool::onRender() {
         if (_selectedRect != -1) {
-            const MapFile::Rect& rect = getMap()->_terrain.rects[_selectedRect];
+            const Map::Rect& rect = getMap()->_terrain.rects[_selectedRect];
 
             float x, y;
             if (_state == MovingSelection) {
                 x = _x2;
                 y = _y2;
 
-                MapFile::Rect i = rect;
+                Map::Rect i = rect;
                 i.x = x;
                 i.y = y;
                 glColor4f(1, 1, 1, 0.5f);
@@ -155,10 +155,10 @@ namespace pyr {
         } else {
             // If an rect is under the cursor, grab the one with the highest z value
             int best = -1;
-            const std::vector<MapFile::Rect>& rects = getMap()->_terrain.rects;
+            const std::vector<Map::Rect>& rects = getMap()->_terrain.rects;
             // Simple brute force rect/point detection loop.  wee.
             for (unsigned i = 0; i < rects.size(); i++) {
-                const MapFile::Rect& img = rects[i];
+                const Map::Rect& img = rects[i];
 
                 if (img.x < te.x && 
                     img.y < te.y &&
@@ -182,7 +182,7 @@ namespace pyr {
 
     bool RectangleTool::idleMouseMove(ToolEvent& te) {
         if (te.leftButton && _selectedRect != -1) {
-            const MapFile::Rect& img = getMap()->_terrain.rects[_selectedRect];
+            const Map::Rect& img = getMap()->_terrain.rects[_selectedRect];
 
             _state = MovingSelection;
             _x = te.x - img.x;
@@ -221,7 +221,7 @@ namespace pyr {
             }
         };
 
-        const MapFile::Rect& rect = getMap()->_terrain.rects[index];
+        const Map::Rect& rect = getMap()->_terrain.rects[index];
         std::map<std::string, std::string> properties;
 
         properties["filename"] = rect.name;
@@ -233,3 +233,4 @@ namespace pyr {
         setPropertiesGrid(properties);
     }
 }
+#endif

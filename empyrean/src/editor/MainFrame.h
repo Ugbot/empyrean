@@ -17,7 +17,7 @@ namespace pyr {
         MainFrame();
         ~MainFrame();
         
-        const MapFile* getMap() const;
+        const Map* getMap() const;
 
         virtual void handleCommand(::pyr::Command* cmd);
 
@@ -51,7 +51,7 @@ namespace pyr {
         std::stack<pyr::Command*> _redoList;
         void clearList(std::stack<pyr::Command*>& list); // deletes and clears
 
-        MapFile* _map;
+        Map* _map;
         
         DECLARE_EVENT_TABLE()
     };

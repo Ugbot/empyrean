@@ -29,7 +29,7 @@ namespace pyr {
     
     MainFrame::MainFrame()
         : wxFrame(0, -1, "pyrEdit", wxDefaultPosition, wxSize(640, 480))
-        , _map(new MapFile)
+        , _map(0)
     {
         createMenu();
         createToolBars();
@@ -42,7 +42,7 @@ namespace pyr {
         clearList(_redoList);
     }
 
-    const MapFile* MainFrame::getMap() const {
+    const Map* MainFrame::getMap() const {
         return _map;
     }
 
@@ -169,11 +169,11 @@ namespace pyr {
     }
 
     void MainFrame::onUseImageTool(wxCommandEvent&) {
-        _mapView->setTool(new RectangleTool(this));
+        //_mapView->setTool(new RectangleTool(this));
     }
 
     void MainFrame::onUseObstructionTool(wxCommandEvent&) {
-        _mapView->setTool(new ObstructionTool(this));
+        //_mapView->setTool(new ObstructionTool(this));
     }
     void MainFrame::onBeginEditGrid(wxGridEvent& event) {
         // ?

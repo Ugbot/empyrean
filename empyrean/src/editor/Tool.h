@@ -8,7 +8,7 @@ namespace pyr {
 
     class MainFrame;
     class MapView;
-    class MapFile;
+    class Map;
     class CommandReciever;
 
     struct ToolEvent {
@@ -53,7 +53,7 @@ namespace pyr {
     protected:
         MainFrame* getMainFrame() const;
         MapView* getMapView() const;
-        const MapFile* getMap() const;
+        const Map* getMap() const;
 
         void setPropertiesGrid(std::map<std::string, std::string>& properties);
 

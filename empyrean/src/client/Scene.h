@@ -12,7 +12,7 @@ namespace pyr {
 
     class Entity;
     class Texture;
-    class MapFile;
+    class Map;
 
     class Scene {
         PYR_DECLARE_SINGLETON(Scene)
@@ -33,7 +33,7 @@ namespace pyr {
         
         Texture* _backdrop;
         EntityMap _entities;
-        std::auto_ptr<MapFile> _map;
+        std::auto_ptr<Map> _map;
     };
 
 }

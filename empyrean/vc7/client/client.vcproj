@@ -175,12 +175,6 @@
 				RelativePath="..\..\src\client\Model.h">
 			</File>
 			<File
-				RelativePath="..\..\src\client\MultiTextureImage.cpp">
-			</File>
-			<File
-				RelativePath="..\..\src\client\MultiTextureImage.h">
-			</File>
-			<File
 				RelativePath="..\..\src\client\ParticleEmitter.cpp">
 			</File>
 			<File
@@ -211,12 +205,6 @@
 				RelativePath="..\..\src\client\Renderer.h">
 			</File>
 			<File
-				RelativePath="..\..\src\client\ResourceManager.cpp">
-			</File>
-			<File
-				RelativePath="..\..\src\client\ResourceManager.h">
-			</File>
-			<File
 				RelativePath="..\..\src\client\Scene.cpp">
 			</File>
 			<File
@@ -239,18 +227,6 @@
 			</File>
 			<File
 				RelativePath="..\..\src\client\ServerConnectionThread.h">
-			</File>
-			<File
-				RelativePath="..\..\src\client\Texture.cpp">
-			</File>
-			<File
-				RelativePath="..\..\src\client\Texture.h">
-			</File>
-			<File
-				RelativePath="..\..\src\client\TextureImage.cpp">
-			</File>
-			<File
-				RelativePath="..\..\src\client\TextureImage.h">
 			</File>
 		</Filter>
 		<Filter

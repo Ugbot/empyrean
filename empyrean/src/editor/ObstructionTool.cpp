@@ -1,4 +1,4 @@
-
+#if 0
 #include "ObstructionTool.h"
 #include "OpenGL.h"
 #include "MapFile.h"
@@ -32,7 +32,7 @@ namespace pyr {
     }
 
     void ObstructionTool::onRender() {
-        const MapFile::ObstructionMap& obs = getMap()->_obstructions;
+        const Map::ObstructionMap& obs = getMap()->_obstructions;
         //                                             B     G     R     A
         const unsigned char UNSELECTED_COLOUR[] = {    0,    0, 0xFF, 0xFF };
         const unsigned char SELECTED_COLOUR[] =   { 0XFF, 0XFF, 0XFF, 0XFF };
@@ -41,7 +41,7 @@ namespace pyr {
         glEnable(GL_POINT_SMOOTH);
         glBegin(GL_POINTS);
         for (unsigned i = 0; i < obs.points.size(); i++) {
-            const MapFile::Point& p = obs.points[i];
+            const Map::Point& p = obs.points[i];
 
             // >:D
             glColor4ubv(const_cast<unsigned char*>((i == _curPoint) ? SELECTED_COLOUR : UNSELECTED_COLOUR));
@@ -54,7 +54,7 @@ namespace pyr {
         int best = -1;
         float bestDistance = 9999999999.0f; // really really far away.
 
-        const std::vector<MapFile::Point>& pts = getMap()->_obstructions.points;
+        const std::vector<Map::Point>& pts = getMap()->_obstructions.points;
         for (unsigned i = 0; i < pts.size(); i++) {
             float dx = x - pts[i].x;
             float dy = y - pts[i].y;
@@ -71,8 +71,8 @@ namespace pyr {
     }
 
     bool ObstructionTool::canAddPoint(int a, int b) {
-        const std::vector<MapFile::Point>& pts = getMap()->_obstructions.points;
-        const std::vector<MapFile::Obstruction>& obs = getMap()->_obstructions.obstructions;
+        const std::vector<Map::Point>& pts = getMap()->_obstructions.points;
+        const std::vector<Map::Obstruction>& obs = getMap()->_obstructions.obstructions;
 
         if (a == b || a == -1 || b == -1)
             return false; // :P
@@ -86,3 +86,4 @@ namespace pyr {
         return true;
     }
 }
+#endif

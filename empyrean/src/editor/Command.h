@@ -4,7 +4,7 @@
 namespace pyr {
 
     class Command;
-    class MapFile;
+    class Map;
 
     /**
      * Something that can recieve a command.
@@ -26,8 +26,8 @@ namespace pyr {
     public:
         virtual ~Command() {}
 
-        virtual bool perform(MapFile* map) = 0;
-        virtual bool undo(MapFile* map) = 0;
+        virtual bool perform(Map* map) = 0;
+        virtual bool undo(Map* map) = 0;
     };
 }
 

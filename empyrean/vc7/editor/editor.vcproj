@@ -189,30 +189,6 @@
 			Name="commands"
 			Filter="">
 			<File
-				RelativePath="..\..\src\editor\AddObstructionPointCommand.cpp">
-			</File>
-			<File
-				RelativePath="..\..\src\editor\AddObstructionPointCommand.h">
-			</File>
-			<File
-				RelativePath="..\..\src\editor\AddObstructionSegmentCommand.cpp">
-			</File>
-			<File
-				RelativePath="..\..\src\editor\AddObstructionSegmentCommand.h">
-			</File>
-			<File
-				RelativePath="..\..\src\editor\AddRectCommand.cpp">
-			</File>
-			<File
-				RelativePath="..\..\src\editor\AddRectCommand.h">
-			</File>
-			<File
-				RelativePath="..\..\src\editor\ChangeRectPropertiesCommand.cpp">
-			</File>
-			<File
-				RelativePath="..\..\src\editor\ChangeRectPropertiesCommand.h">
-			</File>
-			<File
 				RelativePath="..\..\src\editor\Command.h">
 			</File>
 		</Filter>
