@@ -66,10 +66,7 @@ namespace pyr {
         }
 
         static void loadConfigFile(const string& fname, CalCoreModel& model) {
-            string path;
-            int p=fname.rfind('/');
-            if (p != -1)
-                path = fname.substr(0, fname.rfind('/')+1 );    // all the other files are assumed to be in the same directory as the data file itself.
+            string path = getPath(fname);
 
             ifstream file(fname.c_str());
             std::string c;

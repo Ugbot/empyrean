@@ -52,8 +52,8 @@ namespace pyr {
         while (_spawnCount > _period) {
             float x = float(rand()) / RAND_MAX * 5; // arbitrary
             float y = float(rand()) / RAND_MAX * 5;
-            x-=2.5;
-            y-=2.5;
+            x -= 2.5;
+            y -= 2.5;
             _particles.push_back(Particle(gmtl::Vec2f(x, y), gmtl::Vec2f(0, 5), gmtl::Vec2f(0,0), 15, _curColor));
             
             _spawnCount -= _period;
@@ -89,7 +89,7 @@ namespace pyr {
             glTexCoord2f(0, 1);  glVertex2f(x1, y2);
         }
         glEnd();
-        glColor3f(1, 1, 1);
+        glColor4f(1, 1, 1, 1);
     }
 
     const gmtl::Vec2f& ParticleSystem::getGravity() const {

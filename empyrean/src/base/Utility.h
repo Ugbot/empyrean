@@ -102,7 +102,7 @@ namespace pyr {
         T* _array;
     };
 
-    //! Returns the string, stripped of leading and trailing whitespace
+    /// Returns the string, stripped of leading and trailing whitespace
     std::string trimString(const std::string& s);
 
     /**
@@ -115,6 +115,35 @@ namespace pyr {
     std::vector<std::string> splitString(
         const std::string& s,
         const std::string& delimiters=" \n\r\t");
+
+    /** Returns the path passed, stripped of the extension.  The period is also removed.
+     * ie. stripExtension("image.png") == "image"
+     *
+     * If there is no extension in the file at all, the string is returned unaltered.
+     *
+     */
+    std::string stripExtension(const std::string& s);
+
+    /** Returns the extension of the file path passed.  The period is included.
+     * ie. getExtension("image.png") == ".png"
+     *
+     * If there is no extension in the string at all, nothing is returned.
+     */
+    std::string getExtension(const std::string& s);
+
+    /** Returns the directory which contains the file in the path specified.
+     * ie. getPath("images/intro/intro1.png") == "images/intro/"
+     *
+     * If there are no slashes in the path, nothing is returned.
+     */
+    std::string getPath(const std::string& s);
+
+    /** Returns the filename from the path specified.
+     * ie. getFilename("images/intro/intro1.png") == "intro1.png"
+     *
+     * If there are no slashes in the path, the string is returned unaltered.
+     */
+    std::string getFilename(const std::string& s);
 }
 
 #endif

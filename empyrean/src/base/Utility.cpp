@@ -49,4 +49,35 @@ namespace pyr {
         return sv;
     }
 
+    string stripExtension(const string& s) {
+        int p=s.rfind('.');
+        if (p != -1)
+            return s.substr(0,p);
+        else
+            return s;
+    }
+
+    string getExtension(const string& s) {
+        int p=s.rfind('.');
+        if (p != -1)
+            return s.substr(p);
+        else
+            return "";
+    }
+
+    string getPath(const string& s) {
+        int p=s.rfind('/');
+        if (p != -1)
+            return s.substr(0, p + 1 );
+        else
+            return "";
+    }
+
+    string getFilename(const string& s) {
+        int p=s.rfind('/');
+        if (p != -1)
+            return s.substr(p+1);
+        else
+            return s;
+    }
 };
