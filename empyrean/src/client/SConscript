@@ -2,7 +2,7 @@ Import('base_env TOOLS')
 
 SOURCES = [
     'Application.cpp',
-    'Font.cpp',
+    'Configuration.cpp',
     'GameState.cpp',
     'InputManager.cpp',
     'IntroState.cpp',
@@ -10,6 +10,7 @@ SOURCES = [
     'MenuState.cpp',
     'Model.cpp',
     'MultiTextureImage.cpp',
+    'OptionsState.cpp',
     'ParticleEmitter.cpp',
     'ParticleSystem.cpp',
     'PlayerEntity.cpp',
@@ -22,7 +23,7 @@ SOURCES = [
     'Texture.cpp']
 
 env = base_env.Copy()
-for t in Split('PyrBase Cal3D Corona FreeType NSPR OpenGL SDL'):
+for t in Split('PyrBase PHUI Cal3D Corona GLText NSPR OpenGL SDL'):
     TOOLS[t](env)
 
 env.Program('#/build/client', SOURCES)

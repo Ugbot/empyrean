@@ -136,7 +136,7 @@ namespace pyr {
         } else if (e.getSource() == _quit) {
             quit();
         } else if (e.getSource() == _login) {
-            ServerConnection::instance().connect("localhost", 8765);
+//            ServerConnection::instance().connect("localhost", 8765);
             ServerConnection::instance().login(_name->getText(), _password->getText());
             invokeTransition<GameState>();
         } else if (e.getSource() == _cancel) {

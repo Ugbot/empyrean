@@ -1,5 +1,6 @@
 #include <stdlib.h>
 #include <sstream>
+#include <stdexcept>
 
 #include "Application.h"
 #include "IntroState.h"

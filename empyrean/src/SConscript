@@ -1,1 +1,1 @@
-SConscript(dirs = ['client', 'editor', 'server', 'base'])
+SConscript(dirs = ['client', 'editor', 'phui', 'server', 'base'])

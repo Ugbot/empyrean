@@ -47,14 +47,19 @@ def SetupCal3D(env):
 def SetupCorona(env):
     ParseConfig(env, 'corona-config', ['--cxxflags', '--libs'])
 
-def SetupFreeType(env):
-    ParseConfig(env, 'freetype-config', ['--cflags', '--libs'])
+def SetupGLText(env):
+    env.Append(LIBS = ['gltext'])
 
 def SetupOpenGL(env):
     if env['PLATFORM'] == 'cygwin':
         env.Append(LIBS = ['glu32', 'opengl32'])
     else:
         env.Append(LIBS = ['GLU', 'GL'])
+
+def SetupPHUI(env):
+    env.Append(CPPPATH = ['#/src'],
+               LIBPATH = ['#/src/phui'],
+               LIBS = ['phui'])
 
 def SetupPyrBase(env):
     env.Append(CPPPATH = ['#/src/base'],
@@ -90,8 +95,9 @@ def SetupWxWindows(env):
 TOOLS = {
     'Cal3D'     : SetupCal3D,
     'Corona'    : SetupCorona,
-    'FreeType'  : SetupFreeType,
+    'GLText'    : SetupGLText,
     'OpenGL'    : SetupOpenGL,
+    'PHUI'      : SetupPHUI,
     'PyrBase'   : SetupPyrBase,
     'NSPR'      : SetupNSPR,
     'SDL'       : SetupSDL,

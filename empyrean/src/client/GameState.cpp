@@ -1,3 +1,4 @@
+#include <stdexcept>
 #include <gmtl/VecOps.h>
 
 #include "Entity.h"
