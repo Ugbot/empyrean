@@ -25,10 +25,14 @@ namespace pyr {
         Vec2f n;
     };
 
-    struct CollisionData {
+    class CollisionData {
+	public:
+		CollisionData() {velocity = Vec2f(0,0); displacement = Vec2f(0,0); time = 0; type = collision::NONE;}
+		~CollisionData() {}
+
         Vec2f velocity;
         Vec2f displacement;
-        Zeroed<float> time;
+        float time;
         collision::COLLISION_TYPE type;
     };
 

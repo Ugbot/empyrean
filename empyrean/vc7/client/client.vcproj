@@ -398,6 +398,12 @@
 				RelativePath="..\..\src\client\PythonCutScene.h">
 			</File>
 		</Filter>
+		<File
+			RelativePath="..\..\src\client\AudioSystem.cpp">
+		</File>
+		<File
+			RelativePath="..\..\src\client\AudioSystem.h">
+		</File>
 	</Files>
 	<Globals>
 	</Globals>

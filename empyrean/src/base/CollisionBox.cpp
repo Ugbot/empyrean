@@ -117,9 +117,9 @@ namespace pyr {
         Vec2f vel = colDat.velocity;
 
         // Test to see if they are going away from each other if they are.. stop
-        if(!goingTowards(vel,this->getCenter(),box2.getCenter()) && !goingTowards(vel,this->getCenter(),box2.getCenter())) {
+        /*if(!goingTowards(vel,this->getCenter(),box2.getCenter()) && !goingTowards(vel,this->getCenter(),box2.getCenter())) {
             return collision::NONE;
-        }
+        }*/
 
         // Find which sides on box one are intersecting segments of box two
         std::vector<Side> sidesHitBox1;
@@ -138,8 +138,9 @@ namespace pyr {
         } 
 
         Vec2f collisionVec =  _center - box2.getCenter();
-        Vec2f xAxis(1,0);
-        float axisRot = gmtl::Math::aCos(gmtl::dot(collisionVec,xAxis)/gmtl::length(collisionVec));
+		gmtl::normalize(collisionVec);
+        Vec2f xAxis(1,0);		 
+        /*float axisRot = gmtl::Math::aCos(gmtl::dot(collisionVec,xAxis)/gmtl::length(collisionVec));
         if (collisionVec[1] < 0) {
             axisRot *= -1;
         }
@@ -150,13 +151,13 @@ namespace pyr {
         
         // Calculate the velocity vectors of the two boxes in the collision coordinate system (collisionVec = new x axis)
         Vec2f velBox1PreCol = axisRotMat * vel;
-        Vec2f velBox2PreCol = axisRotMat * vel2;
+        Vec2f velBox2PreCol = axisRotMat * vel2;*/
         
         // Calculate the two boxes velocity vectors after the collisions
         float mass1 = 1.0f;
         float mass2 = 1.0f;
         const float coefOfRest = 0.25f;
-        gmtl::Matrix22f A, Ainv, test;
+        /*gmtl::Matrix22f A, Ainv, test;
         Vec2f x,b;
         A.set(mass1,mass2,-1,1);
         b.set(mass1*velBox1PreCol[0] + mass2*velBox2PreCol[0],-coefOfRest*(velBox2PreCol[0]-velBox1PreCol[0]));
@@ -164,14 +165,16 @@ namespace pyr {
             return collision::NONE;
         }
         test = Ainv * A;
-        x = Ainv*b;
+        x = Ainv*b;*/
+		float cosVelToX = gmtl::dot(vel,xAxis)/gmtl::length(vel);
+		float momentumComp = mass1*gmtl::length(vel)/(mass1*gmtl::length(vel)+mass2*gmtl::length(vel2));
+		float velComp = -fabs(gmtl::length(vel)*cosVelToX * momentumComp);
+		vel = Vec2f(velComp,0);
 
         // Save the new velocity, time, and distance
-        axisRotMat.set(gmtl::Math::cos(-axisRot),gmtl::Math::sin(-axisRot),-gmtl::Math::sin(-axisRot),gmtl::Math::cos(-axisRot));
-        colDat.velocity = axisRotMat * Vec2f(x[0],velBox1PreCol[1]);
-        Vec2f unitVel = colDat.velocity;
-        gmtl::normalize(unitVel);
-        colDat.displacement = unitVel * (gmtl::length(points[2] - points[1]) * mass1 / (mass1 + mass2));
+        //axisRotMat.set(gmtl::Math::cos(-axisRot),gmtl::Math::sin(-axisRot),-gmtl::Math::sin(-axisRot),gmtl::Math::cos(-axisRot));
+        colDat.velocity = vel;//axisRotMat * Vec2f(x[0],velBox1PreCol[1]);
+        colDat.displacement = xAxis * (fabs(points[1][0] - points[0][0]) * momentumComp);
         colDat.time = gmtl::length(colDat.displacement)/gmtl::length(colDat.velocity);
         if (colDat.time > dt) {
             colDat.time = dt;

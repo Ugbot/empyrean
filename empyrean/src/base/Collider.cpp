@@ -63,7 +63,7 @@ namespace pyr {
         colDat.velocity = ent1->getNextVel();
 
         // Collide with the other entity
-        entityBox.collideWithDynamic(dt, ent2->getNextVel(), otherBox, colDat);
+        //entityBox.collideWithDynamic(dt, ent2->getNextVel(), otherBox, colDat);
 
         return colDat;
     };
@@ -77,10 +77,9 @@ namespace pyr {
         // Resolve all the entities collisions and set the next values
         for(size_t i = 0; i < ents.size(); ++i) {
             recurseDepth = 0;
-            physics = ents[i]->getBehavior()->getSlot<PhysicsBehaviorSlot>();
-            //physics->inAir = true;
-            std::vector<Entity*> noEntityCollision;
-            collideEntity(dt,ents[i],terrain,noEntityCollision,recurseDepth);
+            //std::vector<Entity*> noEntityCollision;
+			//noEntityCollision.clear();
+            collideEntity(dt,ents[i],terrain,ents,recurseDepth);
         }
     }
 
