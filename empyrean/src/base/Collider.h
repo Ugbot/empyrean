@@ -3,8 +3,7 @@
 
 #include <map>
 #include <vector>
-#include "BoundingRectangle.h"
-#include "CollisionBox.h"
+#include "Constants.h"
 #include "Types.h"
 #include "VecMath.h"
 
@@ -12,6 +11,16 @@ namespace pyr {
 
     class Map;
     class Entity;
+
+    struct Segment {
+        Segment(const Vec2f& a, const Vec2f& b) {
+            v1 = a;
+            v2 = b;
+        }
+
+        Vec2f v1;
+        Vec2f v2;
+    };
 
     struct CollisionData {
         std::vector<Segment> interesting;

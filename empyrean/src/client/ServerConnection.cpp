@@ -111,7 +111,7 @@ namespace pyr {
     }
 
     bool ServerConnection::sendAttack(const std::string& attack) {
-        return sendPacket(new PlayerAttackPacket("TestAttack","Melee"));
+        return sendPacket(new PlayerAttackPacket(attack,"Melee"));
     }
 
     bool ServerConnection::sendPacket(Packet* p) {

@@ -1,6 +1,7 @@
 #include <stdexcept>
 #include "Connection.h"
 #include "Collider.h"
+#include "CollisionBox.h"
 #include "Game.h"
 #include "MapLoader.h"
 #include "PacketTypes.h"
@@ -20,7 +21,7 @@ namespace pyr {
         if (!_map) {
             throw std::runtime_error("Loading maps/map1.obj failed");
         }
-
+        
         // Find start position.
         MapElementPtr start = _map->findElementByName("start");
         if (start) {
@@ -239,6 +240,21 @@ namespace pyr {
         ServerEntity* attacker = dynamic_cast<ServerEntity*>(cd->playerEntity);
         PYR_ASSERT(attacker,"Incorrect dynamic cast in handlePlayerAttack!");
 
+        float damageMod = 1.0f;
+
+        if(p->name() == "Double") {
+            damageMod = 6.0f;
+            PYR_LOG() << "Double";
+        }
+        else if(p->name() == "Super") {
+            damageMod = 10.0f;
+            PYR_LOG() << "Triple";
+        }
+        else if(p->name() == "Mix Attack") {
+            damageMod = 4.0f;
+            PYR_LOG() << "Jump Attack";
+        }
+
         // Get the bounding box of the attack
         Vec2f lowerLeft, upperRight;
         PlayerBehavior* attackerBehavior = dynamic_cast<PlayerBehavior*>(attacker->getBehavior());
@@ -298,6 +314,9 @@ namespace pyr {
             
                         int damage = (int) ( (the<Die>().roll(minWpnDmg,maxWpnDmg) + abilityMod) * 
                                             ((float)wpnDmgMult/(float)armDmgDiv)                   );
+                        
+                        damage = (int) (damage * damageMod);
+                        
                         PYR_LOG() << "Did damage = " << damage;
                         _entities[i]->getGameStats()->changeVitality(-damage);
                         sendAll(new CharacterUpdatedPacket( _entities[i]->getID(),

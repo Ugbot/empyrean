@@ -311,7 +311,7 @@ namespace pyr {
             _model.attachMesh(i);
 
         _model.setMaterialSet(0);
-
+        _model.setLodLevel(5);
         _scale = _coreModel->getScale();
     }
 

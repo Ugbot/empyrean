@@ -314,6 +314,12 @@
 				RelativePath="..\..\src\base\PlayerBehavior.h">
 			</File>
 			<File
+				RelativePath="..\..\src\base\Profiler.cpp">
+			</File>
+			<File
+				RelativePath="..\..\src\base\Profiler.h">
+			</File>
+			<File
 				RelativePath="..\..\src\base\ReaderThread.cpp">
 			</File>
 			<File

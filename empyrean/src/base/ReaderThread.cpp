@@ -25,8 +25,8 @@ namespace pyr {
             bb.add(buffer, read);
 
             while (Packet* p = extractPacket(bb)) {
-                PYR_LOG() << "Read packet:";
-                p->log();
+                //PYR_LOG() << "Read packet:";
+                //p->log();
                 ScopedLock lock(_incomingLock);
                 _incoming.push(p);
             }

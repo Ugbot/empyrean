@@ -1,4 +1,5 @@
 #include <stdexcept>
+#include "Constants.h"
 #include "GameState.h"
 #include "GLUtility.h"
 #include "Input.h"
@@ -36,21 +37,47 @@ namespace pyr {
         _inputJump   = &_im.getInput("Space");
         _inputAttack = &_im.getInput("RCtrl");
         _inputQuit   = &_im.getInput("Escape");
+        _inputAttackA = &_im.getInput("D");
+        _inputAttackB = &_im.getInput("F");    
+
         _inputJoyX   = &_im.getInput("JoyX");
         _inputJoyJump = &_im.getInput("JoyJump");
         _inputJoyStart = &_im.getInput("JoyStart");
+        _inputJoyAttack = &_im.getInput("JoyAttack");
+        _inputJoyX->setValue(0);
+
         _input1 = &_im.getInput("1");
         _input2 = &_im.getInput("2");
         _input3 = &_im.getInput("3");
         _input4 = &_im.getInput("4");
-        _inputJoyAttack = &_im.getInput("JoyAttack");
-        _inputJoyX->setValue(0);
 
         gltext::FontPtr font = gltext::OpenFont("fonts/Vera.ttf", 16);
         _renderer = gltext::CreateRenderer(gltext::TEXTURE, font);
         if (!_renderer) {
             throw std::runtime_error("Error opening fonts/Vera.ttf");
         }
+
+        comboDef combo1;
+        combo1.name = "Super";
+        combo1.act.push_back("AttackA");
+        combo1.act.push_back("AttackB");
+        combo1.act.push_back("AttackA");
+
+        comboDef combo2;
+        combo2.name = "Double";
+        combo2.act.push_back("AttackA");
+        combo2.act.push_back("AttackA");
+
+        comboDef combo3;
+        combo3.name = "Mix Attack";
+        combo3.act.push_back("AttackA");
+        combo3.act.push_back("AttackB");
+
+        fastComboDefs.push_back(combo1);
+        fastComboDefs.push_back(combo2);
+        fastComboDefs.push_back(combo3);
+
+
     }
 
     GameState::~GameState() {
@@ -122,20 +149,7 @@ namespace pyr {
             sc.sendEvent("End Left");
         }
 
-        // jump!
-        if (_inputJump->getDelta() > gmtl::GMTL_EPSILON) {
-            sc.sendEvent("Jump");
-        }
-
-        // attack!
-        if (_inputAttack->getDelta() > gmtl::GMTL_EPSILON) {
-            if (_sfx) {
-                _sfx->play();
-            }
-            sc.sendAttack("Attack");
-        }
-
-        // Input with Joystick
+        // Move with Joystick
         if(_inputJoyX->getValue() > 0.5 && _lastJoyX == 0) {
             sc.sendEvent("Begin Right");
             _lastJoyX = 1;
@@ -164,16 +178,10 @@ namespace pyr {
         }
 
         // jump!
-        if (_inputJoyJump->getDelta() > gmtl::GMTL_EPSILON) {
-            sc.sendEvent("Jump");
-        }
-        
-        // attack!
-        if (_inputJoyAttack->getDelta() > gmtl::GMTL_EPSILON) {
-            if (_sfx) {
-                _sfx->play();
-            }
-            sc.sendAttack("Attack");
+        if (_inputJump->getDelta() > gmtl::GMTL_EPSILON  || 
+            _inputJoyJump->getDelta() > gmtl::GMTL_EPSILON) {
+           
+           sc.sendEvent("Jump");
         }
 
         // Start
@@ -187,10 +195,85 @@ namespace pyr {
             sc.disconnect();
             invokeTransition<MenuState>();
         }
+        
+        // interpret attack and jump commands for combos
+        comboInterpreter(dt);
 
         _im.update(dt);
     }
     
+    void GameState::comboInterpreter(float dt) {
+        
+        ServerConnection& sc = the<ServerConnection>();
+
+        if(fastCombo.size() > 0) {
+            fastCombo[0].timer += dt;
+        }
+
+        // attack!
+        if (_inputAttack->getDelta() > gmtl::GMTL_EPSILON ||
+            _inputJoyAttack->getDelta() > gmtl::GMTL_EPSILON) {
+            fastCombo.push_back(comboEvent("AttackA"));
+        }
+
+        if (_inputAttackA->getDelta() > gmtl::GMTL_EPSILON) {
+            fastCombo.push_back(comboEvent("AttackA"));
+        }
+
+        if (_inputAttackB->getDelta() > gmtl::GMTL_EPSILON) {
+            fastCombo.push_back(comboEvent("AttackB"));
+        }
+
+        if(fastCombo.size() > 0 && 
+           fastCombo[0].timer > constants::FAST_COMBO) {
+        
+           // Check combos here
+           std::string combo = checkFastCombos();
+
+           if(combo != "None") {
+               sc.sendAttack(combo);
+               PYR_LOG() << combo << " Special Attack";
+               fastCombo.clear();
+               return;
+           }
+
+           // Now if no combos arrived send the commands
+           for(size_t i = 0; i < fastCombo.size(); ++i) {
+               if (_sfx) {
+                   _sfx->play();
+               }
+               sc.sendAttack("Attack");
+           }
+           fastCombo.clear();
+        }
+    }
+
+    std::string GameState::checkFastCombos() {
+        for(size_t i = 0; i < fastComboDefs.size(); ++i) {
+            bool comboFound = false;
+            
+            if(fastCombo.size() == fastComboDefs[i].act.size()) {
+                for(size_t j = 0; j < fastCombo.size(); ++j) {
+                    if(fastCombo[j].type == fastComboDefs[i].act[j]) {
+                        comboFound = true;
+                    }
+                    else {
+                        comboFound = false;
+                        break;
+                    }
+                }
+            }
+            
+            if(comboFound) {
+                return fastComboDefs[i].name;
+            }
+        }
+
+        return "None";
+
+    }
+
+
     void GameState::onKeyPress(SDLKey key, bool down) {
         if (key == SDLK_F2 && down) {
             _showPlayerData = !_showPlayerData;

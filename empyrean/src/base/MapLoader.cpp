@@ -67,6 +67,7 @@ namespace pyr {
         }
 
         loadMetaData(map, filename + ".meta");
+        map->processMap();
         return map;
     }
 

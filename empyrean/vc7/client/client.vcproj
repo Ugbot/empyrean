@@ -223,12 +223,6 @@
 				RelativePath="..\..\src\client\Player.h">
 			</File>
 			<File
-				RelativePath="..\..\src\client\Profiler.cpp">
-			</File>
-			<File
-				RelativePath="..\..\src\client\Profiler.h">
-			</File>
-			<File
 				RelativePath="..\..\src\client\Renderer.cpp">
 			</File>
 			<File

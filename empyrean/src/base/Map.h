@@ -5,6 +5,7 @@
 #include <vector>
 #include <string>
 #include <map>
+#include "Collider.h"
 #include "MapElement.h"
 #include "Utility.h"
 
@@ -32,12 +33,27 @@ namespace pyr {
 
         MapElementPtr findElementByName(const std::string& name) const;
         void getAllElements(std::vector<MapElementPtr>& elts) const;
-        
+
+        void getSegs(std::vector<Segment>& segs) const;
+        void processMap();
+
     private:
 
         // The root should always be a GroupElement.  It's rather convenient
         // to be able to assume that the root has children.
         GroupElementPtr _root;
+        
+        std::vector<Segment> _mapSegs;
+        
+        struct Region {
+            std::vector<Segment> _regionSegs;
+            float minX;
+            float maxX;
+        };
+
+        Inited<int,4> _numberRegions;
+        std::vector<Region> _regions;
+
     };
 
 }

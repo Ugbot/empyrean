@@ -6,6 +6,7 @@
 #include "MapRenderer.h"
 #include "ParticleEmitter.h"
 #include "ParticleSystem.h"
+#include "Profiler.h"
 #include "Scene.h"
 #include "Texture.h"
 
@@ -21,6 +22,7 @@ namespace pyr {
         if (!_map) {
             throw std::runtime_error("Loading maps/map1.obj failed");
         }
+
     }
     
     Scene::~Scene() {
@@ -83,6 +85,7 @@ namespace pyr {
     }
 
     void Scene::update(float dt) {
+        PYR_PROFILE_BLOCK("Scene::update");
         std::vector<Entity*> entityVector;
         
         for (EntityMap::iterator itr = _entities.begin();
@@ -97,7 +100,7 @@ namespace pyr {
 
         // Update all entities (regardless of collision with others)
         for (EntityMap::iterator itr = _entities.begin();
-             itr != _entities.end(); ++itr) {
+            itr != _entities.end(); ++itr) {
             itr->second->update(dt, env);
             entityVector.push_back(itr->second);
         }

@@ -25,6 +25,9 @@ namespace pyr {
         void onJoyMove(int axis, float value);
         
     private:
+        void comboInterpreter(float dt);
+        std::string checkFastCombos();
+
         audiere::AudioDevicePtr _device;
         audiere::SoundEffectPtr _sfx;
 
@@ -33,6 +36,8 @@ namespace pyr {
 	Input* _inputRight;
         Input* _inputJump;
         Input* _inputAttack;
+        Input* _inputAttackA;
+        Input* _inputAttackB;
         Input* _inputQuit;
         Input* _inputJoyX;
         Input* _inputJoyJump;
@@ -44,6 +49,24 @@ namespace pyr {
         Input* _inputJoyAttack;
 
         Player _player;
+
+        struct comboEvent {
+            comboEvent(std::string t) {
+                type = t;
+                timer = 0;
+            }
+
+            std::string type;
+            double timer;
+        };
+
+        struct comboDef {
+            std::string name;
+            std::vector<std::string> act;
+        };
+
+        std::vector<comboEvent> fastCombo;
+        std::vector<comboDef> fastComboDefs; 
 
         Inited<bool, false> _showPlayerData;
         Zeroed<int> _lastJoyX;
