@@ -187,6 +187,12 @@
 				RelativePath="..\..\src\base\Singleton.h">
 			</File>
 			<File
+				RelativePath="..\..\src\base\ComboLoader.h">
+			</File>
+			<File
+				RelativePath="..\..\src\base\CondVar.h">
+			</File>
+			<File
 				RelativePath="..\..\src\base\Types.h">
 			</File>
 			<File
@@ -338,6 +344,9 @@
 			</File>
 			<File
 				RelativePath="..\..\src\base\MapVisitor.h">
+			</File>
+			<File
+				RelativePath="..\..\src\base\PhysicsBehaviorSlot.h">
 			</File>
 			<File
 				RelativePath="..\..\src\base\Material.h">
@@ -503,6 +512,15 @@
 			</File>
 			<File
 				RelativePath="..\..\src\base\PhysicsEngine.cpp">
+			</File>
+			<File
+				RelativePath="..\..\src\base\VisDebug.cpp">
+			</File>
+			<File
+				RelativePath="..\..\src\base\VisDebug.h">
+			</File>
+			<File
+				RelativePath="..\..\src\base\WeaponPool.cpp">
 			</File>
 			<File
 				RelativePath="..\..\src\base\PhysicsEngine.h">

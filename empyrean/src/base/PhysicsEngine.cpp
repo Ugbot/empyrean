@@ -1,123 +1,154 @@
 #include "Behavior.h"
-#include "Collider.h"
+//#include "Collider.h"
 #include "Entity.h"
 #include "Map.h"
 #include "PhysicsBehaviorSlot.h"
 #include "PhysicsEngine.h"
 #include "PlayerBehavior.h"
+#include "VisDebug.h"
 
 namespace pyr {
-    PYR_DEFINE_SINGLETON(PhysicsEngine);
 
-    void PhysicsEngine::moveEntities(float dt, const Map* map, const std::vector<Entity*>& entities) {
-        
-        // Find collisions for all entities
-        resolveCollisions(dt,map,entities);
-
-        // Determine the current velocity for this frame (considering changes due
-        // to collisions) and move them.
-        Vec2f newVel;
-        for (size_t i=0; i < entities.size(); ++i) {
-            newVel = entities[i]->getVel() + getAccel(entities[i]) * dt;
-            checkVelocity(newVel);
-            entities[i]->setPos( entities[i]->getPos() + dt*newVel );
-        }
-    }
-
-    void PhysicsEngine::checkVelocity(Vec2f& newVel) {
+    void checkVelocity(Vec2f& newVel) {
         // Set velocity to zero if it is small to stop friction
-        if (fabs(newVel[0]) < 0.05f && fabs(newVel[1]) < 0.05f) {
+        if (fabs(newVel[0]) < 0.05f) {
                 newVel[0] = 0.0f;
+        }
+        if (fabs(newVel[1]) < 0.05f) {
                 newVel[1] = 0.0f;
         }
     }
 
-    int getJumpNumber(const Behavior* b) {
-        if (PhysicsBehaviorSlot* p = b->getSlot<PhysicsBehaviorSlot>()) {
-            return p->jumpNumber;
-        } else {
-            return 0;
+    Vec2f getFrictionEffect(Entity* ent, PhysicsBehaviorSlot* p, Vec2f prevAccel) {
+        // If on the ground ..
+        if (!p->inAir) {
+            // TEMP!!!!!  locally define mu - eventually get this from the MAP!
+            const float muk = 0.3f;
+            const float mus = 0.2f;
+
+            // Get the angle between the ground and the velocity
+            Vec2f vel = ent->getNextVel();
+            float cosVelToGround = gmtl::dot(p->groundDir,vel) / gmtl::length(vel);
+            
+            // Get the angle between gravity and the ground normal
+            float cosGravToNorm = gmtl::dot(-p->groundNorm,Vec2f(0,-1));
+
+            // See if we are not moving (vel perpendicular to ground)
+            if ( cosVelToGround == 0) {
+                return Vec2f(0.0f,0.0f);
+            }
+            else {
+                // See if we are not moving fast enough to overcome static friction
+                float accelComp = gmtl::length(prevAccel) * cosVelToGround;
+                if (fabs(accelComp) <= mus*constants::GRAVITY) {
+                    // Stop moving ...
+                    ent->setNextVel(Vec2f(0,0));
+                    return -prevAccel;
+                }
+                else {
+                    // we are moving so the friction is kinematic
+                    float frictionComp = -sgn(cosVelToGround) * muk * constants::GRAVITY * cosGravToNorm;
+                    return p->groundDir * frictionComp;
+                }
+            }
         }
-    }
 
-    float getDesiredGroundSpeed(const Behavior* b) {
-        if (PhysicsBehaviorSlot* p = b->getSlot<PhysicsBehaviorSlot>()) {
-            return p->desiredGroundSpeed;
-        } else {
-            return 0;
-        }
-    }
-
-    Vec2f getDesiredAccel(const Behavior* b) {
-        if (PhysicsBehaviorSlot* p = b->getSlot<PhysicsBehaviorSlot>()) {
-            return p->desiredAccel;
-        } else {
-            return Vec2f();
-        }
-    }
-
-    Vec2f PhysicsEngine::getAccel(Entity* ent) {
-        const float airRes = 0.01f;
-
-        Vec2f accel;
-
-        // If the entity is on the ground use these equations
-        if (getJumpNumber(ent->getBehavior().get()) == 0) {
-            // Determine vector with x' along ground angle, y' along ground normal without friction
-            accel[0] = getBehaviorAccel(ent) - constants::GRAVITY*sin(ent->getAngleWithGround());
-            accel[0] += getFrictionEffect(ent,accel[0]);
-            accel[1] = 0.0f;
-
-            // Convert the acceleration back to world coordinates
-            rotateVector(ent->getAngleWithGround(),accel);
-        }
-        // Otherwise use the equations for air movement
+        // Or in the air
         else {
-            accel[0] = -airRes; // + THRUST
-            accel[1] = -constants::GRAVITY; // + LIFT
+            const float airRes = 0.01f;
+            return Vec2f(-sgn(ent->getVel()[0])*airRes,0.0f);
         }
+    }
+
+    Vec2f getBehaviorAccel(Entity* ent, PhysicsBehaviorSlot* p) {
+        Vec2f vel = ent->getNextVel();
+      
+        // DETERMINE THE ACCELERATION PARALLEL TO GROUND
+        // If the entity's velocity along the ground is along the same direction and greater than desired max, 
+        // apply no acceleration in the same direction
+        Vec2f accelGroundParallel(0.0f, 0.0f);
+        if (p->desiredAccel[0] != 0) {
+            if (vel[0]*p->desiredGroundSpeed > 0 && fabs(vel[0]) >= fabs(p->desiredGroundSpeed)) {
+                accelGroundParallel = Vec2f(0.0f,0.0f);
+            }
+            else {
+                accelGroundParallel = Vec2f(p->desiredAccel[0],0.0f);
+            }
+        }
+
+        // DETERMINE THE ACCELERATION NORMAL TO GROUND
+        // This is the part that handles jumping.
+        Vec2f accelGroundNormal(0.0f, 0.0f);
+        if (p->desiredAccel[1] != 0) {
+            p->inAir = true;
+
+            //float cosVelToGndNorm = gmtl::dot(p->groundNorm,vel) / gmtl::length(vel);
+            float airSpeed = vel[1];//gmtl::length(vel)*cosVelToGndNorm;
+
+            // See if the jump is over - that is the character has gotten the desired upward speed
+            if (airSpeed*p->desiredAirSpeed > 0 && fabs(airSpeed) >= fabs(p->desiredAirSpeed)) {
+                p->desiredAccel[1] = 0; // kill the jump
+            }
+            else {
+                // Determine the acceleration normal to the ground
+                accelGroundNormal = Vec2f(0,p->desiredAccel[1]);//p->groundNorm * p->desiredAccel[1];
+            }
+        }
+
+        // Return the aggregate desired accel
+        return accelGroundParallel + accelGroundNormal;
+    }
+
+    Vec2f getAccel(Entity* ent) {
+        
+        PhysicsBehaviorSlot* p = ent->getBehavior()->getSlot<PhysicsBehaviorSlot>();
+        PYR_ASSERT(p,"Passed a non-physics entity to getAccel in PhysicsEngine.cpp");
+
+        // Get the desired acceleration
+        Vec2f accel = getBehaviorAccel(ent,p); 
+        
+        // Add in gravity effect
+        accel += Vec2f(0.0f,-constants::GRAVITY);
+        
+        // Add in friction
+        accel += getFrictionEffect(ent,p,accel);
+
+        // Finally add in the applied force (as an acceleration)
+        accel += p->appliedForce/p->mass;
+        p->appliedForce = Vec2f(0.0f, 0.0f);
 
         return accel;
     }
 
-    float PhysicsEngine::getFrictionEffect(Entity* ent, float oldAccel) {
-        // TEMP!!!!!  locally define mu - eventually get this from the MAP!
-        const float mus = 0.75f;
-        const float muk = 0.08f;
-
-        Vec2f velAlongGround = ent->getVel();
-        rotateVector(-ent->getAngleWithGround(),velAlongGround);
-        float frictionAccel = 0.0f;
-
-        if ( velAlongGround[0] == 0) {
-            // see if it is kinematic friction
-            if (fabs(oldAccel) > mus*cos(ent->getAngleWithGround())*constants::GRAVITY) {
-                frictionAccel = -sgn(velAlongGround[0])*muk*cos(ent->getAngleWithGround())*constants::GRAVITY;
-            }
-            // it is static friction
-            else {
-                frictionAccel = -oldAccel;
+    void moveEntities(float dt, const Map* map, const std::vector<Entity*>& entities, CollisionData& coldata) {
+                
+        // Do not affect "non-physics" entities
+        std::vector<Entity*> physicsEntities;
+        for (size_t i=0; i<entities.size(); ++i) {
+            if (entities[i]->getBehavior()->getSlot<PhysicsBehaviorSlot>()) {
+                physicsEntities.push_back(entities[i]);
             }
         }
-        // we are moving so the friction is kinematic
-        else {
-            frictionAccel = -sgn(velAlongGround[0])*muk*cos(ent->getAngleWithGround())*constants::GRAVITY;
+
+        Vec2f newVel;
+        for (size_t i=0; i < physicsEntities.size(); ++i) {
+            PhysicsBehaviorSlot* phys = physicsEntities[i]->getBehavior()->getSlot<PhysicsBehaviorSlot>();
+            physicsEntities[i]->setNextWithCurrent();
+            newVel = physicsEntities[i]->getVel() + getAccel(physicsEntities[i]) * dt;
+            checkVelocity(newVel);
+            physicsEntities[i]->setNextVel(newVel);
+            phys->inAir = true;
+            //the<VisDebug>().addSegment(physicsEntities[i]->getPos(),physicsEntities[i]->getPos() + physicsEntities[i]->getVel() * dt, Vec3f(1,0,1));            
         }
 
-        return frictionAccel;
-    }
+        // Find collisions for all entities, and find out where they need to move (by setting next pos)
+        resolveCollisionsAndMove(dt,map,physicsEntities);
 
-    float PhysicsEngine::getBehaviorAccel(Entity* ent) {
-        float behaviorVelComp = getDesiredGroundSpeed(ent->getBehavior().get());
-        Vec2f velAlongGround = ent->getVel();
-        rotateVector(-ent->getAngleWithGround(),velAlongGround);
-
-        // If the entity's velocity is greater than desired max, apply no force in the same direction
-        if (velAlongGround[0]*behaviorVelComp > 0 && velAlongGround[0] > behaviorVelComp) {
-            return 0.0f;
-        }
-        else {
-            return getDesiredAccel(ent->getBehavior().get())[0];
+        // Officially move the entities by making their next positions the current ones, this is needed to 
+        // ensure that all entities collide against the same setup.
+        for (size_t i=0; i < physicsEntities.size(); ++i) {
+            physicsEntities[i]->setCurrentWithNext();
+            //the<VisDebug>().addSegment(physicsEntities[i]->getPos(),physicsEntities[i]->getPos() + physicsEntities[i]->getVel() * dt, Vec3f(0,0,0.5));
         }
     }
 }

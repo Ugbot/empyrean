@@ -1,3 +1,4 @@
+#include "Debug.h"
 #include "GLUtility.h"
 
 namespace pyr {
@@ -28,6 +29,13 @@ namespace pyr {
             case GL_OUT_OF_MEMORY:     return "GL_OUT_OF_MEMORY";
             case GL_TABLE_TOO_LARGE:   return "GL_TABLE_TOO_LARGE";
             default:                   return "Unknown error";
+        }
+    }
+
+    void checkOpenGLErrors() {
+        GLenum error;
+	while ((error = glGetError()) != GL_NO_ERROR) {
+            throw std::runtime_error(getErrorString(error));
         }
     }
 

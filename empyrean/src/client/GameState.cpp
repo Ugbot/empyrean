@@ -17,6 +17,8 @@
 #include "Scene.h"
 #include "ServerConnection.h"
 #include "Texture.h"
+#include "HUD.h"
+#include "VisDebug.h"
 
 namespace pyr {
 
@@ -63,7 +65,9 @@ namespace pyr {
             throw std::runtime_error("Error opening fonts/Vera.ttf");
         }
 
-        comboDef combo1;
+        //loadCombos(_combosLoaded);
+
+        /*comboDef combo1;
         combo1.name = "Super";
         combo1.act.push_back("AttackA");
         combo1.act.push_back("AttackB");
@@ -81,7 +85,7 @@ namespace pyr {
 
         fastComboDefs.push_back(combo1);
         fastComboDefs.push_back(combo2);
-        fastComboDefs.push_back(combo3);
+        _combosLoaded.push_back(combo3);*/
 
         the<ServerConnection>().sendPacket(new AllowUpdatesPacket());
         
@@ -89,7 +93,57 @@ namespace pyr {
     }
 
     GameState::~GameState() {
-        the<ServerConnection>().removeReceiver(this);
+
+    }
+
+    void GameState::draw() {
+        PYR_PROFILE_BLOCK("GameState::draw");
+        
+        _scene.draw(_renderer);
+        checkOpenGLErrors();
+
+        // Draw any lines and points in the visDebug
+        std::vector<DebugRay> debugRays = the<VisDebug>().getSegs();
+        glLineWidth(2.0);
+        glBegin(GL_LINES);
+        for (size_t i=0; i<debugRays.size(); ++i) {
+            glColor3f(debugRays[i].color[0],debugRays[i].color[1],debugRays[i].color[2]);
+            glVertex2f(debugRays[i].pt1[0],debugRays[i].pt1[1]);
+            glVertex2f(debugRays[i].pt2[0],debugRays[i].pt2[1]);
+        }
+        glEnd();
+        checkOpenGLErrors();
+
+        the<VisDebug>().clearSegs();
+        std::vector<Vec2f> debugPts = the<VisDebug>().getPts();
+        glBegin(GL_POINTS);
+        for (size_t i=0; i<debugPts.size(); ++i) {
+            glColor3f(1,1,1);
+            glVertex2f(debugPts[i][0],debugPts[i][1]);            
+        }
+        glEnd();
+        the<VisDebug>().clearPts();
+        checkOpenGLErrors();
+
+        if (ClientEntityPtr entity = _scene.getFocus()) {
+            _hud.draw(_renderer,entity);
+            checkOpenGLErrors();
+
+            if (_showPlayerData) {
+                Application& app = the<Application>();
+                glEnable(GL_BLEND);
+                setOrthoProjection(float(app.getWidth()), float(app.getHeight()));
+                glPushMatrix();
+                glTranslatef(app.getWidth() / 2.0f, 0, 0);
+                glColor3f(1, 1, 1);
+                GLTEXT_STREAM(_renderer)
+                    << "Position: " << entity->getPos() << "\n"
+                    << "Velocity: " << entity->getVel();
+                glPopMatrix();
+            }
+            checkOpenGLErrors();
+        }
+
     }
 
     void GameState::update(float dt) {
@@ -184,29 +238,6 @@ namespace pyr {
         _im.update(dt);
     }
     
-    void GameState::draw() {
-        PYR_PROFILE_BLOCK("GameState::draw");
-        
-        _scene.draw(_renderer);
-
-        if (ClientEntityPtr entity = _scene.getFocus()) {
-            _hud.draw(_renderer,entity);
-
-            if (_showPlayerData) {
-                Application& app = the<Application>();
-                glEnable(GL_BLEND);
-                setOrthoProjection(float(app.getWidth()), float(app.getHeight()));
-                glPushMatrix();
-                glTranslatef(app.getWidth() / 2.0f, 0, 0);
-                glColor3f(1, 1, 1);
-                GLTEXT_STREAM(_renderer)
-                    << "Position: " << entity->getPos() << "\n"
-                    << "Velocity: " << entity->getVel();
-                glPopMatrix();
-            }
-        }
-    }
-
     void GameState::handleSetMap(Connection*, SetMapPacket* p) {
         _scene.setMap(p->map());
     }
@@ -277,22 +308,22 @@ namespace pyr {
         
         ServerConnection& sc = the<ServerConnection>();
 
-        if(fastCombo.size() > 0) {
-            fastCombo[0].timer += dt;
+        if(_fastComboVector.size() > 0) {
+            _fastComboVector[0].timer += dt;
         }
 
         // attack!
         if (_inputAttack->getDelta() > gmtl::GMTL_EPSILON ||
             _inputJoyAttack->getDelta() > gmtl::GMTL_EPSILON) {
-            fastCombo.push_back(comboEvent("AttackA"));
+            _fastComboVector.push_back(comboEvent("AttackA"));
         }
 
         if (_inputAttackA->getDelta() > gmtl::GMTL_EPSILON) {
-            fastCombo.push_back(comboEvent("AttackA"));
+            _fastComboVector.push_back(comboEvent("AttackA"));
         }
 
         if (_inputAttackB->getDelta() > gmtl::GMTL_EPSILON) {
-            fastCombo.push_back(comboEvent("AttackB"));
+            _fastComboVector.push_back(comboEvent("AttackB"));
         }
 
         if(fastCombo.size() > 0 &&
@@ -307,7 +338,6 @@ namespace pyr {
                 fastCombo.clear();
                 return;
             }
-
             // Now if no combos arrived send the commands
             for(size_t i = 0; i < fastCombo.size(); ++i) {
                 the<AudioSystem>().playSound("sounds/attack.wav");
@@ -318,12 +348,12 @@ namespace pyr {
     }
 
     std::string GameState::checkFastCombos() {
-        for(size_t i = 0; i < fastComboDefs.size(); ++i) {
+        /*for(size_t i = 0; i < _combosLoaded.size(); ++i) {
             bool comboFound = false;
             
-            if(fastCombo.size() == fastComboDefs[i].act.size()) {
-                for(size_t j = 0; j < fastCombo.size(); ++j) {
-                    if(fastCombo[j].type == fastComboDefs[i].act[j]) {
+            if(_fastComboVector.size() == _combosLoaded[i].act.size()) {
+                for(size_t j = 0; j < _fastComboVector.size(); ++j) {
+                    if(_fastComboVector[j].type == _combosLoaded[i].act[j]) {
                         comboFound = true;
                     }
                     else {
@@ -334,10 +364,10 @@ namespace pyr {
             }
             
             if(comboFound) {
-                return fastComboDefs[i].name;
+                return _combosLoaded[i].name;
             }
         }
-
+        */
         return "None";
 
     }

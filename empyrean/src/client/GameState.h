@@ -3,6 +3,7 @@
 
 #include <gltext.h>
 #include <vector>
+#include "ComboLoader.h"
 #include "Connection.h"
 #include "HUD.h"
 #include "InputManager.h"
@@ -82,14 +83,11 @@ namespace pyr {
             double timer;
         };
 
-        struct comboDef {
-            std::string name;
-            std::vector<std::string> act;
-        };
+        std::vector<comboEvent> _fastComboVector;
+        std::vector<comboEvent> _slowComboVector;
 
         std::vector<comboEvent> fastCombo;
-        std::vector<comboDef> fastComboDefs;
-
+        
         Inited<bool, false> _showPlayerData;
         Zeroed<int> _lastJoyX;
         gltext::FontRendererPtr _renderer;

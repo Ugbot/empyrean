@@ -8,7 +8,7 @@
 #include "Map.h"
 #include "ScopedPtr.h"
 #include "Types.h"
-
+#include "PhysicsEngine.h"
 
 namespace pyr {
 
@@ -45,8 +45,8 @@ namespace pyr {
         ClientEntityPtr _focus;
         Texture* _backdrop;
         EntityMap _entities;
+        CollisionData _coldata;
         MapPtr _map;
-
         Inited<bool, false> _wireframe;
     };
 

@@ -46,21 +46,26 @@ namespace pyr {
         Vec2f& getVel()               { return _vel; }
         const Vec2f& getVel() const   { return _vel; }
 
+        void setNextPos(const Vec2f& pos) { _nextPos = pos;  }
+        const Vec2f& getNextPos() const   { return _nextPos; }
+        void setNextVel(const Vec2f& vel) { _nextVel = vel;  }
+        const Vec2f& getNextVel() const   { return _nextVel; }
+        void setNextWithCurrent();
+        void setCurrentWithNext();
+
         void setBounds(const BoundingRectangle& br) { _bounds = br; }
         BoundingRectangle& getBounds()              { return _bounds; }
         const BoundingRectangle& getBounds() const  { return _bounds; }
-
-        float getAngleWithGround() { return _angleWithGround; }
-        void setAngleWithGround(float val) { _angleWithGround = val; }
 
     private:
         BehaviorPtr _behavior;
         ScopedPtr<Appearance> _appearance;
 
+        Vec2f _nextPos;
+        Vec2f _nextVel;
         Vec2f _pos;
         Vec2f _vel;
         BoundingRectangle _bounds;
-        Zeroed<float> _angleWithGround;
     };
     typedef RefPtr<Entity> EntityPtr;
 

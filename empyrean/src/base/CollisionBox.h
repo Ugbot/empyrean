@@ -24,11 +24,10 @@ namespace pyr {
         void getIntersectingSegs(std::vector<Segment>& interestingSegs,
                                  const std::vector<Segment>& segs);
         
-        collision::COLLISION_TYPE collideWithDynamic(float dt, Vec2f& vel, Vec2f& vel2, CollisionBox& box2,
-                              std::vector<Vec2f>& points);
+        collision::COLLISION_TYPE collideWithDynamic(float dt, const Vec2f& vel2, CollisionBox& box2, CollisionData& colDat);
 
-        collision::COLLISION_TYPE collideWithStationary(float dt, Vec2f& vel, const std::vector<Segment>& segs,
-                              std::vector<Vec2f>& points);
+        bool collideWithStationary(float dt, CollisionData& colDat, const std::vector<Segment>& segs,
+                                        Vec2f& groundVec);
 
         bool findCollision(std::vector<Side>& sides, CollisionBox& otherBox, std::vector<Vec2f>& points); 
 
@@ -40,6 +39,7 @@ namespace pyr {
         Side pointIntersect(std::vector<Vec2f>& points, const Segment& seg);
 
     private:
+        float intersectLine(Vec2f& point, const Segment& seg1, const Segment& seg2);
         bool interestingSeg(const Segment& seg);
         bool segmentInside(const Segment& seg);
         bool pointInside(const Vec2f& pt);

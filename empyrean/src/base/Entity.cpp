@@ -11,4 +11,13 @@ namespace pyr {
         return aq;
     }
 
+    void Entity::setNextWithCurrent() {
+        _nextPos = _pos;
+        _nextVel = _vel;
+    }
+
+    void Entity::setCurrentWithNext() {
+        _pos = _nextPos;
+        _vel = _nextVel;
+    }
 }

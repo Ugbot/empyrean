@@ -4,107 +4,142 @@
 #include "Entity.h"
 #include "Map.h"
 #include "MapVisitor.h"
+#include "PhysicsBehaviorSlot.h"
 #include "PlayerBehavior.h"
 #include "Profiler.h"
+#include "Log.h"
 
 namespace pyr {
-
-
 
     struct CollisionRegion {
         std::vector<int> indici;
     };
 
-    //CollisionData collideWithWorld(float dt, const Vec2f& origPos, Vec2f& newPos,
-    //                               Vec2f& vel, const BoundingRectangle& bounds, const Map* terrain) {
-
     CollisionData collideWithWorld(float dt, Entity* ent, const Map* terrain) {
-        CollisionBox newBox(ent->getPos() + ent->getBounds().min,
-                            ent->getPos() + ent->getBounds().max);
+        PhysicsBehaviorSlot* physics = ent->getBehavior()->getSlot<PhysicsBehaviorSlot>();
+        PYR_ASSERT(physics,"Passed in a non-physics object to the collider!");
 
+        CollisionBox newBox(ent->getNextPos() + ent->getBounds().min, 
+                            ent->getNextPos() + ent->getBounds().max);
+        
+        // Get the terrain segments
         std::vector<Segment> segs;
-        terrain->getSegs(segs,ent->getPos()[0]);
-        CollisionData rv;
-        newBox.getIntersectingSegs(rv.interesting, segs);
+        terrain->getSegs(segs,ent->getNextPos()[0]);
+        
+        // Create the CollisionData to store information about collisions
+        CollisionData colDat;
+        colDat.velocity = ent->getNextVel();
 
-        collision::COLLISION_TYPE result = newBox.collideWithStationary(dt,ent->getVel(),rv.interesting, rv.points);
-
-        if(result == collision::GROUND_BELOW) {
-            Behavior* beh = ent->getBehavior().get();
-            PlayerBehavior* pb = dynamic_cast<PlayerBehavior*>(beh);
-            if(pb) {
-                pb->handleEvent(ent, "Reset Jumping");
+        // Determine which segment if any that the entity collides with
+        newBox.collideWithStationary(dt,colDat,segs,physics->groundDir);
+        
+        // Change the physics info
+        if(colDat.type == collision::GROUND_BELOW || colDat.type == collision::NOT_MOVING ||
+           colDat.type == collision::GROUND_HORIZ                                            ) {        
+            // Set the appropriate physics values
+            if (physics->inAir) {
+                physics->inAir = false;
             }
+            Vec2f groundNorm(-physics->groundDir[1],physics->groundDir[0]);
+            if (groundNorm[1] < 0) {
+                groundNorm = groundNorm * -1; // reverse direction if wrong normal is computed
+            }
+            physics->groundNorm = groundNorm;
+            //physics->coeffOfFriction = terrain->something(seg);
         }
-
-        ent->getPos() += newBox.getDisplacement();
-
-        return rv;
+      
+        return colDat;
     };
 
+    CollisionData collideWithEntity(float dt, Entity* ent1, Entity* ent2) {
+        // Create the collision boxes for the two entities
+        Vec2f box1Pos = ent1->getNextPos() + dt*ent1->getNextVel();
+        Vec2f box2Pos = ent2->getNextPos() + dt*ent2->getNextVel();
+        CollisionBox entityBox(box1Pos + ent1->getBounds().min, box1Pos + ent1->getBounds().max);
+        CollisionBox otherBox(box2Pos + ent2->getBounds().min, box2Pos + ent2->getBounds().max);
+        
+        // Create the CollisionData to store information about collisions
+        CollisionData colDat;
+        colDat.velocity = ent1->getNextVel();
 
-    void collideWithEntity(Entity* ent1, Entity* ent2) {
+        // Collide with the other entity
+        entityBox.collideWithDynamic(dt, ent2->getNextVel(), otherBox, colDat);
 
-        CollisionBox entityBox(ent1->getPos() + ent1->getBounds().min, ent1->getPos() + ent1->getBounds().max);
-        CollisionBox otherBox(ent2->getPos() + ent2->getBounds().min, ent2->getPos() + ent2->getBounds().max);
-
-        CollisionData rv;
-
-        /*collision::COLLISION_TYPE result = */entityBox.collideWithDynamic(0,ent1->getVel(),ent2->getVel(), otherBox, rv.points);
+        return colDat;
     };
 
-    void resolveCollisions(float dt, const Map* terrain, const std::vector<Entity*>& ents) {
+    void resolveCollisionsAndMove(float dt, const Map* terrain, const std::vector<Entity*>& ents) {
         PYR_PROFILE_BLOCK("resolveCollisions");
 
-        std::vector<int> entityRegionAssignment(ents.size());
-        std::vector<CollisionRegion> regions;
+        int recurseDepth = 0;
+        PhysicsBehaviorSlot* physics = 0; 
 
-        // Clear region assignments
-        for (size_t i = 0; i < ents.size(); ++i) {
-            entityRegionAssignment[i] = collision::REGION_UNASSIGNED; 
+        // Resolve all the entities collisions and set the next values
+        for(size_t i = 0; i < ents.size(); ++i) {
+            recurseDepth = 0;
+            physics = ents[i]->getBehavior()->getSlot<PhysicsBehaviorSlot>();
+            //physics->inAir = true;
+            collideEntity(dt,ents[i],terrain,ents,recurseDepth);
         }
+    }
+
+    void collideEntity(float dt, Entity* ent, const Map* terrain, const std::vector<Entity*>& ents, int depth) {
+        //PYR_PROFILE_BLOCK("collideEntity");
     
-        int regionNumber = 0;
-        // Classify the entities into different regions (this is to speed up collisions between entities)
-        for (size_t i = 0; i < ents.size(); ++i) {
-            if(entityRegionAssignment[i] == collision::REGION_UNASSIGNED) {
-                CollisionRegion currentRegion;
-                for(size_t j = 0; j < ents.size(); ++j) {
-                    if(gmtl::length(ents[i]->getPos() - ents[j]->getPos()) < collision::REGION_RADIUS) {
-                        entityRegionAssignment[j] = regionNumber;
-                        currentRegion.indici.push_back((int) j);
-                    }
-                }
-                regionNumber++;
-                regions.push_back(currentRegion);
-            }
-        }    
+        // Check to see if we have recursed too far
+        if (++depth > 5) {
+            //PYR_ASSERT(0,"test");
+            return;
+        }
 
-        // Collisions
-        for (size_t i = 0; i < regions.size(); ++i) {
-            if(regions[i].indici.size() == 1) {  // Simply collide with the ground
-                int index = regions[i].indici[0];
-                collideWithWorld(dt,ents[index],terrain);
-            }
-            else { // More than one entity in the area so need to collide with the other entities in the area
-                for(size_t j = 0; j < regions[i].indici.size(); ++j) {
-                    for(size_t k = 0; k < regions[i].indici.size(); ++k) {
-                        if(j!=k) {  // Don't Collide with yourself
-                            // Ultimately collide with others here
-                            int index1 = regions[i].indici[j];
-                            int index2 = regions[i].indici[k];
-                            collideWithEntity(ents[index1],ents[index2]);
-                        }
-                    }
-                }
+        // Check to see where the collision would be with the ground
+        float origdt = dt;
+        CollisionData groundData = collideWithWorld(dt,ent,terrain);
 
-                for(size_t j = 0; j < regions[i].indici.size(); ++j) {
-                    // Collide everyone with the ground after all
-                    int index = regions[i].indici[j];
-                    collideWithWorld(dt,ents[index],terrain);
+        // Check to see where the collision would be with another entity  OPTIMIZE THIS!!!
+        CollisionData entColData, tempData;
+        for (size_t i=0; i<ents.size(); ++i) {
+            if (ents[i] != ent) {
+                // Collide with the other entity
+                tempData = collideWithEntity(dt,ent,ents[i]);
+
+                // Save the collision info if it is the first one or would happen sooner 
+                if (entColData.time == 0 || (tempData.time > 0 && tempData.time < entColData.time)) {
+                    entColData = tempData;
                 }
             }
         }
 
-    }    
-}
+        // See if there was no collision
+        if (groundData.time ==  0 && entColData.time == 0) {
+            // Move the entity along its desired path
+            ent->setNextPos(ent->getNextPos() + dt*ent->getNextVel());
+
+            // We are done moving for this frame
+            return;
+        }
+        // Otherwise, find the collision that happens first.
+        else {
+            if ( (groundData.time < entColData.time && groundData.time > 0) || entColData.time == 0 ) {
+                // We collided with the ground first, so move the entity and set up for more movement
+                ent->setNextPos(ent->getNextPos() + groundData.displacement);
+                ent->setNextVel(groundData.velocity);
+                dt -= groundData.time;
+            }
+            else {
+                // We collided with another entity first, so move the entity and set up for more movement
+                ent->setNextPos(ent->getNextPos() + entColData.displacement);
+                ent->setNextVel(entColData.velocity);
+                dt -= entColData.time;
+            }
+
+            // Collide again to keep moving since we should have time left
+            PYR_ASSERT(dt > -0.005, "Error in recursive collision");
+            collideEntity(dt,ent,terrain,ents,depth);
+        }
+
+        return; 
+    }
+
+ }
+  

@@ -6,6 +6,7 @@
 #include "Game.h"
 #include "MapLoader.h"
 #include "PacketTypes.h"
+#include "PhysicsEngine.h"
 #include "PlayerBehavior.h"
 #include "ServerAppearance.h"
 #include "ServerEntity.h"
@@ -171,7 +172,8 @@ namespace pyr {
             entityVector.push_back(_entities[i].get());
         }
 
-        resolveCollisions(dt, _map.get(),entityVector);
+        CollisionData temp;
+        moveEntities(dt,_map.get(),entityVector,temp);
 
         // If we fall off of the world, get pushed back up.  :)
         for (size_t i = 0; i < _entities.size(); ++i) {
@@ -186,6 +188,7 @@ namespace pyr {
         // Calculate authoritative world state.
         WorldAspect aspect;
         aspect.map = the<Configuration>().map;
+
         for (size_t i = 0; i < _entities.size(); ++i) {
             aspect.entities.insert(EntityState(_entities[i]));
         }
@@ -438,12 +441,13 @@ namespace pyr {
                                             _entities[i]->getPos() + _entities[i]->getBounds().max );
                 
                 CollisionData rv;
-                if (attackArea.findCollision(sidesHit,otherEntityBox,rv.points)) {
+                std::vector<Vec2f> points;
+                if (attackArea.findCollision(sidesHit,otherEntityBox,points)) {
                     // An entity is potentially hit!
                     _logger.log(INFO, "Found a potential hit!! ");
 
                     // Determine the location and hitMod of the hit location
-                    /*int hitModifier = */getHitModifier(attackArea,p->type(),rv.points);
+                    /*int hitModifier = */getHitModifier(attackArea,p->type(),points);
 
                     // Get the weapon and armor stats of the combatants
                     int minWpnDmg,maxWpnDmg,wpnDmgMult,wpnAccuracy = 0;

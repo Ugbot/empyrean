@@ -18,11 +18,11 @@ namespace pyr {
     namespace collision {
         const int FALLING_SPEED = 0;
         const int REGION_UNASSIGNED = -1;
-        const float REGION_RADIUS = 2;
+        const float REGION_RADIUS = 4;
         const int REGION_END = -2;
     
         enum COLLISION_TYPE {
-            GROUND_BELOW,GROUND_ABOVE, GROUND_HORIZ, ENTITY_ABOVE, ENTITY_BELOW, ENTITY_HORIZ, NONE 
+            NONE, GROUND_BELOW,GROUND_ABOVE, GROUND_HORIZ, ENTITY_ABOVE, ENTITY_BELOW, ENTITY_HORIZ, NOT_MOVING
         };
     }
 }

@@ -144,12 +144,25 @@ namespace pyr {
                 break;
             }
         }
-        
     }
     
     void Map::processMap() const {
         SegmentExtractor extractor(_mapSegs, 0);
         this->handleVisitor(extractor);
+
+        // Calculate the normals for the map #NOTE bug in this (platform bottoms will have normals pointing up 
+        for(size_t i = 0; i < _mapSegs.size(); ++i) {
+            Vec2f diff = _mapSegs[i].v1 - _mapSegs[i].v2;
+            _mapSegs[i].n[0] = -diff[1];
+            _mapSegs[i].n[1] = diff[0];
+    
+            if(_mapSegs[i].n[1] < 0) {
+                _mapSegs[i].n *= -1;
+            }            
+            
+            gmtl::normalize(_mapSegs[i].n);
+        }
+
 
         if (_mapSegs.empty()) {
             return;
@@ -165,7 +178,7 @@ namespace pyr {
             if(newMax > maxX) {
                 maxX = newMax;
             }
-            else if(newMin < minX) {
+            if(newMin < minX) {
                 minX = newMin;
             }
         }
@@ -173,7 +186,7 @@ namespace pyr {
         // Geographically divide regions
         const int REGION_COUNT = 8;
         float length = maxX - minX;
-        float regionLength = length / REGION_COUNT;
+        float regionLength = length / (float) REGION_COUNT;
 
         // Create a predefined number of regions
         for(int i = 0; i < REGION_COUNT; ++i) {
@@ -192,6 +205,7 @@ namespace pyr {
 
         // Check each segment to see which region it falls into
         for(size_t i = 0; i < _mapSegs.size(); ++i) {
+           
             // Check against each region
             for(size_t j = 0; j < _regions.size(); ++j) {
                 // Check first point
@@ -199,17 +213,14 @@ namespace pyr {
                     _mapSegs[i].v1[0] < (_regions[j].maxX + overlap)) {
                     
                     _regions[j]._regionSegs.push_back(_mapSegs[i]);
-                    continue;  // if one segment is in then this is relavant to the region no more checking needed
                 }
                 // Check second point
-                if(_mapSegs[i].v2[0] >= (_regions[j].minX - overlap) &&
+                else if(_mapSegs[i].v2[0] >= (_regions[j].minX - overlap) &&
                     _mapSegs[i].v2[0] < (_regions[j].maxX + overlap)) {
                     
                     _regions[j]._regionSegs.push_back(_mapSegs[i]);
                 }
             }
         }
-
-
     }
 }

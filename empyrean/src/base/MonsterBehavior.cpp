@@ -2,12 +2,21 @@
 #include "Constants.h"
 #include "Entity.h"
 #include "MonsterBehavior.h"
-
+#include "PhysicsBehaviorSlot.h"
 
 namespace pyr {
 
     float distance(const Entity* a, const Entity* b) {
         return length(a->getPos() - b->getPos());
+    }
+
+    MonsterBehavior::MonsterBehavior(const std::string& /*resource*/) {
+        _physics = new PhysicsBehaviorSlot;
+        setSlot(_physics);
+
+        // We would like to be able to start in some sort of animation.
+        //beginAnimationCycle("idle");
+        _physics->desiredGroundSpeed = 1.5f;
     }
 
     void MonsterBehavior::update(Entity* entity, float dt, const Environment& env) {
@@ -26,49 +35,31 @@ namespace pyr {
         }
 
         if (closest) {
-            float xvel = 0;
             if (closest->getPos()[0] > entity->getPos()[0] + 1.0) {
-                xvel = 1;
+                	_physics->desiredAccel = Vec2f(1.0f,0.0f);
+                	_physics->facingRight = true;
+                	sendAppearanceCommand(entity, "Face Left");
+                	beginAnimationCycle(entity, "walk");                
             }
-			else if (closest->getPos()[0] > entity->getPos()[0]) {
-				xvel = -1;
-			}
-            else if (closest->getPos()[0] < entity->getPos()[0] - 1.0) {
-                xvel = -1;
+   	  else if (closest->getPos()[0] > entity->getPos()[0]) {
+		 	_physics->desiredAccel = Vec2f(-1.0f,0.0f);
+                	_physics->facingRight = false;
+                	sendAppearanceCommand(entity, "Face Right");
+                	beginAnimationCycle(entity, "walk");
+		}
+        else if (closest->getPos()[0] < entity->getPos()[0] - 1.0) {
+                	_physics->desiredAccel = Vec2f(-1.0f,0.0f);
+                	_physics->facingRight = false;
+                	sendAppearanceCommand(entity, "Face Right");
+                	beginAnimationCycle(entity, "walk");
             }
-			else if (closest->getPos()[0] < entity->getPos()[0]) {
-				xvel = 1;
-			}
-            entity->getVel()[0] = xvel;
-        }
-
-        // Default physical behavior.
-        Vec2f& pos = entity->getPos();
-        Vec2f& vel = entity->getVel();
-        const Vec2f origPos = pos;
-
-        pos += vel * dt;
-        vel[1] += -constants::GRAVITY * dt;           // gravity
-
-        const float mu = 0.8f;
-        const float acc = -mu * constants::GRAVITY;
-
-        if(vel[0] > 0) {
-            vel[0] += acc * dt;
-            if(vel[0] < 0) {
-                vel[0] = 0;
-            }
-        }
-        
-        if(vel[0] < 0) {
-            vel[0] -= acc * dt;
-            if(vel[0] > 0) {
-                vel[0] = 0;
-            }
-        }                        
+	  else if (closest->getPos()[0] < entity->getPos()[0]) {
+			_physics->desiredAccel = Vec2f(1.0f,0.0f);
+                	_physics->facingRight = true;
+                	sendAppearanceCommand(entity, "Face Left");
+                	beginAnimationCycle(entity, "walk");                
+		}
        
-        if (vel[1] < constants::TERMINAL_VELOCITY) { // terminal velocity
-            vel[1] = constants::TERMINAL_VELOCITY;
         }
 
     }

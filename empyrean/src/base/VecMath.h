@@ -19,7 +19,7 @@ namespace pyr {
     using gmtl::Vec3i;
     using gmtl::Vec4i;
 
-    inline void rotateVector(float angle, Vec2f vec) {
+    inline void rotateVector(float angle, Vec2f& vec) {
         gmtl::Matrix22f rotMat;
         rotMat.set(gmtl::Math::cos(angle),gmtl::Math::sin(angle),
                    -gmtl::Math::sin(angle),gmtl::Math::cos(angle));

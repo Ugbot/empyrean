@@ -12,6 +12,7 @@
 #include "ServerConnection.h"
 #include "State.h"
 #include "Texture.h"
+#include "VisDebug.h"
 
 namespace pyr {
 
@@ -91,6 +92,9 @@ namespace pyr {
         // Update the ServerConnection before updating the states, since
         // network traffic can be considered input.
         the<ServerConnection>().update();
+
+        //the<VisDebug>().clearSegs();
+        //the<VisDebug>().clearPts();
 
         if (_currentState) {
             _currentState->update(dt);
@@ -212,10 +216,4 @@ namespace pyr {
         return _lastY;
     }
 
-    void Application::checkOpenGLErrors() {
-        GLenum error;
-	while ((error = glGetError()) != GL_NO_ERROR) {
-            throw std::runtime_error(getErrorString(error));
-        }
-    }
 }

@@ -6,6 +6,7 @@
 #include "MapRenderer.h"
 #include "ParticleEmitter.h"
 #include "ParticleSystem.h"
+//#include "PhysicsEngine.h"
 #include "Profiler.h"
 #include "Scene.h"
 #include "Texture.h"
@@ -52,6 +53,15 @@ namespace pyr {
 
         glColor3f(1, 1, 1);
         glPointSize(5);
+
+        glDisable(GL_DEPTH_TEST);
+        
+        /*glColor3f(1, 0, 0);  FIX THIS ...
+        glBegin(GL_POINTS);
+        for(size_t i = 0; i < _coldata.points.size(); i++) {
+            glVertex(_coldata.points[i]);
+        }
+        glEnd();*/
 
         glEnable(GL_TEXTURE_2D);
 
@@ -106,17 +116,21 @@ namespace pyr {
         env.map = _map.get();
         env.entities = std::vector<const Entity*>(entityVector.begin(), entityVector.end());
 
-
-        // Update all entities (regardless of collision with others)
+        // Update all entities behaviors
         for (EntityMap::iterator itr = _entities.begin();
             itr != _entities.end(); ++itr) {
             itr->second->update(dt, env);
             entityVector.push_back(itr->second.get());
         }
+        
+        // Move the entities 
+        moveEntities(dt,_map.get(),entityVector,_coldata);
 
+#if 0
         if (_map.get()) {
             resolveCollisions(dt, _map.get(), entityVector);
         }
+#endif
     }
     
     void Scene::setMap(const string& map) {
