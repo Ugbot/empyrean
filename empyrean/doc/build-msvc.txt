@@ -9,7 +9,9 @@ Before you can compile or run Empyrean, you must run the
 scripts/update-vc7.sh script.  This requires that you have Cygwin
 installed.  When installing Cygwin, make sure you select the Python,
 gcc (c++ and c), make, libpng-devel, and jpeg packages.  (If we depend
-on more than that, let me know.)
+on more than that, let me know.)  IMPORTANT (if you plan to use CVS
+from within Cygwin): The installer gives you the option of using DOS
+or UNIX text files.  Select DOS.
 
 Then you need to install SCons into Cygwin.  Go to www.scons.org,
 download and extract the latest source tarball into /usr/src, and run
