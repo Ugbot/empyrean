@@ -220,42 +220,21 @@ namespace pyr {
 
     CoreModel::InstanceMap CoreModel::_instances;
 
-    template<>
-    class CachePolicy<pyr::Model*> {
-    public:
-        static Model* create(const string& id) {
-            return new Model(id);
-        }
-        
-        static void destroy(Model* model) {
-            delete model;
-        }
-    };
-
-    Model* Model::create(const string& id) {
-        return ResourceManager::instance().get<Model*>(id);
-    }
-
     Model::Model(const string& fname) {
         _coreModel=CoreModel::create(fname);
         _coreModel->addRef();
 
-        _model=new CalModel();
-        _model->create(_coreModel->get());
+        _model.create(_coreModel->get());
 
         for (int i = 0; i < _coreModel->get()->getCoreMeshCount(); i++)
-            _model->attachMesh(i);
+            _model.attachMesh(i);
         
-        _model->setMaterialSet(0);
-
-        _model->getMixer()->blendCycle(0, 1, 4.0f);
+        _model.setMaterialSet(0);
     }
 
     Model::~Model()
     {
-        _model->destroy();
-        delete _model;
-
+        _model.destroy();
         _coreModel->decRef();
     }
 
@@ -264,11 +243,11 @@ namespace pyr {
     }
 
     CalModel& Model::getModel() {
-        return *_model;
+        return _model;
     }
 
     void Model::update(float timedelta) {
         PYR_PROFILE_BLOCK("Model::update");
-        _model->update(timedelta);
+        _model.update(timedelta);
     }
 };

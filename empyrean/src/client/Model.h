@@ -16,6 +16,9 @@ namespace pyr {
      * and the CalModel, because their interfaces are pretty simple and as is.
      * We'll want to add higher level abstraction, like being able to say what
      * kind of equipment/weapon(s) a model has.
+     *
+     * Something to note is that this does not use ResourceManager.  You have to
+     * new/delete it. (or just use ScopedPtr)
      */
     class Model {
     private:
@@ -27,15 +30,14 @@ namespace pyr {
          * these classes, so maybe it's not worth it.  Time will tell.
          */
         CoreModel* _coreModel;
-        CalModel* _model;
+        CalModel _model;
         // We'll probably want to store information on how this particular model
         // is skinned, and so on.
 
     public:
 
-        static Model* create(const std::string& id);
-
         Model(const std::string& fname);
+        Model(CoreModel* coremodel);
         ~Model();
 
         CalCoreModel& getCoreModel();

@@ -9,6 +9,7 @@ DIRS = Split("""
    images
    models
    models/paladin
+   models/Walk1
 """)
 
 WILD = Split("""

@@ -136,6 +136,9 @@
 				RelativePath="..\..\src\client\Font.h">
 			</File>
 			<File
+				RelativePath="FontRenderer.h">
+			</File>
+			<File
 				RelativePath="..\..\src\client\GLUtility.h">
 			</File>
 			<File

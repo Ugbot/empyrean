@@ -62,6 +62,7 @@ namespace pyr {
 
             glPushMatrix();
             glTranslatef(0,8,0);
+            glEnable(GL_TEXTURE_2D);
             (*_font) << "FPS: " << _fps.getFPS() << "\n";
 
             for (Profiler::ProcessMap::const_iterator iter = pi.begin(); iter != pi.end(); iter++) {

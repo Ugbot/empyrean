@@ -36,7 +36,7 @@ namespace pyr {
         Input* _inputRight;
         Input* _inputQuit;
 
-        Model* _testModel;
+        ScopedPtr<Model> _testModel;
         Renderer* _renderer;
         Texture* _backdropTex;
 
