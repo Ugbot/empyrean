@@ -13,10 +13,12 @@ namespace pyr {
     ServerConnection::ServerConnection() {
         _status = DISCONNECTED;
         _connectionMaker = 0;
+        _loginFailed = false;
     }
     
     void ServerConnection::beginConnecting(const std::string& server, int port) {
         _status = CONNECTING;
+        _loginFailed = false;
         _connectionMaker = new ServerConnectionThread(server, port);
         _connectionThread = new Thread(_connectionMaker, PR_PRIORITY_HIGH);
     }
@@ -24,6 +26,7 @@ namespace pyr {
     void ServerConnection::disconnect() {
         _connection = 0;
         _status = DISCONNECTED;
+        _loginFailed = false;
     }
     
     bool ServerConnection::isConnected() {
@@ -32,6 +35,10 @@ namespace pyr {
     
     ServerConnection::Status ServerConnection::getStatus() {
         return _status;
+    }
+    
+    bool ServerConnection::loginFailed() {
+        return _loginFailed;
     }
     
     const std::string& ServerConnection::getError() {
@@ -65,6 +72,7 @@ namespace pyr {
         const std::string& pass,
         bool newuser)
     {
+        _loginFailed = false;
         return sendPacket(new LoginPacket(user, pass, newuser ? 1 : 0));
     }
 
@@ -76,10 +84,24 @@ namespace pyr {
             return false;
         }
     }
+    
+    std::string getLRMessage(int response) {
+        switch (response) {
+            case LR_INVALID_USERNAME:  return "Invalid username";
+            case LR_NO_ACCOUNT:        return "Invalid account";
+            case LR_INVALID_PASSWORD:  return "Invalid password";
+            case LR_ACCOUNT_TAKEN:     return "Account already taken";
+            case LR_ALREADY_LOGGED_IN: return "Already logged in";
+            default:                   return "";
+        }
+    }
             
     void ServerConnection::handleLoginResponse(Connection*, LoginResponsePacket* p) {
         if (p->response() == LR_LOGGED_IN) {
             _status = LOGGED_IN;
+        } else {
+            _loginFailed = true;
+            _error = getLRMessage(p->response());
         }
     }
 

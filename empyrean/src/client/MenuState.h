@@ -18,6 +18,8 @@ namespace pyr {
         void onMousePress(Uint8 button, bool down, int x, int y);
         void onMouseMove(int x, int y);
         
+        // screen callbacks below
+        
         void onErrorOK();
         
         void onMainConnect();
@@ -36,6 +38,10 @@ namespace pyr {
             const std::string& password,
             bool newuser);
         void onLoginCancel();
+        
+        void onLoggingInLoggedIn();
+        void onLoggingInCancel();
+        void onLoggingInError(const std::string& error);
 
     private:
         void createInterface();
@@ -49,6 +55,7 @@ namespace pyr {
         phui::RootWidgetPtr _connectScreen;
         phui::RootWidgetPtr _connectingScreen;
         phui::RootWidgetPtr _loginScreen;
+        phui::RootWidgetPtr _loggingInScreen;
     };
 
 }

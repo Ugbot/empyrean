@@ -36,6 +36,7 @@ namespace pyr {
         void disconnect();
         bool isConnected();
         Status getStatus();
+        bool loginFailed();
         
         /// valid if DISCONNECTED after beginConnecting()
         const std::string& getError();
@@ -66,6 +67,7 @@ namespace pyr {
         
         // if CONNECTED
         ScopedPtr<Connection> _connection;
+        bool _loginFailed;
     };
 
 }

@@ -244,6 +244,37 @@ namespace pyr {
         ButtonPtr    _login;
         ButtonPtr    _cancel;
     };
+    
+    class LoggingInScreen : public MenuScreen {
+    public:
+        LoggingInScreen(MenuState* state)
+            : MenuScreen(state)
+        {
+            LabelPtr label = new Label("Logging in...");
+            label->setPositionAndSize(0, 0, 1024, 384);
+        
+            ButtonPtr cancel = new Button("Cancel");
+            cancel->setPositionAndSize(0, 384, 1024, 384);
+            cancel->addListener(this, &LoggingInScreen::onCancel);
+            
+            add(label);
+            add(cancel);
+        }
+        
+        void update(float /*dt*/) {
+            ServerConnection& sc = ServerConnection::instance();
+            if (sc.getStatus() == ServerConnection::LOGGED_IN) {
+                getState()->onLoggingInLoggedIn();
+            } else if (sc.loginFailed()) {
+                getState()->onLoggingInError(sc.getError());
+            }
+        }
+        
+    private:
+        void onCancel(const ActionEvent&) {
+            getState()->onLoggingInCancel();
+        }
+    };
 
 
     MenuState::MenuState() {
@@ -348,7 +379,7 @@ namespace pyr {
         bool newuser)
     {
         ServerConnection::instance().login(username, password, newuser);
-        // go to logging in screen?
+        _screen = _loggingInScreen;
     }
     
     void MenuState::onLoginCancel() {
@@ -356,11 +387,25 @@ namespace pyr {
         _screen = _mainScreen;
     }
     
+    void MenuState::onLoggingInLoggedIn() {
+        invokeTransition<GameState>();
+    }
+    
+    void MenuState::onLoggingInCancel() {
+        ServerConnection::instance().disconnect();
+        _screen = _mainScreen;
+    }
+    
+    void MenuState::onLoggingInError(const std::string& error) {
+        _screen = new ErrorScreen(this, "Error logging in: " + error);
+    }
+    
     void MenuState::createInterface() {
         _mainScreen       = new MainScreen(this);
         _connectScreen    = new ConnectScreen(this);
         _connectingScreen = new ConnectingScreen(this);
         _loginScreen      = new LoginScreen(this);
+        _loggingInScreen  = new LoggingInScreen(this);
         
         _screen = _mainScreen;
     }
