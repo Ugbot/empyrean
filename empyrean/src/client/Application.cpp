@@ -73,6 +73,8 @@ namespace pyr {
 
             endPass();
         }
+
+	checkOpenGLErrors();
     }
 
     void Application::update(float dt) {
@@ -135,6 +137,7 @@ namespace pyr {
 
     void Application::invokeTransition(State* state) {
         PYR_ASSERT(state, "Can't transition to null state");
+	PYR_LOG() << "Switching to state: " << state->getName();
         _nextState = state;
     }
     
@@ -199,5 +202,12 @@ namespace pyr {
 
     int Application::getMousePosY() {
         return _lastY;
+    }
+
+    void Application::checkOpenGLErrors() {
+        GLenum error;
+	while ((error = glGetError()) != GL_NO_ERROR) {
+            throw std::runtime_error(getErrorString(error));
+        }
     }
 }

@@ -56,6 +56,8 @@ namespace pyr {
             const CallNodeList& callTree,
             const Vec2f& offset);
 
+	void checkOpenGLErrors();
+
         // dimensions of the window or screen
         Zeroed<int> _width;
         Zeroed<int> _height;

@@ -12,6 +12,10 @@ namespace pyr {
     public:
         LobbyState();
 
+	const char* getName() const {
+            return "LobbyState";
+	}
+
         void update(float dt);
         
         // screen callbacks below

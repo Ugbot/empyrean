@@ -11,6 +11,10 @@ namespace pyr {
     class CreditsState : public State {
     public:
         CreditsState();
+
+	const char* getName() const {
+            return "CreditsState";
+	}
     
         void draw();
         void onKeyPress(SDLKey key, bool down);

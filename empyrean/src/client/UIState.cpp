@@ -1,5 +1,6 @@
 #include <phui/SDLBridge.h>
 #include "Application.h"
+#include "Log.h"
 #include "Profiler.h"
 #include "UIState.h"
 
@@ -12,11 +13,14 @@ namespace pyr {
     
     void UIState::update(float dt) {
         PYR_PROFILE_BLOCK("UIState::update");
+	PYR_LOG() << "UIState::update";
+
         _root->update(dt);
     }
     
     void UIState::draw() {
         PYR_PROFILE_BLOCK("UIState::draw");
+	PYR_LOG() << "UIState::draw";
 
         // New renderer is needed!
         glDisable(GL_DEPTH_TEST);

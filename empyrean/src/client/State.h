@@ -24,6 +24,8 @@ namespace pyr {
     public:
         virtual ~State() { }
 
+	virtual const char* getName() const = 0;
+
         // The order of the update and draw methods in this class reflect the
         // fact that update is called just before draw in order to minimize
         // perceived system latency.  (Or maybe it's just a wrong guess.)

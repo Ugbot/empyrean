@@ -14,6 +14,10 @@ namespace pyr {
     public:
         CutSceneState();
 
+	const char* getName() const {
+	    return "CutSceneState";
+	}
+
         void update(float dt);
         void draw();
 

@@ -12,6 +12,10 @@ namespace pyr {
     public:
         MenuState();
 
+	const char* getName() const {
+            return "MenuState";
+	}
+
         // Main menu callbacks.
         void onOptions();
         void onCredits();

@@ -25,7 +25,11 @@ namespace pyr {
     public:
         GameState();
         ~GameState();
-        
+
+	const char* getName() const {
+            return "GameState";
+	}
+
         void update(float dt);
         void draw();
         

@@ -21,6 +21,9 @@ def CachedWhereIs(command):
 def ParseConfig(env, command, options):
     "Parses xxx-config style output for compilation directives"
 
+    if env['PLATFORM'] == 'darwin':
+        return env.ParseConfig(string.join([command] + options))
+
     # Run the command
     where = CachedWhereIs(command)
     if not where:

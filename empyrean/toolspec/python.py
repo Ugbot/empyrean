@@ -6,7 +6,7 @@ def generate(env):
     env.Append(CPPPATH=[os.path.join(sys.prefix, 'include', pybase)],
                LIBPATH=[os.path.join(sys.prefix, 'lib', pybase, 'config')],
                LIBS=['lib%s' % pybase])
-    if env['PLATFORM'] not in ['cygwin', 'win32']:
+    if env['PLATFORM'] not in ['cygwin', 'win32', 'darwin']:
         env.Append(LIBS=['util'])
 
 def exists(env):

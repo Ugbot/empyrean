@@ -9,7 +9,8 @@
 namespace pyr {
 
     void setOrthoProjection(float width, float height, bool cartesian = false);
-        
+    const char* getErrorString(GLenum error);
+
     inline void glTranslate(const Vec2f& vec) {
         glTranslatef(vec[0], vec[1], 0);
     }

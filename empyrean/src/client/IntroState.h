@@ -12,6 +12,10 @@ namespace pyr {
     class IntroState : public State {
     public:
         IntroState();
+
+	const char* getName() const {
+            return "IntroState";
+	}
         
         void draw();
         
