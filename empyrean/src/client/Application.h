@@ -8,8 +8,9 @@
 
 namespace pyr {
 
-    class State;
     class Font;
+    class State;
+    class Texture;
 
     /// Lazily-instantiated singleton class representing the game as a whole.
     class Application {
@@ -38,7 +39,7 @@ namespace pyr {
         void invokeTransition(State* state);
         void invokeTimedTransition(State* state, float seconds);
         bool shouldQuit();
-
+        
     private:
         static Application* _instance;
     
@@ -60,6 +61,7 @@ namespace pyr {
         bool _showCPUInfo;
 
         ScopedPtr<Font> _font;
+        Texture* _pointer;
 
         FPSCounter _fps;
     };

@@ -2,11 +2,12 @@
 #include <sstream>
 
 #include "Application.h"
+#include "Font.h"
 #include "IntroState.h"
+#include "NSPRUtility.h"
 #include "OpenGL.h"
 #include "Profiler.h"
-#include "NSPRUtility.h"
-#include "Font.h"
+#include "Texture.h"
 
 namespace pyr {
 
@@ -41,6 +42,8 @@ namespace pyr {
 
         _font = new Font("fonts/arial.ttf", 16);
         _font->setScale(400.0f / 1024.0f);
+        
+        _pointer = Texture::create("images/pointer.png");
     }
     
     void Application::resize(int width, int height) {
@@ -79,6 +82,17 @@ namespace pyr {
             }
 
             glPopMatrix();
+        }
+        
+        if (_currentState && _currentState->isPointerVisible()) {
+            glMatrixMode(GL_PROJECTION);
+            glLoadIdentity();
+            glOrtho(0, _width, _height, 0, -1, 1);
+            
+            glMatrixMode(GL_MODELVIEW);
+            glLoadIdentity();
+            
+            _pointer->drawRectangle(_lastX, _lastY);
         }
     }
     

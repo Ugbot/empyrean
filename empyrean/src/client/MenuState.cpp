@@ -14,6 +14,7 @@ namespace pyr {
         , optionsbutton("images/ui/options_up.png")
         , exitbutton("images/ui/quit_up.png")
     {
+        showPointer();
     }
     
     void MenuState::draw(float fade) {

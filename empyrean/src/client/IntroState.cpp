@@ -29,9 +29,13 @@ namespace pyr {
         _image->drawRectangle(0, 0, 1, 1);
     }
     
-    void IntroState::onKeyPress(SDLKey /*key*/, bool down) {
+    void IntroState::onKeyPress(SDLKey key, bool down) {
         if (down) {
-            invokeTimedTransition<MenuState>(1);
+            if (key == SDLK_ESCAPE) {
+                quit();
+            } else {
+                invokeTimedTransition<MenuState>(1);
+            }
         }
     }
     

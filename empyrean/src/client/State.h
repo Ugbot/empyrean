@@ -10,6 +10,10 @@ namespace pyr {
 
     class State {
     public:
+        State() {
+            _pointerVisible = false;
+        }
+    
         virtual ~State() { }
         
         /**
@@ -24,6 +28,11 @@ namespace pyr {
         virtual void onKeyPress(SDLKey key, bool down) { }
         virtual void onMousePress(Uint8 button, bool down, int x, int y) { }
         virtual void onMouseMove(int x, int y) { }
+        
+        bool isPointerVisible() {
+            return _pointerVisible;
+        }
+        
         
         template<typename T>
         static void invokeTransition(Type2Type<T> = Type2Type<T>()) {
@@ -41,6 +50,13 @@ namespace pyr {
         static void quit() {
             Application::instance().invokeTransition(0);
         }
+        
+    protected:
+        void showPointer() { _pointerVisible = true;  }
+        void hidePointer() { _pointerVisible = false; }
+               
+    private:
+        bool _pointerVisible;
     };
 
 }

@@ -161,6 +161,9 @@
 				RelativePath="..\..\src\base\NSPRUtility.h">
 			</File>
 			<File
+				RelativePath="..\..\src\base\OpenGL.h">
+			</File>
+			<File
 				RelativePath="..\..\src\base\Packet.h">
 			</File>
 			<File
