@@ -29,7 +29,7 @@ namespace pyr {
         }
     }
     
-    Vec2f CollisionBox::getDisplacement(const std::vector<Segment>& segs,
+    Vec2f CollisionBox::getDisplacement(Vec2f& vel, const std::vector<Segment>& segs,
                                         std::vector<Vec2f>& points) {
         for(size_t i = 0; i<segs.size(); ++i) {
             if(segmentInside(segs[i])) {
@@ -50,7 +50,36 @@ namespace pyr {
             maxY = std::max(maxY,points[i][1]);
         }
         
-        if(maxY > _verts[0][1]) {
+        float minY = points[0][1];
+        for(size_t i = 1; i<points.size(); ++i) {
+            minY = std::min(minY,points[i][1]);
+        }
+    
+        float maxX = points[0][0];
+        for(size_t i = 1; i<points.size(); ++i) {
+            maxX = std::max(maxX,points[i][0]);
+        }
+        
+        float minX = points[0][0];
+        for(size_t i = 1; i<points.size(); ++i) {
+            minX = std::min(minX,points[i][0]);
+        }
+
+        if(maxY > (_verts[2][1] + _verts[0][1])/2.0 && minY < (_verts[2][1] + _verts[0][1])/2.0) {
+            vel[0] = 0;
+            if(maxX > (_verts[2][0] + _verts[0][0])/2.0) {
+                return Vec2f(minX-_verts[2][0],0);
+            }
+            else {
+                return Vec2f(maxX-_verts[0][0],0);
+            }
+
+        }
+        else if(maxY > (_verts[2][1] + _verts[0][1])/2.0) {
+            return Vec2f(0,minY-_verts[2][1]);
+        }
+        else {
+            vel[1] = 0;          
             return Vec2f(0,maxY-_verts[0][1]);
         }
 
@@ -73,7 +102,7 @@ namespace pyr {
     }
 
     void CollisionBox::pointIntersect(std::vector<Vec2f>& points, const Segment& seg) {
-        if(fabs(seg.v2[0] - seg.v1[0]) < 0.01) { // Vertical line
+       if(fabs(seg.v2[0] - seg.v1[0]) < 0.01) { // Vertical line
             if(seg.v1[0] > _verts[0][0] && seg.v1[0] < _verts[1][0]) {
                 // Top line of box
                 float ty = (_verts[2][1] - seg.v1[1])/(seg.v2[1] - seg.v1[1]);

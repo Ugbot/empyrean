@@ -74,11 +74,7 @@ namespace pyr {
         CollisionData rv;
         newBox.getIntersectingSegs(rv.interesting, segs);
 
-        Vec2f displacement = newBox.getDisplacement(rv.interesting, rv.points);
-
-        if(displacement[1] != 0) {
-            vel[1] = 0;
-        }
+        Vec2f displacement = newBox.getDisplacement(vel,rv.interesting, rv.points);
 
         newPos += displacement;
 
