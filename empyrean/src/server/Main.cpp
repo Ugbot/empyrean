@@ -1,4 +1,3 @@
-#include <iostream>
 #include <stdexcept>
 #include "Configuration.h"
 #include "Error.h"
@@ -12,8 +11,6 @@
 namespace pyr {
 
     void runServer() {
-	std::cout << "Starting Empyrean Server..." << std::endl;
-
         World world;
 
         int port = Configuration::instance().getServerPort();

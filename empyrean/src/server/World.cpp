@@ -1,4 +1,3 @@
-#include <iostream>
 #include "Connection.h"
 #include "EntityAddedPacket.h"
 #include "EntityRemovedPacket.h"
@@ -54,8 +53,8 @@ namespace pyr {
     }
     
     void World::addConnection(Connection* connection) {
-        std::cout << "Connection!" << std::endl;
-        
+//        std::cout << "Connection!" << std::endl;
+
         ConnectionData* cd = new ConnectionData();
         cd->loggedIn = false;
         cd->entityID = 0;
@@ -82,16 +81,16 @@ namespace pyr {
         _connections.erase(_connections.begin() + index);
         delete connection;
         
-        std::cout << "Disconnected" << std::endl;
+//        std::cout << "Disconnected" << std::endl;
     }
     
     void World::handleLogin(Connection* c, LoginPacket* p) {
         ConnectionData* cd = (ConnectionData*)c->getOpaque();
         if (!cd->loggedIn) {
-            std::cout << "Login: "
-                      << p->getUsername() << " | " << p->getPassword()
-                      << std::endl;
-                  
+//            std::cout << "Login: "
+//                      << p->getUsername() << " | " << p->getPassword()
+//                      << std::endl;
+
             cd->loggedIn = true;
             cd->entityID = _uidGenerator.reserve();
             c->sendPacket(new LoginResponsePacket(cd->entityID));
@@ -111,20 +110,20 @@ namespace pyr {
             ServerEntity* se = new ServerEntity();
             addEntity(cd->entityID, se);
         } else {
-	    std::cout << "Already logged in!" << std::endl;
+//	    std::cout << "Already logged in!" << std::endl;
 	}
     }
 
     void World::handlePlayerState(Connection* c, PlayerStatePacket* p) {
-	std::cout << "handlePlayerState" << std::endl;
+//	std::cout << "handlePlayerState" << std::endl;
 	ConnectionData* cd = (ConnectionData*)c->getOpaque();
 	if (cd->loggedIn) {
-	    std::cout << "Player state update" << std::endl;
+//	    std::cout << "Player state update" << std::endl;
 	    ServerEntity* entity = getEntity(cd->entityID);
 	    if (entity) {
 		entity->setVel(gmtl::Vec2f(p->getForce() * 50, 0));
 	    } else {
-		std::cout << "- Unknown entity" << std::endl;
+//		std::cout << "- Unknown entity" << std::endl;
 	    }
 	}
     }
