@@ -31,7 +31,8 @@
 				AssemblerOutput="4"
 				WarningLevel="3"
 				Detect64BitPortabilityProblems="FALSE"
-				DebugInformationFormat="3"/>
+				DebugInformationFormat="3"
+				DisableSpecificWarnings="4099"/>
 			<Tool
 				Name="VCCustomBuildTool"/>
 			<Tool
@@ -88,7 +89,8 @@
 				AssemblerOutput="4"
 				WarningLevel="3"
 				Detect64BitPortabilityProblems="FALSE"
-				DebugInformationFormat="0"/>
+				DebugInformationFormat="0"
+				DisableSpecificWarnings="4099"/>
 			<Tool
 				Name="VCCustomBuildTool"/>
 			<Tool
