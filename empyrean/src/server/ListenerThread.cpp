@@ -14,16 +14,18 @@ namespace pyr {
         while (!thread->shouldQuit()) {
             Socket* socket = _listener->accept(0.5f);
             if (socket) {
-                ScopedLock lock(_connectionsLock);
-                _connections.push_back(new Connection(socket));
+                PYR_SYNCHRONIZED(_connectionsLock, {
+                    _connections.push_back(new Connection(socket));
+                })
             }
         }
     }
     
     void ListenerThread::getConnections(std::vector<Connection*>& connections) {
-        ScopedLock lock(_connectionsLock);
-        connections = _connections;
-        _connections.clear();
+        PYR_SYNCHRONIZED(_connectionsLock, {
+            connections.swap(_connections);
+            _connections.clear();
+        })
     }
 
 }

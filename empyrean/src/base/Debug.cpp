@@ -118,53 +118,51 @@ namespace pyr {
             return TRUE;
         }
         
-        ScopedLock lock__(_state->mutex);
-        
-        // Allow re-entrancy.  Allocations called from the hook don't count.
-        _CRT_ALLOC_HOOK this_hook = _CrtSetAllocHook(_state->oldHook);
-        // Need a scope guard here.  :(
+        PYR_SYNCHRONIZED(_state->mutex, {
             
-        try {
-            
-            switch (allocType) {
-                case _HOOK_ALLOC: {
-                    Request r;  // Implicitly performs a stack trace.
-                    r.filename = reinterpret_cast<const char*>(filename);
-                    r.line     = line;
+            // Allow re-entrancy.  Allocations called from the hook don't count.
+            _CRT_ALLOC_HOOK this_hook = _CrtSetAllocHook(_state->oldHook);
+            // Need a scope guard here.  :(
+                
+            try {
+                
+                switch (allocType) {
+                    case _HOOK_ALLOC: {
+                        Request r;  // Implicitly performs a stack trace.
+                        r.filename = reinterpret_cast<const char*>(filename);
+                        r.line     = line;
 
-                    PYR_ASSERT(_state->requests.count(request) == 0, "Two allocations have the same request number");
-                    _state->requests[request] = r;
-                    break;
+                        PYR_ASSERT(_state->requests.count(request) == 0, "Two allocations have the same request number");
+                        _state->requests[request] = r;
+                        break;
+                    }
+
+                    case _HOOK_FREE: {
+                        // The _CrtSetAllocHook documention is WRONG, so we have to
+                        // set the parameters ourselves.
+                        _CrtMemBlockHeader* header = pHdr(data);
+                        size     = header->nDataSize;
+                        request  = header->lRequest;
+                        filename = reinterpret_cast<unsigned char*>(header->szFileName);
+                        line     = header->nLine;
+                        
+                        // This assert triggers far too often to be useful.
+                        //PYR_ASSERT(_state->requests.count(request) == 1, "Free without allocation");
+                        _state->requests.erase(request);
+                        break;
+                    }
                 }
 
-                case _HOOK_FREE: {
-                    // The _CrtSetAllocHook documention is WRONG, so we have to
-                    // set the parameters ourselves.
-                    _CrtMemBlockHeader* header = pHdr(data);
-                    size     = header->nDataSize;
-                    request  = header->lRequest;
-                    filename = reinterpret_cast<unsigned char*>(header->szFileName);
-                    line     = header->nLine;
-                    
-                    // This assert triggers far too often to be useful.
-                    //PYR_ASSERT(_state->requests.count(request) == 1, "Free without allocation");
-                    _state->requests.erase(request);
-                    break;
-                }
+                _CrtSetAllocHook(this_hook);
+                return TRUE;
             }
-
-            _CrtSetAllocHook(this_hook);
-            return TRUE;
-        }
-        catch (const std::exception&) {
-            // We could use PYR_LOG(), but it might throw too.
-            _CrtSetAllocHook(this_hook);
-            return FALSE;
-        }
-        #if 0  // Catch everything?
-        catch (...) {
-        }
-        #endif
+            catch (const std::exception&) {
+                // We could use PYR_LOG(), but it might throw too.
+                _CrtSetAllocHook(this_hook);
+                return FALSE;
+            }
+            // Catch everything?
+        })
     }
 
     static void __cdecl dumpLeaks() {

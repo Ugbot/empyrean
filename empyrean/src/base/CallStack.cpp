@@ -39,7 +39,7 @@ namespace pyr {
             (LPSTR)&buf,
             0,
             0);
-        LocalFreeSentry sentry__(buf);
+        LocalFreeSentry PYR_UNIQUE_NAME()(buf);
         if (rv == 0) {
             throw Win32Error("Win32 error in " + str(function) + " -- FormatMessage failed");
         } else {
@@ -62,7 +62,7 @@ namespace pyr {
             (LPSTR)&buf,
             0,
             0);
-        LocalFreeSentry sentry__(buf);
+        LocalFreeSentry PYR_UNIQUE_NAME()(buf);
         if (rv == 0) {
             outputDebugString("Win32 error in " + str(function) + " -- FormatMessage failed");
         } else {

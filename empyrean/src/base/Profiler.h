@@ -159,7 +159,7 @@ namespace pyr {
 #endif
 
 #ifdef PYR_ENABLE_PROFILE
-#   define PYR_PROFILE_BLOCK(name) pyr::ProfileScope __profileBlockObject(name)
+#   define PYR_PROFILE_BLOCK(name) ::pyr::ProfileScope PYR_UNIQUE_NAME()(name)
 #else
 #   define PYR_PROFILE_BLOCK(name)
 #endif

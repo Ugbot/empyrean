@@ -11,7 +11,7 @@
 // trap is usually placed around callbacks or entry points, such
 // as wxWindows event handlers or main().
 
-#define PYR_EXCEPTION_TRAP(block)                   \
+#define PYR_EXCEPTION_TRAP(block) {                 \
     try {                                           \
         block                                       \
     }                                               \
@@ -19,7 +19,8 @@
         std::string what = e.what();                \
         pyr::error("Exception: " + what);           \
     }                                               \
-    PYR_CATCH_ALL()
+    PYR_CATCH_ALL()                                 \
+}
 
 
 /// Defines an exception class that derives from std::runtime_error.

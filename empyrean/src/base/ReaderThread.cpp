@@ -27,19 +27,21 @@ namespace pyr {
             while (Packet* p = extractPacket(bb)) {
                 //PYR_LOG() << "Read packet:";
                 //p->log();
-                ScopedLock lock(_incomingLock);
-                _incoming.push(p);
+                PYR_SYNCHRONIZED(_incomingLock, {
+                    _incoming.push(p);
+                })
             }
         }
     }
 
     std::queue<PacketPtr> ReaderThread::getPackets() {
-        ScopedLock lock(_incomingLock);
-        std::queue<PacketPtr> packets = _incoming;
-        while (!_incoming.empty()) {
-            _incoming.pop();
-        }
-        return packets;
+        PYR_SYNCHRONIZED(_incomingLock, {
+            std::queue<PacketPtr> packets = _incoming;
+            while (!_incoming.empty()) {
+                _incoming.pop();
+            }
+            return packets;
+        })
     }
 
     Packet* ReaderThread::extractPacket(ByteBuffer& bb) {

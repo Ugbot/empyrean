@@ -33,7 +33,7 @@ namespace pyr {
     #define PYR_NO_UNUSED_WARNING(x) ((void)&(x))
 
     /// Wraps a block of code with Python error safety.
-    #define PYR_PYTHON_CODE(block)                              \
+    #define PYR_PYTHON_CODE(block) {                            \
         try {                                                   \
             PythonCodeErrorSentry sentry__;                     \
             PYR_NO_UNUSED_WARNING(sentry__);  /* silly gcc */   \
@@ -42,7 +42,8 @@ namespace pyr {
         catch (const boost::python::error_already_set&) {       \
             requirePythonError();                               \
             throw PythonError(getPythonErrorString());          \
-        }
+        }                                                       \
+    }
 
     class PythonInterpreter {
         PYR_DECLARE_SINGLETON(PythonInterpreter)

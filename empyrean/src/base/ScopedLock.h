@@ -3,6 +3,7 @@
 
 
 #include "Mutex.h"
+#include "Utility.h"
 
 
 namespace pyr {
@@ -26,6 +27,12 @@ namespace pyr {
     private:    
         Mutex* _mutex;
     };
+    
+    
+    #define PYR_SYNCHRONIZED(mutex, block) {    \
+        ScopedLock PYR_UNIQUE_NAME()(mutex);    \
+        block                                   \
+    }
 
 }
 

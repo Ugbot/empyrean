@@ -30,7 +30,7 @@
 				AssemblerOutput="4"
 				WarningLevel="3"
 				Detect64BitPortabilityProblems="FALSE"
-				DebugInformationFormat="4"/>
+				DebugInformationFormat="3"/>
 			<Tool
 				Name="VCCustomBuildTool"/>
 			<Tool
@@ -77,7 +77,7 @@
 				AssemblerOutput="4"
 				WarningLevel="3"
 				Detect64BitPortabilityProblems="FALSE"
-				DebugInformationFormat="3"/>
+				DebugInformationFormat="0"/>
 			<Tool
 				Name="VCCustomBuildTool"/>
 			<Tool
@@ -170,25 +170,10 @@
 				RelativePath="..\..\src\base\Profiler.h">
 			</File>
 			<File
-				RelativePath="..\..\src\base\RefCounted.h">
-			</File>
-			<File
-				RelativePath="..\..\src\base\RefPtr.h">
-			</File>
-			<File
 				RelativePath="..\..\src\base\ResourceManager.cpp">
 			</File>
 			<File
 				RelativePath="..\..\src\base\ResourceManager.h">
-			</File>
-			<File
-				RelativePath="..\..\src\base\ScopedArray.h">
-			</File>
-			<File
-				RelativePath="..\..\src\base\ScopedLock.h">
-			</File>
-			<File
-				RelativePath="..\..\src\base\ScopedPtr.h">
 			</File>
 			<File
 				RelativePath="..\..\src\base\Singleton.h">
@@ -204,9 +189,6 @@
 			</File>
 			<File
 				RelativePath="..\..\src\base\VecMath.h">
-			</File>
-			<File
-				RelativePath="..\..\src\base\Win32Memory.h">
 			</File>
 			<File
 				RelativePath="..\..\src\base\wx.h">
@@ -419,6 +401,9 @@
 				RelativePath="..\..\src\base\Mutex.h">
 			</File>
 			<File
+				RelativePath="..\..\src\base\ScopedLock.h">
+			</File>
+			<File
 				RelativePath="..\..\src\base\Thread.cpp">
 			</File>
 			<File
@@ -467,12 +452,6 @@
 			<File
 				RelativePath="..\..\src\base\TextureImage.h">
 			</File>
-			<File
-				RelativePath="..\..\src\base\UnownedPtr.h">
-			</File>
-			<File
-				RelativePath="..\..\src\base\Utility.cpp">
-			</File>
 			<Filter
 				Name="glew"
 				Filter="">
@@ -510,6 +489,28 @@
 			</File>
 			<File
 				RelativePath="..\..\src\base\PhysicsEngine.h">
+			</File>
+		</Filter>
+		<Filter
+			Name="memory"
+			Filter="">
+			<File
+				RelativePath="..\..\src\base\RefCounted.h">
+			</File>
+			<File
+				RelativePath="..\..\src\base\RefPtr.h">
+			</File>
+			<File
+				RelativePath="..\..\src\base\ScopedArray.h">
+			</File>
+			<File
+				RelativePath="..\..\src\base\ScopedPtr.h">
+			</File>
+			<File
+				RelativePath="..\..\src\base\UnownedPtr.h">
+			</File>
+			<File
+				RelativePath="..\..\src\base\Win32Memory.h">
 			</File>
 		</Filter>
 	</Files>

@@ -61,15 +61,15 @@ namespace pyr {
     }
 
     void WriterThread::addPackets(const std::vector<PacketPtr>& packets) {
-        ScopedLock lock(_outgoingLock);
-
-        for (size_t i = 0; i < packets.size(); ++i) {
-            //PYR_LOG() << "Queueing packet for writing:";
-            //packets[i]->log();
-            _outgoing.push(packets[i]);
-        }
-        
-        _packetsAvailable->notify();
+        PYR_SYNCHRONIZED(_outgoingLock, {
+            for (size_t i = 0; i < packets.size(); ++i) {
+                //PYR_LOG() << "Queueing packet for writing:";
+                //packets[i]->log();
+                _outgoing.push(packets[i]);
+            }
+            
+            _packetsAvailable->notify();
+        })
     }
 
 }

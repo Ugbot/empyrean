@@ -50,6 +50,20 @@ namespace pyr {
     #define PYR_UNIQUE_SIGNATURE(T) Type2Type<T> = Type2Type<T>()
     
     
+    /**
+     * Generates a unique name for a variable by using the current line
+     * number.
+     *
+     * Note: PYR_UNIQUE_NAME does not work if you're compiling with the
+     *       /ZI (program database for edit and continue) option in VC++.
+     *       Use /Zi instead.  See
+     *       http://support.microsoft.com/default.aspx?scid=kb;en-us;199057
+     */
+    #define PYR_UNIQUE_NAME() PYR_CONCATENATE1(_unique_, __LINE__)
+    #define PYR_CONCATENATE1(s1, s2) PYR_CONCATENATE0(s1, s2)
+    #define PYR_CONCATENATE0(s1, s2) s1##s2
+
+    
     // Lets you delete the contents of a container with std::for_each.
     template<typename T>
     void delete_function(T* p) {

@@ -254,16 +254,13 @@ namespace pyr {
 
 /// main() needs to be defined with argc and argv so SDL works right.
 int main(int argc, char* argv[]) {
-    int result = EXIT_FAILURE;
-
-    pyr::registerLeakChecker();
-
     PYR_EXCEPTION_TRAP({
+        pyr::registerLeakChecker();
         pyr::runClient(argc, argv);
-        result = EXIT_SUCCESS;
+        return EXIT_SUCCESS;
     })
     
-    return result;
+    return EXIT_FAILURE;
 }
 
 

@@ -106,12 +106,11 @@ namespace pyr {
      * A convenience macro around pyr::LogStream().  Used as follows:
      * PYR_LOG() << blah blah blah;
      *
-     * This is the preferred interface for streaming text to the
-     * log.
+     * This is the preferred interface for streaming text to the log.
      */
     #define PYR_LOG() ::pyr::LogStream().get()
 
-    #define PYR_LOG_BLOCK(name) ::pyr::LogBlock block_obj__(name);
+    #define PYR_LOG_BLOCK(name) ::pyr::LogBlock PYR_UNIQUE_NAME()(name);
 
 
 };
