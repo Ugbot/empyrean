@@ -6,7 +6,10 @@
 namespace pyr {
 
     MenuState::MenuState() {
-        _image = Texture::create("images/menu.png");
+        _tex1 = Texture::create("images/title/title_main.png");
+        _tex2 = Texture::create("images/title/title_bg1.png");
+        _tex3 = Texture::create("images/title/title_bg2.png");
+        _tex4 = Texture::create("images/title/title_sky.png");
     }
     
     void MenuState::draw(float fade) {
@@ -16,13 +19,16 @@ namespace pyr {
     
         glMatrixMode(GL_PROJECTION);
         glLoadIdentity();
-        gluOrtho2D(0, 1, 1, 0);
+        gluOrtho2D(0, 1024, 768, 0);
         
         glMatrixMode(GL_MODELVIEW);
         glLoadIdentity();
         
         glColor4f(1, 1, 1, 1 - fade);
-        _image->drawRectangle(0, 0, 1, 1);
+        _tex4->drawRectangle(0, 0, 1024, 384);
+        _tex3->drawRectangle(0, 0, 1024, 768);
+        _tex2->drawRectangle(0, 314, 601, 768);
+        _tex1->drawRectangle(0, 0, 1024, 768);
     }
     
     void MenuState::onMousePress(Uint8 button, bool down, int x, int y) {

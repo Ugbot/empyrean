@@ -597,7 +597,7 @@ void Render()
     }
     else if (usevertexarrays)
         RenderMesh();
-    else
+    else    
     {
         if (cellshade)
         {

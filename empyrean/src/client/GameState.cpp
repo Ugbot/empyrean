@@ -23,8 +23,8 @@ namespace pyr {
         
         _inputMLeft  = &_im.getInput("MouseLeft");
         _inputMRight = &_im.getInput("MouseRight");
-	_inputLeft   = &_im.getInput("Left");
-	_inputRight  = &_im.getInput("Right");
+        _inputLeft   = &_im.getInput("Left");
+        _inputRight  = &_im.getInput("Right");
         _inputSpace  = &_im.getInput("Space");
         _inputQuit   = &_im.getInput("Escape");
 
@@ -51,10 +51,10 @@ namespace pyr {
         glLoadIdentity();
         gluOrtho2D(0, 400, 300, 0);
         
-	glEnable(GL_TEXTURE_2D);
-	glEnable(GL_BLEND);
-	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-	glColor4f(1, 1, 1, 1);
+        glEnable(GL_TEXTURE_2D);
+        glEnable(GL_BLEND);
+        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+        glColor4f(1, 1, 1, 1);
         glTranslatef(0, 8, 0);
         bool loggedIn = ServerConnection::instance().isLoggedIn();
         (*_font) << (loggedIn ? "Logged In" : "Not Logged In") << "\n";
@@ -69,7 +69,7 @@ namespace pyr {
         ServerConnection& sc = ServerConnection::instance();
         sc.update();
 
-	sc.setForce(_inputRight->getValue() - _inputLeft->getValue());
+        sc.setForce(_inputRight->getValue() - _inputLeft->getValue());
 
         if (_inputQuit->getValue() >= 0.50f) {
             invokeTransition<MenuState>();

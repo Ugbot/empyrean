@@ -92,7 +92,7 @@ namespace StickTest
             glLineWidth(1.5f);
 
             backdrop=new Texture("backdrop.jpg");
-            modeltex=new Texture("generic_male.png");
+            //modeltex=new Texture("generic_male.png");
             shadetex=new Tex1D();
         }
 
@@ -292,10 +292,10 @@ namespace StickTest
             glEnable(GL_TEXTURE_2D);
             backdrop.Bind();
             glBegin(GL_QUADS);
-            glTexCoord2d(0,0);       glVertex2i(0,0);
-            glTexCoord2d(0,1);       glVertex2i(0,1);
-            glTexCoord2d(1,1);       glVertex2i(1,1);
-            glTexCoord2d(1,0);       glVertex2i(1,0);
+            glTexCoord2d(0,0);       glVertex2f(0.1f,0.1f);
+            glTexCoord2d(0,1);       glVertex2f(0.1f,99);
+            glTexCoord2d(1,1);       glVertex2f(99,99);
+            glTexCoord2d(1,0);       glVertex2f(99,0.1f);
             glEnd();
             glDisable(GL_TEXTURE_2D);
             Unset2D();
@@ -303,7 +303,7 @@ namespace StickTest
             glBindTexture(GL_TEXTURE_2D,0);
 
 
-            glTranslated(x,y,z);
+            /*glTranslated(x,y,z);
             glTranslated(modelpos.x,modelpos.y,modelpos.z);
             glRotated(xangle,0,1,0);
             glRotated(yangle,1,0,0);
@@ -346,7 +346,7 @@ namespace StickTest
                     i++;
                 }
                 glColor3f(1,1,1);
-            }
+            }*/
 
             gl.Context.SwapBuffer();
         }

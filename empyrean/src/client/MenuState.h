@@ -17,7 +17,10 @@ namespace pyr {
         void onMousePress(Uint8 button, bool down, int x, int y);
 
     private:
-        Texture* _image;
+        Texture* _tex1;
+        Texture* _tex2;
+        Texture* _tex3;
+        Texture* _tex4;
     };
 
 }

@@ -235,7 +235,7 @@ namespace
 
     int BestStartTriangle(const vector<Face>& faces, const vector<Edge>& edges, const set<int>& usedfaces)
     {
-        int adj[4];
+        int adj[4] = {-1,-1,-1,-1};
         std::fill(adj,adj+3,-1);
 
         // Find one that's only adjacent to one other triangle
@@ -262,7 +262,8 @@ namespace
             if (count == 1)
                 return i;
             else
-                adj[count]=i;
+                if (adj[count] == -1)
+                    adj[count]=i;
         }
 
         // 0 sucks, but it has to go in sometime.
