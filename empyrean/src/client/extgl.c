@@ -10,7 +10,7 @@ are permitted provided that the following conditions are met:
     * Redistributions in binary form must reproduce the above copyright notice, 
       this list of conditions and the following disclaimer in the documentation 
       and/or other materials provided with the distribution.
-    * The name of the author may be used to endorse or promote products 
+    * The name of the author may not be used to endorse or promote products 
       derived from this software without specific prior written permission.
 
 THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
@@ -31,13 +31,15 @@ THE POSSIBILITY OF SUCH DAMAGE.
 
     http://www.levp.de/3d/
 
-*/                         
+*/                      
+
+/* VERSION 1.02 (see header for details) */
       
 #include "extgl.h"
 #include <stdio.h>
 #include <string.h>
 
-#if !defined(_WIN32) && !defined(CYGWIN)
+#if !defined(_WIN32) && !defined(__CYGWIN__) && !defined(__MINGW32__)
 #include <GL/glx.h>
 #endif /* _WIN32 */
 
@@ -53,7 +55,7 @@ THE POSSIBILITY OF SUCH DAMAGE.
 /* WGL stuff */
 /*-------------------------------------*/
 
-#ifdef _WIN32
+#if defined(_WIN32) || defined(__CYGWIN__) || defined(__MINGW32__)
 
 /* WGL_EXT_etxension_string */
 
@@ -125,7 +127,7 @@ wglGetCurrentReadDCARBPROC wglGetCurrentReadDCARB = NULL;
 /*---WGL STUFF END---------------------*/
 /*-------------------------------------*/
 
-#ifdef _WIN32
+#if defined(_WIN32) || defined(__CYGWIN__) || defined(__MINGW32__)
 
 #ifdef GL_VERSION_1_2
 glDrawRangeElementsPROC glDrawRangeElements = NULL;
@@ -329,7 +331,7 @@ glFogCoordPointerEXTPROC glFogCoordPointerEXT = NULL;
 glFlushVertexArrayRangeNVPROC glFlushVertexArrayRangeNV = NULL;
 glVertexArrayRangeNVPROC glVertexArrayRangeNV = NULL;
 
-#ifdef _WIN32
+#if defined(_WIN32) || defined(__CYGWIN__) || defined(__MINGW32__)
 wglAllocateMemoryNVPROC wglAllocateMemoryNV = NULL;
 wglFreeMemoryNVPROC wglFreeMemoryNV = NULL;
 #else
@@ -794,12 +796,7 @@ glCullParameterfvEXTPROC glCullParameterfvEXT = NULL;
 glCullParameterdvEXTPROC glCullParameterdvEXT = NULL;
 #endif /* GL_EXT_cull_vertex */
 
-#ifdef GL_EXT_blend_function_sepatate
-glBlendFuncSeparateEXTPROC glBlendFuncSeparateEXT = NULL;
-glBlendFuncSeparateINGRPROC glBlendFuncSeparateINGR = NULL;
-#endif /* GL_EXT_blend_func_separate */
-
-#ifdef _WIN32
+#if defined(_WIN32) || defined(__CYGWIN__) || defined(__MINGW32__)
 #ifdef GL_VERSION_1_4
 /*#ifndef GL_VERSION_1_2
 glBlendColorPROC glBlendColor = NULL;
@@ -881,13 +878,109 @@ glGetProgramLocalParameterfvARBPROC glGetProgramLocalParameterfvARB = NULL;
 #endif /* GL_ARB_vertex_program */
 #endif /* GL_NV_fragment_program */
 
-
 #ifdef GL_NV_primitive_restart
 glPrimitiveRestartNVPROC glPrimitiveRestartNV = NULL;
 glPrimitiveRestartIndexNVPROC glPrimitiveRestartIndexNV = NULL;
 #endif /* GL_NV_primitive_restart */
 
+#ifdef GL_ATI_draw_buffers
+glDrawBuffersATIPROC glDrawBuffersATI = NULL;
+#endif /* GL_ATI_draw_buffers */
 
+#ifdef GL_NV_half_float
+glVertex2hNVPROC glVertex2hNV = NULL;
+glVertex2hvNVPROC glVertex2hvNV = NULL;
+glVertex3hNVPROC glVertex3hNV = NULL;
+glVertex3hvNVPROC glVertex3hvNV = NULL;
+glVertex4hNVPROC glVertex4hNV = NULL;
+glVertex4hvNVPROC glVertex4hvNV = NULL;
+glNormal3hNVPROC glNormal3hNV = NULL;
+glNormal3hvNVPROC glNormal3hvNV = NULL;
+glColor3hNVPROC glColor3hNV = NULL;
+glColor3hvNVPROC glColor3hvNV = NULL;
+glColor4hNVPROC glColor4hNV = NULL;
+glColor4hvNVPROC glColor4hvNV = NULL;
+glTexCoord1hNVPROC glTexCoord1hNV = NULL;
+glTexCoord1hvNVPROC glTexCoord1hvNV = NULL;
+glTexCoord2hNVPROC glTexCoord2hNV = NULL;
+glTexCoord2hvNVPROC glTexCoord2hvNV = NULL;
+glTexCoord3hNVPROC glTexCoord3hNV = NULL;
+glTexCoord3hvNVPROC glTexCoord3hvNV = NULL;
+glTexCoord4hNVPROC glTexCoord4hNV = NULL;
+glTexCoord4hvNVPROC glTexCoord4hvNV = NULL;
+glMultiTexCoord1hNVPROC glMultiTexCoord1hNV = NULL;
+glMultiTexCoord1hvNVPROC glMultiTexCoord1hvNV = NULL;
+glMultiTexCoord2hNVPROC glMultiTexCoord2hNV = NULL;
+glMultiTexCoord2hvNVPROC glMultiTexCoord2hvNV = NULL;
+glMultiTexCoord3hNVPROC glMultiTexCoord3hNV = NULL;
+glMultiTexCoord3hvNVPROC glMultiTexCoord3hvNV = NULL;
+glMultiTexCoord4hNVPROC glMultiTexCoord4hNV = NULL;
+glMultiTexCoord4hvNVPROC glMultiTexCoord4hvNV = NULL;
+glFogCoordhNVPROC glFogCoordhNV = NULL;
+glFogCoordhvNVPROC glFogCoordhvNV = NULL;
+glSecondaryColor3hNVPROC glSecondaryColor3hNV = NULL;
+glSecondaryColor3hvNVPROC glSecondaryColor3hvNV = NULL;
+glVertexWeighthNVPROC glVertexWeighthNV = NULL;
+glVertexWeighthvNVPROC glVertexWeighthvNV = NULL;
+glVertexAttrib1hNVPROC glVertexAttrib1hNV = NULL;
+glVertexAttrib1hvNVPROC glVertexAttrib1hvNV = NULL;
+glVertexAttrib2hNVPROC glVertexAttrib2hNV = NULL;
+glVertexAttrib2hvNVPROC glVertexAttrib2hvNV = NULL;
+glVertexAttrib3hNVPROC glVertexAttrib3hNV = NULL;
+glVertexAttrib3hvNVPROC glVertexAttrib3hvNV = NULL;
+glVertexAttrib4hNVPROC glVertexAttrib4hNV = NULL;
+glVertexAttrib4hvNVPROC glVertexAttrib4hvNV = NULL;
+glVertexAttribs1hvNVPROC glVertexAttribs1hvNV = NULL;
+glVertexAttribs2hvNVPROC glVertexAttribs2hvNV = NULL;
+glVertexAttribs3hvNVPROC glVertexAttribs3hvNV = NULL;
+glVertexAttribs4hvNVPROC glVertexAttribs4hvNV = NULL;
+#endif /* GL_NV_half_float */
+
+#ifdef GL_NV_pixel_data_range
+glPixelDataRangeNVPROC glPixelDataRangeNV = NULL;
+glFlushPixelDataRangeNVPROC glFlushPixelDataRangeNV = NULL;
+#endif /* GL_NV_pixel_data_range */
+
+#ifdef GL_ATI_map_object_buffer
+glMapObjectBufferATIPROC glMapObjectBufferATI = NULL;
+glUnmapObjectBufferATIPROC glUnmapObjectBufferATI = NULL;
+#endif /* GL_ATI_map_object_buffer */ 
+
+#ifdef GL_ATI_separate_stencil
+glStencilOpSeparateATIPROC glStencilOpSeparateATI = NULL;
+glStencilFuncSeparateATIPROC glStencilFuncSeparateATI = NULL;
+#endif /* GL_ATI_separate_stencil */
+
+#ifdef GL_ATI_vertex_attrib_array_object
+glVertexAttribArrayObjectATIPROC glVertexAttribArrayObjectATI = NULL;
+glGetVertexAttribArrayObjectfvATIPROC glGetVertexAttribArrayObjectfvATI = NULL;
+glGetVertexAttribArrayObjectivATIPROC glGetVertexAttribArrayObjectivATI = NULL;
+#endif /* GL_ATI_vertex_attrib_array_object */
+
+#ifdef GL_EXT_blend_color
+glBlendColorEXTPROC glBlendColorEXT = NULL;
+#endif /* GL_EXT_blend_color */
+
+#ifdef GL_EXT_blend_minmax
+glBlendEquationEXTPROC glBlendEquationEXT = NULL;
+#endif /* GL_EXT_blend_minmax */
+
+#ifdef GL_ARB_vertex_buffer_object
+glBindBufferARBPROC glBindBufferARB = NULL;
+glDeleteBuffersARBPROC glDeleteBuffersARB = NULL;
+glGenBuffersARBPROC glGenBuffersARB = NULL;
+glIsBufferARBPROC glIsBufferARB = NULL;
+glBufferDataARBPROC glBufferDataARB = NULL;
+glBufferSubDataARBPROC glBufferSubDataARB = NULL;
+glGetBufferSubDataARBPROC glGetBufferSubDataARB = NULL;
+glMapBufferARBPROC glMapBufferARB = NULL;
+glUnmapBufferARBPROC glUnmapBufferARB = NULL;
+glGetBufferParameterivARBPROC glGetBufferParameterivARB = NULL;
+glGetBufferPointervARBPROC glGetBufferPointervARB = NULL;
+#endif /* GL_ARB_vertex_buffer_object */
+
+
+/* other definitions */
 static int extgl_error = 0;
 
 struct ExtensionTypes extgl_Extensions;
@@ -899,8 +992,8 @@ struct ExtensionTypes SupportedExtensions; /* deprecated, please do not use */
 
 void *extgl_GetProcAddress(char *name)
 {
-#ifdef _WIN32
-    void *t = wglGetProcAddress(name);
+#if defined(_WIN32) || defined(__CYGWIN__) || defined(__MINGW32__)
+    void *t = (void*)wglGetProcAddress(name);
     if (t == NULL)
     {
         extgl_error = 1;  
@@ -920,7 +1013,7 @@ void *extgl_GetProcAddress(char *name)
 /* WGL stuff */
 /*-----------------------------------------------------*/
 
-#ifdef _WIN32
+#if defined(_WIN32) || defined(__CYGWIN__) || defined(__MINGW32__)
 
 /** returns true if the extention is available */
 int QueryWGLExtension(const char *name)
@@ -1033,6 +1126,7 @@ void extgl_InitSupportedWGLExtensions()
     extgl_Extensions.wgl.ARB_pbuffer = QueryWGLExtension("WGL_ARB_pbuffer");
     extgl_Extensions.wgl.ARB_pixel_format = QueryWGLExtension("WGL_ARB_pixel_format");
     extgl_Extensions.wgl.ARB_render_texture = QueryWGLExtension("WGL_ARB_render_texture");
+    extgl_Extensions.wgl.ATI_pixel_format_float = QueryWGLExtension("WGL_ATI_pixel_format_float");
     extgl_Extensions.wgl.EXT_swap_control = QueryWGLExtension("WGL_EXT_swap_control");
     extgl_Extensions.wgl.NV_render_depth_texture = QueryWGLExtension("WGL_NV_render_depth_texture");
     extgl_Extensions.wgl.NV_render_texture_rectangle = QueryWGLExtension("WGL_NV_render_texture_rectangle");
@@ -1100,6 +1194,169 @@ int QueryExtension(const char *name)
         start = terminator;
     }
     return 0;
+}
+
+void extgl_InitARBVertexBufferObject()
+{
+#ifdef GL_ARB_vertex_buffer_object
+    if (!extgl_Extensions.ARB_vertex_buffer_object)
+        return;
+    glBindBufferARB = (glBindBufferARBPROC) extgl_GetProcAddress("glBindBufferARB");
+    glDeleteBuffersARB = (glDeleteBuffersARBPROC) extgl_GetProcAddress("glDeleteBuffersARB");
+    glGenBuffersARB = (glGenBuffersARBPROC) extgl_GetProcAddress("glGenBuffersARB");
+    glIsBufferARB = (glIsBufferARBPROC) extgl_GetProcAddress("glIsBufferARB");
+    glBufferDataARB = (glBufferDataARBPROC) extgl_GetProcAddress("glBufferDataARB");
+    glBufferSubDataARB = (glBufferSubDataARBPROC) extgl_GetProcAddress("glBufferSubDataARB");
+    glGetBufferSubDataARB = (glGetBufferSubDataARBPROC) extgl_GetProcAddress("glGetBufferSubDataARB");
+    glMapBufferARB = (glMapBufferARBPROC) extgl_GetProcAddress("glMapBufferARB");
+    glUnmapBufferARB = (glUnmapBufferARBPROC) extgl_GetProcAddress("glUnmapBufferARB");
+    glGetBufferParameterivARB = (glGetBufferParameterivARBPROC) extgl_GetProcAddress("glGetBufferParameterivARB");
+    glGetBufferPointervARB = (glGetBufferPointervARBPROC) extgl_GetProcAddress("glGetBufferPointervARB");
+#endif /* GL_ARB_vertex_buffer_object */
+}
+
+
+void extgl_InitEXTBlendMinmax()
+{
+#ifdef GL_EXT_blend_minmax
+    if (!extgl_Extensions.EXT_blend_minmax)
+        return;
+    glBlendEquationEXT = (glBlendEquationEXTPROC) extgl_GetProcAddress("glBlendEquationEXT");
+#endif /* GL_EXT_blend_minmax */
+}
+
+
+void extgl_InitEXTBlendColor()
+{
+#ifdef GL_EXT_blend_color
+    if (!extgl_Extensions.EXT_blend_color)
+        return;
+    glBlendColorEXT = (glBlendColorEXTPROC) extgl_GetProcAddress("glBlendColorEXT");
+#endif /* GL_EXT_blend_color */
+}
+
+void extgl_InitATIVertexAttribArrayObject()
+{
+#ifdef GL_ATI_vertex_attrib_array_object
+    if (!extgl_Extensions.ATI_vertex_attrib_array_object)
+        return;
+    glVertexAttribArrayObjectATI = (glVertexAttribArrayObjectATIPROC) extgl_GetProcAddress("glVertexAttribArrayObjectATI");
+    glGetVertexAttribArrayObjectfvATI = (glGetVertexAttribArrayObjectfvATIPROC) extgl_GetProcAddress("glGetVertexAttribArrayObjectfvATI");
+    glGetVertexAttribArrayObjectivATI = (glGetVertexAttribArrayObjectivATIPROC) extgl_GetProcAddress("glGetVertexAttribArrayObjectivATI");
+#endif /* GL_ATI_vertex_attrib_array_object */
+}
+
+void extgl_InitATISeparateStencil()
+{
+#ifdef GL_ATI_separate_stencil
+    if (!extgl_Extensions.ATI_separate_stencil)
+        return;
+    glStencilOpSeparateATI = (glStencilOpSeparateATIPROC) extgl_GetProcAddress("glStencilOpSeparateATI");
+    glStencilFuncSeparateATI = (glStencilFuncSeparateATIPROC) extgl_GetProcAddress("glStencilFuncSeparateATI");
+#endif /* GL_ATI_separate_stencil */
+}
+
+void extgl_InitATIMapObjectBuffer()
+{
+#ifdef GL_ATI_map_object_buffer
+    if (!extgl_Extensions.ATI_map_object_buffer)
+        return;
+    glMapObjectBufferATI = (glMapObjectBufferATIPROC) extgl_GetProcAddress("glMapObjectBufferATI");
+    glUnmapObjectBufferATI = (glUnmapObjectBufferATIPROC) extgl_GetProcAddress("glUnmapObjectBufferATI");
+#endif /* GL_ATI_map_object_buffer */
+}
+
+void extgl_InitNVPixelDataRange()
+{
+#ifdef GL_NV_pixel_data_range
+    if (!extgl_Extensions.NV_pixel_data_range)
+        return;
+    glPixelDataRangeNV = (glPixelDataRangeNVPROC) extgl_GetProcAddress("glPixelDataRangeNV");
+    glFlushPixelDataRangeNV = (glFlushPixelDataRangeNVPROC) extgl_GetProcAddress("glFlushPixelDataRangeNV");
+#endif /* GL_NV_pixel_data_range */
+}
+
+void extgl_InitNVHalfFloat()
+{
+#ifdef GL_NV_half_float
+    if (!extgl_Extensions.NV_half_float)
+        return;
+    glVertex2hNV = (glVertex2hNVPROC) extgl_GetProcAddress("glVertex2hNV");
+    glVertex2hvNV = (glVertex2hvNVPROC) extgl_GetProcAddress("glVertex2hvNV");
+    glVertex3hNV = (glVertex3hNVPROC) extgl_GetProcAddress("glVertex3hNV");
+    glVertex3hvNV = (glVertex3hvNVPROC) extgl_GetProcAddress("glVertex3hvNV");
+    glVertex4hNV = (glVertex4hNVPROC) extgl_GetProcAddress("glVertex4hNV");
+    glVertex4hvNV = (glVertex4hvNVPROC) extgl_GetProcAddress("glVertex4hvNV");
+    glNormal3hNV = (glNormal3hNVPROC) extgl_GetProcAddress("glNormal3hNV");
+    glNormal3hvNV = (glNormal3hvNVPROC) extgl_GetProcAddress("glNormal3hvNV");
+    glColor3hNV = (glColor3hNVPROC) extgl_GetProcAddress("glColor3hNV");
+    glColor3hvNV = (glColor3hvNVPROC) extgl_GetProcAddress("glColor3hvNV");
+    glColor4hNV = (glColor4hNVPROC) extgl_GetProcAddress("glColor4hNV");
+    glColor4hvNV = (glColor4hvNVPROC) extgl_GetProcAddress("glColor4hvNV");
+    glTexCoord1hNV = (glTexCoord1hNVPROC) extgl_GetProcAddress("glTexCoord1hNV");
+    glTexCoord1hvNV = (glTexCoord1hvNVPROC) extgl_GetProcAddress("glTexCoord1hvNV");
+    glTexCoord2hNV = (glTexCoord2hNVPROC) extgl_GetProcAddress("glTexCoord2hNV");
+    glTexCoord2hvNV = (glTexCoord2hvNVPROC) extgl_GetProcAddress("glTexCoord2hvNV");
+    glTexCoord3hNV = (glTexCoord3hNVPROC) extgl_GetProcAddress("glTexCoord3hNV");
+    glTexCoord3hvNV = (glTexCoord3hvNVPROC) extgl_GetProcAddress("glTexCoord3hvNV");
+    glTexCoord4hNV = (glTexCoord4hNVPROC) extgl_GetProcAddress("glTexCoord4hNV");
+    glTexCoord4hvNV = (glTexCoord4hvNVPROC) extgl_GetProcAddress("glTexCoord4hvNV");
+    
+    if ((extgl_Extensions.OpenGL13) || (extgl_Extensions.ARB_multitexture))
+    {
+        glMultiTexCoord1hNV = (glMultiTexCoord1hNVPROC) extgl_GetProcAddress("glMultiTexCoord1hNV");
+        glMultiTexCoord1hvNV = (glMultiTexCoord1hvNVPROC) extgl_GetProcAddress("glMultiTexCoord1hvNV");
+        glMultiTexCoord2hNV = (glMultiTexCoord2hNVPROC) extgl_GetProcAddress("glMultiTexCoord2hNV");
+        glMultiTexCoord2hvNV = (glMultiTexCoord2hvNVPROC) extgl_GetProcAddress("glMultiTexCoord2hvNV");
+        glMultiTexCoord3hNV = (glMultiTexCoord3hNVPROC) extgl_GetProcAddress("glMultiTexCoord3hNV");
+        glMultiTexCoord3hvNV = (glMultiTexCoord3hvNVPROC) extgl_GetProcAddress("glMultiTexCoord3hvNV");
+        glMultiTexCoord4hNV = (glMultiTexCoord4hNVPROC) extgl_GetProcAddress("glMultiTexCoord4hNV");
+        glMultiTexCoord4hvNV = (glMultiTexCoord4hvNVPROC) extgl_GetProcAddress("glMultiTexCoord4hvNV");
+    }
+    
+    if (extgl_Extensions.EXT_fog_coord)
+    {
+        glFogCoordhNV = (glFogCoordhNVPROC) extgl_GetProcAddress("glFogCoordhNV");
+        glFogCoordhvNV = (glFogCoordhvNVPROC) extgl_GetProcAddress("glFogCoordhvNV");
+    }
+    
+    if (extgl_Extensions.EXT_secondary_color)
+    {
+        glSecondaryColor3hNV = (glSecondaryColor3hNVPROC) extgl_GetProcAddress("glSecondaryColor3hNV");
+        glSecondaryColor3hvNV = (glSecondaryColor3hvNVPROC) extgl_GetProcAddress("glSecondaryColor3hvNV");
+    }
+    
+    if (extgl_Extensions.EXT_vertex_weighting)
+    {
+        glVertexWeighthNV = (glVertexWeighthNVPROC) extgl_GetProcAddress("glVertexWeighthNV");
+        glVertexWeighthvNV = (glVertexWeighthvNVPROC) extgl_GetProcAddress("glVertexWeighthvNV");
+    }
+    
+    if (extgl_Extensions.NV_vertex_program)
+    {
+        glVertexAttrib1hNV = (glVertexAttrib1hNVPROC) extgl_GetProcAddress("glVertexAttrib1hNV");
+        glVertexAttrib1hvNV = (glVertexAttrib1hvNVPROC) extgl_GetProcAddress("glVertexAttrib1hvNV");
+        glVertexAttrib2hNV = (glVertexAttrib2hNVPROC) extgl_GetProcAddress("glVertexAttrib2hNV");
+        glVertexAttrib2hvNV = (glVertexAttrib2hvNVPROC) extgl_GetProcAddress("glVertexAttrib2hvNV");
+        glVertexAttrib3hNV = (glVertexAttrib3hNVPROC) extgl_GetProcAddress("glVertexAttrib3hNV");
+        glVertexAttrib3hvNV = (glVertexAttrib3hvNVPROC) extgl_GetProcAddress("glVertexAttrib3hvNV");
+        glVertexAttrib4hNV = (glVertexAttrib4hNVPROC) extgl_GetProcAddress("glVertexAttrib4hNV");
+        glVertexAttrib4hvNV = (glVertexAttrib4hvNVPROC) extgl_GetProcAddress("glVertexAttrib4hvNV");
+        glVertexAttribs1hvNV = (glVertexAttribs1hvNVPROC) extgl_GetProcAddress("glVertexAttribs1hvNV");
+        glVertexAttribs2hvNV = (glVertexAttribs2hvNVPROC) extgl_GetProcAddress("glVertexAttribs2hvNV");
+        glVertexAttribs3hvNV = (glVertexAttribs3hvNVPROC) extgl_GetProcAddress("glVertexAttribs3hvNV");
+        glVertexAttribs4hvNV = (glVertexAttribs4hvNVPROC) extgl_GetProcAddress("glVertexAttribs4hvNV");
+    }
+#endif /* GL_NV_half_float */
+}
+
+void extgl_InitATIDrawBuffers()
+{
+#ifdef GL_ATI_draw_buffers
+    if (!extgl_Extensions.ATI_draw_buffers)
+        return;
+    glDrawBuffersATI = (glDrawBuffersATIPROC) extgl_GetProcAddress("glDrawBuffersATI");
+#endif /* GL_ATI_draw_buffers */
 }
 
 void extgl_InitARBFragmentProgram()
@@ -1731,7 +1988,7 @@ void extgl_InitNVVertexArrayRange()
         return;
     glFlushVertexArrayRangeNV = (glFlushVertexArrayRangeNVPROC) extgl_GetProcAddress("glFlushVertexArrayRangeNV");
     glVertexArrayRangeNV = (glVertexArrayRangeNVPROC) extgl_GetProcAddress("glVertexArrayRangeNV");
-#ifdef _WIN32
+#if defined(_WIN32) || defined(__CYGWIN__) || defined(__MINGW32__)
     wglAllocateMemoryNV = (wglAllocateMemoryNVPROC) extgl_GetProcAddress("wglAllocateMemoryNV");
     wglFreeMemoryNV = (wglFreeMemoryNVPROC) extgl_GetProcAddress("wglFreeMemoryNV");
 #else
@@ -1812,7 +2069,7 @@ void extgl_InitEXTDrawRangeElements()
 
 void extgl_InitARBMultitexture()
 {
-#ifdef _WIN32
+#if defined(_WIN32) || defined(__CYGWIN__) || defined(__MINGW32__)
 #ifdef GL_ARB_multitexture
     if (!extgl_Extensions.ARB_multitexture)
         return;
@@ -1860,7 +2117,7 @@ void extgl_InitARBMultitexture()
 
 void extgl_InitOpenGL1_2()
 {
-#ifdef _WIN32
+#if defined(_WIN32) || defined(__CYGWIN__) || defined(__MINGW32__)
 #ifdef GL_VERSION_1_2
     if (!extgl_Extensions.OpenGL12)
         return;
@@ -1874,7 +2131,7 @@ void extgl_InitOpenGL1_2()
 
 void extgl_InitARBImaging()
 {
-#ifdef _WIN32
+#if defined(_WIN32) || defined(__CYGWIN__) || defined(__MINGW32__)
 #ifdef GL_ARB_imaging
     if (!extgl_Extensions.ARB_imaging)
         return;
@@ -1918,7 +2175,7 @@ void extgl_InitARBImaging()
 
 void extgl_InitOpenGL1_3()
 {
-#ifdef _WIN32
+#if defined(_WIN32) || defined(__CYGWIN__) || defined(__MINGW32__)
 #ifdef GL_VERSION_1_3
     if (!extgl_Extensions.OpenGL13)
         return;
@@ -1980,7 +2237,7 @@ void extgl_InitOpenGL1_3()
 
 void extgl_InitOpenGL1_4()
 {
-#ifdef _WIN32
+#if defined(_WIN32) || defined(__CYGWIN__) || defined(__MINGW32__)
 #ifdef GL_VERSION_1_4
     if (!extgl_Extensions.OpenGL14)
         return;
@@ -2036,6 +2293,7 @@ void extgl_InitOpenGL1_4()
 void extgl_InitSupportedExtensions()
 {
     char *s = (char*) glGetString(GL_VERSION);
+    extgl_ExtString[0] = 0;
     if (!s)
         return;
     s = strstr(s, "1.");
@@ -2086,11 +2344,15 @@ void extgl_InitSupportedExtensions()
     extgl_Extensions.ARB_texture_mirrored_repeat = QueryExtension("GL_ARB_texture_mirrored_repeat");
     extgl_Extensions.ARB_transpose_matrix = QueryExtension("GL_ARB_transpose_matrix");
     extgl_Extensions.ARB_vertex_blend = QueryExtension("GL_ARB_vertex_blend");
+    extgl_Extensions.ARB_vertex_buffer_object = QueryExtension("GL_ARB_vertex_buffer_object");
     extgl_Extensions.ARB_vertex_program = QueryExtension("GL_ARB_vertex_program");
     extgl_Extensions.ARB_window_pos = QueryExtension("GL_ARB_window_pos");
     extgl_Extensions.EXT_abgr = QueryExtension("GL_EXT_abgr");
     extgl_Extensions.EXT_bgra = QueryExtension("GL_EXT_bgra");
+    extgl_Extensions.EXT_blend_color = QueryExtension("GL_EXT_blend_color");
     extgl_Extensions.EXT_blend_func_separate = QueryExtension("GL_EXT_blend_func_separate");
+    extgl_Extensions.EXT_blend_minmax = QueryExtension("GL_EXT_blend_minmax");
+    extgl_Extensions.EXT_blend_subtract = QueryExtension("GL_EXT_blend_subtract");
     extgl_Extensions.EXT_compiled_vertex_array = QueryExtension("GL_EXT_compiled_vertex_array");
     extgl_Extensions.EXT_cull_vertex = QueryExtension("GL_EXT_cull_vertex");
     extgl_Extensions.EXT_draw_range_elements = QueryExtension("GL_EXT_draw_range_elements");
@@ -2108,14 +2370,20 @@ void extgl_InitSupportedExtensions()
     extgl_Extensions.EXT_texture_lod_bias = QueryExtension("GL_EXT_texture_lod_bias");
     extgl_Extensions.EXT_vertex_shader = QueryExtension("GL_EXT_vertex_shader");
     extgl_Extensions.EXT_vertex_weighting = QueryExtension("GL_EXT_vertex_weighting");
+    extgl_Extensions.ATI_draw_buffers = QueryExtension("GL_ATI_draw_buffers");
     extgl_Extensions.ATI_element_array = QueryExtension("GL_ATI_element_array");
     extgl_Extensions.ATI_envmap_bumpmap = QueryExtension("GL_ATI_envmap_bumpmap");
     extgl_Extensions.ATI_fragment_shader = QueryExtension("GL_ATI_fragment_shader");
+    extgl_Extensions.ATI_map_object_buffer = QueryExtension("GL_ATI_map_object_buffer");
     extgl_Extensions.ATI_pn_triangles = QueryExtension("GL_ATI_pn_triangles");
     extgl_Extensions.ATI_point_cull_mode = QueryExtension("GL_ATI_point_cull_mode");
+    extgl_Extensions.ATI_separate_stencil = QueryExtension("GL_ATI_separate_stencil");
     extgl_Extensions.ATI_text_fragment_shader = QueryExtension("GL_ATI_text_fragment_shader");
+    extgl_Extensions.ATI_texture_env_combine3 = QueryExtension("GL_ATI_texture_env_combine3");
+    extgl_Extensions.ATI_texture_float = QueryExtension("GL_ATI_texture_float");
     extgl_Extensions.ATI_texture_mirror_once = QueryExtension("GL_ATI_texture_mirror_once");
     extgl_Extensions.ATI_vertex_array_object = QueryExtension("GL_ATI_vertex_array_object");
+    extgl_Extensions.ATI_vertex_attrib_array_object = QueryExtension("GL_ATI_vertex_attrib_array_object");
     extgl_Extensions.ATI_vertex_streams = QueryExtension("GL_ATI_vertex_streams");
     extgl_Extensions.ATIX_point_sprites = QueryExtension("GL_ATIX_point_sprites");
     extgl_Extensions.ATIX_texture_env_route = QueryExtension("GL_ATIX_texture_env_route");
@@ -2129,15 +2397,18 @@ void extgl_InitSupportedExtensions()
     extgl_Extensions.NV_float_buffer = QueryExtension("GL_NV_float_buffer");
     extgl_Extensions.NV_fog_distance = QueryExtension("GL_NV_fog_distance");
     extgl_Extensions.NV_fragment_program = QueryExtension("GL_NV_fragment_program");
+    extgl_Extensions.NV_half_float = QueryExtension("GL_NV_half_float");
     extgl_Extensions.NV_light_max_exponent = QueryExtension("GL_NV_light_max_exponent");
     extgl_Extensions.NV_occlusion_query = QueryExtension("GL_NV_occlusion_query");
     extgl_Extensions.NV_packed_depth_stencil = QueryExtension("GL_NV_packed_depth_stencil");
+    extgl_Extensions.NV_pixel_data_range = QueryExtension("GL_NV_pixel_data_range");
     extgl_Extensions.NV_point_sprite = QueryExtension("GL_NV_point_sprite");
     extgl_Extensions.NV_primitive_restart = QueryExtension("GL_NV_primitive_restart");
     extgl_Extensions.NV_register_combiners = QueryExtension("GL_NV_register_combiners");
     extgl_Extensions.NV_register_combiners2 = QueryExtension("GL_NV_register_combiners2");
     extgl_Extensions.NV_texgen_reflection = QueryExtension("GL_NV_texgen_reflection");
     extgl_Extensions.NV_texture_env_combine4 = QueryExtension("GL_NV_texture_env_combine4");
+    extgl_Extensions.NV_texture_expand_normal = QueryExtension("GL_NV_texture_expand_normal");
     extgl_Extensions.NV_texture_rectangle = QueryExtension("GL_NV_texture_rectangle");
     extgl_Extensions.NV_texture_shader = QueryExtension("GL_NV_texture_shader");
     extgl_Extensions.NV_texture_shader2 = QueryExtension("GL_NV_texture_shader2");
@@ -2161,44 +2432,53 @@ int extgl_Initialize()
     extgl_InitSupportedExtensions();
     
     /* first load the etensions */
-    extgl_InitARBTransposeMatrix();
-    extgl_InitARBMultisample();
-    extgl_InitEXTCompiledVertexArray();
-    extgl_InitEXTSecondaryColor();
-    extgl_InitEXTFogCoord();
-    extgl_InitNVVertexArrayRange();
-    extgl_InitEXTPointParameters();
-    extgl_InitNVRegisterCombiners();
-    extgl_InitEXTVertexWeighting();
-    extgl_InitNVVertexProgram();
-    extgl_InitNVFence();
-    extgl_InitNVRegisterCombiners2();
-    extgl_InitATIPNTriangles();
-    extgl_InitARBPointParameters();
-    extgl_InitARBVertexBlend();
-    extgl_InitEXTMultiDrawArrays();
+    extgl_InitARBFragmentProgram();
+    extgl_InitARBImaging();
     extgl_InitARBMatrixPalette();
+    extgl_InitARBMultisample();
+    extgl_InitARBMultitexture();
+    extgl_InitARBPointParameters();
+    extgl_InitARBTextureCompression();
+    extgl_InitARBTransposeMatrix();
+    extgl_InitARBVertexBlend();
+    extgl_InitARBVertexBufferObject();
+    extgl_InitARBVertexProgram();
+    extgl_InitARBWindowPos();
+    extgl_InitEXTBlendColor();
+    extgl_InitEXTBlendFuncSeparate();
+    extgl_InitEXTBlendMinmax();
+    extgl_InitEXTCompiledVertexArray();
+    extgl_InitEXTCullVertex();
+    extgl_InitEXTDrawRangeElements();
+    extgl_InitEXTFogCoord();
+    extgl_InitEXTMultiDrawArrays();
+    extgl_InitEXTPointParameters();
+    extgl_InitEXTSecondaryColor();
+    extgl_InitEXTStencilTwoSide();
     extgl_InitEXTVertexShader();
+    extgl_InitEXTVertexWeighting();
+    extgl_InitATIDrawBuffers();
+    extgl_InitATIElementArray();
     extgl_InitATIEnvmapBumpmap();
     extgl_InitATIFragmentShader();
-    extgl_InitATIElementArray();
-    extgl_InitATIVertexStreams();
+    extgl_InitATIMapObjectBuffer();
+    extgl_InitATIPNTriangles();
+    extgl_InitATISeparateStencil();
     extgl_InitATIVertexArrayObject();
-    extgl_InitNVOcclusionQuery();
-    extgl_InitNVPointSprite();
-    extgl_InitARBWindowPos();
-    extgl_InitARBTextureCompression();
-    extgl_InitEXTDrawRangeElements();
-    extgl_InitEXTStencilTwoSide();
-    extgl_InitARBVertexProgram();
-    extgl_InitEXTCullVertex();
-    extgl_InitEXTBlendFuncSeparate();
-    extgl_InitARBImaging();
-    extgl_InitARBMultitexture();
+    extgl_InitATIVertexAttribArrayObject();
+    extgl_InitATIVertexStreams();
     extgl_InitNVElementArray();
+    extgl_InitNVFence();
     extgl_InitNVFragmentProgram();
+    extgl_InitNVOcclusionQuery();
+    extgl_InitNVPixelDataRange();
+    extgl_InitNVPointSprite();
     extgl_InitNVPrimitiveRestart();
-    extgl_InitARBFragmentProgram();
+    extgl_InitNVRegisterCombiners();
+    extgl_InitNVRegisterCombiners2();
+    extgl_InitNVVertexArrayRange();
+    extgl_InitNVVertexProgram();
+    extgl_InitNVHalfFloat();
     
    /* now load core opengl */
     extgl_InitOpenGL1_2();
@@ -2206,7 +2486,7 @@ int extgl_Initialize()
     extgl_InitOpenGL1_4();
 
     /* load WGL extensions */
-#ifdef _WIN32
+#if defined(_WIN32) || defined(__CYGWIN__) || defined(__MINGW32__)
     extgl_InitializeWGL();
 #endif
 

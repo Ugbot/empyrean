@@ -7,10 +7,10 @@
 
 #include <cal3d/cal3d.h>
 
-#include "extgl.h"
 #include "Model.h"
-#include "ResourceManager.h"
+#include "OpenGL.h"
 #include "Profiler.h"
+#include "ResourceManager.h"
 #include "Utility.h"
 #include "Types.h"
 

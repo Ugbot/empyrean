@@ -1,7 +1,7 @@
-#include "extgl.h"
 #include "GameState.h"
 #include "IntroState.h"
 #include "MenuState.h"
+#include "OpenGL.h"
 #include "Texture.h"
 
 

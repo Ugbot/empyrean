@@ -3,7 +3,7 @@
 
 
 #include <gmtl/Vec.h>
-#include "extgl.h"
+#include "OpenGL.h"
 
 
 namespace pyr {

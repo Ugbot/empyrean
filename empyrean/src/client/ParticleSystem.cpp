@@ -1,9 +1,8 @@
 #include <gmtl/VecOps.h>
-
-#include "extgl.h"
+#include "OpenGL.h"
 #include "ParticleSystem.h"
-#include "Texture.h"
 #include "Profiler.h"
+#include "Texture.h"
 
 namespace pyr {
     ParticleSystem::Particle::Particle(

@@ -1,6 +1,8 @@
 import sys
 import os
 import string
+import SCons.Errors
+
 
 Default('build')
 
@@ -11,8 +13,8 @@ def ParseConfig(env, command, options):
     # Run the command
     where = WhereIs(command)
     if not where:
-        print '%s not found in PATH' % command
-        sys.exit(-1)
+        print "Looked for " + str(command) + " but could not find it in PATH"
+        raise SCons.Errors.UserError, ('%s not found in PATH' % command)
     print "Found " + str(command) + ": " + where
     cmd = where + ' ' + string.join(options)
     params = string.split(os.popen(cmd).read())
@@ -52,11 +54,14 @@ def SetupGL(env):
         env.Append(LIBS = ['GLU', 'GL'])
 
 def SetupNSPR(env):
-    # @todo  make it only include /usr/mozilla...  on debian
-    #        check uname's output?
-    env.Append(
-        CPPPATH = ['/usr/include/mozilla/nspr', '/usr/include/nspr'],
-        LIBS = ['nspr4'])
+    try:
+        ParseConfig(env, 'nspr-config', Split('--cflags --libs'))
+    except SCons.Errors.UserError, e:
+        # @todo  make it only include /usr/mozilla...  on debian
+        #        check uname's output?
+        env.Append(
+            CPPPATH = ['/usr/include/mozilla/nspr', '/usr/include/nspr'],
+            LIBS = ['nspr4'])
 
 def SetupSDL(env):
     if sys.platform == 'cygwin':

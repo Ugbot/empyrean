@@ -7,7 +7,9 @@
 #include <SDL.h>
 #include "Application.h"
 #include "Error.h"
+#ifdef PYR_USE_EXTGL
 #include "extgl.h"
+#endif
 #include "InputManager.h"
 #include "Profiler.h"
 #include "SDLUtility.h"
@@ -47,9 +49,11 @@ namespace pyr {
             throwSDLError("Setting video mode failed");
         }
 
+#ifdef PYR_USE_EXTGL
         if (extgl_Initialize() != 0) {
             throw std::runtime_error("extgl_Initialize() failed");
         }
+#endif
 
         SDL_WM_SetCaption("Empyrean", 0);
         

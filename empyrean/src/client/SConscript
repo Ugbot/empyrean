@@ -20,16 +20,15 @@ SOURCES = [
     'Scene.cpp',
     'SDLUtility.cpp',
     'ServerConnection.cpp',
-    'Texture.cpp',
-    'extgl.c']
+    'Texture.cpp']
+
+# if using extgl...
+# SOURCES.append('extgl.c')
 
 env = base_env.Copy()
-SetupCal3D(env)
-SetupCorona(env)
-SetupFreeType(env)
-SetupNSPR(env)
-SetupSDL(env)
-SetupGL(env)
+tools = [SetupCal3D, SetupCorona, SetupFreeType, SetupNSPR, SetupSDL, SetupGL]
+for t in tools:
+    t(env)
 
 env.Prepend(LIBS = ['base'])
 

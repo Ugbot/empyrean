@@ -2,8 +2,8 @@
 #include <sstream>
 
 #include "Application.h"
-#include "extgl.h"
 #include "GameState.h"
+#include "OpenGL.h"
 #include "Profiler.h"
 #include "NSPRUtility.h"
 #include "Font.h"

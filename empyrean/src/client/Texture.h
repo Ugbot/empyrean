@@ -2,7 +2,7 @@
 #define PYR_TEXTURE_H
 
 #include <string>
-#include "extgl.h"
+#include "OpenGL.h"
 #include "Types.h"
 
 namespace pyr {

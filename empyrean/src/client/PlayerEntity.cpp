@@ -2,10 +2,10 @@
 #include <gmtl/VecOps.h>
 #include <cal3d/cal3d.h>
 
-#include "extgl.h"
 #include "Input.h"
 #include "InputManager.h"
 #include "Model.h"
+#include "OpenGL.h"
 #include "PlayerEntity.h"
 #include "Renderer.h"
 #include "ResourceManager.h"

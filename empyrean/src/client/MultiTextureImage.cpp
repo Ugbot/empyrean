@@ -1,7 +1,6 @@
-
-#include "extgl.h"
-#include "MultiTextureImage.h"
 #include "Canvas.h"
+#include "MultiTextureImage.h"
+#include "OpenGL.h"
 
 namespace {
 

@@ -4,13 +4,13 @@
 #include <gmtl/Matrix.h>
 #include <gmtl/VecOps.h>
 #include <gmtl/Xforms.h>
-#include "extgl.h"
-#include "Renderer.h"
+#include "Debug.h"
 #include "Model.h"
+#include "OpenGL.h"
+#include "Profiler.h"
+#include "Renderer.h"
 #include "Texture.h"
 #include "Types.h"
-#include "Debug.h"
-#include "Profiler.h"
 
 namespace {
     using namespace pyr;
@@ -324,9 +324,11 @@ namespace pyr {
     }
 
     CellShadeRenderer::CellShadeRenderer() {
+#if !defined(GL_ARB_multitexture) && defined(PYR_USE_EXTGL)
         if (!extgl_Extensions.ARB_multitexture) {
             throw std::runtime_error("Multitexturing required for cell shading");
         }
+#endif
         
         _useVertexArrays=false;
     }
