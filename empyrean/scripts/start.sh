@@ -1,6 +1,6 @@
 #!/bin/sh
 cd `dirname "$0"`/..
-build/server &
+(GMON_OUT_PREFIX=server.profile build/server) &
 sleep 1  # We want the client to appear on top.
-nice -n 1 build/client &
+(GMON_OUT_PREFIX=client.profile nice -n 1 build/client) &
 wait

@@ -19,6 +19,7 @@ opts.AddOptions(
     BoolOption('dbg',     'Build with debugging enabled', 0),
     BoolOption('opt',     'Build with optimizations', 0),
     BoolOption('profile', 'Build with profiling information', 0),
+    BoolOption('strip',   'Strip symbols from executables', 0),
     BoolOption('distcc',  'Enable compiling with distcc', 0),
     BoolOption('nowarn',  'Disable all warnings', 0),
     BoolOption('warningsAsErrors', 'Treat warnings as errors', 0),
@@ -68,11 +69,15 @@ if env['CXX'][:3] == 'g++' and env.WhereIs('objcopy'):
 
 # Process build options.
 if env.get('dbg'):
-    env.Append(CCFLAGS=['-g'], CPPDEFINES=['DEBUG'])
+    env.Append(CCFLAGS=['-g'])
+    if not env.get('opt'):
+        env.Append(CPPDEFINES=['DEBUG'])
 if env.get('opt'):
-    env.Append(CCFLAGS=['-O2'], LINKFLAGS=['-s'], CPPDEFINES=['NDEBUG'])
+    env.Append(CCFLAGS=['-O2'], CPPDEFINES=['NDEBUG'])
 if env.get('profile'):
     env.Append(CCFLAGS=['-pg'], LINKFLAGS=['-pg'])
+if env.get('strip'):
+    env.Append(LINKFLAGS=['-g'])
 if env.get('distcc'):
     env['CC']  = ['$(', 'distcc', '$)', env['CC']]
     env['CXX'] = ['$(', 'distcc', '$)', env['CXX']]

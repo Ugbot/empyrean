@@ -61,6 +61,8 @@ namespace pyr {
                 case CURRENT: origin = SEEK_CUR; break;
                 case END:     origin = SEEK_END; break;
                 default:      PYR_ASSERT(false, "Invalid From value given to CFile::setPosition");
+                              origin = SEEK_SET;  // Bullet-proof.
+                              break;
             }
             int result = fseek(_handle, static_cast<long>(position), origin);
             return result == 0;
