@@ -33,15 +33,10 @@ namespace pyr {
         virtual void update(float dt);
 
     private:
-        void walkState(float dt);
-        void standState(float dt);
-        void runState(float dt);
+        typedef void (PlayerEntity::*StateHandler)(double dt);
+        StateHandler _state;
 
-        typedef void (PlayerEntity::*StateHandler)(float);
-        StateHandler _stateFn;
-        int _state;
-
-        void changeState(StateHandler fn);
+        void changeState(StateHandler* newstate);
 
         // These are aggregates.  We don't clean up.
         Model* _model;
@@ -54,6 +49,12 @@ namespace pyr {
         Input* _inputRun;
 
         float _direction;
+
+        void startWalkState();
+        void updateWalkState(double dt);
+
+        void startStandState();
+        void updateStandState(double dt);
     };
 
 }
