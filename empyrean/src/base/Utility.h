@@ -2,6 +2,7 @@
 #define PYR_UTILITY_H
 
 
+#include <typeinfo>
 #include <vector>
 #include "Debug.h"
 #include "Types.h"
@@ -124,21 +125,41 @@ namespace pyr {
     };
     
 
+    template<typename T, typename U>
+    bool check_type(U* u) {
+        return (!u || dynamic_cast<T>(u) ? true : false);
+    }
+
+    template<typename T, typename U>
+    bool check_type_ref(U& u) {
+        try {
+            dynamic_cast<T>(u);
+            return true;
+        }
+        catch (const std::bad_cast&) {
+        }
+        return false;
+    }
+
     /**
-     * Same as static_cast, except does some type checking (ideally only
-     * in debug builds).  This only works for classes, not native types.
+     * Same as static_cast, except does some type checking in debug
+     * builds.
+     * @{
      */
     template<typename T, typename U>
-    T checked_cast(U u) {
-        // Null pointers should not raise an assertion.
-        if (!u) {
-            return 0;
-        }
-        
-        T t = dynamic_cast<T>(u);
-        PYR_ASSERT(t, "checked_cast failed");
-        return t;
+    T checked_cast(U* u) {
+        PYR_ASSERT(!u || dynamic_cast<T>(u), "checked_cast failed.");
+        return static_cast<T>(u);
     }
+
+    template<typename T, typename U>
+    T checked_cast_ref(U& u) {
+        PYR_ASSERT((check_type<T, U>(u)), "checked_cast failed.");
+        return static_cast<T>(u);
+    }
+    /**
+     * @}
+     */
 
 
     // These are perfect candidates for unit tests.
