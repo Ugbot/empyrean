@@ -14,6 +14,16 @@ namespace pyr {
         const float GRAVITY = -9.81f;         // Meters per second per second.
     }
 
+    namespace collision {
+        const int FALLING_SPEED = 0;
+        const int REGION_UNASSIGNED = -1;
+        const float REGION_RADIUS = 2;
+        const int REGION_END = -2;
+    
+        enum COLLISION_TYPE {
+            GROUND_BELOW,GROUND_ABOVE, GROUND_HORIZ, ENTITY_ABOVE, ENTITY_BELOW, ENTITY_HORIZ, NONE 
+        };
+    }
 }
 
 #endif

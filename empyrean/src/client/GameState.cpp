@@ -156,7 +156,7 @@ namespace pyr {
         
         // attack!
         if (_inputJoyAttack->getDelta() > gmtl::GMTL_EPSILON) {
-            sc.sendEvent("Attack");
+            sc.sendAttack("Attack");
         }
 
         // Start

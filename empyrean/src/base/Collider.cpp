@@ -84,17 +84,9 @@ namespace pyr {
         float _plane;
     };
 
-    namespace collision {
-        const int FALLING_SPEED = 0;
-        const int REGION_UNASSIGNED = -1;
-        const float REGION_RADIUS = 2;
-        const int REGION_END = -2;
-    }
-
     struct CollisionRegion {
         std::vector<int> indici;
     };
-
 
     //CollisionData collideWithWorld(float dt, const Vec2f& origPos, Vec2f& newPos, 
     //                               Vec2f& vel, const BoundingRectangle& bounds, const Map* terrain) {
@@ -110,9 +102,9 @@ namespace pyr {
         CollisionData rv;
         newBox.getIntersectingSegs(rv.interesting, segs);
 
-        newBox.collideWithStationary(dt,ent->getVel(),rv.interesting, rv.points);
+        collision::COLLISION_TYPE result = newBox.collideWithStationary(dt,ent->getVel(),rv.interesting, rv.points);
         
-        if(gmtl::length(newBox.getDisplacement()) > 0) {
+        if(result == collision::GROUND_BELOW) {        
             Behavior* beh = ent->getBehavior();
             PlayerBehavior* pb = dynamic_cast<PlayerBehavior*>(beh);
             if(pb) {

@@ -1,6 +1,7 @@
 #ifndef PYR_COLLISION_BOX_H
 #define PYR_COLLISION_BOX_H
 
+#include "Constants.h"
 #include "VecMath.h"
 
 namespace pyr {
@@ -30,10 +31,10 @@ namespace pyr {
         void getIntersectingSegs(std::vector<Segment>& interestingSegs,
                                  const std::vector<Segment>& segs);
         
-        void collideWithDynamic(float dt, Vec2f& vel, Vec2f& vel2, CollisionBox& box2,
+        collision::COLLISION_TYPE collideWithDynamic(float dt, Vec2f& vel, Vec2f& vel2, CollisionBox& box2,
                               std::vector<Vec2f>& points);
 
-        void collideWithStationary(float dt, Vec2f& vel, const std::vector<Segment>& segs,
+        collision::COLLISION_TYPE collideWithStationary(float dt, Vec2f& vel, const std::vector<Segment>& segs,
                               std::vector<Vec2f>& points);
 
         bool findCollision(std::vector<Side>& sides, CollisionBox& otherBox, std::vector<Vec2f>& points); 

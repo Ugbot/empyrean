@@ -53,7 +53,7 @@ namespace pyr {
 
     void PlayerBehavior::handleEvent(Entity* entity, const std::string& event) {
         const float jumpSpeed = 8;
-        const float speed = 3;
+        const float speed = 2;
        
         if (event == "Begin Right") {
             _desiredVelocity = speed;

@@ -107,12 +107,12 @@ namespace pyr {
         return false;
     }
 
-    void CollisionBox::collideWithDynamic(float dt, Vec2f& vel, Vec2f& vel2, CollisionBox& box2,
+    collision::COLLISION_TYPE CollisionBox::collideWithDynamic(float dt, Vec2f& vel, Vec2f& vel2, CollisionBox& box2,
                                         std::vector<Vec2f>& points) {
 
         // Test to see if they are going away from each other if they are.. stop
         if(!goingTowards(vel,this->getCenter(),box2.getCenter()) && !goingTowards(vel,this->getCenter(),box2.getCenter())) {
-            return;
+            return collision::NONE;
         }
 
         // Find which sides on box one are intersecting segments of box two
@@ -127,8 +127,8 @@ namespace pyr {
 
         // Hitting on a vertex of the boxes is not a collision (for now)
         if(points.size() < 2) {
-            return;
-        }
+            return collision::NONE;
+        } 
 
         Vec2f collisionVec =  _center - box2.getCenter();
         Vec2f xAxis(1,0);
@@ -162,24 +162,18 @@ namespace pyr {
         vel = axisRotMat * Vec2f(x[0],velBox1PreCol[1]);
         vel2 = axisRotMat * Vec2f(x[1],velBox2PreCol[1]);
         
-        // Find the two verticis that are inside the other boxes
-        Vec2f dispVert1 = this->findInsideVertex(sidesHitBox1);
-        Vec2f dispVert2 = box2.findInsideVertex(sidesHitBox2);
-
-        // Find the vector between these two inside vertici
-        Vec2f dispVector = dispVert1 - dispVert2;
-        if(dispVector[0] < dispVector[1]) {
-            dispVector[1] = 0;
+        if(abs(this->getCenter()[1] - box2.getCenter()[1]) < 0.5) {
+            return collision::ENTITY_HORIZ;
+        }
+        else if(this->getCenter()[1] > box2.getCenter()[1]) {
+            return collision::ENTITY_ABOVE;
         }
         else {
-            dispVector[0] = 0;
+            return collision::ENTITY_BELOW;
         }
-
-        this->setDisplacement(-dispVector/2.0f);
-        box2.setDisplacement(dispVector/2.0f);
     }
 
-    void CollisionBox::collideWithStationary(float dt, Vec2f& vel, const std::vector<Segment>& segs,
+   collision::COLLISION_TYPE CollisionBox::collideWithStationary(float dt, Vec2f& vel, const std::vector<Segment>& segs,
                                         std::vector<Vec2f>& points) {
         for(size_t i = 0; i<segs.size(); ++i) {
             if(segmentInside(segs[i])) {
@@ -192,7 +186,7 @@ namespace pyr {
         }
 
         if(points.empty()) {
-            return;
+            return collision::NONE;
         }
 
         float maxY = points[0][1];
@@ -221,29 +215,34 @@ namespace pyr {
             if(maxY > (_verts[2][1] + _verts[0][1])/2.0 && minY < (_verts[2][1] + _verts[0][1])/2.0) {
                 if(vel[0] > 0) {
                     vel[0] = 0;
-                    return setDisplacement(Vec2f(minX-_verts[2][0],0));
+                    setDisplacement(Vec2f(minX-_verts[2][0],0));
+                    return collision::GROUND_HORIZ;
                 }
                 else {
                     vel[0] = 0;
-                    return setDisplacement(Vec2f(maxX-_verts[0][0],0));
+                    setDisplacement(Vec2f(maxX-_verts[0][0],0));
+                    return collision::GROUND_HORIZ;
                 }
             }
             else if(maxY > (_verts[2][1] + _verts[0][1])/2.0f) {
                 vel[1] = dt * constants::GRAVITY; // To make the person start to fall down again.  
                 vel[0] = 0;
-                return setDisplacement(Vec2f(0,minY-_verts[2][1]));
+                setDisplacement(Vec2f(0,minY-_verts[2][1]));
+                return collision::GROUND_ABOVE;
             }
             else {
                 vel[1] = 0;          
-                return setDisplacement(Vec2f(0,maxY-_verts[0][1]));
+                setDisplacement(Vec2f(0,maxY-_verts[0][1]));
+                return collision::GROUND_BELOW;
             }
 
-            return;
+            return collision::NONE;
         }
         else {
             // high speed crashing into earth collision
             vel[1] = 0;
-            return setDisplacement(Vec2f(0,maxY-_verts[0][1]));
+            setDisplacement(Vec2f(0,maxY-_verts[0][1]));
+            return collision::GROUND_BELOW;
         }
 
     }
