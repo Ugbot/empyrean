@@ -19,7 +19,6 @@ SOURCES = Split("""
     ParticleEmitter.cpp
     ParticleSystem.cpp
     Player.cpp
-    Profiler.cpp
     Renderer.cpp
     Scene.cpp
     SDLUtility.cpp

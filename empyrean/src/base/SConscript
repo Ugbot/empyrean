@@ -25,6 +25,7 @@ SOURCES = Split("""
     PlanarMap.cpp
     Platform.cpp
     PlayerBehavior.cpp
+    Profiler.cpp
     ReaderThread.cpp
     ResourceManager.cpp
     ServerSocket.cpp
