@@ -68,6 +68,7 @@ namespace pyr {
                       const std::string& password,
                       bool newGame);
         bool sendEvent(const std::string& event);
+        bool sendAttack(const std::string& attack);
         bool sendHUDUpdate(Packet* p) { return sendPacket(p); }
 
     private:

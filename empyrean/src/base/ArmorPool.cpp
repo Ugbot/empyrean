@@ -56,5 +56,6 @@ namespace pyr {
         ADD_ARMOR("Scale Mail",6,1,"ScaleMail.flt")
         ADD_ARMOR("Chain Mail",8,1,"ChainMail.flt")
         ADD_ARMOR("Full Plate",10,2,"FullPlate.flt")
+        ADD_ARMOR("Scales",3,1,"PartOfMonster")
      }
 }

@@ -18,6 +18,14 @@ namespace pyr {
             max[1] = std::max(p1[1], p2[1]);
         }
 
+        float getHeight() const {
+            return max[1] - min[1];
+        }
+                
+        float getWidth() const {
+            return max[0] - min[0];
+        }
+
         Vec2f min;
         Vec2f max;
     };

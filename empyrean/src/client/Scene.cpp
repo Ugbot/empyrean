@@ -30,7 +30,7 @@ namespace pyr {
         }
     }
     
-    void Scene::draw() {
+    void Scene::draw(gltext::FontRendererPtr rend) {
         // Nominal viewport is 12 meters wide and 9 meters high.
         const float width = 12.0f;
         const float height = 9.0f;
@@ -77,7 +77,7 @@ namespace pyr {
             ClientEntity* e = itr->second;
             glPushMatrix();
             glTranslate(e->getPos());
-            e->draw();
+            e->draw(rend);
             glPopMatrix();
         }
     }
@@ -121,6 +121,11 @@ namespace pyr {
     ClientEntity* Scene::getEntity(u16 id) const {
         EntityMap::const_iterator i = _entities.find(id);
         return (i == _entities.end() ? 0 : i->second);
+    }
+
+    void Scene::clear() {
+        _focus = 0;
+        _entities.clear();
     }
     
     void Scene::setFocus(u16 id) {

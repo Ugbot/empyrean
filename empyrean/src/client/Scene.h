@@ -4,6 +4,7 @@
 
 #include <map>
 #include <memory>
+#include <gltext.h>
 #include "Map.h"
 #include "ScopedPtr.h"
 #include "Singleton.h"
@@ -23,7 +24,7 @@ namespace pyr {
         ~Scene();
         
     public:
-        void draw();
+        void draw(gltext::FontRendererPtr rend);
         void update(float dt);
         
         /** The scene takes ownership of entities that are given to it,
@@ -31,6 +32,8 @@ namespace pyr {
         void addEntity(u16 id, ClientEntity* entity);
         void removeEntity(u16 id);
         ClientEntity* getEntity(u16 id) const;
+
+        void clear();
         
         void setFocus(u16 id);
         ClientEntity* getFocus() const;

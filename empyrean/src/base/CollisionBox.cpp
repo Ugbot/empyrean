@@ -52,7 +52,7 @@ namespace pyr {
         }
     }
     
-    Vec2f CollisionBox::findInsideVertex(Side* hitlist) {
+    Vec2f CollisionBox::findInsideVertex(std::vector<Side>& hitlist) {
         // Find Vertex of my box that is in box 2
         Vec2f insideVertex;
         if(hitlist[0] == BOTTOM || hitlist[1] == BOTTOM) {
@@ -78,6 +78,26 @@ namespace pyr {
         return invmat;
     }
 
+    bool CollisionBox::findCollision(std::vector<Side>& sides, CollisionBox& otherBox, std::vector<Vec2f>& points) {
+        sides.clear();
+
+        // Get the segments box two
+        std::vector<Segment> segs;
+        otherBox.segment(segs);
+
+        // Find which sides on box one are intersecting segments of box two 
+        Side hit;
+        for(size_t i = 0; i<segs.size(); ++i) {
+            // Normal Interesection
+            hit = pointIntersect(points,segs[i]);
+            if(hit != NONE) {
+                sides.push_back(hit);
+            }
+        }
+
+        return sides.size() > 0;
+    }
+
     bool goingTowards(Vec2f& vel, Vec2f& pos, Vec2f& secPos) {
         Vec2f posVec = secPos - pos;
         float dotprod = gmtl::dot(posVec, vel);
@@ -95,38 +115,16 @@ namespace pyr {
             return;
         }
 
-        // Get the segments box two
-        std::vector<Segment> segs;
-        box2.segment(segs);
+        // Find which sides on box one are intersecting segments of box two
+        std::vector<Side> sidesHitBox1;
+        findCollision(sidesHitBox1,box2,points);
 
-        // Find which sides on box one are intersecting segments of box two 
-        Side sidesHitBox1[2];
-        int hitCount = 0;
-        Side hit;
-        for(size_t i = 0; i<segs.size(); ++i) {
-            // Normal Interesection
-            hit = this->pointIntersect(points,segs[i]);
-            if(hit != NONE) {
-                sidesHitBox1[hitCount++] = hit;
-            }
-        }
-
-        // Get the segments box one (me!)
         points.clear(); // will get the same points twice otherwise
-        segs.clear();
-        this->segment(segs);
 
         // Find which sides on box two are intersecting segments of box one and get the intersection points
-        Side sidesHitBox2[2];
-        hitCount = 0;
-        for(size_t i = 0; i<segs.size(); ++i) {
-            // Normal Interesection
-            hit = box2.pointIntersect(points,segs[i]);
-            if(hit != NONE) {
-                sidesHitBox2[hitCount++] = hit;
-            }
-        }
-
+        std::vector<Side> sidesHitBox2;
+        box2.findCollision(sidesHitBox2,*this,points);
+        
         // Hitting on a vertex of the boxes is not a collision (for now)
         if(points.size() < 2) {
             return;

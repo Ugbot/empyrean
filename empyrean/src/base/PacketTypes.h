@@ -91,6 +91,11 @@ namespace pyr {
     #define PYR_PLAYER_EVENT_PACKET(_) \
         _(string)(32, event)
 
+    #define PYR_PLAYER_ATTACK_PACKET_NAME PlayerAttackPacket
+    #define PYR_PLAYER_ATTACK_PACKET(_) \
+        _(string)(32, name)             \
+        _(string)(32, type)
+
     // client -> server //TEMP!!!!!
     #define PYR_TEMP_HUD_PACKET_NAME TempHUDPacket
     #define PYR_TEMP_HUD_PACKET(_)  \
@@ -167,7 +172,8 @@ namespace pyr {
         _(PYR_ENTITY_UPDATED_PACKET)            \
         _(PYR_APPEARANCE_PACKET)                \
         _(PYR_CHARACTER_UPDATED_PACKET)         \
-        _(PYR_TEMP_HUD_PACKET)
+        _(PYR_TEMP_HUD_PACKET)                  \
+        _(PYR_PLAYER_ATTACK_PACKET)
 
 
     // allocate packet IDs

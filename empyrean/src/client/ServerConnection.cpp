@@ -110,6 +110,10 @@ namespace pyr {
         return sendPacket(new PlayerEventPacket(event));
     }
 
+    bool ServerConnection::sendAttack(const std::string& attack) {
+        return sendPacket(new PlayerAttackPacket("TestAttack","Melee"));
+    }
+
     bool ServerConnection::sendPacket(Packet* p) {
         if (_connection) {
             _connection->sendPacket(p);

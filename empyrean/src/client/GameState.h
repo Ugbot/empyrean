@@ -12,6 +12,7 @@ namespace pyr {
     class GameState : public State {
     public:
         GameState();
+        ~GameState();
         
         void draw(float fade);
         void update(float dt);

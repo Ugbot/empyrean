@@ -159,10 +159,22 @@
 				RelativePath="..\..\src\server\Database.h">
 			</File>
 			<File
+				RelativePath="..\..\src\server\Die.cpp">
+			</File>
+			<File
+				RelativePath="..\..\src\server\Die.h">
+			</File>
+			<File
 				RelativePath="..\..\src\server\Game.cpp">
 			</File>
 			<File
 				RelativePath="..\..\src\server\Game.h">
+			</File>
+			<File
+				RelativePath="..\..\src\server\GameStatistics.cpp">
+			</File>
+			<File
+				RelativePath="..\..\src\server\GameStatistics.h">
 			</File>
 			<File
 				RelativePath="..\..\src\server\ListenerThread.cpp">
@@ -178,6 +190,12 @@
 			</File>
 			<File
 				RelativePath="..\..\src\server\Main.cpp">
+			</File>
+			<File
+				RelativePath="..\..\src\server\Monster.cpp">
+			</File>
+			<File
+				RelativePath="..\..\src\server\Monster.h">
 			</File>
 			<File
 				RelativePath="..\..\src\server\Server.cpp">

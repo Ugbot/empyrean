@@ -42,11 +42,16 @@ namespace pyr {
         }
     }
 
+    GameState::~GameState() {
+        // The scene is owned by the GameState.
+        the<Scene>().clear();
+    }
+
     void GameState::draw(float fade) {
         PYR_PROFILE_BLOCK("GameState::draw");
         
         Scene& scene = the<Scene>();
-        scene.draw();
+        scene.draw(_renderer);
 
         if (ClientEntity* entity = scene.getFocus()) {
             the<HUD>().draw(_renderer,entity);
@@ -113,7 +118,7 @@ namespace pyr {
 
         // attack!
         if (_inputAttack->getDelta() > gmtl::GMTL_EPSILON) {
-            sc.sendEvent("Attack");
+            sc.sendAttack("Attack");
         }
 
         // Input with Joystick

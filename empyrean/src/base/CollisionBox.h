@@ -36,9 +36,11 @@ namespace pyr {
         void collideWithStationary(float dt, Vec2f& vel, const std::vector<Segment>& segs,
                               std::vector<Vec2f>& points);
 
+        bool findCollision(std::vector<Side>& sides, CollisionBox& otherBox, std::vector<Vec2f>& points); 
+
         void segment(std::vector<Segment>& segs);
         Vec2f getCenter();
-        Vec2f findInsideVertex(Side* hitlist);
+        Vec2f findInsideVertex(std::vector<Side>& hitlist);
         Vec2f getDisplacement();
         void setDisplacement(Vec2f disp);
         Side pointIntersect(std::vector<Vec2f>& points, const Segment& seg);

@@ -21,8 +21,7 @@ namespace pyr {
         pos += vel * dt;
         vel[1] += constants::GRAVITY * dt;                      // gravity
 
-
-        const float mu = 0.8;
+        const float mu = 0.8f;
         const float acc = mu * constants::GRAVITY;
         
         if(_desiredVelocity != 0) {
@@ -58,12 +57,14 @@ namespace pyr {
        
         if (event == "Begin Right") {
             _desiredVelocity = speed;
+            _facingRight = true;
             sendAppearanceCommand(entity, "Face Left");
             beginAnimationCycle(entity, "walk");
         }
 
         if (event == "Begin Left") {
             _desiredVelocity = -speed;
+            _facingRight = false;
             sendAppearanceCommand(entity, "Face Right");
             beginAnimationCycle(entity, "walk");
         }

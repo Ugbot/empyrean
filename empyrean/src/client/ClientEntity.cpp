@@ -1,15 +1,66 @@
 #include "ClientEntity.h"
-
+#include "GLUtility.h"
+#include "OpenGL.h"
+#include "Log.h"
 
 namespace pyr {
 
     void ClientEntity::update(float dt, const Environment& env) {
         Entity::update(dt, env);
         getClientAppearance()->update(dt);
+
+        // Reduce the display time for the numbers
+        if (_timeToShowVitChange > 0) {
+            _timeToShowVitChange -= dt;
+            if (_timeToShowVitChange < 0) {
+                _timeToShowVitChange = 0;
+            }
+        }
+        if (_timeToShowEthChange > 0) {
+            _timeToShowEthChange -= dt;
+            if (_timeToShowEthChange < 0) {
+                _timeToShowEthChange = 0;
+            }
+        }
     }
 
-    void ClientEntity::draw() const {
+    void ClientEntity::draw(gltext::FontRendererPtr rend) const {
         getClientAppearance()->draw();
+
+        // Draw the loss/gain of vitality/ether above the character if needs be.
+        if (_timeToShowVitChange > 0 && _vitalityChange != 0) {
+            glDisable(GL_TEXTURE_2D);
+            glEnable(GL_BLEND);
+            glPushMatrix();
+            glTranslatef(-0.3f,getBounds().getHeight()+0.4,0);
+            glScalef(0.03f,-0.03f,0.03f);
+            if (_vitalityChange < 0) {
+                glColor3f(1.0f,0.0f,0.0f);
+            }
+            else {
+                glColor3f(0.0f,1.0f,0.0f);
+            }
+            GLTEXT_STREAM(rend) << gmtl::Math::abs(_vitalityChange);
+            glPopMatrix();
+            glEnable(GL_TEXTURE_2D);
+        }
+        if (_timeToShowEthChange > 0 && _etherChange != 0) {
+            glDisable(GL_TEXTURE_2D);
+            glEnable(GL_BLEND);
+            glPushMatrix();
+            glTranslatef(-0.3f,getBounds().getHeight()+0.4,0);
+            glScalef(0.03f,-0.03f,0.03f);
+            if (_etherChange < 0) {
+                glColor3f(0.0f,0.0f,1.0f);
+            }
+            else {
+                glColor3f(1.0f,1.0f,1.0f);
+            }
+            GLTEXT_STREAM(rend) << gmtl::Math::abs(_etherChange);
+            glPopMatrix();
+            glEnable(GL_TEXTURE_2D);
+        }
+            
 
 #if 0
         // Render player bounding box [debugging].
@@ -49,4 +100,28 @@ namespace pyr {
         max = _maxEther;
     }
 
+    void ClientEntity::setCurrentVitality(int val) {
+        // Do not set change if it is the first time vitality has been set
+        if (_vitalityFirstTime) {
+            _vitalityFirstTime = false;
+        }
+        else {
+            _vitalityChange = val - _currentVitality;
+            _timeToShowVitChange = 2.0f;
+        }
+        _currentVitality = val; 
+        
+    }
+
+    void ClientEntity::setCurrentEther(int val) {
+        if (_etherFirstTime) {
+            _etherFirstTime = false;
+        }
+        else {
+            _etherChange = val - _currentEther;
+            _timeToShowEthChange = 2.0f;
+        }
+        _currentEther = val; 
+        
+    }
 }

@@ -59,6 +59,7 @@ namespace pyr {
         ADD_WEAPON("Short Sword",1,6,1,4,"ShortSword.flt")
         ADD_WEAPON("Long Sword",2,9,1,5,"LongSword.flt")
         ADD_WEAPON("Pistol",1,8,1,3,"Pistol.flt")
+        ADD_WEAPON("SmallClaws",1,5,1,3,"PartOfMonster")
 
         // Add weapons to the pool as needed        
     }
