@@ -34,6 +34,10 @@
 
 #if defined(_MSC_VER) && defined(_DEBUG)
 
+
+//#define PYR_ENABLE_LEAK_CHECKER
+
+
 #include <map>
 #include <crtdbg.h>
 #include <windows.h>
@@ -193,8 +197,8 @@ namespace pyr {
         }
         OutputDebugString(os.str().c_str());
     }
-
-    void registerLeakChecker() {
+    
+    static void actuallyRegisterLeakChecker() {
         PYR_ASSERT(!_state, "LeakCheckerState already set.  registerLeakChecker called twice?");
         _state = new LeakCheckerState;
         _state->oldHook = _CrtSetAllocHook(hook);
@@ -206,6 +210,12 @@ namespace pyr {
         int dbg = _CrtSetDbgFlag(_CRTDBG_REPORT_FLAG);
         dbg &= ~_CRTDBG_LEAK_CHECK_DF;
         _CrtSetDbgFlag(dbg);
+    }
+
+    void registerLeakChecker() {
+        #ifdef PYR_ENABLE_LEAK_CHECKER
+            actuallyRegisterLeakChecker();
+        #endif
     }
 
 }
