@@ -72,7 +72,7 @@ namespace pyr {
                 path = fname.substr(0, fname.rfind('/')+1 );    // all the other files are assumed to be in the same directory as the data file itself.
 
             ifstream file(fname.c_str());
-            char c[256];
+            std::string c;
 
             float scale;
             string skeleton;
@@ -81,24 +81,23 @@ namespace pyr {
             vector<string> materials;
 
             int curline=1;
-            while (file.good()) {
-                file.getline(c, 255);
+            while (file) {
+                std::getline(file, c);
                 vector<string> line = splitString(c, " \r\n\t=");
 
-                if (line[0][0] == '#' || c[0]=='\0')
+                if (line[0][0] == '#' || c[0]=='\0') {
                     ;   // do nothing at all
-                else if (line[0] == "scale")
+                } else if (line[0] == "scale") {
                     scale=(float)atof(line[1].c_str()); // @todo Do something with the scale?
-                else if (line[0] == "skeleton")
+                } else if (line[0] == "skeleton") {
                     skeleton=line[1];
-                else if (line[0] == "animation")
+                } else if (line[0] == "animation") {
                     animations.push_back(line[1]);
-                else if (line[0] == "mesh")
+                } else if (line[0] == "mesh") {
                     meshes.push_back(line[1]);
-                else if (line[0] == "material")
+                } else if (line[0] == "material") {
                     materials.push_back(line[1]);
-                else
-                {
+                } else {
                     std::stringstream ss;
                     ss << "Unkown token \"" << line[0] << "\" on line " << curline << " in " << fname;
                     throw std::runtime_error(ss.str().c_str());

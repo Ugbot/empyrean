@@ -26,7 +26,7 @@ namespace pyr {
 
         _renderer = new CellShadeRenderer;
         _renderer->useVertexArrays(false);
-        _testModel = Model::create("paladin/paladin.cfg");
+        _testModel = Model::create("models/paladin/paladin.cfg");
 
         _backdropTex = Texture::create("images/backdrop.jpg");
 
