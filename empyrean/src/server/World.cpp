@@ -2,6 +2,7 @@
 #include "Connection.h"
 #include "LoginPacket.h"
 #include "ScopedLock.h"
+#include "UpdatePacket.h"
 #include "World.h"
 
 
@@ -39,6 +40,7 @@ namespace pyr {
                 continue;
             }
             _connections[i]->processIncomingPackets();
+            _connections[i]->sendPacket(new UpdatePacket());
         }
     }
     

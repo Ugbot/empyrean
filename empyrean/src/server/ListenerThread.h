@@ -13,6 +13,7 @@ namespace pyr {
     class ListenerThread : public Thread {
     public:
         ListenerThread(int port);
+        ~ListenerThread();
         
         void run();
         

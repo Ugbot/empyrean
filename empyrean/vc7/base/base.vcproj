@@ -179,6 +179,9 @@
 				RelativePath="..\..\src\base\Types.h">
 			</File>
 			<File
+				RelativePath="..\..\src\base\UpdatePacket.h">
+			</File>
+			<File
 				RelativePath="..\..\src\base\Utility.cpp">
 			</File>
 			<File

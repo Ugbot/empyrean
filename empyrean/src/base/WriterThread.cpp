@@ -15,15 +15,22 @@ namespace pyr {
     }
     
     WriterThread::~WriterThread() {
+        stop();
         delete _packetsAvailable;
         delete _outgoingLock;
     }
     
     void WriterThread::run() {
-        for (;;) {
+        while (!shouldQuit()) {
             _outgoingLock->lock();
             while (_outgoing.empty()) {
-                _packetsAvailable->wait();
+                _packetsAvailable->wait(1);
+                if (shouldQuit()) {
+                    break;
+                }
+            }
+            if (shouldQuit()) {
+                break;
             }
             
             // write a single packet
@@ -36,9 +43,13 @@ namespace pyr {
             u16 id = PR_htons(p->getID());
             u16 size = PR_htons(out.getSize());
             
-            _socket->write(&id, sizeof(id));
-            _socket->write(&size, sizeof(size));
-            _socket->write(out.getBuffer(), out.getSize());
+            if (_socket->write(&id, sizeof(id)) != sizeof(id) ||
+                _socket->write(&size, sizeof(size)) != sizeof(size) ||
+                _socket->write(out.getBuffer(), out.getSize()) != out.getSize())
+            {
+                _outgoingLock->unlock();
+                break;
+            }
             
             _outgoingLock->unlock();
         }

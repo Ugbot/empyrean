@@ -17,6 +17,7 @@ namespace pyr {
     class ReaderThread : public Thread {
     public:
         ReaderThread(Socket* socket);
+        ~ReaderThread();
         
         void run();
         

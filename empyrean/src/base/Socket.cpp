@@ -52,9 +52,11 @@ namespace pyr {
         int read = PR_Recv(_socket, buffer, size, 0, PR_INTERVAL_NO_TIMEOUT);
         // if the peer closed the connection or we were interrupted
         if (read < 0 && PR_GetError() == PR_PENDING_INTERRUPT_ERROR) {
-            throwNSPRError("Interrupt occurred");
+            return 0;
+            //throwNSPRError("Interrupt occurred");
         } else if (read < 0) {
-            throwNSPRError("Unknown error");
+            return 0;
+            //throwNSPRError("PR_Recv: Unknown error");
         }
         return read;
     }
@@ -63,9 +65,11 @@ namespace pyr {
         int sent = PR_Send(_socket, buffer, size, 0, PR_INTERVAL_NO_TIMEOUT);
         // if we were interrupted
         if (sent < 0 && PR_GetError() == PR_PENDING_INTERRUPT_ERROR) {
-            throwNSPRError("Interrupt occurred");
+            return 0;
+            //throwNSPRError("Interrupt occurred");
         } else if (sent < 0) {
-            throwNSPRError("Unknown error");
+            return 0;
+            //throwNSPRError("Unknown error");
         }
         return sent;
     }

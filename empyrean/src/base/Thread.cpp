@@ -1,5 +1,6 @@
 #include <iostream>
 #include <pratom.h>
+#include "Debug.h"
 #include "Error.h"
 #include "Thread.h"
 
@@ -27,9 +28,10 @@ namespace pyr {
     }
     
     Thread::~Thread() {
-        if (_started && !_stopped) {
-            stop();
-        }
+        PYR_ASSERT(
+            _stopped,
+            "Thread must be stopped before ~Thread() is called.\n"
+            "Put a call to stop() in your thread's destructor.");
     }
     
     void Thread::start() {
@@ -38,11 +40,13 @@ namespace pyr {
             _mutex.unlock();
         }
     }
-    
-    void Thread::stop() {
+
+    void Thread::stop(bool interrupt) {
         if (!_stopped) {
             PR_AtomicSet(&_shouldQuit, 1);
-            PR_Interrupt(_thread);
+            if (interrupt) {
+                PR_Interrupt(_thread);
+            }
             join();
             PR_AtomicSet(&_stopped, 1);
         }

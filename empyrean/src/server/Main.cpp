@@ -23,7 +23,7 @@ namespace pyr {
             float now = getNow();
             float dt = now - last;
             last = now;
-        
+            
             world.update(dt);
             PR_Sleep(PR_MillisecondsToInterval(20));
         }

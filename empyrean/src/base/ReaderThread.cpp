@@ -10,6 +10,10 @@ namespace pyr {
         _socket = socket;
     }
     
+    ReaderThread::~ReaderThread() {
+        stop(true);
+    }    
+    
     void ReaderThread::run() {
         ByteBuffer bb;
 

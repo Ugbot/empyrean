@@ -10,14 +10,16 @@ namespace pyr {
         _listener = new ServerSocket(port);
     }
     
+    ListenerThread::~ListenerThread() {
+        stop();
+    }
+    
     void ListenerThread::run() {
         while (!shouldQuit()) {
-            Socket* socket = _listener->accept();
-            if (!socket) {
-                break;
+            Socket* socket = _listener->accept(1);
+            if (socket) {
+                World::instance().addConnection(new Connection(socket));
             }
-            
-            World::instance().addConnection(new Connection(socket));
         }
     }
 

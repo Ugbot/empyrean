@@ -25,8 +25,15 @@ namespace pyr {
             PR_DestroyCondVar(_cvar);
         }
         
-        void wait() {
-            PRStatus status = PR_WaitCondVar(_cvar, PR_INTERVAL_NO_TIMEOUT);
+        void wait(float timeout = -1) {
+            PRIntervalTime interval;
+            if (timeout < 0) {
+                interval = PR_INTERVAL_NO_TIMEOUT;
+            } else {
+                interval = PR_MicrosecondsToInterval(PRUint32(timeout * 1000000));
+            }
+        
+            PRStatus status = PR_WaitCondVar(_cvar, interval);
             if (status != PR_SUCCESS) {
                 throw std::runtime_error("PR_WaitCondVar() failed");
             }

@@ -13,6 +13,9 @@ namespace pyr {
      * The creator of the thread is responsible for deleting it.
      * While the thread may stop execution, the Thread object will
      * not be destroyed automatically.
+     *
+     * *NOTE* Your derived thread's destructor should call stop() before it
+     * does any cleanup.
      */
     class Thread {
     public:
@@ -34,8 +37,11 @@ namespace pyr {
          * Notifies the thread that it should stop execution by setting
          * an internal flag, interrupting blocked calls, and waiting for
          * the thread to finish.
+         *
+         * @param interrupt  If this is true, the thread sends an interrupt
+         *                   event, breaking out of blocking I/O calls.
          */
-        void stop();
+        void stop(bool interrupt = false);
         
         /**
          * Waits for the thread to finish execution.
