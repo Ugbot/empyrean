@@ -98,6 +98,12 @@
 				RelativePath="..\..\src\base\CondVar.h">
 			</File>
 			<File
+				RelativePath="..\..\src\base\Connection.cpp">
+			</File>
+			<File
+				RelativePath="..\..\src\base\Connection.h">
+			</File>
+			<File
 				RelativePath="..\..\src\base\Error.cpp">
 			</File>
 			<File

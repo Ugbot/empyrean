@@ -111,12 +111,6 @@
 			Name="files"
 			Filter="">
 			<File
-				RelativePath="..\..\src\server\Connection.cpp">
-			</File>
-			<File
-				RelativePath="..\..\src\server\Connection.h">
-			</File>
-			<File
 				RelativePath="..\..\src\server\ListenerThread.cpp">
 			</File>
 			<File
