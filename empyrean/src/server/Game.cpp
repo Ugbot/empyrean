@@ -62,6 +62,8 @@ namespace pyr {
         connection->sendPacket(new EntityAddedPacket(
                  entity->getID(),
                  entity->getAppearance()));
+                 
+        // @todo send all existing entities to the new connection
 
         // set connection-specific data
         ConnectionData* cd = new ConnectionData;

@@ -56,8 +56,9 @@ namespace pyr {
     }
     
     void Scene::update(float dt) {
-        for (unsigned i = 0; i < _entities.size(); i++) {
-            _entities[i]->update(dt);
+        EntityMap::iterator itr = _entities.begin();
+        for (; itr != _entities.end(); ++itr) {
+            itr->second->update(dt);
         }
     }
     

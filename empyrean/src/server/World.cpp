@@ -91,7 +91,7 @@ namespace pyr {
 
         for (size_t i = 0; i < getConnectionCount(); ++i) {
             ConnectionData* cdi = getData(getConnection(i));
-            if (cdi != cd && cdi->account->getUsername() == p->username()) {
+            if (cdi != cd && cdi->account && cdi->account->getUsername() == p->username()) {
                 c->sendPacket(new LoginResponsePacket(LR_ALREADY_LOGGED_IN));
                 logMessage(italic(p->username()) + " already logged in!");
                 return;
