@@ -88,7 +88,7 @@ namespace pyr {
             }
             return;
         }
-        else if(fabs(seg.v2[1] - seg.v2[1]) < 0.01) { // Horizontal line 
+        else if(fabs(seg.v2[1] - seg.v1[1]) < 0.01) { // Horizontal line 
             if(seg.v1[1] > _verts[0][1] && seg.v1[1] < _verts[2][1]) {
                 // Left line of box
                 float tx = (_verts[0][0] - seg.v1[0])/(seg.v2[0] - seg.v1[0]);
