@@ -33,6 +33,7 @@ SOURCES = Split("""
     Profiler.cpp
     PythonBehavior.cpp
     PythonBindings.cpp
+    PythonGMTL.cpp
     PythonInterpreter.cpp
     PythonLog.cpp
     PythonScript.cpp

@@ -17,21 +17,44 @@ namespace pyr {
 
         PyObject *type, *value, *traceback;
         PyErr_Fetch(&type, &value, &traceback);
-        PyErr_Clear();
 
         std::string message = "Python error: ";
         if (type) {
-            type = PyObject_Str(type);
-            message += PyString_AsString(type);
+            if (PyObject* type_str = PyObject_Str(type)) {
+                message += PyString_AsString(type_str);
+                Py_DECREF(type_str);
+            }
+            Py_DECREF(type);
         }
         if (value) {
-            value = PyObject_Str(value);
-            message += ": ";
-            message += PyString_AsString(value);
+            if (PyObject* value_str = PyObject_Str(value)) {
+                message += ": ";
+                message += PyString_AsString(value_str);
+                Py_DECREF(value_str);
+            }
+            Py_DECREF(value);
         }
-        Py_XDECREF(type);
-        Py_XDECREF(value);
-        Py_XDECREF(traceback);
+        if (traceback) {
+            // Since we're using Boost.Python, don't let it throw exceptions
+            // here.
+            try {
+                boost::python::str StringIOName("StringIO");
+                object StringIOModule((handle<>(
+                    PyImport_Import( PyObject_Str(StringIOName.ptr()) )
+                )));
+                object StringIOClass(StringIOModule.attr("StringIO"));
+                object stringFile(StringIOClass());
+                PyTraceBack_Print(traceback, stringFile.ptr());
+                boost::python::str traceback_str(stringFile.attr("getvalue")());
+                message += "\n\n";
+                message += PyString_AsString(traceback_str.ptr());
+            }
+            catch (const std::exception&) {
+            }
+            catch (const error_already_set&) {
+            }
+            Py_DECREF(traceback);
+        }
 
         return message;
     }
@@ -44,8 +67,7 @@ namespace pyr {
 
     void requirePythonError() {
         if (!PyErr_Occurred()) {
-            throw PythonError("Boost.Python exception, "
-                              "but no Python error set.");
+            throw PythonError("Boost.Python exception, but no Python error set.");
         }
     }
 

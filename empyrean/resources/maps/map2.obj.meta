@@ -9,6 +9,7 @@
   </node>
   <node name="Line04" position="27.8393 17.8492 9.62532">
   </node>
+<!--
   <node name="Dummy01" position="-32.0946 -8.37314e-008 1.91555">
     <property key="entity" value="true"/>
     <property key="behavior" value="python"/>
@@ -16,6 +17,7 @@
     <property key="appearance" value="cal3d"/>
     <property key="appearanceResource" value="models/paladin/paladin.cal3d"/>
   </node>
+-->
   <node name="MOUSE" position="-28.0946 -8.37314e-008 1.91555">
     <property key="entity" value="true"/>
     <property key="behavior" value="python"/>
@@ -23,6 +25,7 @@
     <property key="appearance" value="obj"/>
     <property key="appearanceResource" value="maps/MOUSE_Final.obj"/>
   </node>
+<!--
   <node name="Gargon" position="-16.0946 -8.37314e-008 1.91555">
     <property key="entity" value="true"/>
     <property key="behavior" value="python"/>
@@ -30,6 +33,7 @@
     <property key="appearance" value="obj"/>
     <property key="appearanceResource" value="maps/gargon.skeleton.obj"/>
   </node>
+-->
   <node name="Fish" position="-6.0946 -8.37314e-008 1.91555">
     <property key="entity" value="true"/>
     <property key="behavior" value="python"/>

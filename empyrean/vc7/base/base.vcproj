@@ -285,6 +285,12 @@
 				RelativePath="..\..\src\base\PythonBindings.h">
 			</File>
 			<File
+				RelativePath="..\..\src\base\PythonGMTL.cpp">
+			</File>
+			<File
+				RelativePath="..\..\src\base\PythonGMTL.h">
+			</File>
+			<File
 				RelativePath="..\..\src\base\PythonInterpreter.cpp">
 			</File>
 			<File

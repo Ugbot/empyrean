@@ -61,26 +61,18 @@ namespace pyr {
     };
 
 
-    void setPos(Entity* entity, float x, float y) {
-        entity->setPos(Vec2f(x, y));
+    void setPos(Entity* entity, const Vec2f& pos) {
+        entity->setPos(pos);
+    }
+    Vec2f getPos(Entity* entity) {
+        return entity->getPos();
     }
 
-    void setVel(Entity* entity, float x, float y) {
-        entity->setVel(Vec2f(x, y));
+    void setVel(Entity* entity, const Vec2f& vel) {
+        entity->setVel(vel);
     }
-
-    float getPosX(Entity* entity) {
-        return entity->getPos()[0];
-    }
-    float getPosY(Entity* entity) {
-        return entity->getPos()[1];
-    }
-
-    float getVelX(Entity* entity) {
-        return entity->getVel()[0];
-    }
-    float getVelY(Entity* entity) {
-        return entity->getVel()[1];
+    Vec2f getVel(Entity* entity) {
+        return entity->getVel();
     }
 
     void bindBehavior() {
@@ -113,12 +105,8 @@ namespace pyr {
 
         // Perhaps this should go into a bindEntity() function somewhere else.
         class_<Entity, EntityPtr, noncopyable>("Entity", no_init)
-            .def("setPos", &setPos)
-            .def("setVel", &setVel)
-            .def("getPosX", &getPosX)
-            .def("getPosY", &getPosY)
-            .def("getVelX", &getVelX)
-            .def("getVelY", &getVelY)
+            .add_property("pos", &getPos, &setPos)
+            .add_property("vel", &getVel, &setVel)
             ;
     }
 
