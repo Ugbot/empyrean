@@ -1,7 +1,7 @@
-
 #ifndef PYR_PLAYERENTITY_H
 #define PYR_PLAYERENTITY_H
 
+#include "Collider.h"
 #include "Entity.h"
 #include "Utility.h"
 
@@ -46,6 +46,9 @@ namespace pyr {
         // These are aggregates.  We don't clean up.
         Model* _model;
         Renderer* _renderer;
+        
+        /// Data from last collision detection test.  Used for debug drawing.
+        CollisionData _lastCD;
 
         float _direction;
     };

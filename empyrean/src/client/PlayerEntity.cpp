@@ -3,6 +3,7 @@
 #include <cal3d/cal3d.h>
 
 #include "Collider.h"
+#include "GLUtility.h"
 #include "Input.h"
 #include "InputManager.h"
 #include "Model.h"
@@ -22,6 +23,7 @@ namespace pyr {
     }
 
     void PlayerEntity::draw() {
+        // Render player model.
         glPushMatrix();
         glEnable(GL_DEPTH_TEST);
         glRotatef(_direction + 180, 0, 1, 0);
@@ -30,29 +32,47 @@ namespace pyr {
         _renderer->draw(_model);
         glDisable(GL_DEPTH_TEST);
         glPopMatrix();
+
+        // Render player bounding box [debugging].
         float height = 1.9f;
         float width = 0.3f;
-        
+
         glBegin(GL_LINE_LOOP);
         glVertex2f(-width/2.0,0);
         glVertex2f(width/2.0,0);
         glVertex2f(width/2.0,height);
         glVertex2f(-width/2.0,height);
         glEnd();
+
+        // Render last collision data [debugging].
+        glColor3f(1, 0, 0);
+        glBegin(GL_LINES);
+        for (size_t i = 0; i < _lastCD.interesting.size(); ++i) {
+            glVertex(_lastCD.interesting[i].v1 - getPos());
+            glVertex(_lastCD.interesting[i].v2 - getPos());
+        }
+        glEnd();
+
+        glColor3f(0, 1, 0);
+        glBegin(GL_POINTS);
+        for (size_t i = 0; i < _lastCD.points.size(); ++i) {
+            glVertex(_lastCD.points[i] - getPos());
+        }
+        glEnd();
     }
 
     void PlayerEntity::update(float dt, const Map* terrain) {
         // Provide client-side estimation of server physics model.
-	Vec2f origPos = getPos();
+        Vec2f origPos = getPos();
 
         getPos() += getVel() * dt;
-	getPos()[1] = std::max(getPos()[1], 0.0f);
-	getVel()[1] -= 9.81f * dt;
-	    
+        getPos()[1] = std::max(getPos()[1], 0.0f);
+        getVel()[1] -= 9.81f * dt;
+
         float height = 1.9f;
         float width = 0.3f;
-    
-        collide(origPos, getPos(), getVel(), width, height, terrain);
+
+        _lastCD = collide(origPos, getPos(), getVel(), width, height, terrain);
 
         if (_state) {
             (this->*_state)(dt);

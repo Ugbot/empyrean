@@ -3,6 +3,8 @@ Import('base_env TOOLS')
 SOURCES = Split("""
     ByteBuffer.cpp
     Canvas.cpp
+    Collider.cpp
+    CollisionBox.cpp
     Connection.cpp
     Error.cpp
     GLUtility.cpp

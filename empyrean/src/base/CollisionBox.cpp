@@ -29,8 +29,8 @@ namespace pyr {
         }
     }
     
-    Vec2f CollisionBox::getDisplacement(const std::vector<Segment>& segs) {
-        std::vector<Vec2f> points;
+    Vec2f CollisionBox::getDisplacement(const std::vector<Segment>& segs,
+                                        std::vector<Vec2f>& points) {
         for(size_t i = 0; i<segs.size(); ++i) {
             if(segmentInside(segs[i])) {
                 // Something small is inside character... deal with later
