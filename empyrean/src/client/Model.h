@@ -21,22 +21,25 @@ namespace pyr {
      * new/delete it. (or just use ScopedPtr)
      */
     class Model {
-    private:
-        CoreModel* _coreModel;
-        CalModel _model;
-        // We'll probably want to store information on how this particular model
-        // is skinned, and so on.
-
     public:
-
         Model(const std::string& fname);
-        Model(CoreModel* coremodel);
         ~Model();
 
         CalCoreModel& getCoreModel();
         CalModel& getModel();
+        
+        float getScale() const {
+            return _scale;
+        }
 
         void update(float timedelta);
+
+    private:
+        CoreModel* _coreModel;
+        CalModel _model;
+        float _scale;
+        // We'll probably want to store information on how this particular model
+        // is skinned, and so on.
     };
 };
 

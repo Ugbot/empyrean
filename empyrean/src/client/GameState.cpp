@@ -1,5 +1,5 @@
 #include <stdexcept>
-#include <gmtl/VecOps.h>
+#include <gmtl/gmtl.h>
 
 #include "Entity.h"
 #include "GameState.h"
@@ -38,18 +38,18 @@ namespace pyr {
     void GameState::draw(float fade) {
         PYR_PROFILE_BLOCK("GameState::draw");
         
-        Application& a = Application::instance();
-        setOrthoProjection(float(a.getWidth()), float(a.getHeight()));
+        Scene& scene = the<Scene>();
+        Application& app = the<Application>();
         
-        /*
-        glEnable(GL_TEXTURE_2D);
-        glEnable(GL_BLEND);
-        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-        glColor4f(1, 1, 1, 1);
-        glTranslatef(0, 8, 0);
-        */
-
-        Scene::instance().draw();
+        scene.draw();
+        
+        if (Entity* entity = scene.getFocus()) {
+            glEnable(GL_BLEND);
+            setOrthoProjection(float(app.getWidth()), float(app.getHeight()));
+            glTranslatef(app.getWidth() / 2.0f, 0, 0);
+            glColor3f(1, 1, 1);
+            GLTEXT_STREAM(_renderer) << "(" << entity->getPos() << ")";
+        }
     }
 
     void GameState::update(float dt) {
@@ -57,17 +57,17 @@ namespace pyr {
         
         _im.update(dt);
         
-        Scene::instance().update(dt);
+        the<Scene>().update(dt);
 
-        ServerConnection& sc = ServerConnection::instance();
+        ServerConnection& sc = the<ServerConnection>();
         sc.update();
 
         float dx = _inputRight->getValue() - _inputLeft->getValue();
-        float dy = 1 - _inputSpace->getValue() * 2;
+        float dy = _inputSpace->getValue() * 2 - 1;
         sc.setVelocity(gmtl::Vec2f(dx * 50, dy * 10));
 
         if (_inputQuit->getValue() >= 0.50f) {
-            ServerConnection::instance().disconnect();
+            sc.disconnect();
             invokeTransition<MenuState>();
         }
     }

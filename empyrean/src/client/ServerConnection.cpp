@@ -65,9 +65,10 @@ namespace pyr {
                 _connection->definePacketHandler(this, &ServerConnection::handleLobby);
                 _connection->definePacketHandler(this, &ServerConnection::handleJoinGameResponse);
                 _connection->definePacketHandler(this, &ServerConnection::handleNewCharacterResponse);
+                _connection->definePacketHandler(this, &ServerConnection::handleSetPlayer);
                 _connection->definePacketHandler(this, &ServerConnection::handleEntityAdded);
                 _connection->definePacketHandler(this, &ServerConnection::handleEntityRemoved);
-                _connection->definePacketHandler(this, &ServerConnection::handleEntityUpdated);                
+                _connection->definePacketHandler(this, &ServerConnection::handleEntityUpdated);
                 
                 _connectionMaker = 0;
                 _connectionThread = 0;
@@ -177,26 +178,28 @@ namespace pyr {
         _hasNewCharacterResponse = true;
         _newCharacterResponse = p->code();
     }
+    
+    void ServerConnection::handleSetPlayer(Connection*, SetPlayerPacket* p) {
+        the<Scene>().setFocus(p->id());
+    }
 
     void ServerConnection::handleEntityAdded(Connection*, EntityAddedPacket* p) {
         PlayerEntity* entity = new PlayerEntity(
             new Model(p->appearance()),
-            new DefaultRenderer(),
-            0);
-        Scene::instance().addEntity(p->id(), entity);
+            new DefaultRenderer());
+        the<Scene>().addEntity(p->id(), entity);
     }
 
     void ServerConnection::handleEntityRemoved(Connection*, EntityRemovedPacket* p) {
-        Scene& s = Scene::instance();
-        Entity* entity = s.getEntity(p->id());
+        Entity* entity = the<Scene>().getEntity(p->id());
         if (entity) {
-            s.removeEntity(p->id());
+            the<Scene>().removeEntity(p->id());
             delete entity;
         }
     }
 
     void ServerConnection::handleEntityUpdated(Connection*, EntityUpdatedPacket* p) {
-        Entity* entity = Scene::instance().getEntity(p->id());
+        Entity* entity = the<Scene>().getEntity(p->id());
         if (entity) {
             entity->setPos(p->pos());
             entity->setVel(p->vel());

@@ -45,7 +45,7 @@ namespace pyr {
             u16 id   = PR_ntohs(*p_id);
             u16 size = PR_ntohs(*p_size);
             
-            if (bb.getSize() >= 4 + size) {
+            if (bb.getSize() >= size_t(4 + size)) {
                 Packet* p = _factory.create(id, size, (u8*)bb.getBuffer() + 4);
                 bb.consumeFront(4 + size);
                 return p;

@@ -1,5 +1,6 @@
 #include <stdlib.h>
 #include "Configuration.h"
+#include "Constants.h"
 #include "XMLParser.h"
 
 
@@ -10,7 +11,7 @@ namespace pyr {
     PYR_DEFINE_SINGLETON(Configuration)
 
     Configuration::Configuration() {
-        serverPort = 14702;
+        serverPort = constants::SERVER_PORT;
         shouldStartServer = true;
         
         windowPosition = wxDefaultPosition;

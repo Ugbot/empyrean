@@ -11,6 +11,7 @@ namespace pyr {
     PYR_DEFINE_SINGLETON(Scene)
 
     Scene::Scene() {
+        _focus = 0;
         _backdrop = Texture::create("images/stars.tga");
     }
     
@@ -61,12 +62,23 @@ namespace pyr {
     }
     
     void Scene::removeEntity(u16 id) {
+        if (_focus && getEntity(id) == _focus) {
+            _focus = 0;
+        }
         _entities.erase(id);
     }
     
-    Entity* Scene::getEntity(u16 id) {
-        EntityMap::iterator i = _entities.find(id);
+    Entity* Scene::getEntity(u16 id) const {
+        EntityMap::const_iterator i = _entities.find(id);
         return (i == _entities.end() ? 0 : i->second);
+    }
+    
+    void Scene::setFocus(u16 id) {
+        _focus = getEntity(id);
+    }
+    
+    Entity* Scene::getFocus() const {
+        return _focus;
     }
     
 }

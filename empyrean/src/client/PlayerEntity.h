@@ -26,7 +26,7 @@ namespace pyr {
      */
     class PlayerEntity : public Entity {
     public:
-        PlayerEntity(Model* model, Renderer* renderer, InputManager* im);
+        PlayerEntity(Model* model, Renderer* renderer);
 
         void draw();
         void update(float dt);
@@ -48,9 +48,6 @@ namespace pyr {
         Renderer* _renderer;
 
         float _direction;
-        
-        Input* _inputLeft;
-        Input* _inputRight;
     };
 
 }

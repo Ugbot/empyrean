@@ -24,8 +24,8 @@
  *
  * -----------------------------------------------------------------
  * File:          $RCSfile: TextField.cpp,v $
- * Date modified: $Date: 2003-11-09 08:15:56 $
- * Version:       $Revision: 1.7 $
+ * Date modified: $Date: 2003-11-10 01:25:04 $
+ * Version:       $Revision: 1.8 $
  * -----------------------------------------------------------------
  *
  ************************************************************** phui-cpr-end */
@@ -40,6 +40,7 @@ namespace phui
         , mCursorScreenPosition(0)
         , mCursorCharacterPosition(0)
     {
+        setBackgroundColor(Colorf(1.0f, 1.0f, 1.0f, 0.2f));
     }
 
     void TextField::draw() {

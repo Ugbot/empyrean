@@ -64,7 +64,7 @@ namespace pyr {
         sendAll(new EntityAddedPacket(
                     entity->getID(),
                     entity->getAppearance()));
-
+                    
         // set connection-specific data
         ConnectionData* cd = new ConnectionData;
         cd->playerEntity = entity;
@@ -81,6 +81,8 @@ namespace pyr {
                 _entities[i]->getID(),
                 _entities[i]->getAppearance()));
         }
+
+        connection->sendPacket(new SetPlayerPacket(entity->getID()));
     }
     
     void Game::connectionRemoved(Connection* connection) {

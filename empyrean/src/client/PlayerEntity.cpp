@@ -1,5 +1,4 @@
-#include <gmtl/Vec.h>
-#include <gmtl/VecOps.h>
+#include <gmtl/gmtl.h>
 #include <cal3d/cal3d.h>
 
 #include "Input.h"
@@ -11,19 +10,11 @@
 #include "ResourceManager.h"
 
 namespace pyr {
-    PlayerEntity::PlayerEntity(Model* model, Renderer* renderer, InputManager* im) {
+    PlayerEntity::PlayerEntity(Model* model, Renderer* renderer) {
         _model = model;
         _renderer = renderer;
 	_direction = 0;
 	
-        if (im) {
-            _inputLeft  = &im->getInput("Left");
-            _inputRight = &im->getInput("Right");
-        } else {
-            _inputLeft = 0;
-            _inputRight = 0;
-        }
-
         startStandState();
     }
 
@@ -48,22 +39,14 @@ namespace pyr {
 
     void PlayerEntity::startStandState() {
         _model->getModel().getMixer()->clearCycle(0, 0.0f);
-        setVel(gmtl::Vec2f(0,0));
-
         _state = &PlayerEntity::updateStandState;
     }
     
     void PlayerEntity::updateStandState(float dt) {
-        if (_inputLeft && _inputLeft->getValue() != 0) {
+        float xvel = getVel()[0];
+        if (gmtl::Math::abs(xvel) > gmtl::GMTL_EPSILON) {
             startWalkState();
-        } else if (_inputRight && _inputRight->getValue() != 0) {
-            startWalkState();
-        } else {
-            startStandState();
-            return;
         }
-
-        setPos(getPos() + (getVel() * dt));
     }
 
     void PlayerEntity::startWalkState() {
@@ -72,17 +55,13 @@ namespace pyr {
     }
 
     void PlayerEntity::updateWalkState(float dt) {
-        if (_inputLeft && _inputLeft->getValue() != 0) {
-            setVel(gmtl::Vec2f(-vel, 0));
-            _direction = -90;
-        } else if (_inputRight && _inputRight->getValue() != 0) {
-            setVel(gmtl::Vec2f(vel, 0));
+        float xvel = getVel()[0];
+        if (gmtl::Math::abs(xvel) < gmtl::GMTL_EPSILON) {
+            startStandState();
+        } else if (xvel > 0) {
             _direction = 90;
         } else {
-            startStandState();
-            return;
+            _direction = -90;
         }
-
-        setPos(getPos() + (getVel() * dt));
     }
 }

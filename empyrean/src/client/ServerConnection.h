@@ -27,6 +27,7 @@ namespace pyr {
     class NewCharacterResponsePacket;
     class Packet;
     class ServerConnectionThread;
+    class SetPlayerPacket;
     
     class ServerConnection {
         PYR_DECLARE_SINGLETON(ServerConnection)
@@ -88,6 +89,7 @@ namespace pyr {
         void handleLobby(Connection*, LobbyPacket* p);
         void handleJoinGameResponse(Connection*, JoinGameResponsePacket* p);
         void handleNewCharacterResponse(Connection*, NewCharacterResponsePacket* p);
+        void handleSetPlayer(Connection*, SetPlayerPacket* p);
 
         void handleEntityAdded(Connection*, EntityAddedPacket* p);
         void handleEntityRemoved(Connection*, EntityRemovedPacket* p);

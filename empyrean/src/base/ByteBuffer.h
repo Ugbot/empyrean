@@ -27,10 +27,10 @@ namespace pyr {
             _capacity = 0;
         }
         
-        void add_string(const std::string& s, int size) {
+        void add_string(const std::string& s, size_t size) {
             ScopedArray<char> str(new char[size + 1]);
             memset(str.get(), 0, size + 1);
-            memcpy(str.get(), s.c_str(), std::min<int>(s.length(), size));
+            memcpy(str.get(), s.c_str(), std::min<size_t>(s.length(), size));
             add(str.get(), size);
         }
         
@@ -59,7 +59,7 @@ namespace pyr {
         }
         
         /// Add bytes to the end of the buffer.
-        void add(const void* buffer, int size);
+        void add(const void* buffer, size_t size);
         
         void* getBuffer() {
             return _buffer;
@@ -69,17 +69,17 @@ namespace pyr {
             return _buffer;
         }
         
-        int getSize() const {
+        size_t getSize() const {
             return _size;
         }
         
         /// Removes a chunk of the buffer from the front.
-        void consumeFront(int amount);
+        void consumeFront(size_t amount);
         
     private:
         u8* _buffer;
-        int _size;
-        int _capacity;
+        size_t _size;
+        size_t _capacity;
     };
 
 }

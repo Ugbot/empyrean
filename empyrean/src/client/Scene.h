@@ -27,11 +27,15 @@ namespace pyr {
          *  unless they are removed. */
         void addEntity(u16 id, Entity* entity);
         void removeEntity(u16 id);
-        Entity* getEntity(u16 id);
+        Entity* getEntity(u16 id) const;
+        
+        void setFocus(u16 id);
+        Entity* getFocus() const;
         
     private:
         typedef std::map<u16, Entity*> EntityMap;
-        
+
+        Entity* _focus;
         Texture* _backdrop;
         EntityMap _entities;
     };

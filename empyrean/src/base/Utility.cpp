@@ -26,7 +26,7 @@ namespace pyr {
         }
 
         // Find the last nonwhitespace character
-        for (int i = t.length()-1; i >= 0; i++) {
+        for (int i = int(t.length() - 1); i >= 0; i++) {
             if (t[i] != ' ') {
                 t = t.substr(0,i);
                 return t;
@@ -43,11 +43,11 @@ namespace pyr {
       const string& delimiters=" \n\r\t")
     {
         vector<string> sv;
-        unsigned int p = 0;
-        int pos = 0;
+        string::size_type p = 0;
+        string::size_type pos = 0;
 
-        for (unsigned int i = 0; i < s.length(); i++) {
-            if (( pos=delimiters.find(s[i]) ) != -1) {
+        for (string::size_type i = 0; i < s.length(); i++) {
+            if (( pos=delimiters.find(s[i]) ) != string::npos) {
                 string st = s.substr(p, i - p);
                 if (st.length() > 0) {
                     sv.push_back(st);
@@ -64,39 +64,42 @@ namespace pyr {
     }
 
     string stripExtension(const string& s) {
-        int p=s.rfind('.');
-        if (p != -1)
+        string::size_type p = s.rfind('.');
+        if (p != string::npos) {
             return s.substr(0,p);
-        else
+        } else {
             return s;
+        }
     }
 
     string getExtension(const string& s) {
-        int p = s.rfind('.');
-        if (p != -1)
+        string::size_type p = s.rfind('.');
+        if (p != string::npos) {
             return s.substr(p);
-        else
+        } else {
             return "";
+        }
     }
 
     string getPath(const string& s) {
-        int p = s.rfind('/');
-        if (p != -1)
-            return s.substr(0, p + 1 );
-        else
+        string::size_type p = s.rfind('/');
+        if (p != string::npos) {
+            return s.substr(0, p + 1);
+        } else {
             return "";
+        }
     }
 
     string getFilename(const string& s) {
-        int p = s.rfind('/');
-        if (p != -1)
-            return s.substr(p+1);
-        else
+        string::size_type p = s.rfind('/');
+        if (p != string::npos) {
+            return s.substr(p + 1);
+        } else {
             return s;
+        }
     }
 
-    string va(const char* s, ...)
-    {
+    string va(const char* s, ...) {
         char temp[1024];
         va_list lst;
         
@@ -104,6 +107,6 @@ namespace pyr {
         vsprintf(temp, s, lst);
         va_end(lst);
 
-        return string(temp);
+        return temp;
     }
 };

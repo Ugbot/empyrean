@@ -32,7 +32,7 @@ namespace pyr {
     
         void update(float dt) {
             _pos += _vel * dt;
-            //_pos[1] = std::max(0.0f, _pos[1]);
+            _pos[1] = std::max(0.0f, _pos[1]);
             //_vel[1] -= 9.81f * dt;
         }
         

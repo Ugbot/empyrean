@@ -48,7 +48,7 @@ namespace pyr {
             
             if (_socket->write(&id, sizeof(id)) != sizeof(id) ||
                 _socket->write(&size, sizeof(size)) != sizeof(size) ||
-                _socket->write(out.getBuffer(), out.getSize()) != out.getSize())
+                _socket->write(out.getBuffer(), static_cast<int>(out.getSize())) != out.getSize())
             {
                 break;
             }

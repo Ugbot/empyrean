@@ -38,9 +38,11 @@ namespace pyr {
 
         CalCoreModel _coreModel;
         int _refCount;
+        float _scale;
 
         CoreModel(const std::string& id) {
             _coreModel.create(id);
+            _scale = 1.0f;
             loadConfigFile(id, _coreModel);
             _refCount = 0;
         }
@@ -67,13 +69,12 @@ namespace pyr {
             _coreModel.destroy();
         }
 
-        static void loadConfigFile(const string& fname, CalCoreModel& model) {
+        void loadConfigFile(const string& fname, CalCoreModel& model) {
             string path = getPath(fname);
 
             ifstream file(fname.c_str());
             std::string c;
 
-            float scale;
             string skeleton;
             vector<string> animations;
             vector<string> meshes;
@@ -87,7 +88,7 @@ namespace pyr {
                 if (line[0][0] == '#' || c[0]=='\0') {
                     ;   // do nothing at all
                 } else if (line[0] == "scale") {
-                    scale=(float)atof(line[1].c_str()); // @todo Do something with the scale?
+                    _scale=float(atof(line[1].c_str()));
                 } else if (line[0] == "skeleton") {
                     skeleton=line[1];
                 } else if (line[0] == "animation") {
@@ -222,10 +223,14 @@ namespace pyr {
         void decRef() {
             _refCount--;
 
-            if (_refCount == 0)
+            if (_refCount == 0) {
                 delete this;
+            }
         }
-
+        
+        float getScale() const {
+            return _scale;
+        }
     };
 
     CoreModel::InstanceMap CoreModel::_instances;
@@ -240,10 +245,11 @@ namespace pyr {
             _model.attachMesh(i);
         
         _model.setMaterialSet(0);
+        
+        _scale = _coreModel->getScale();
     }
 
-    Model::~Model()
-    {
+    Model::~Model() {
         _model.destroy();
         _coreModel->decRef();
     }

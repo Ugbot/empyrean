@@ -278,8 +278,7 @@ namespace pyr {
             glVertex3fv(verts);
         }
 
-        static void setTex(u32 tex)
-        {
+        static void setTex(u32 tex) {
             //PYR_ASSERT(tex,"CellShade::tex must not be 0!");
             glBindTexture(GL_TEXTURE_2D,tex);
         }
@@ -291,10 +290,15 @@ namespace pyr {
     }
 
     void DefaultRenderer::draw(Model* m) {
-        if (_useVertexArrays)
+        glPushMatrix();
+        float scale = m->getScale();
+        glScalef(scale, scale, scale);
+        if (_useVertexArrays) {
             pyr::renderMesh(*m);
-        else
-            renderMesh(*m,DefaultShade());
+        } else {
+            renderMesh(*m, DefaultShade());
+        }
+        glPopMatrix();
     }
 
     void DefaultRenderer::useVertexArrays(bool b) {
@@ -329,10 +333,15 @@ namespace pyr {
     }
 
     void CellShadeRenderer::draw(Model* m) {
-        if (_useVertexArrays)
+        glPushMatrix();
+        float scale = m->getScale();
+        glScalef(scale, scale, scale);
+        if (_useVertexArrays) {
             pyr::renderMesh(*m, true, _shadeTex.handle);
-        else
+        } else {
             renderMesh(*m, CellShade(_shadeTex.handle));
+        }
+        glPopMatrix();
     }
 
     void CellShadeRenderer::useVertexArrays(bool b) {

@@ -33,9 +33,9 @@ namespace pyr {
         
         for (;;) {
             char buffer[1024];
-            int read = fread(buffer, 1, BUFFER_SIZE, file);
+            size_t read = fread(buffer, 1, BUFFER_SIZE, file);
             
-            int status = XML_Parse(_parser, buffer, read, 0);
+            int status = XML_Parse(_parser, buffer, static_cast<int>(read), 0);
             if (status == 0) {
                 fclose(file);
                 return finish();

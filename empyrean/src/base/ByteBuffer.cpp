@@ -5,8 +5,8 @@
 
 namespace pyr {
 
-    void ByteBuffer::add(const void* buffer, int size) {
-        int new_size = _size + size;
+    void ByteBuffer::add(const void* buffer, size_t size) {
+        size_t new_size = _size + size;
         
         bool do_realloc = false;
         while (_capacity < new_size) {
@@ -21,7 +21,7 @@ namespace pyr {
         _size += size;
     }
     
-    void ByteBuffer::consumeFront(int amount) {
+    void ByteBuffer::consumeFront(size_t amount) {
         amount = std::min(amount, _size);
         memmove(_buffer, _buffer + amount, _size - amount);
         _size -= amount;
