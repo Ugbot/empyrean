@@ -3,10 +3,13 @@
 
 namespace pyr {
 
-    CreateMapElementCommand::CreateMapElementCommand(const RefPtr<MapElement>& element, const RefPtr<GroupElement>& parentElement)
-        : _element(element)
-        , _parentElement(parentElement)
-    {}
+    CreateMapElementCommand::CreateMapElementCommand(
+        const MapElementPtr& element,
+        const GroupElementPtr& parentElement)
+    {
+        _element = element;
+        _parentElement = parentElement;
+    }
 
     void CreateMapElementCommand::perform(CommandContext& context) {
         _parentElement->children.push_back(_element);

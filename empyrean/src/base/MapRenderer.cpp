@@ -12,7 +12,7 @@ namespace pyr {
         glTranslate(e->pos);
 
         for (unsigned i = 0; i < e->children.size(); i++) {
-            e->children[i]->handleVisitor(this);
+            e->children[i]->handleVisitor(*this);
         }
 
         glPopMatrix();

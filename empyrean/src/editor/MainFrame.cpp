@@ -1,12 +1,9 @@
+#include "CreateGeometryTool.h"
 #include "MainFrame.h"
-#include "MapElement.h"
-#include "MapFile.h"
 #include "MapTree.h"
 #include "MapUpdateVisitor.h"
 #include "MapView.h"
-#include "ObstructionTool.h"
 #include "PropertyGridUpdater.h"
-#include "RectangleTool.h"
 #include "TranslateTool.h"
 #include "TranslateViewTool.h"
 #include "ZoomViewTool.h"
@@ -21,8 +18,8 @@ namespace pyr {
         ID_VIEW_ZOOM,
     
         ID_TOOL_TRANSLATE,
-        ID_TOOL_RECTANGLE,
-        ID_TOOL_OBSTRUCTION,
+
+        ID_TOOL_CREATE_GEOMETRY,
     };
 
     BEGIN_EVENT_TABLE(MainFrame, wxFrame)
@@ -34,8 +31,8 @@ namespace pyr {
         EVT_TOOL(ID_VIEW_ZOOM,      MainFrame::onUseZoomViewTool)
         
         EVT_TOOL(ID_TOOL_TRANSLATE,   MainFrame::onUseTranslateTool)
-        EVT_TOOL(ID_TOOL_RECTANGLE,   MainFrame::onUseRectangleTool)
-        EVT_TOOL(ID_TOOL_OBSTRUCTION, MainFrame::onUseObstructionTool)
+        
+        EVT_TOOL(ID_TOOL_CREATE_GEOMETRY, MainFrame::onUseCreateGeometryTool)
 
         EVT_GRID_EDITOR_SHOWN(MainFrame::onBeginEditGrid)
         EVT_GRID_CELL_CHANGE(MainFrame::onChangeGrid)
@@ -46,7 +43,6 @@ namespace pyr {
     
     MainFrame::MainFrame()
         : wxFrame(0, -1, "pyrEdit", wxDefaultPosition, wxSize(640, 480))
-        , _map(new Map)
     {
         createMenu();
         createToolBars();
@@ -54,7 +50,7 @@ namespace pyr {
         createStatusBar();
 
         // Test code, to get a map
-        GroupElement* mapRoot = _map->getRoot().get();
+        GroupElementPtr mapRoot = _map.getRoot();
         GeometryElement* e = new GeometryElement;
         e->texture = "images/pointer.png";
         e->addVert(gmtl::Vec2f(0, 0), gmtl::Vec2f(0, 0), gmtl::Vec4f(1, 1, 1, 1));
@@ -72,12 +68,12 @@ namespace pyr {
     }
 
     MainFrame::~MainFrame() {
-        clearList(_undoList);
-        clearList(_redoList);
+        clearStack(_undoList);
+        clearStack(_redoList);
     }
 
     const Map* MainFrame::getMap() const {
-        return _map.get();
+        return &_map;
     }
     
     MapView* MainFrame::getMapView() const {
@@ -95,25 +91,35 @@ namespace pyr {
     void MainFrame::handleCommand(pyr::Command* cmd) {
         PYR_ASSERT(cmd, "Can't handle null command");
 
-        CommandContext context(_mapTree, _mapView, this, _map.get());
+        CommandContext context(_mapTree, _mapView, this, &_map);
 
-        clearList(_redoList);
+        clearStack(_redoList);
         _undoList.push(cmd);
         cmd->perform(context);
     }
 
     void MainFrame::updateTree() {
-        _mapTree->update(_map.get());
+        _mapTree->update(&_map);
     }
 
     void MainFrame::updatePropertyGrid() {
         MapElement* e = getSelectedElement();
-        // assert(e)?
-        
-        if (e)
-        {
+        if (e) {
             PropertyGridUpdater pgu(_propertiesGrid);
             e->handleVisitor(pgu);
+        } else {
+            wxGrid* g = _propertiesGrid;
+        
+            // Can't have an empty grid, so just have one empty row.  :(
+            int delta = 1 - g->GetRows();
+            if (delta > 0) {
+                g->AppendRows(delta);
+            } else if (delta < 0) {
+                g->DeleteRows(0, -delta);
+            }
+            g->SetReadOnly(0, 0); g->SetCellValue("N/A", 0, 0);
+            g->SetReadOnly(0, 1); g->SetCellValue("N/A", 0, 1);
+            g->AutoSizeColumn(0);
         }
     }
 
@@ -140,8 +146,8 @@ namespace pyr {
         
         wxMenu* toolMenu = new wxMenu;
         toolMenu->Append(ID_TOOL_TRANSLATE, "&Translate");
-        toolMenu->Append(ID_TOOL_RECTANGLE, "&Rectangle");
-        toolMenu->Append(ID_TOOL_OBSTRUCTION, "&Obstruction");
+        toolMenu->AppendSeparator();
+        toolMenu->Append(ID_TOOL_CREATE_GEOMETRY, "Create &Geometry");
         
         wxMenu* helpMenu = new wxMenu;
         helpMenu->Append(wxID_ABOUT,  "&About...");
@@ -167,6 +173,7 @@ namespace pyr {
         wxToolBar* toolbar = CreateToolBar(style);
 
         #if wxVERSION_NUMBER >= 2400
+        // This list is the canonical one.  Modify it and then update the other.
         toolbar->AddTool(wxID_NEW,  "New",  PNG_BITMAP("editorrc/new.png"));
         toolbar->AddTool(wxID_OPEN, "Open", PNG_BITMAP("editorrc/open.png"));
         toolbar->AddTool(wxID_SAVE, "Save", PNG_BITMAP("editorrc/save.png"));
@@ -175,19 +182,19 @@ namespace pyr {
         toolbar->AddTool(ID_VIEW_ZOOM,      "VZoom",  PNG_BITMAP("editorrc/view_zoom.png"));
         toolbar->AddSeparator();
         toolbar->AddTool(ID_TOOL_TRANSLATE, "Trans", PNG_BITMAP("editorrc/tool_translate.png"));
-        toolbar->AddTool(ID_TOOL_RECTANGLE, "Rect",  PNG_BITMAP("editorrc/tool_rect.png"));
-        toolbar->AddTool(ID_TOOL_OBSTRUCTION, "Obs", PNG_BITMAP("editorrc/tool_translate.png")); // ah what the hell
+        toolbar->AddSeparator();
+        toolbar->AddTool(ID_TOOL_CREATE_GEOMETRY, "Geom", PNG_BITMAP("editorrc/tool_translate.png"));
         #else
-        toolbar->AddTool(wxID_NEW, PNG_BITMAP("editorrc/new.png"));
+        toolbar->AddTool(wxID_NEW,  PNG_BITMAP("editorrc/new.png"));
         toolbar->AddTool(wxID_OPEN, PNG_BITMAP("editorrc/open.png"));
         toolbar->AddTool(wxID_SAVE, PNG_BITMAP("editorrc/save.png"));
         toolbar->AddSeparator();
         toolbar->AddTool(ID_VIEW_TRANSLATE, PNG_BITMAP("editorrc/view_translate.png"));
         toolbar->AddTool(ID_VIEW_ZOOM,      PNG_BITMAP("editorrc/view_zoom.png"));
         toolbar->AddSeparator();
-        toolbar->AddTool(ID_TOOL_TRANSLATE, PNG_BITMAP("editorrc/tool_translate.png"));
-        toolbar->AddTool(ID_TOOL_RECTANGLE, PNG_BITMAP("editorrc/tool_rect.png"));
-        toolbar->AddTool(ID_TOOL_OBSTRUCTION, PNG_BITMAP("editorrc/tool_translate.png")); // ah what the hell
+        toolbar->AddTool(ID_TOOL_TRANSLATE, NG_BITMAP("editorrc/tool_translate.png"));
+        toolbar->AddSeparator();
+        toolbar->AddTool(ID_TOOL_CREATE_GEOMETRY, PNG_BITMAP("editorrc/tool_translate.png"));
         #endif
 
         // add more stuff
@@ -253,15 +260,11 @@ namespace pyr {
     void MainFrame::onUseTranslateTool(wxCommandEvent&) {
         _mapView->setTool(new TranslateTool);
     }
-
-    void MainFrame::onUseRectangleTool(wxCommandEvent&) {
-        //_mapView->setTool(new RectangleTool(this));
-    }
-
-    void MainFrame::onUseObstructionTool(wxCommandEvent&) {
-        //_mapView->setTool(new ObstructionTool(this));
-    }
     
+    void MainFrame::onUseCreateGeometryTool(wxCommandEvent&) {
+        _mapView->setTool(new CreateGeometryTool);
+    }
+
     void MainFrame::onBeginEditGrid(wxGridEvent& event) {
         // ?
     }
@@ -275,7 +278,7 @@ namespace pyr {
         e.value = _propertiesGrid->GetCellValue(row, 1).c_str();    // the value it was changed to
 
         MapUpdateVisitor muv(e.name, e.value);
-        _mapTree->getSelection()->handleVisitor(&muv);
+        _mapTree->getSelection()->handleVisitor(muv);
 
         bool result = true;
             _mapView->getTool()->onPropertiesChanged(e);
@@ -293,7 +296,7 @@ namespace pyr {
             pyr::Command* c = _undoList.top();
             _undoList.pop();
             _redoList.push(c);
-            CommandContext context(_mapTree, _mapView, this, _map.get());
+            CommandContext context(_mapTree, _mapView, this, &_map);
             c->undo(context);
         }
     }
@@ -303,16 +306,16 @@ namespace pyr {
             pyr::Command* c = _redoList.top();
             _redoList.pop();
             _undoList.push(c);
-            CommandContext context(_mapTree, _mapView, this, _map.get());
+            CommandContext context(_mapTree, _mapView, this, &_map);
             c->perform(context);
         }
     }
 
-    void MainFrame::clearList(std::stack<pyr::Command*>& list) {
-        while (!list.empty()) {
-            pyr::Command* c = list.top();
+    void MainFrame::clearStack(std::stack<pyr::Command*>& stack) {
+        while (!stack.empty()) {
+            pyr::Command* c = stack.top();
             delete c;
-            list.pop();
+            stack.pop();
         }
     }
 }

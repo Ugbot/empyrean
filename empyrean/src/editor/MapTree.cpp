@@ -1,13 +1,10 @@
-
-#include "MapTree.h"
-
+#include "CreateMapElementCommand.h"
 #include "Editor.h"
 #include "MainFrame.h"
-#include "MapFile.h"
-#include "MapTreeUpdater.h"
-#include "MapFile.h"
+#include "Map.h"
 #include "MapElement.h"
-#include "CreateMapElementCommand.h"
+#include "MapTree.h"
+#include "MapTreeUpdater.h"
 
 namespace pyr {
 
@@ -40,14 +37,14 @@ namespace pyr {
     void MapTree::update(const Map* map) {
         MapTreeUpdater updater(this, GetRootItem());
         DeleteChildren(GetRootItem());
-        map->getRoot()->handleVisitor(&updater);
+        map->getRoot()->handleVisitor(updater);
     }
 
     MapElement* MapTree::getSelection() const {
         // GetSelection returns a wxTreeItemId, getSelection returns the map element.  GOOD NAME
         TreeItemData* tid = static_cast<TreeItemData*>(GetItemData(GetSelection()));
 
-        return tid ? tid->element : 0;
+        return tid ? tid->element.get() : 0;
     }
 
     void MapTree::onRightClick(wxMouseEvent& event) {
@@ -67,7 +64,7 @@ namespace pyr {
         wxASSERT(data != 0);
 
         // Maybe dynamic_cast isn't such a good idea.  I dunno.
-        GroupElement* group = dynamic_cast<GroupElement*>(data->element);
+        GroupElement* group = dynamic_cast<GroupElement*>(data->element.get());
         if (id.IsOk() && group) {
             GeometryElement* element = new GeometryElement();
 

@@ -4,6 +4,7 @@
 #include <stack>
 #include "wx.h"
 #include "Command.h"
+#include "Map.h"
 #include "Utility.h"
 
 namespace pyr {
@@ -38,14 +39,15 @@ namespace pyr {
         void onUndo(wxCommandEvent&);
         void onRedo(wxCommandEvent&);
         
-        // view tool selection
+        // view tools
         void onUseTranslateViewTool(wxCommandEvent&);
         void onUseZoomViewTool(wxCommandEvent&);
         
-        // tool selection
+        // object modification tools
         void onUseTranslateTool(wxCommandEvent&);
-        void onUseRectangleTool(wxCommandEvent&);
-        void onUseObstructionTool(wxCommandEvent&);
+        
+        // creation tools
+        void onUseCreateGeometryTool(wxCommandEvent&);
         
         void onBeginEditGrid(wxGridEvent& event);
         void onChangeGrid(wxGridEvent& event);
@@ -64,9 +66,9 @@ namespace pyr {
 
         std::stack<pyr::Command*> _undoList;
         std::stack<pyr::Command*> _redoList;
-        void clearList(std::stack<pyr::Command*>& list); // deletes and clears
+        void clearStack(std::stack<pyr::Command*>& list); // deletes and clears
 
-        ScopedPtr<Map> _map;
+        Map _map;
         
         DECLARE_EVENT_TABLE()
     };

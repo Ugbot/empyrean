@@ -1,9 +1,9 @@
 #ifndef PYR_TOOL_H
 #define PYR_TOOL_H
 
-#include <gmtl/gmtl.h>
 #include <map>
 #include <string>
+#include "VecMath.h"
 
 namespace pyr {
 
@@ -14,8 +14,8 @@ namespace pyr {
 
     struct ToolEvent {
         CommandReceiver* cmd;
-        gmtl::Vec2f pos;
-        gmtl::Vec2i screenPos;
+        Vec2f mapPos;
+        Vec2i screenPos;
         bool leftButton;
         bool rightButton;
         bool middleButton;
@@ -32,7 +32,7 @@ namespace pyr {
 
     /**
      * Superclass for all editor tools.
-     * It allows tools to gain a const MapView* pointing to it.
+     * It allows tools to gain a const Map* pointing to it.
      *
      * This is necessary for tools to be able to render things when active, and other such things.
      * the constness *should* keep silly people from altering the map without using a Command.
@@ -45,6 +45,8 @@ namespace pyr {
         virtual bool onMouseMove(ToolEvent&) { return false; }
         virtual bool onLeftDown(ToolEvent&)  { return false; }
         virtual bool onLeftUp(ToolEvent&)    { return false; }
+        virtual bool onRightDown(ToolEvent&) { return false; }
+        virtual bool onRightUp(ToolEvent&)   { return false; }
         virtual bool onPropertiesChanged(GridEvent&) { return false; }
 
         virtual void onRender() { }
@@ -53,8 +55,9 @@ namespace pyr {
         static MainFrame* getMainFrame();
         static MapView* getMapView();
         static const Map* getMap();
+        static MapElement* getSelectedElement();
 
-        static void setPropertiesGrid(std::map<std::string, std::string>& properties);
+        //static void setPropertiesGrid(std::map<std::string, std::string>& properties);
     };
 
 }

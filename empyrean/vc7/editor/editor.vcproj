@@ -219,6 +219,9 @@
 			Name="tools"
 			Filter="">
 			<File
+				RelativePath="..\..\src\editor\CreateGeometryTool.h">
+			</File>
+			<File
 				RelativePath="..\..\src\editor\ObstructionTool.cpp">
 			</File>
 			<File

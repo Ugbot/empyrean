@@ -24,37 +24,36 @@ namespace pyr {
 
         virtual bool onMouseMove(ToolEvent& event) {
             if (_down) {
-                getMainFrame()->getSelectedElement()->pos = _oldElementPos - (_lastPos - event.pos);
+                if (MapElement* elt = getSelectedElement()) {
+                    elt->pos = _oldElementPos - (_lastPos - event.mapPos);
+                }
             }
 
             return _down;
         }
 
         virtual bool onLeftDown(ToolEvent& event) {
-            MapElement* e = getMainFrame()->getSelectedElement();
-
-            if (e) {
-                _oldElementPos = e->pos;
+            if (MapElement* elt = getSelectedElement()) {
+                _oldElementPos = elt->pos;
                 _down = true;
-                _lastPos = event.pos;
+                _lastPos = event.mapPos;
             }            
             return false;
         }
 
         virtual bool onLeftUp(ToolEvent& event) {
             _down = false;
-            gmtl::Vec2f newPos = _oldElementPos - (_lastPos - event.pos);
+            Vec2f newPos = _oldElementPos - (_lastPos - event.mapPos);
 
-            MapElement* e = getMainFrame()->getSelectedElement();
-            if (e) {
+            if (MapElement* elt = getSelectedElement()) {
                 // need to restore this; permanently altering the map
                 // must be done with a Command
-                e->pos = _oldElementPos;
+                elt->pos = _oldElementPos;
 
                 // if shift is held when the mouse button is released, no
                 // movement is done
                 if (!event.shift) {
-                    event.cmd->handleCommand(new UpdateMapElementCommand(e, newPos));
+                    event.cmd->handleCommand(new UpdateMapElementCommand(elt, newPos));
                 }
 
                 getMainFrame()->updatePropertyGrid();
@@ -67,9 +66,9 @@ namespace pyr {
 
     private:
         bool _down;
-        gmtl::Vec2f _lastPos;
+        Vec2f _lastPos;
 
-        gmtl::Vec2f _oldElementPos;
+        Vec2f _oldElementPos;
     };
 
 }

@@ -32,8 +32,6 @@ namespace pyr {
 
         _tool = new DefaultTool;
         _zoomFactor = 100.0f;
-
-        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     }
 
     MapView::~MapView() {
@@ -53,14 +51,24 @@ namespace pyr {
         return _tool.get();
     }
     
-    gmtl::Vec2f MapView::getMapCoordinates(const gmtl::Vec2i& screenPos) {
+    Vec2f MapView::getMapCoordinates(const Vec2i& screenPos) {
         wxSize size = GetClientSize();
-        gmtl::Vec2f upperLeft(
-            _viewCenter[0] - size.x / 2.0f,
-            _viewCenter[1] - size.y / 2.0f);
-        return gmtl::Vec2f(
-            screenPos[0] / _zoomFactor + upperLeft[0],
-            -(screenPos[1] / _zoomFactor + upperLeft[1]));
+        Vec2f upperLeft(  // In map coordinates.
+            _viewCenter[0] - size.x / 2.0f / _zoomFactor,
+            _viewCenter[1] + size.y / 2.0f / _zoomFactor);
+        return Vec2f(
+            upperLeft[0] + screenPos[0] / _zoomFactor,
+            upperLeft[1] - screenPos[1] / _zoomFactor);
+    }
+    
+    Vec2i MapView::getScreenCoordinates(const Vec2f& mapPos) {
+        wxSize size = GetClientSize();
+        Vec2f screenPos(
+            _zoomFactor * (mapPos[0] - _viewCenter[0]) + size.x / 2.0f,
+            _zoomFactor * (_viewCenter[1] - mapPos[1]) + size.y / 2.0f);
+        return Vec2i(
+            static_cast<int>(screenPos[0]),
+            static_cast<int>(screenPos[1]));
     }
 
     void MapView::OnSize(wxSizeEvent& e) {
@@ -97,11 +105,11 @@ namespace pyr {
             return;
         }
         
-        const gmtl::Vec2i screenPos(e.GetX(), e.GetY());
+        const Vec2i screenPos(e.GetX(), e.GetY());
     
         ToolEvent te;
         te.cmd = _mainFrame;
-        te.pos = getMapCoordinates(screenPos);
+        te.mapPos = getMapCoordinates(screenPos);
         te.screenPos = screenPos;
         te.leftButton = e.LeftIsDown();
         te.rightButton = e.RightIsDown();
@@ -121,6 +129,12 @@ namespace pyr {
                 repaint = _tool->onLeftDown(te);
             } else {
                 repaint = _tool->onLeftUp(te);
+            }
+        } else if (button == 2) {
+            if (e.ButtonDown()) {
+                repaint = _tool->onRightDown(te);
+            } else {
+                repaint = _tool->onRightUp(te);
             }
         }
         
@@ -147,11 +161,10 @@ namespace pyr {
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
         MapRenderer renderer;
-        // why do I need to dereference?  I overloaded for MapVisitor&
-        getMap()->getRoot()->handleVisitor(&renderer);
+        getMap()->getRoot()->handleVisitor(renderer);
 
         MapOutliner outliner;
-        getMap()->getRoot()->handleVisitor(&outliner);
+        getMap()->getRoot()->handleVisitor(outliner);
 
         _tool->onRender();
         

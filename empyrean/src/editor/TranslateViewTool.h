@@ -17,7 +17,7 @@ namespace pyr {
         
     private:
         bool _down;
-        gmtl::Vec2f _lastPos;
+        Vec2f _lastPos;
     };
 
 }

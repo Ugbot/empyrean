@@ -1,17 +1,18 @@
 #ifndef PYR_MAPTREE_H
 #define PYR_MAPTREE_H
 
+#include "MapElement.h"
+#include "Utility.h"
 #include "wx.h"
 
 namespace pyr {
 
     class CommandReciever;
-    class MapElement;
     class Map;
 
     class TreeItemData : public wxTreeItemData {
     public:
-        MapElement* element;
+        MapElementPtr element;
 
         TreeItemData(MapElement* e)
             : element(e)

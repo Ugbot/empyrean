@@ -16,7 +16,12 @@ namespace pyr {
     const Map* Tool::getMap() {
         return getMainFrame()->getMap();
     }
+    
+    MapElement* Tool::getSelectedElement() {
+        return getMainFrame()->getSelectedElement();
+    }
 
+/*
     void Tool::setPropertiesGrid(std::map<std::string, std::string>& properties) {
         wxGrid* grid = getMainFrame()->getPropertiesGrid();
 
@@ -46,4 +51,5 @@ namespace pyr {
         grid->AutoSizeColumn(0);
         grid->EndBatch();
     }
+*/
 }

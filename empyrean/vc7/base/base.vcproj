@@ -164,16 +164,16 @@
 				RelativePath="..\..\src\base\LokiTypeInfo.h">
 			</File>
 			<File
+				RelativePath="..\..\src\base\Map.cpp">
+			</File>
+			<File
+				RelativePath="..\..\src\base\Map.h">
+			</File>
+			<File
 				RelativePath="..\..\src\base\MapElement.cpp">
 			</File>
 			<File
 				RelativePath="..\..\src\base\MapElement.h">
-			</File>
-			<File
-				RelativePath="..\..\src\base\MapFile.cpp">
-			</File>
-			<File
-				RelativePath="..\..\src\base\MapFile.h">
 			</File>
 			<File
 				RelativePath="..\..\src\base\MapRenderer.cpp">
@@ -285,6 +285,9 @@
 			</File>
 			<File
 				RelativePath="..\..\src\base\Utility.h">
+			</File>
+			<File
+				RelativePath="..\..\src\base\VecMath.h">
 			</File>
 			<File
 				RelativePath="..\..\src\base\WriterThread.cpp">

@@ -19,7 +19,7 @@ namespace pyr {
 
 
     /**
-     * Specializations should define the following static methods:
+     * Specializations must define the following static methods:
      * T create(const std::string& id);
      * void destroy(T value);
      */

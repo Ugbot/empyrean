@@ -3,7 +3,6 @@
 
 namespace pyr {
 
-    class MapElement;
     class GroupElement;
     class GeometryElement;
 

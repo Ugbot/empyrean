@@ -2,9 +2,9 @@
 #define PYR_MAP_VIEW_H
 
 
-#include <gmtl/gmtl.h>
-#include "MapFile.h"
+#include "Map.h"
 #include "Utility.h"
+#include "VecMath.h"
 #include "wx.h"
 
 
@@ -24,14 +24,16 @@ namespace pyr {
         void setTool(Tool* tool);
         Tool* getTool() const;
         
-        void setViewCenter(const gmtl::Vec2f& center) { _viewCenter = center; }        
-        const gmtl::Vec2f& getViewCenter() const      { return _viewCenter;   }
-        gmtl::Vec2f& getViewCenter()                  { return _viewCenter;   }
+        void setViewCenter(const Vec2f& center) { _viewCenter = center; }        
+        const Vec2f& getViewCenter() const      { return _viewCenter;   }
+        Vec2f& getViewCenter()                  { return _viewCenter;   }
         
         void setZoomFactor(float factor) { _zoomFactor = factor; }
         float getZoomFactor() const      { return _zoomFactor; }
         
-        gmtl::Vec2f getMapCoordinates(const gmtl::Vec2i& screenPos);
+        Vec2f getMapCoordinates(const Vec2i& screenPos);
+        Vec2i getScreenCoordinates(const Vec2f& mapPos);
+        
 
     private:
         void OnSize(wxSizeEvent& e);
@@ -43,7 +45,7 @@ namespace pyr {
 
         MainFrame* _mainFrame;
         ScopedPtr<Tool> _tool;
-        gmtl::Vec2f _viewCenter;
+        Vec2f _viewCenter;
         float _zoomFactor;
 
         DECLARE_EVENT_TABLE()

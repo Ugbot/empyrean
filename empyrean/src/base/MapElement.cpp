@@ -5,7 +5,7 @@
 namespace pyr {
 
     bool GeometryElement::Triangle::operator == (const GeometryElement::Triangle& rhs) const { 
-        // There shouldn't be any repeat indeces, so we can just see if there's
+        // There shouldn't be any repeat indices, so we can just see if there's
         // any commonality between each vertex
         return
             (vert[0] == rhs.vert[0] ||
@@ -25,9 +25,9 @@ namespace pyr {
     {}
 
     void GeometryElement::addVert(
-        const gmtl::Vec2f& pos,
-        const gmtl::Vec2f& tex,
-        const gmtl::Vec4f& col)
+        const Vec2f& pos,
+        const Vec2f& tex,
+        const Vec4f& col)
     {
         Vertex v;
         v.pos = pos;
@@ -39,9 +39,9 @@ namespace pyr {
 
     void GeometryElement::updateVert(
         unsigned index,
-        const gmtl::Vec2f& pos,
-        const gmtl::Vec2f& tex,
-        const gmtl::Vec4f& col)
+        const Vec2f& pos,
+        const Vec2f& tex,
+        const Vec4f& col)
     {
         Vertex& v = _verts[index];
         v.pos = pos;
@@ -63,7 +63,7 @@ namespace pyr {
 
         // Make sure the tri doesn't already exist in here someplace.
         // std::set instead?
-        for (unsigned i = 0; i < tris.size(); i++) {
+        for (size_t i = 0; i < tris.size(); i++) {
             if (tris[i] == t) {
                 return;
             }
@@ -83,11 +83,11 @@ namespace pyr {
         _tris.erase(_tris.begin() + index);
     }
 
-    void GeometryElement::handleVisitor(MapVisitor* v) {
-        v->visitGeometry(this);
+    void GeometryElement::handleVisitor(MapVisitor& v) {
+        v.visitGeometry(this);
     }
-
-    void GroupElement::handleVisitor(MapVisitor* v) {
-        v->visitGroup(this);
+    
+    void GroupElement::handleVisitor(MapVisitor& v) {
+        v.visitGroup(this);
     }
 }

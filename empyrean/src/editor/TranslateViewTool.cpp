@@ -10,7 +10,7 @@ namespace pyr {
 
     bool TranslateViewTool::onMouseMove(ToolEvent& event) {
         if (_down) {
-            getMapView()->getViewCenter() += _lastPos - event.pos;
+            getMapView()->getViewCenter() += _lastPos - event.mapPos;
             _lastPos = getMapView()->getMapCoordinates(event.screenPos);
             return true;
         } else {
@@ -19,7 +19,7 @@ namespace pyr {
     }
     
     bool TranslateViewTool::onLeftDown(ToolEvent& event) {
-        _lastPos = event.pos;
+        _lastPos = event.mapPos;
         _down = true;
         return false;
     }

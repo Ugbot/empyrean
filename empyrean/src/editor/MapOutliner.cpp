@@ -54,7 +54,7 @@ namespace pyr {
 
             // TODO: draw something to indicate where the group's origin is
 
-            e->children[i]->handleVisitor(this);
+            e->children[i]->handleVisitor(*this);
 
             glPopMatrix();
         }

@@ -7,30 +7,27 @@
 #include <gmtl/Vec.h>
 #include "RefCounted.h"
 #include "RefPtr.h"
+#include "VecMath.h"
 
 
 namespace pyr {
 
     class MapVisitor;
 
+    /// entities, triggers, obstructions should all inherit MapElement
     class MapElement : public RefCounted {
     public:
-        gmtl::Vec2f pos;
-
-        virtual void handleVisitor(MapVisitor* v) = 0;
+        Vec2f pos;
 
         // Allows more convenient syntax when creating MapVisitors on the stack.
         // ie. nameless temporaries.
-        void handleVisitor(MapVisitor& v) { handleVisitor(&v); }
+        virtual void handleVisitor(MapVisitor& v) = 0;
 
     protected:
-
         virtual ~MapElement() {}
     };
-
     typedef RefPtr<MapElement> MapElementPtr;
 
-    // entities, triggers, obstructions should all inherit MapElement
 
     /**
      * This indexed triangle list setup is decidedly inconvenient.  I suppose
@@ -42,14 +39,14 @@ namespace pyr {
     class GeometryElement : public MapElement {
     public:
         struct Vertex {
-            gmtl::Vec2f pos;
-            gmtl::Vec2f tex;
-            gmtl::Vec4f col;
+            Vec2f pos;
+            Vec2f tex;
+            Vec4f col;
         };
 
         // Triangle strips instead?
         struct Triangle {
-            int vert[3];  // indeces to use.
+            int vert[3];  // indices to use.
 
             bool operator == (const Triangle& rhs) const;
         };
@@ -65,14 +62,14 @@ namespace pyr {
 
         // interface
         void addVert(
-            const gmtl::Vec2f& pos, 
-            const gmtl::Vec2f& tex, 
-            const gmtl::Vec4f& col);
+            const Vec2f& pos, 
+            const Vec2f& tex, 
+            const Vec4f& col);
         void updateVert(
             unsigned index,
-            const gmtl::Vec2f& pos, 
-            const gmtl::Vec2f& tex, 
-            const gmtl::Vec4f& col);
+            const Vec2f& pos, 
+            const Vec2f& tex, 
+            const Vec4f& col);
         void deleteVert(unsigned index);
 
         void addTri(int a, int b, int c);
@@ -82,21 +79,24 @@ namespace pyr {
         const VertList& vertices;   // list of vertices
         const TriList& tris;        // triples of point indeces
 
-        virtual void handleVisitor(MapVisitor* v);
+        virtual void handleVisitor(MapVisitor& v);
 
     private:
         VertList _verts;
         TriList  _tris;
     };
+    typedef RefPtr<GeometryElement> GeometryElementPtr;
 
+
+    /// Render state changing nodes should inherit GroupElement.
     class GroupElement : public MapElement {
     public:
         std::vector<MapElementPtr> children;
-
-        virtual void handleVisitor(MapVisitor* v);
+    
+        virtual void handleVisitor(MapVisitor& v);
     };
+    typedef RefPtr<GroupElement> GroupElementPtr;
 
-    // Render state changing nodes should inherit GroupElement.
 }
 
 #endif
