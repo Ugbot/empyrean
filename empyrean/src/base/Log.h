@@ -17,6 +17,10 @@
 #include "Singleton.h"
 #include "Types.h"
 
+// Evil Win32.
+#ifdef ERROR
+#undef ERROR
+#endif
 
 namespace pyr {
 
