@@ -24,29 +24,18 @@
 }
 
 
+#define PYR_CATCH_ALL()                             \
+    catch (...) {                                   \
+        pyr::error("Unknown exception");            \
+    }
+    
+
 /// Defines an exception class that derives from std::runtime_error.
 #define PYR_DEFINE_RUNTIME_ERROR(name)  \
     struct name : std::runtime_error {  \
         name(const std::string& what)   \
         : std::runtime_error(what) { }  \
     }
-
-
-#if 0
-
-/**
- * This is disabled because it can catch system exceptions
- * such as division by zero or null pointer accesses.
- */
-#define PYR_CATCH_ALL()                             \
-    catch (...) {                                   \
-        pyr::error("Unknown exception");     \
-    }
-    
-#else
-#define PYR_CATCH_ALL()
-#endif
-
 
 
 namespace pyr {

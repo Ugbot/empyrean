@@ -1,6 +1,31 @@
 #include <stdio.h>
 #include "Error.h"
 
+
+#ifdef _MSC_VER
+
+#include <windows.h>
+#include <eh.h>
+
+namespace {
+
+    /**
+     * In MSVC, catch(...) can catch win32 exceptions such as division by
+     * zero and null pointer accesses.  Disable that behavior so we can
+     * actually break into the debugger when we screw up.
+     */
+    void disableCatchAll(unsigned, EXCEPTION_POINTERS*) {
+        throw;
+    }
+
+    _se_translator_function oldHandler = _set_se_translator(disableCatchAll);
+
+}
+
+#endif
+
+
+
 #if defined(WIN32) && !defined(_CONSOLE) && !defined(__CYGWIN__)
 
     #include <windows.h>
