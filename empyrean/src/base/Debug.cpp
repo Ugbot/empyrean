@@ -1,3 +1,6 @@
+//#define PYR_ENABLE_LEAK_CHECKER
+
+
 #include "CallStack.h"
 #include "Debug.h"
 #include "Log.h"
@@ -33,9 +36,6 @@
 
 
 #if defined(_MSC_VER) && defined(_DEBUG)
-
-
-//#define PYR_ENABLE_LEAK_CHECKER
 
 
 #include <map>

@@ -17,6 +17,7 @@ namespace pyr {
             specular = Vec3f(1, 1, 1);
             alpha = 1;
             shininess = 0;
+            texture_scale = Vec2f(1, 1);
         }
 
         string name;
@@ -88,7 +89,7 @@ namespace pyr {
                                 }
                             } else if (arg == "-s") {
                                 float sx, sy, sz;
-                                if (ss >> sy >> sy >> sz) {
+                                if (ss >> sx >> sy >> sz) {
                                     current.texture_scale = Vec2f(sx, sy/*, sz*/);
                                 }
                             } else {

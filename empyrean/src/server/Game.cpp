@@ -25,9 +25,9 @@ namespace pyr {
 
         // Loading below.
 
-        _map = loadMap("maps/map2.obj");
+        _map = loadMap("maps/map3.obj");
         if (!_map) {
-            throw std::runtime_error("Loading maps/map1.obj failed");
+            throw std::runtime_error("Loading maps/map3.obj failed");
         }
         
         // Find start position.
