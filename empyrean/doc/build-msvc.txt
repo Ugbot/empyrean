@@ -8,8 +8,8 @@ Note: The only supported version of MSVS is VS.NET 2003 (VC7.1).
 Before you can compile or run Empyrean, you must run the
 scripts/update-vc7.sh script.  This requires that you have Cygwin
 installed.  When installing Cygwin, make sure you select the Python,
-libpng, and jpeg packages.  (If we depend on more than that, let me
-know.)
+gcc (c++ and c), make, libpng-devel, and jpeg packages.  (If we depend
+on more than that, let me know.)
 
 Then you need to install SCons into Cygwin.  Go to www.scons.org,
 download and extract the latest source tarball into /usr/src, and run
