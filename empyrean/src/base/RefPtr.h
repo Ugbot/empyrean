@@ -22,7 +22,7 @@ namespace pyr {
     private:
         RefDerivedSafe<T>& operator=(const T&);
 
-        /// Prevents calling delete on a ScopedPtr.
+        /// Prevents calling delete on a RefPtr.
         void operator delete(void*);
 
 #if 0   // ref() and unref() are already private in RefCounted.  Uncomment
