@@ -183,6 +183,15 @@ namespace pyr {
                 e->getPos()[1] = +1000;
             }
         }
+
+		for(size_t i = 0; i < _entities.size(); ++i) {
+			ServerEntityPtr e = _entities[i];
+			// check if it's behavior is attacking - should only happen for monsters
+			BehaviorPtr b = e->getBehavior();
+			if(b->isAttacking()) {
+				handleMonsterAttack(e);
+			}
+		}
     }
 
     void Game::updateConnections() {
@@ -394,6 +403,157 @@ namespace pyr {
         _logger.log(INFO, "Allowing updates for connection");
         getData(c)->acceptingUpdates = true;  // maybe allow it to turn off later.
     }
+
+	void Game::handleMonsterAttack(ServerEntityPtr attacker)
+	{
+		float damageMod = 5.0f;
+		string type = "Melee";
+	    BehaviorPtr attackerBehavior = attacker->getBehavior();
+
+        // Get the bounding box of the attack - dumb this time - attacking both sides
+        Vec2f lowerLeft, upperRight, lowerLeft2, upperRight2;
+		lowerLeft = attacker->getPos() + Vec2f(attacker->getBounds().getWidth()/2.0f,attacker->getBounds().getHeight()/2.0f);
+        upperRight = attacker->getPos() + attacker->getBounds().max + Vec2f(attacker->getBounds().getHeight(), 0.0f);
+        lowerLeft2 = attacker->getPos() + attacker->getBounds().min + Vec2f(-attacker->getBounds().getHeight(),attacker->getBounds().getHeight()/2.0f);
+        upperRight2 = attacker->getPos() + attacker->getBounds().min + Vec2f(0.0f, attacker->getBounds().getHeight());
+
+		CollisionBox attackArea(lowerLeft,upperRight);
+        CollisionBox attackArea2(lowerLeft2, upperRight2);
+        
+        // See if the attack hits any other entities
+        std::vector<CollisionBox::Side> sidesHit;
+        std::vector<ServerEntityPtr> entitiesToClean;
+        for (size_t i=0; i < _entities.size(); i++) {
+            if (_entities[i] != attacker) {
+                CollisionBox otherEntityBox(_entities[i]->getPos() + _entities[i]->getBounds().min, 
+                                            _entities[i]->getPos() + _entities[i]->getBounds().max );
+                
+                CollisionData rv;
+                std::vector<Vec2f> points;
+                if (attackArea.findCollision(sidesHit,otherEntityBox,points)) {
+                    // An entity is potentially hit!
+                    _logger.log(WARN, "Found a potential hit!! ");
+
+                    // Determine the location and hitMod of the hit location
+                    getHitModifier(attackArea,type,points);
+
+                    // Get the weapon and armor stats of the combatants
+                    int minWpnDmg,maxWpnDmg,wpnDmgMult,wpnAccuracy = 0;
+                    attacker->getGameStats()->getEquippedWeaponStats(minWpnDmg,maxWpnDmg,
+                                                                    wpnDmgMult,wpnAccuracy);
+                    int armDmgDiv, armDef = 0;
+                    _entities[i]->getGameStats()->getEquippedArmorStats(armDef,armDmgDiv);
+
+                    // Determine the appropriate skill modifier (for now use Rush) - will be based on attack type
+                    int attSkillMod = 5*attacker->getGameStats()->getRushSkill();
+
+                    // See if the attacker scores a hit
+                    int attackScore = the<Die>().roll(1,50) + attacker->getGameStats()->getAgility() +
+                                    wpnAccuracy + attSkillMod;
+                    int defenderScore = the<Die>().roll(11,60) + _entities[i]->getGameStats()->getAgility() +
+                                        armDef + 5*_entities[i]->getGameStats()->getDodgeSkill();
+                    PYR_LOG(_logger, WARN, "Attacker Score = " << attackScore);
+                    PYR_LOG(_logger, WARN, "Defender Score = " << defenderScore);
+
+                    // If the attacker does hit, do damage
+                    if (attackScore >= defenderScore) {
+                        int abilityMod = type == "Melee" ? attacker->getGameStats()->getStrength() :
+                                                                attacker->getGameStats()->getAgility();
+            
+                        int damage = (int) ( (the<Die>().roll(minWpnDmg,maxWpnDmg) + abilityMod) * 
+                                            ((float)wpnDmgMult/(float)armDmgDiv)                   );
+                        
+                        damage = (int) (damage * damageMod);
+                        
+                        PYR_LOG(_logger, WARN, "Did damage = " << damage);
+                        _entities[i]->getGameStats()->changeVitality(-damage);
+                        sendAll(new CharacterUpdatedPacket( _entities[i]->getID(),
+                                                            _entities[i]->getGameStats()->getCurrentVitality(),
+                                                            _entities[i]->getGameStats()->getMaxVitality(),
+                                                            _entities[i]->getGameStats()->getCurrentEther(),
+                                                            _entities[i]->getGameStats()->getMaxEther()        ));
+                    }
+
+                    // See if the target has died, and if so inform everyone
+                    if (_entities[i]->getGameStats()->getCurrentVitality() < 1) {
+                        sendAll(new EntityRemovedPacket(_entities[i]->getID()));
+                        entitiesToClean.push_back(_entities[i]);
+                    }
+                }
+            }
+        }
+
+		// hack for second collision box
+        // See if the attack hits any other entities
+        std::vector<CollisionBox::Side> sidesHit2;
+        std::vector<ServerEntityPtr> entitiesToClean2;
+        for (size_t i=0; i < _entities.size(); i++) {
+            if (_entities[i] != attacker) {
+                CollisionBox otherEntityBox2(_entities[i]->getPos() + _entities[i]->getBounds().min, 
+                                            _entities[i]->getPos() + _entities[i]->getBounds().max );
+                
+                CollisionData rv2;
+                std::vector<Vec2f> points2;
+                if (attackArea2.findCollision(sidesHit2,otherEntityBox2,points2)) {
+                    // An entity is potentially hit!
+                    _logger.log(WARN, "Found a potential hit!! ");
+
+                    // Determine the location and hitMod of the hit location
+                    getHitModifier(attackArea2,type,points2);
+
+                    // Get the weapon and armor stats of the combatants
+                    int minWpnDmg,maxWpnDmg,wpnDmgMult,wpnAccuracy = 0;
+                    attacker->getGameStats()->getEquippedWeaponStats(minWpnDmg,maxWpnDmg,
+                                                                    wpnDmgMult,wpnAccuracy);
+                    int armDmgDiv, armDef = 0;
+                    _entities[i]->getGameStats()->getEquippedArmorStats(armDef,armDmgDiv);
+
+                    // Determine the appropriate skill modifier (for now use Rush) - will be based on attack type
+                    int attSkillMod = 5*attacker->getGameStats()->getRushSkill();
+
+                    // See if the attacker scores a hit
+                    int attackScore = the<Die>().roll(1,50) + attacker->getGameStats()->getAgility() +
+                                    wpnAccuracy + attSkillMod;
+                    int defenderScore = the<Die>().roll(11,60) + _entities[i]->getGameStats()->getAgility() +
+                                        armDef + 5*_entities[i]->getGameStats()->getDodgeSkill();
+                    PYR_LOG(_logger, WARN, "Attacker Score = " << attackScore);
+                    PYR_LOG(_logger, WARN, "Defender Score = " << defenderScore);
+
+                    // If the attacker does hit, do damage
+                    if (attackScore >= defenderScore) {
+                        int abilityMod = type == "Melee" ? attacker->getGameStats()->getStrength() :
+                                                                attacker->getGameStats()->getAgility();
+            
+                        int damage = (int) ( (the<Die>().roll(minWpnDmg,maxWpnDmg) + abilityMod) * 
+                                            ((float)wpnDmgMult/(float)armDmgDiv)                   );
+                        
+                        damage = (int) (damage * damageMod);
+                        
+                        PYR_LOG(_logger, WARN, "Did damage = " << damage);
+                        _entities[i]->getGameStats()->changeVitality(-damage);
+                        sendAll(new CharacterUpdatedPacket( _entities[i]->getID(),
+                                                            _entities[i]->getGameStats()->getCurrentVitality(),
+                                                            _entities[i]->getGameStats()->getMaxVitality(),
+                                                            _entities[i]->getGameStats()->getCurrentEther(),
+                                                            _entities[i]->getGameStats()->getMaxEther()        ));
+                    }
+
+                    // See if the target has died, and if so inform everyone
+                    if (_entities[i]->getGameStats()->getCurrentVitality() < 1) {
+                        sendAll(new EntityRemovedPacket(_entities[i]->getID()));
+                        entitiesToClean.push_back(_entities[i]);
+                    }
+                }
+            }
+        }
+
+        // Clean up dead entities
+        for (size_t i=0; i < entitiesToClean.size(); i++) {
+            _idGenerator.release(entitiesToClean[i]->getID());
+            removeEntity(entitiesToClean[i]);
+            entitiesToClean[i] = 0;
+        }
+	}
 
     void Game::handlePlayerAttack(Connection* c, PlayerAttackPacket* p) {
         GameConnectionData* cd = getData(c);

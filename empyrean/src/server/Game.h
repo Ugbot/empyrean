@@ -56,6 +56,9 @@ namespace pyr {
 
         int getHitModifier(CollisionBox& box, const string& attackType,
                            std::vector<Vec2f>& points);
+
+		void handleMonsterAttack(ServerEntityPtr attacker);
+
     private:
         string _name;
         string _password;
