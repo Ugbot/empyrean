@@ -59,7 +59,7 @@ namespace StickTest
             GL.glMatrixMode(GL.GL_PROJECTION);
             GL.glLoadIdentity();
             GL.gluPerspective(45,1.0*xres/yres,0.1,800);
-            GL.gluOrtho2D(-380,380,10,-100);
+            //GL.gluOrtho2D(-380,380,10,-100);
             GL.glMatrixMode(GL.GL_MODELVIEW);
             GL.glLoadIdentity();
 
@@ -374,7 +374,7 @@ namespace StickTest
             Console.WriteLine(v3);*/
             //Console.WriteLine(m4);
 
-            string s=args.Length>0?args[0]:"head1.ms3d.txt";
+            string s=args.Length>0?args[0]:"walk.ms3d.txt";
             new MainClass(s).Execute();
         }
     }

@@ -7,7 +7,7 @@
     >
         <Build>
             <Settings
-                ApplicationIcon = "App.ico"
+                ApplicationIcon = ""
                 AssemblyKeyContainerName = ""
                 AssemblyName = "StickTest"
                 AssemblyOriginatorKeyFile = ""
@@ -92,10 +92,6 @@
         <Files>
             <Include>
                 <File
-                    RelPath = "App.ico"
-                    BuildAction = "Content"
-                />
-                <File
                     RelPath = "AssemblyInfo.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
@@ -109,11 +105,6 @@
                     RelPath = "Texture.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "Texture.resx"
-                    DependentUpon = "Texture.cs"
-                    BuildAction = "EmbeddedResource"
                 />
                 <File
                     RelPath = "MilkShape\Joint.cs"
