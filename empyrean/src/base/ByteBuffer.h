@@ -34,6 +34,10 @@ namespace pyr {
             add(str.get(), size);
         }
         
+        void add(u8 value) {
+            add(&value, sizeof(value));
+        }
+
         void add(u16 value) {
             value = PR_htons(value);
             add(&value, sizeof(value));

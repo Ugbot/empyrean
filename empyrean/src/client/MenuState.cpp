@@ -130,8 +130,6 @@ namespace pyr {
     void MenuState::onButtonPressed(const ActionEvent& e) {
         if (e.getSource() == _connect) {
             _root = _loginRoot;
-            //invokeTransition<ConnectToServerState>();
-            //invokeTimedTransition<GameState>(1);
         } else if (e.getSource() == _options) {
             invokeTransition<OptionsState>();
         } else if (e.getSource() == _quit) {
@@ -140,7 +138,10 @@ namespace pyr {
             ServerConnection::instance().connect(
                 Configuration::instance().getServer(),
                 Configuration::instance().getPort());
-            ServerConnection::instance().login(_name->getText(), _password->getText());
+            ServerConnection::instance().login(
+                _name->getText(),
+                _password->getText(),
+                false);
             invokeTransition<GameState>();
         } else if (e.getSource() == _cancel) {
             _root = _mainRoot;

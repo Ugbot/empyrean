@@ -24,8 +24,8 @@
  *
  * -----------------------------------------------------------------
  * File:          $RCSfile: Color.h,v $
- * Date modified: $Date: 2003-07-22 03:24:31 $
- * Version:       $Revision: 1.1 $
+ * Date modified: $Date: 2003-08-08 00:17:54 $
+ * Version:       $Revision: 1.2 $
  * -----------------------------------------------------------------
  *
  ************************************************************** phui-cpr-end */
@@ -41,13 +41,19 @@ namespace phui
    /**
     * Color tuple for easier color handling.
     */
-   template< class TYPE >
+   template<class TYPE>
    struct Color
    {
       /**
-       * Creates a new uninitialized color.
+       * Creates a new color initialized to transparent black.
        */
-      Color() {}
+      Color()
+      {
+         r = 0;
+         g = 0;
+         b = 0;
+         a = 0;
+      }
 
       /**
        * Creates a color with the given color values.
@@ -57,9 +63,13 @@ namespace phui
        * @param b_   the blue part of the color
        * @param a_   the alpha/transparent part of the color
        */
-      Color(TYPE r_, TYPE g_, TYPE b_, TYPE a_)
-         : r(r_), g(g_), b(b_), a(a_)
-      {}
+      Color(TYPE r_, TYPE g_, TYPE b_, TYPE a_ = 1.0f)
+      {
+         r = r_;
+         g = g_;
+         b = b_;
+         a = a_;
+      }
 
       /**
        * Changes this color to the new color values.
@@ -82,10 +92,9 @@ namespace phui
       TYPE b;  /**< The blue part of the color. */
       TYPE a;  /**< The alpha/transparent part of the color. */
    };
-   // helper typedefs
-   typedef Color<float>    Colorf;
-   typedef Color<double>   Colord;
-   typedef Color<int>      Colori;
+
+   typedef Color<float>  Colorf;
+   typedef Color<double> Colord;
 
    template< typename T >
    inline std::ostream& operator<<(std::ostream& out, const Color<T>& clr)
@@ -118,10 +127,6 @@ namespace phui
    inline void glColor(const Colord& clr)
    {
       glColor4d(clr.r, clr.g, clr.b, clr.a);
-   }
-   inline void glColor(const Colori& clr)
-   {
-      glColor4i(clr.r, clr.g, clr.b, clr.a);
    }
    //@}
 

@@ -9,11 +9,16 @@
 
 namespace pyr {
 
-    #define PYR_CREATE_ACCOUNT_PACKET_NAME CreateAccountPacket
-    #define PYR_CREATE_ACCOUNT_PACKET(_)    \
-        _(string)(12, username)             \
-        _(string)(12, password)
+    // username length = 12...
 
+    // PACKET DEFINITIONS
+
+    #define PYR_CHAT_PACKET_NAME ChatPacket
+    #define PYR_CHAT_PACKET(_)  \
+        _(string)(12, username) \
+        _(field)(u16, action)   \
+        _(string)(512, text)
+    
     #define PYR_ENTITY_ADDED_PACKET_NAME EntityAddedPacket
     #define PYR_ENTITY_ADDED_PACKET(_)      \
         _(string)(256, appearance)          \
@@ -28,7 +33,8 @@ namespace pyr {
     #define PYR_LOGIN_PACKET_NAME LoginPacket
     #define PYR_LOGIN_PACKET(_)             \
         _(string)(12, username)             \
-        _(string)(12, password)
+        _(string)(12, password)             \
+        _(field)(u8, newAccount)
         
     #define PYR_LOGIN_RESPONSE_PACKET_NAME LoginResponsePacket
     #define PYR_LOGIN_RESPONSE_PACKET(_)    \
@@ -50,11 +56,11 @@ namespace pyr {
         _(field)(gmtl::Vec2f, vel)
 
 
-
-#if 1
+    // PACKET LIST
+    
     // Packet IDs are allocated based on the order of this list.
     #define PYR_PACKET_LIST(_)          \
-        _(PYR_CREATE_ACCOUNT_PACKET)    \
+        _(PYR_CHAT_PACKET)              \
         _(PYR_ENTITY_ADDED_PACKET)      \
         _(PYR_ENTITY_REMOVED_PACKET)    \
         _(PYR_LOGIN_PACKET)             \
@@ -62,10 +68,6 @@ namespace pyr {
         _(PYR_PING_PACKET)              \
         _(PYR_PLAYER_STATE_PACKET)      \
         _(PYR_UPDATE_PACKET)
-
-#else
-    #define PYR_PACKET_LIST(_) _(PYR_PING_PACKET)
-#endif
 
 
     // allocate packet IDs

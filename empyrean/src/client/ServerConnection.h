@@ -31,7 +31,9 @@ namespace pyr {
         
         void update();
         
-        bool login(const std::string& user, const std::string& pass);
+        bool login(const std::string& user,
+                   const std::string& pass,
+                   bool newuser);
         bool isLoggedIn() {
             return _loggedIn;
         }

@@ -24,8 +24,8 @@
  *
  * -----------------------------------------------------------------
  * File:          $RCSfile: LayoutManager.h,v $
- * Date modified: $Date: 2003-07-22 03:24:31 $
- * Version:       $Revision: 1.1 $
+ * Date modified: $Date: 2003-08-08 00:17:54 $
+ * Version:       $Revision: 1.2 $
  * -----------------------------------------------------------------
  *
  ************************************************************** phui-cpr-end */
@@ -59,12 +59,10 @@ namespace phui
        * @param   constraint  the layout constraint to follow
        */
       LayoutManager(WidgetContainer* container, LayoutConstraintPtr constraint)
-         : mConstraint(constraint), mContainer(container)
+         : mConstraint(constraint)
+         , mContainer(container)
       {
       }
-
-      virtual ~LayoutManager()
-      {}
 
       /**
        * Adds a widget's specifications to this layout manager
@@ -112,7 +110,7 @@ namespace phui
       WidgetContainer* mContainer;
 
       ///The points and sizes of all widgets that are in this layout manager
-      std::vector<std::pair< Point, Size > > mWidgets;
+      std::vector<std::pair<Point, Size> > mWidgets;
    };
 
    typedef RefPtr<LayoutManager> LayoutManagerPtr;

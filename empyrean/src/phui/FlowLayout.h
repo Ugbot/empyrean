@@ -24,8 +24,8 @@
  *
  * -----------------------------------------------------------------
  * File:          $RCSfile: FlowLayout.h,v $
- * Date modified: $Date: 2003-07-22 03:24:31 $
- * Version:       $Revision: 1.1 $
+ * Date modified: $Date: 2003-08-08 00:17:54 $
+ * Version:       $Revision: 1.2 $
  * -----------------------------------------------------------------
  *
  ************************************************************** phui-cpr-end */
@@ -77,16 +77,9 @@ namespace phui
       }
 
    private:
-      ///Current Width
       int mCurrentWidth;
-
-      ///Current Maximum Width
       int mCurrentMaxWidth;
-
-      ///Current Height
       int mCurrentHeight;
-
-      ///Current Maximum Height
       int mCurrentMaxHeight;
    };
 }

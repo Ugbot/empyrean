@@ -24,8 +24,8 @@
  *
  * -----------------------------------------------------------------
  * File:          $RCSfile: Version.h,v $
- * Date modified: $Date: 2003-07-22 03:24:31 $
- * Version:       $Revision: 1.1 $
+ * Date modified: $Date: 2003-08-08 00:17:54 $
+ * Version:       $Revision: 1.2 $
  * -----------------------------------------------------------------
  *
  ************************************************************** phui-cpr-end */
@@ -47,8 +47,8 @@
  */
 // The major/minor/patch version (up to 3 digits each).
 #define PHUI_VERSION_MAJOR    0
-#define PHUI_VERSION_MINOR    0
-#define PHUI_VERSION_PATCH    1
+#define PHUI_VERSION_MINOR    1
+#define PHUI_VERSION_PATCH    0
 
 //--------------------------------------------------------------------------
 //--------------------------------------------------------------------------

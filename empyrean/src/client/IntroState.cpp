@@ -33,14 +33,14 @@ namespace pyr {
             if (key == SDLK_ESCAPE) {
                 quit();
             } else {
-                invokeTimedTransition<MenuState>(1);
+                invokeTransition<MenuState>();
             }
         }
     }
     
     void IntroState::onMousePress(Uint8 /*button*/, bool down, int, int) {
         if (down) {
-            invokeTimedTransition<MenuState>(1);
+            invokeTransition<MenuState>();
         }
     }
 

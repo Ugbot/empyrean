@@ -24,8 +24,8 @@
  *
  * -----------------------------------------------------------------
  * File:          $RCSfile: Button.cpp,v $
- * Date modified: $Date: 2003-08-05 05:00:28 $
- * Version:       $Revision: 1.2 $
+ * Date modified: $Date: 2003-08-08 00:17:54 $
+ * Version:       $Revision: 1.3 $
  * -----------------------------------------------------------------
  *
  ************************************************************** phui-cpr-end */
@@ -37,35 +37,68 @@
 
 namespace phui
 {
-   Button::Button()
-      : mText("")
-      , mButtonDown(false)
-   {}
-
    Button::Button(const std::string& text)
       : mText(text)
       , mButtonDown(false)
-   {}
+   {
+      setBackgroundColor(Colorf(0.5f, 0.5f, 0.5f));
+   }
 
    void Button::draw()
    {
-      const Size& size = getSize();
-      const int width = size.getWidth();
-      const int height = size.getHeight();
+      const int width  = getSize().getWidth();
+      const int height = getSize().getHeight();
+      
+      const Insets insets(10, 10, 10, 10);
+      const Colorf halfWhite(1, 1, 1, 0.5f);
+      const Colorf zeroWhite(1, 1, 1, 0);
+      const Colorf halfBlack(0, 0, 0, 0.5f);
+      const Colorf zeroBlack(0, 0, 0, 0);
+      
+      const Point ul(0, 0);
+      const Point ur(width, 0);
+      const Point ll(0, height);
+      const Point lr(width, height);
+      const Point ulIn = ul + Point( insets.getLeft(),   insets.getTop());
+      const Point urIn = ur + Point(-insets.getRight(),  insets.getTop());
+      const Point llIn = ll + Point( insets.getLeft(),  -insets.getBottom());
+      const Point lrIn = lr + Point(-insets.getRight(), -insets.getBottom());
 
       // draw the button background
-      glColor(mButtonDown ? getForegroundColor() : getBackgroundColor());
+      glColor(getBackgroundColor());
       glBegin(GL_TRIANGLE_FAN);
-      {
-         glVertex2i(0,     0     );
-         glVertex2i(width, 0     );
-         glVertex2i(width, height);
-         glVertex2i(0,     height);
-      }
+         glVertex(ul);
+         glVertex(ur);
+         glVertex(lr);
+         glVertex(ll);
+      glEnd();
+      
+      // draw upper left edge of button
+      Colorf out = mButtonDown ? halfBlack : halfWhite;
+      Colorf in  = mButtonDown ? zeroBlack : zeroWhite;
+      glBegin(GL_TRIANGLE_STRIP);
+         glColor(out); glVertex(ur);
+         glColor(in);  glVertex(urIn);
+         glColor(out); glVertex(ul);
+         glColor(in);  glVertex(ulIn);
+         glColor(out); glVertex(ll);
+         glColor(in);  glVertex(llIn);
+      glEnd();
+      
+      // draw lower right edge of button
+      out = mButtonDown ? halfWhite : halfBlack;
+      in  = mButtonDown ? zeroWhite : zeroBlack;
+      glBegin(GL_TRIANGLE_STRIP);
+         glColor(out); glVertex(ur);
+         glColor(in);  glVertex(urIn);
+         glColor(out); glVertex(lr);
+         glColor(in);  glVertex(lrIn);
+         glColor(out); glVertex(ll);
+         glColor(in);  glVertex(llIn);
       glEnd();
 
       // draw text
-      glColor(mButtonDown ? getBackgroundColor() : getForegroundColor());
+      glColor(getForegroundColor());
 
       gltext::FontPtr font = getFont();
       gltext::FontRendererPtr renderer = getFontRenderer();

@@ -24,8 +24,8 @@
  *
  * -----------------------------------------------------------------
  * File:          $RCSfile: Button.h,v $
- * Date modified: $Date: 2003-07-22 03:24:31 $
- * Version:       $Revision: 1.1 $
+ * Date modified: $Date: 2003-08-08 00:17:54 $
+ * Version:       $Revision: 1.2 $
  * -----------------------------------------------------------------
  *
  ************************************************************** phui-cpr-end */
@@ -46,15 +46,12 @@ namespace phui
    class Button : public Widget
    {
    public:
-      /// Creates a new button with no text at (0,0) with size (0,0).
-      Button();
-
       /**
        * Creates a new button with the given text at (0,0) with size (0,0).
        *
        * @param text      the text for the button
        */
-      Button(const std::string& text);
+      Button(const std::string& text = "");
 
       /**
        * Draws this button with its text.

@@ -24,8 +24,8 @@
  *
  * -----------------------------------------------------------------
  * File:          $RCSfile: Insets.h,v $
- * Date modified: $Date: 2003-07-22 03:24:31 $
- * Version:       $Revision: 1.1 $
+ * Date modified: $Date: 2003-08-08 00:17:54 $
+ * Version:       $Revision: 1.2 $
  * -----------------------------------------------------------------
  *
  ************************************************************** phui-cpr-end */
@@ -119,16 +119,9 @@ namespace phui
       void setBottom(int bottom);
 
    private:
-      /// Inset on the left side.
       int mLeft;
-
-      /// Inset on the right side.
       int mRight;
-
-      /// Inset on the top side.
       int mTop;
-
-      /// Inset on the bottom side.
       int mBottom;
    };
 

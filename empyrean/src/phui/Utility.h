@@ -24,15 +24,13 @@
  *
  * -----------------------------------------------------------------
  * File:          $RCSfile: Utility.h,v $
- * Date modified: $Date: 2003-07-22 03:24:31 $
- * Version:       $Revision: 1.1 $
+ * Date modified: $Date: 2003-08-08 00:17:54 $
+ * Version:       $Revision: 1.2 $
  * -----------------------------------------------------------------
  *
  ************************************************************** phui-cpr-end */
 #ifndef PHUI_UTILITY_H
 #define PHUI_UTILITY_H
-
-#include <assert.h>
 
 namespace phui
 {

@@ -60,9 +60,10 @@ namespace pyr {
     
     bool ServerConnection::login(
         const std::string& user,
-        const std::string& pass)
+        const std::string& pass,
+        bool newuser)
     {
-	return sendPacket(new LoginPacket(user, pass));
+	return sendPacket(new LoginPacket(user, pass, newuser ? 1 : 0));
     }
 
     void ServerConnection::setForce(float force) {

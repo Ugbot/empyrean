@@ -40,6 +40,10 @@ namespace pyr {
             s = str.get();
         }
         
+        void read(u8& u) {
+            read(&u, sizeof(u));
+        }
+        
         void read(u16& u) {
             read((u8*)&u, sizeof(u));
             u = PR_ntohs(u);
