@@ -2,8 +2,8 @@
 <VisualStudioProject
 	ProjectType="Visual C++"
 	Version="7.00"
-	Name="base"
-	ProjectGUID="{03B95B05-B6D6-4FB1-B9AC-269467287C88}"
+	Name="phui"
+	ProjectGUID="{E36E29D7-7422-4030-B30D-5E8FD6727BA4}"
 	Keyword="Win32Proj">
 	<Platforms>
 		<Platform
@@ -19,12 +19,11 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="../../third-party-vc7/include"
-				PreprocessorDefinitions="WIN32;_DEBUG;_LIB;NOMINMAX"
+				AdditionalIncludeDirectories="../../third-party-vc7/include;../../src/base"
+				PreprocessorDefinitions="WIN32;_DEBUG;_LIB"
 				MinimalRebuild="TRUE"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
-				RuntimeTypeInfo="TRUE"
 				UsePrecompiledHeader="0"
 				WarningLevel="3"
 				Detect64BitPortabilityProblems="FALSE"
@@ -33,7 +32,7 @@
 				Name="VCCustomBuildTool"/>
 			<Tool
 				Name="VCLibrarianTool"
-				OutputFile="$(OutDir)/base.lib"/>
+				OutputFile="$(OutDir)/phui.lib"/>
 			<Tool
 				Name="VCMIDLTool"/>
 			<Tool
@@ -58,12 +57,11 @@
 				Optimization="2"
 				InlineFunctionExpansion="1"
 				OmitFramePointers="TRUE"
-				AdditionalIncludeDirectories="../../third-party-vc7/include"
-				PreprocessorDefinitions="WIN32;NDEBUG;_LIB;NOMINMAX"
+				AdditionalIncludeDirectories="../../third-party-vc7/include;../../src/base"
+				PreprocessorDefinitions="WIN32;NDEBUG;_LIB"
 				StringPooling="TRUE"
 				RuntimeLibrary="2"
 				EnableFunctionLevelLinking="TRUE"
-				RuntimeTypeInfo="TRUE"
 				UsePrecompiledHeader="0"
 				WarningLevel="3"
 				Detect64BitPortabilityProblems="FALSE"
@@ -72,7 +70,7 @@
 				Name="VCCustomBuildTool"/>
 			<Tool
 				Name="VCLibrarianTool"
-				OutputFile="$(OutDir)/base.lib"/>
+				OutputFile="$(OutDir)/phui.lib"/>
 			<Tool
 				Name="VCMIDLTool"/>
 			<Tool
@@ -90,138 +88,144 @@
 	<Files>
 		<Filter
 			Name="files"
-			Filter="cpp;c;cxx;def;odl;idl;hpj;bat;asm">
+			Filter="">
 			<File
-				RelativePath="..\..\src\base\BufferParser.h">
+				RelativePath="..\..\src\phui\ActionListener.h">
 			</File>
 			<File
-				RelativePath="..\..\src\base\ByteBuffer.cpp">
+				RelativePath="..\..\src\phui\Button.cpp">
 			</File>
 			<File
-				RelativePath="..\..\src\base\ByteBuffer.h">
+				RelativePath="..\..\src\phui\Button.h">
 			</File>
 			<File
-				RelativePath="..\..\src\base\Canvas.cpp">
+				RelativePath="..\..\src\phui\CheckBox.cpp">
 			</File>
 			<File
-				RelativePath="..\..\src\base\Canvas.h">
+				RelativePath="..\..\src\phui\CheckBox.h">
 			</File>
 			<File
-				RelativePath="..\..\src\base\CanvasBlitter.h">
+				RelativePath="..\..\src\phui\Color.h">
 			</File>
 			<File
-				RelativePath="..\..\src\base\CondVar.h">
+				RelativePath="..\..\src\phui\EmptyConstraint.h">
 			</File>
 			<File
-				RelativePath="..\..\src\base\Connection.cpp">
+				RelativePath="..\..\src\phui\FlowLayout.cpp">
 			</File>
 			<File
-				RelativePath="..\..\src\base\Connection.h">
+				RelativePath="..\..\src\phui\FlowLayout.h">
 			</File>
 			<File
-				RelativePath="..\..\src\base\EntityAddedPacket.h">
+				RelativePath="..\..\src\phui\FlowVerticalConstraint.h">
 			</File>
 			<File
-				RelativePath="..\..\src\base\EntityRemovedPacket.h">
+				RelativePath="..\..\src\phui\Input.h">
 			</File>
 			<File
-				RelativePath="..\..\src\base\Error.cpp">
+				RelativePath="..\..\src\phui\Insets.cpp">
 			</File>
 			<File
-				RelativePath="..\..\src\base\Error.h">
+				RelativePath="..\..\src\phui\Insets.h">
 			</File>
 			<File
-				RelativePath="..\..\src\base\LoginPacket.cpp">
+				RelativePath="..\..\src\phui\Label.cpp">
 			</File>
 			<File
-				RelativePath="..\..\src\base\LoginPacket.h">
+				RelativePath="..\..\src\phui\Label.h">
 			</File>
 			<File
-				RelativePath="..\..\src\base\LoginResponsePacket.h">
+				RelativePath="..\..\src\phui\LayoutConstraint.h">
 			</File>
 			<File
-				RelativePath="..\..\src\base\LokiTypeInfo.h">
+				RelativePath="..\..\src\phui\LayoutManager.cpp">
 			</File>
 			<File
-				RelativePath="..\..\src\base\Map.cpp">
+				RelativePath="..\..\src\phui\LayoutManager.h">
 			</File>
 			<File
-				RelativePath="..\..\src\base\Map.h">
+				RelativePath="..\..\src\phui\ListBox.cpp">
 			</File>
 			<File
-				RelativePath="..\..\src\base\MapElement.h">
+				RelativePath="..\..\src\phui\ListBox.h">
 			</File>
 			<File
-				RelativePath="..\..\src\base\Mutex.h">
+				RelativePath="..\..\src\phui\ListSelectionListener.h">
 			</File>
 			<File
-				RelativePath="..\..\src\base\NSPRUtility.cpp">
+				RelativePath="..\..\src\phui\Point.h">
 			</File>
 			<File
-				RelativePath="..\..\src\base\NSPRUtility.h">
+				RelativePath="..\..\src\phui\Rect.cpp">
 			</File>
 			<File
-				RelativePath="..\..\src\base\OpenGL.h">
+				RelativePath="..\..\src\phui\Rect.h">
 			</File>
 			<File
-				RelativePath="..\..\src\base\Packet.h">
+				RelativePath="..\..\src\phui\RefCounted.h">
 			</File>
 			<File
-				RelativePath="..\..\src\base\PacketFactory.cpp">
+				RelativePath="..\..\src\phui\RefPtr.h">
 			</File>
 			<File
-				RelativePath="..\..\src\base\PacketFactory.h">
+				RelativePath="..\..\src\phui\RootWidget.cpp">
 			</File>
 			<File
-				RelativePath="..\..\src\base\ReaderThread.cpp">
+				RelativePath="..\..\src\phui\RootWidget.h">
 			</File>
 			<File
-				RelativePath="..\..\src\base\ReaderThread.h">
+				RelativePath="..\..\src\phui\SDLBridge.cpp">
 			</File>
 			<File
-				RelativePath="..\..\src\base\ScopedLock.h">
+				RelativePath="..\..\src\phui\SDLBridge.h">
 			</File>
 			<File
-				RelativePath="..\..\src\base\ServerSocket.cpp">
+				RelativePath="..\..\src\phui\Size.cpp">
 			</File>
 			<File
-				RelativePath="..\..\src\base\ServerSocket.h">
+				RelativePath="..\..\src\phui\Size.h">
 			</File>
 			<File
-				RelativePath="..\..\src\base\Socket.cpp">
+				RelativePath="..\..\src\phui\TextField.cpp">
 			</File>
 			<File
-				RelativePath="..\..\src\base\Socket.h">
+				RelativePath="..\..\src\phui\TextField.h">
 			</File>
 			<File
-				RelativePath="..\..\src\base\Thread.cpp">
+				RelativePath="..\..\src\phui\Utility.h">
 			</File>
 			<File
-				RelativePath="..\..\src\base\Thread.h">
+				RelativePath="..\..\src\phui\Version.cpp">
 			</File>
 			<File
-				RelativePath="..\..\src\base\Types.h">
+				RelativePath="..\..\src\phui\Version.h">
 			</File>
 			<File
-				RelativePath="..\..\src\base\UpdatePacket.h">
+				RelativePath="..\..\src\phui\Widget.cpp">
 			</File>
 			<File
-				RelativePath="..\..\src\base\Utility.cpp">
+				RelativePath="..\..\src\phui\Widget.h">
 			</File>
 			<File
-				RelativePath="..\..\src\base\Utility.h">
+				RelativePath="..\..\src\phui\WidgetContainer.cpp">
 			</File>
 			<File
-				RelativePath="..\..\src\base\WriterThread.cpp">
+				RelativePath="..\..\src\phui\WidgetContainer.h">
 			</File>
 			<File
-				RelativePath="..\..\src\base\WriterThread.h">
+				RelativePath="..\..\src\phui\Window.cpp">
 			</File>
 			<File
-				RelativePath="..\..\src\base\extgl.c">
+				RelativePath="..\..\src\phui\Window.h">
 			</File>
 			<File
-				RelativePath="..\..\src\base\extgl.h">
+				RelativePath="..\..\src\phui\WindowAdapter.h">
+			</File>
+			<File
+				RelativePath="..\..\src\phui\WindowListener.h">
+			</File>
+			<File
+				RelativePath="..\..\src\phui\phui.h">
 			</File>
 		</Filter>
 	</Files>

@@ -33,7 +33,7 @@ namespace pyr {
             return _pointerVisible;
         }
         
-        
+    protected:
         template<typename T>
         static void invokeTransition(Type2Type<T> = Type2Type<T>()) {
             Application::instance().invokeTransition(new T());
@@ -51,7 +51,6 @@ namespace pyr {
             Application::instance().invokeTransition(0);
         }
         
-    protected:
         void showPointer() { _pointerVisible = true;  }
         void hidePointer() { _pointerVisible = false; }
                

@@ -19,7 +19,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="../../src/third-party/include,../../src/base"
+				AdditionalIncludeDirectories="../../third-party-vc7/include,../../src/base,../../src"
 				PreprocessorDefinitions="_CONSOLE;WIN32;_DEBUG;_WINDOWS;NOMINMAX"
 				MinimalRebuild="TRUE"
 				BasicRuntimeChecks="3"
@@ -33,10 +33,10 @@
 				Name="VCCustomBuildTool"/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="../base/Debug/base.lib SDL.lib SDLmain.lib nspr4.lib corona.lib cal3d_d.lib opengl32.lib glu32.lib freetype211MT_D.lib"
+				AdditionalDependencies="../base/Debug/base.lib ../phui/Debug/phui.lib SDL.lib SDLmain.lib nspr4.lib gltext.lib corona.lib cal3d_d.lib opengl32.lib glu32.lib freetype211MT_D.lib"
 				OutputFile="../bin/$(OutDir)/client.exe"
 				LinkIncremental="2"
-				AdditionalLibraryDirectories="../../src/third-party/lib"
+				AdditionalLibraryDirectories="../../third-party-vc7/lib"
 				GenerateDebugInformation="TRUE"
 				ProgramDatabaseFile="$(OutDir)/client.pdb"
 				SubSystem="1"
@@ -68,7 +68,7 @@
 				Optimization="2"
 				InlineFunctionExpansion="1"
 				OmitFramePointers="TRUE"
-				AdditionalIncludeDirectories="../../src/third-party/include,../../src/base"
+				AdditionalIncludeDirectories="../../third-party-vc7/include,../../src/base,../../src"
 				PreprocessorDefinitions="_CONSOLE;WIN32;NDEBUG;_WINDOWS;NOMINMAX"
 				StringPooling="TRUE"
 				RuntimeLibrary="2"
@@ -82,10 +82,10 @@
 				Name="VCCustomBuildTool"/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="../base/Debug/base.lib SDL.lib SDLmain.lib nspr4.lib corona.lib cal3d.lib opengl32.lib glu32.lib freetype211MT.lib"
+				AdditionalDependencies="../base/Debug/base.lib ../phui/Release/phui.lib SDL.lib SDLmain.lib nspr4.lib gltext.lib corona.lib cal3d.lib opengl32.lib glu32.lib freetype211MT.lib"
 				OutputFile="../bin/$(OutDir)/client.exe"
 				LinkIncremental="1"
-				AdditionalLibraryDirectories="../../src/third-party/lib"
+				AdditionalLibraryDirectories="../../third-party-vc7/lib"
 				GenerateDebugInformation="TRUE"
 				SubSystem="1"
 				OptimizeReferences="2"
