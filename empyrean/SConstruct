@@ -63,6 +63,16 @@ def SetupAudiere(env):
     if env['PLATFORM'] == 'cygwin':
         env.Append(CPPDEFINES = ['ADR_CALL=', 'ADR_DECL='])
 
+# Maybe this tool should really be called BoostPython.  Oh well.
+def SetupBoost(env):
+    if env['PLATFORM'] == 'cygwin':
+        env.Append(CPPDEFINES=['BOOST_PYTHON_STATIC_LIB',
+                               'BOOST_PYTHON_STATIC_MODULE'],
+                   CPPPATH=['/usr/local/include/boost-1_31'],
+                   LIBS=['boost_python-gcc'])
+    else:
+        env.Append(LIBS=['boost_python-gcc'])
+
 def SetupCal3D(env):
     env.Append(CXXFLAGS=['-DCAL3D_API='], LIBS=['cal3d', 'm'])
 
@@ -145,6 +155,7 @@ def SetupWxWindows(env):
 # Initialize set of external dependencies.
 TOOLS = {
     'Audiere'   : SetupAudiere,
+    'Boost'     : SetupBoost,
     'Cal3D'     : SetupCal3D,
     'Corona'    : SetupCorona,
     'Expat'     : SetupExpat,

@@ -34,6 +34,9 @@ namespace pyr {
     template<typename T>
     class ScopedPtr {
     public:
+        // For compatibility with Boost.Python.
+        typedef T element_type;
+
         ScopedPtr(T* p = 0) {
             _ptr = p;
         }
@@ -49,6 +52,11 @@ namespace pyr {
 
         ScopedDerivedSafe<T>* get() const {
             return reinterpret_cast<ScopedDerivedSafe<T>*>(_ptr);
+        }
+
+        /// If you really need the raw pointer...
+        T* raw_ptr() const {
+            return _ptr;
         }
         
         /**
@@ -93,6 +101,13 @@ namespace pyr {
     private:
         T* _ptr;
     };
+
+
+    // For compatibility with Boost.Python.
+    template<class T>
+    T* get_pointer(const ScopedPtr<T>& p) {
+        return p.get();
+    }
 
 
     template<typename T, typename U>

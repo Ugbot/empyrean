@@ -20,7 +20,7 @@
 				Name="VCCLCompilerTool"
 				Optimization="0"
 				AdditionalIncludeDirectories="../../third-party-vc7/include,../../src/base,../../src"
-				PreprocessorDefinitions="_CONSOLE;WIN32;WIN32_LEAN_AND_MEAN;_DEBUG;_WINDOWS;NOMINMAX"
+				PreprocessorDefinitions="_CONSOLE;WIN32;WIN32_LEAN_AND_MEAN;_DEBUG;_WINDOWS;NOMINMAX;BOOST_PYTHON_STATIC_LIB;BOOST_PYTHON_STATIC_MODULE"
 				GeneratePreprocessedFile="0"
 				MinimalRebuild="TRUE"
 				BasicRuntimeChecks="3"
@@ -29,13 +29,13 @@
 				UsePrecompiledHeader="0"
 				AssemblerOutput="4"
 				WarningLevel="3"
-				Detect64BitPortabilityProblems="TRUE"
+				Detect64BitPortabilityProblems="FALSE"
 				DebugInformationFormat="4"/>
 			<Tool
 				Name="VCCustomBuildTool"/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="../base/Debug/base.lib ../phui/Debug/phui.lib libexpat.lib SDL.lib SDLmain.lib nspr4.lib gltext.lib audiere.lib corona.lib cal3d_d.lib opengl32.lib glu32.lib"
+				AdditionalDependencies="../base/Debug/base.lib ../phui/Debug/phui.lib libexpat.lib SDL.lib SDLmain.lib nspr4.lib gltext.lib audiere.lib corona.lib cal3d_d.lib opengl32.lib glu32.lib libboost_python-vc71-mt-gd.lib"
 				OutputFile="../bin/$(OutDir)/client.exe"
 				LinkIncremental="2"
 				AdditionalLibraryDirectories="../../third-party-vc7/lib"
@@ -77,7 +77,7 @@
 				InlineFunctionExpansion="1"
 				OmitFramePointers="TRUE"
 				AdditionalIncludeDirectories="../../third-party-vc7/include,../../src/base,../../src"
-				PreprocessorDefinitions="_CONSOLE;WIN32;WIN32_LEAN_AND_MEAN;NDEBUG;_WINDOWS;NOMINMAX"
+				PreprocessorDefinitions="_CONSOLE;WIN32;WIN32_LEAN_AND_MEAN;NDEBUG;_WINDOWS;NOMINMAX;BOOST_PYTHON_STATIC_LIB;BOOST_PYTHON_STATIC_MODULE"
 				GeneratePreprocessedFile="0"
 				StringPooling="TRUE"
 				RuntimeLibrary="2"
@@ -86,13 +86,13 @@
 				UsePrecompiledHeader="0"
 				AssemblerOutput="4"
 				WarningLevel="3"
-				Detect64BitPortabilityProblems="TRUE"
+				Detect64BitPortabilityProblems="FALSE"
 				DebugInformationFormat="3"/>
 			<Tool
 				Name="VCCustomBuildTool"/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="../base/Release/base.lib ../phui/Release/phui.lib libexpat.lib SDL.lib SDLmain.lib nspr4.lib gltext.lib audiere.lib corona.lib cal3d.lib opengl32.lib glu32.lib"
+				AdditionalDependencies="../base/Release/base.lib ../phui/Release/phui.lib libexpat.lib SDL.lib SDLmain.lib nspr4.lib gltext.lib audiere.lib corona.lib cal3d.lib opengl32.lib glu32.lib libboost_python-vc71-mt.lib"
 				OutputFile="../bin/$(OutDir)/client.exe"
 				LinkIncremental="1"
 				AdditionalLibraryDirectories="../../third-party-vc7/lib"
@@ -166,10 +166,10 @@
 				RelativePath="..\..\src\client\Configuration.h">
 			</File>
 			<File
-				RelativePath="..\..\src\client\CutSceneState.cpp">
+				RelativePath="..\..\src\client\CutScene.cpp">
 			</File>
 			<File
-				RelativePath="..\..\src\client\CutSceneState.h">
+				RelativePath="..\..\src\client\CutScene.h">
 			</File>
 			<File
 				RelativePath="..\..\src\client\FPSCounter.h">
@@ -223,6 +223,21 @@
 				RelativePath="..\..\src\client\Player.h">
 			</File>
 			<File
+				RelativePath="..\..\src\client\PythonBindings.cpp">
+			</File>
+			<File
+				RelativePath="..\..\src\client\PythonCutScene.cpp">
+			</File>
+			<File
+				RelativePath="..\..\src\client\PythonInterpreter.cpp">
+			</File>
+			<File
+				RelativePath="..\..\src\client\PythonInterpreter.h">
+			</File>
+			<File
+				RelativePath="..\..\src\client\PythonLog.cpp">
+			</File>
+			<File
 				RelativePath="..\..\src\client\Renderer.cpp">
 			</File>
 			<File
@@ -261,6 +276,12 @@
 			</File>
 			<File
 				RelativePath="..\..\src\client\CreditsState.h">
+			</File>
+			<File
+				RelativePath="..\..\src\client\CutSceneState.cpp">
+			</File>
+			<File
+				RelativePath="..\..\src\client\CutSceneState.h">
 			</File>
 			<File
 				RelativePath="..\..\src\client\GameState.cpp">

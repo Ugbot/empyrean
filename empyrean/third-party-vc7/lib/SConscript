@@ -17,6 +17,7 @@ Both = Split("""
     gltext.dll
     libexpat.dll
     nspr4.dll
+    python23.dll
 """)
 
 Debug = Split("""

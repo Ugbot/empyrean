@@ -5,7 +5,7 @@
 #define PYR_TYPES_H
 
 
-#include <prtypes.h>
+#include "IncludeNSPR.h"
 
 
 namespace pyr {

@@ -41,6 +41,9 @@ namespace pyr {
     template<typename T>
     class RefPtr {
     public:
+        // For compatibility with Boost.Python.
+        typedef T element_type;
+
         RefPtr(T* ptr = 0) {
             *this = ptr;
         }
@@ -112,11 +115,23 @@ namespace pyr {
             return reinterpret_cast<RefDerivedSafe<T>*>(_ptr.get());
         }
 
+        /// If you really need the raw pointer...
+        T* raw_ptr() const {
+            return _ptr;
+        }
+
     private:
         Zeroed<T*> _ptr;
     };
     
     
+    // For compatibility with Boost.Python.
+    template<class T>
+    T* get_pointer(const RefPtr<T>& p) {
+        return p.get();
+    }
+
+
     template<typename T, typename U>
     bool operator==(const RefPtr<T>& a, const RefPtr<U>& b) {
         return (a.get() == b.get());

@@ -1,6 +1,7 @@
 import os
 
 SConsignFile()
+Default('.')
 
 builds = [Dir('../vc7/bin/Debug'), Dir('../vc7/bin/Release')]
 debug  = [True, False]
@@ -9,3 +10,7 @@ for b, d in zip(builds, debug):
     env = Environment(ENV=os.environ, DEST=b, DEBUG=d)
     Export('env')
     SConscript(dirs=['lib'])
+
+Command(['include/boost/python.hpp', 'lib/libboost_python-vc71-mt-gd.lib',
+         'lib/libboost_python-vc71-mt.lib'], 'boost-1.31.tbz',
+        'tar xfvj $SOURCE')

@@ -4,6 +4,8 @@
 
 #include <vector>
 #include "RefCounted.h"
+#include "RefPtr.h"
+
 
 namespace pyr {
 
@@ -11,7 +13,9 @@ namespace pyr {
 
     class CutScene : public RefCounted {
     protected:
-        ~CutScene() { }
+        // Objects exposed to boost.python have to be destructible for
+        // some reason.  :(
+        //~CutScene() { }
 
     public:
         void addImage(const std::string& filename);
