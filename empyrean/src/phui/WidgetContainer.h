@@ -24,8 +24,8 @@
  *
  * -----------------------------------------------------------------
  * File:          $RCSfile: WidgetContainer.h,v $
- * Date modified: $Date: 2003-08-12 20:58:02 $
- * Version:       $Revision: 1.4 $
+ * Date modified: $Date: 2003-09-19 13:26:20 $
+ * Version:       $Revision: 1.5 $
  * -----------------------------------------------------------------
  *
  ************************************************************** phui-cpr-end */
@@ -87,7 +87,7 @@ namespace phui
       WidgetPtr getWidget(unsigned int idx);
 
       /// Gets the number of widgets in this container.
-      unsigned int getNumChildren();
+      size_t getNumChildren();
 
       /**
        * Draws this widget and all of its children.
@@ -122,7 +122,7 @@ namespace phui
 
    private:
       /**
-       * Widgets contained by this container sorted from top to bottom where the
+       * Widgets contained by this container sorted from bottom to top where the
        * topmost widget has the focus.
        */
       std::vector<WidgetPtr> mWidgets;

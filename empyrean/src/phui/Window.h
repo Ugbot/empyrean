@@ -24,8 +24,8 @@
  *
  * -----------------------------------------------------------------
  * File:          $RCSfile: Window.h,v $
- * Date modified: $Date: 2003-07-22 03:24:31 $
- * Version:       $Revision: 1.1 $
+ * Date modified: $Date: 2003-09-19 13:26:20 $
+ * Version:       $Revision: 1.2 $
  * -----------------------------------------------------------------
  *
  ************************************************************** phui-cpr-end */
@@ -45,17 +45,12 @@ namespace phui
    class Window : public WidgetContainer
    {
    public:
-      /// Creates a window with an empty title.
-      Window();
-
       /**
        * Creates a window with the given title.
        *
        * @param   title          the title for the window
        */
-      Window(const std::string& title);
-
-      virtual ~Window();
+      Window(const std::string& title = "");
 
       void draw();
 

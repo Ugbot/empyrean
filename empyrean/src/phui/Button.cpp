@@ -24,15 +24,15 @@
  *
  * -----------------------------------------------------------------
  * File:          $RCSfile: Button.cpp,v $
- * Date modified: $Date: 2003-08-11 23:19:57 $
- * Version:       $Revision: 1.7 $
+ * Date modified: $Date: 2003-09-19 13:26:20 $
+ * Version:       $Revision: 1.8 $
  * -----------------------------------------------------------------
  *
  ************************************************************** phui-cpr-end */
 #include <algorithm>
-#include "OpenGL.h"
 #include <gltext.h>
 #include "Button.h"
+#include "OpenGL.h"
 #include "WidgetContainer.h"
 
 namespace phui
@@ -47,6 +47,8 @@ namespace phui
 
    void Button::draw()
    {
+      glDisable(GL_TEXTURE_2D);
+   
       const int width  = getSize().getWidth();
       const int height = getSize().getHeight();
       

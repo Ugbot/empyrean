@@ -24,8 +24,8 @@
  *
  * -----------------------------------------------------------------
  * File:          $RCSfile: WidgetContainer.cpp,v $
- * Date modified: $Date: 2003-08-12 20:58:02 $
- * Version:       $Revision: 1.5 $
+ * Date modified: $Date: 2003-09-19 13:26:20 $
+ * Version:       $Revision: 1.6 $
  * -----------------------------------------------------------------
  *
  ************************************************************** phui-cpr-end */
@@ -96,7 +96,7 @@ namespace phui
       }
    }
 
-   unsigned int WidgetContainer::getNumChildren()
+   size_t WidgetContainer::getNumChildren()
    {
       return mWidgets.size();
    }
@@ -110,7 +110,7 @@ namespace phui
       }
       // draw all children to this widget
       // draw them backwards so it's from the back to the front, visually
-      for (int i = int(mWidgets.size()) - 1; i >= 0; --i)
+      for (size_t i = 0; i < mWidgets.size(); ++i)
       {
          WidgetPtr wgt = mWidgets[i];
 
@@ -211,11 +211,17 @@ namespace phui
 
    void WidgetContainer::focus(WidgetPtr widget)
    {
-      for (size_t i = 0; i < mWidgets.size(); ++i)
+      if (!widget->isFocusable())
+      {
+         return;
+      }
+   
+      // Bring the widget to the end of the list.
+      for (int i = 0; i < int(mWidgets.size()) - 1; ++i)
       {
          if (mWidgets[i] == widget)
          {
-            std::swap(mWidgets[0], mWidgets[i]);
+            std::swap(mWidgets[i], mWidgets[i + 1]);
             break;
          }
       }
@@ -224,7 +230,7 @@ namespace phui
    WidgetPtr WidgetContainer::getFocus()
    {
       WidgetPtr null;
-      return (mWidgets.empty() ? null : mWidgets[0]);
+      return (mWidgets.empty() ? null : mWidgets.back());
    }
 
    void WidgetContainer::capture(WidgetPtr widget)
@@ -239,7 +245,7 @@ namespace phui
 
    WidgetPtr WidgetContainer::getWidgetAt(const Point& p)
    {
-      for (size_t i = 0; i < mWidgets.size(); ++i)
+      for (int i = int(mWidgets.size() - 1); i >= 0; --i)
       {
          WidgetPtr wgt = mWidgets[i];
 

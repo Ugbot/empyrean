@@ -24,8 +24,8 @@
  *
  * -----------------------------------------------------------------
  * File:          $RCSfile: Widget.h,v $
- * Date modified: $Date: 2003-08-11 23:19:57 $
- * Version:       $Revision: 1.4 $
+ * Date modified: $Date: 2003-09-19 13:26:20 $
+ * Version:       $Revision: 1.5 $
  * -----------------------------------------------------------------
  *
  ************************************************************** phui-cpr-end */
@@ -64,6 +64,8 @@ namespace phui
       virtual void draw() { };
       virtual void update(float dt) { };
       
+      virtual bool isFocusable() { return true; }
+      
 
       /**
        * Gets the position of this widget relative to its parent.
@@ -79,7 +81,6 @@ namespace phui
        * @param y    the y position of this widget
        */
       virtual void setPosition(const Point& p);
-      
       void setPosition(int x, int y) { setPosition(Point(x, y)); }
       
       /**
@@ -87,7 +88,9 @@ namespace phui
        *
        * @return  the size of this widget
        */
-      virtual const Size& getSize() const;
+      const Size& getSize() const;
+      int getWidth() const  { return getSize().getWidth(); }
+      int getHeight() const { return getSize().getHeight(); }
 
       /**
        * Sets the size of this widget.
@@ -95,7 +98,6 @@ namespace phui
        * @param size    the new size of the widget
        */
       void setSize(const Size& size);
-      
       void setSize(int w, int h) { setSize(Size(w, h)); }
       
       void setPositionAndSize(const Point& pos, const Size& size)

@@ -14,23 +14,30 @@ namespace pyr {
         MainScreen(MenuState* state)
             : MenuScreen(state)
         {
-            _background = Texture::create("images/title/title_main.png");
+            phui::PicturePtr background = new phui::Picture("images/title/title_composite.png");
+            background->setPositionAndSize(0, 0, 1024, 768);
+            
+            phui::WindowPtr buttons = new phui::Window();
+            buttons->setPositionAndSize(400, 350, 224, 240);
+            buttons->show();
         
             phui::ButtonPtr connect = new phui::Button("Connect to Server");
             connect->addListener(this, &MainScreen::onConnect);
-            connect->setPositionAndSize(0, 384, 1024, 128);
+            connect->setPositionAndSize(0, 0, 224, 80);
             
             phui::ButtonPtr options = new phui::Button("Options");
             options->addListener(this, &MainScreen::onOptions);
-            options->setPositionAndSize(0, 384 + 128, 1024, 128);
+            options->setPositionAndSize(0, 84, 224, 80);
             
             phui::ButtonPtr quit = new phui::Button("Quit");
             quit->addListener(this, &MainScreen::onQuit);
-            quit->setPositionAndSize(0, 384 + 256, 1024, 128);
+            quit->setPositionAndSize(0, 168, 224, 80);
 
-            add(connect);
-            add(options);
-            add(quit);
+            add(background);
+            buttons->add(connect);
+            buttons->add(options);
+            buttons->add(quit);
+            add(buttons);
         }
         
     private:
@@ -45,8 +52,6 @@ namespace pyr {
         void onQuit(const phui::ActionEvent&) {
             getState()->onMainQuit();
         }
-        
-        Texture* _background;
     };
     
 }
