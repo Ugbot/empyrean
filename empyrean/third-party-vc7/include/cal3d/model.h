@@ -16,6 +16,8 @@
 //****************************************************************************//
 
 #include "cal3d/global.h"
+#include "cal3d/vector.h"
+
 
 //****************************************************************************//
 // Forward declarations                                                       //
@@ -23,6 +25,7 @@
 
 class CalCoreModel;
 class CalSkeleton;
+class CalAbstractMixer;
 class CalMixer;
 class CalMorphTargetMixer;
 class CalPhysique;
@@ -44,13 +47,14 @@ class CAL3D_API CalModel
 protected:
   CalCoreModel *m_pCoreModel;
   CalSkeleton *m_pSkeleton;
-  CalMixer *m_pMixer;
+  CalAbstractMixer *m_pMixer;
   CalMorphTargetMixer *m_pMorphTargetMixer;
   CalPhysique *m_pPhysique;
   CalSpringSystem *m_pSpringSystem;
   CalRenderer *m_pRenderer;
   Cal::UserData m_userData;
   std::vector<CalMesh *> m_vectorMesh;
+  CalBoundingBox m_boundingBox;
 
 // constructors/destructor
 public: 
@@ -66,11 +70,14 @@ public:
   CalCoreModel *getCoreModel();
   CalMesh *getMesh(int coreMeshId);
   CalMixer *getMixer();
+  CalAbstractMixer *getAbstractMixer();
+  void setAbstractMixer(CalAbstractMixer* pMixer);
   CalMorphTargetMixer *getMorphTargetMixer();
   CalPhysique *getPhysique();
-  CalRenderer *getRenderer();
+  CalRenderer *getRenderer() const;
   CalSkeleton *getSkeleton();
   CalSpringSystem *getSpringSystem();
+  CalBoundingBox & getBoundingBox(bool precision = false);
   Cal::UserData getUserData();
   std::vector<CalMesh *>& getVectorMesh();
   void setLodLevel(float lodLevel);

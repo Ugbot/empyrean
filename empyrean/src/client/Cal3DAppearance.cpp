@@ -1,5 +1,5 @@
 #include "Cal3DAppearance.h"
-#include "Renderer.h"
+#include "ModelRenderer.h"
 
 
 namespace pyr {
@@ -36,7 +36,7 @@ namespace pyr {
         glRotatef(_direction + 180, 0, 1, 0);
         glRotatef(90, 1, 0, 0);
         glScalef(1, 1, -1);
-        DefaultRenderer().draw(_model.get());
+        ModelRenderer().draw(*_model);
         glDisable(GL_DEPTH_TEST);
         glPopMatrix();
     }

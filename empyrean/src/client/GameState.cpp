@@ -5,7 +5,7 @@
 #include "InputManager.h"
 #include "MenuState.h"
 #include "Model.h"
-#include "Renderer.h"
+#include "ModelRenderer.h"
 #include "PacketTypes.h"
 #include "ParticleSystem.h"
 #include "ParticleEmitter.h"

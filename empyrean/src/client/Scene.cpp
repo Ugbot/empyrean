@@ -5,7 +5,6 @@
 #include "MapRenderer.h"
 #include "ParticleEmitter.h"
 #include "ParticleSystem.h"
-#include "Renderer.h"
 #include "Scene.h"
 #include "Texture.h"
 

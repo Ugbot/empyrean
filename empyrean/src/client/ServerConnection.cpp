@@ -3,7 +3,6 @@
 #include "Connection.h"
 #include "Model.h"
 #include "PacketTypes.h"
-#include "Renderer.h"
 #include "Scene.h"
 #include "ServerConnection.h"
 #include "ServerConnectionThread.h"

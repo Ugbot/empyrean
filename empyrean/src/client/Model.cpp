@@ -319,11 +319,15 @@ namespace pyr {
         _model.destroy();
     }
 
-    CalCoreModel& Model::getCoreModel() {
+    CalCoreModel& Model::getCoreModel() const {
         return *_coreModel->get();
     }
 
     CalModel& Model::getModel() {
+        return _model;
+    }
+
+    const CalModel& Model::getModel() const {
         return _model;
     }
 

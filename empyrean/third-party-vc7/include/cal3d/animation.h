@@ -50,7 +50,8 @@ public:
     STATE_ASYNC,
     STATE_IN,
     STATE_STEADY,
-    STATE_OUT
+    STATE_OUT,
+	STATE_STOPPED
   };
 
 // member variables
@@ -78,6 +79,9 @@ public:
   Type getType();
   float getWeight();
   void setTime(float time);
+  void setTimeFactor(float timeFactor);
+  float getTimeFactor();
+
 };
 
 #endif

@@ -38,8 +38,9 @@ namespace pyr {
         Model(const std::string& fname);
         ~Model();
 
-        CalCoreModel& getCoreModel();
+        CalCoreModel& getCoreModel() const;
         CalModel& getModel();
+        const CalModel& getModel() const;
 
         float getScale() const {
             return _scale;
@@ -50,7 +51,6 @@ namespace pyr {
         void executeAction(const std::string& animation, float weight, float delayIn, float delayOut);
 
     private:
-
         CoreModelPtr _coreModel;
         CalModel _model;
         float _scale;

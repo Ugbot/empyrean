@@ -166,6 +166,12 @@
 				RelativePath="..\..\src\client\Configuration.h">
 			</File>
 			<File
+				RelativePath="..\..\src\client\CutSceneState.cpp">
+			</File>
+			<File
+				RelativePath="..\..\src\client\CutSceneState.h">
+			</File>
+			<File
 				RelativePath="..\..\src\client\FPSCounter.h">
 			</File>
 			<File
@@ -193,6 +199,12 @@
 				RelativePath="..\..\src\client\Model.h">
 			</File>
 			<File
+				RelativePath="..\..\src\client\ModelRenderer.cpp">
+			</File>
+			<File
+				RelativePath="..\..\src\client\ModelRenderer.h">
+			</File>
+			<File
 				RelativePath="..\..\src\client\ParticleEmitter.cpp">
 			</File>
 			<File
@@ -215,12 +227,6 @@
 			</File>
 			<File
 				RelativePath="..\..\src\client\Profiler.h">
-			</File>
-			<File
-				RelativePath="..\..\src\client\Renderer.cpp">
-			</File>
-			<File
-				RelativePath="..\..\src\client\Renderer.h">
 			</File>
 			<File
 				RelativePath="..\..\src\client\Scene.cpp">
