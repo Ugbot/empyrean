@@ -17,7 +17,7 @@ namespace pyr {
 
         glPopMatrix();
     }
-    
+
     Vec2f mult(const Vec2f& a, const Vec2f& b) {
         return Vec2f(a[0] * b[0], a[1] * b[1]);
     }

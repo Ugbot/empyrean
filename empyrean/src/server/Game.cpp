@@ -165,51 +165,55 @@ namespace pyr {
 
         resolveCollisions(dt, _map.get(),entityVector);
     }
-    
+
     void Game::updateConnections() {
         // Calculate authoritative world state.
         WorldAspect aspect;
         for (size_t i = 0; i < _entities.size(); ++i) {
             aspect.entities.insert(EntityState(_entities[i]));
         }
-    
+
         // Update connections.
         for (size_t i = 0; i < getConnectionCount(); ++i) {
             updateConnection(aspect, getConnection(i));
         }
-        
+
         // Clear appearance changes for this frame.
         for (size_t i = 0; i < _entities.size(); ++i) {
             ServerAppearance* appearance = _entities[i]->getServerAppearance();
             appearance->clearAppearanceChanges();
         }
     }
-    
+
     void Game::updateConnection(const WorldAspect& aspect, Connection* c) {
         GameConnectionData* cd = getData(c);
         if (!cd->acceptingUpdates) {
             return;
         }
-                
+
         // Send difference between client aspect and world.
         EntityStateSetCIter clientIter = cd->aspect.entities.begin();
         EntityStateSetCIter clientEnd  = cd->aspect.entities.end();
         EntityStateSetCIter serverIter = aspect.entities.begin();
         EntityStateSetCIter serverEnd  = aspect.entities.end();
-        
+
         while (clientIter != clientEnd || serverIter != serverEnd) {
             if (serverIter == serverEnd || clientIter->id < serverIter->id) {
                 // Client has entity that server doesn't.  Remove and increment client.
                 c->sendPacket(new EntityRemovedPacket(clientIter->id));
-                
+
                 ++clientIter;
-                
+
             } else if (clientIter == clientEnd || clientIter->id > serverIter->id) {
-                ServerEntityPtr entity = serverIter->entity;            
+                ServerEntityPtr entity = serverIter->entity;
 
                 // Server has entity that client doesn't.  Add and increment server.
                 c->sendPacket(buildEntityAddedPacket(entity));
-                
+                    
+                // EntityAddedPacket doesn't have pos/vel.
+                c->sendPacket(new EntityUpdatedPacket(
+                    entity->getID(), entity->getPos(), entity->getVel()));
+
                 // If this is the player's own entity, do special things.
                 if (entity == cd->playerEntity) {
                     c->sendPacket(new SetPlayerPacket(entity->getID()));
@@ -222,7 +226,7 @@ namespace pyr {
                         entity->getGameStats()->getCurrentEther(),
                         entity->getGameStats()->getMaxEther()));
                 }
-                
+
                 ++serverIter;
             } else {
                 // Entities match.  Compare and increment both.
