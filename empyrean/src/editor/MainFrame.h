@@ -24,13 +24,6 @@ namespace pyr {
         MainFrame();
         ~MainFrame();
 
-    protected:
-        // contents
-        wxSplitterWindow* _splitter;
-        MapTree* _mapTree;
-        MapView* _mapView;
-        wxGrid* _propertiesGrid;
-
     private:
         void createMenu();
         void createToolBars();
@@ -51,6 +44,13 @@ namespace pyr {
         void undo();
         void redo();
         
+    private:
+        // contents
+        wxSplitterWindow* _splitter;
+        MapTree* _mapTree;
+        MapView* _mapView;
+        wxGrid* _propertiesGrid;
+
         std::stack<pyr::Command*> _undoList;
         std::stack<pyr::Command*> _redoList;
         void clearList(std::stack<pyr::Command*>& list); // deletes and clears

@@ -24,24 +24,22 @@
  *
  * -----------------------------------------------------------------
  * File:          $RCSfile: WidgetContainer.cpp,v $
- * Date modified: $Date: 2003-09-21 19:37:55 $
- * Version:       $Revision: 1.7 $
+ * Date modified: $Date: 2003-09-22 23:45:02 $
+ * Version:       $Revision: 1.8 $
  * -----------------------------------------------------------------
  *
  ************************************************************** phui-cpr-end */
-#include "EmptyConstraint.h"
+#include "NullLayout.h"
 #include "OpenGL.h"
 #include "WidgetContainer.h"
 
 namespace phui {
 
-    WidgetContainer::WidgetContainer(LayoutManagerPtr manager)
-        : mLayoutManager(manager)
-    {
-        if (!manager) {
-            manager = new LayoutManager(this, new EmptyConstraint());
+    WidgetContainer::WidgetContainer(LayoutPtr layout) {
+        if (!layout) {
+            layout = new NullLayout();
         }
-        mLayoutManager = manager;
+        mLayout = layout;
     }
 
     WidgetContainer::~WidgetContainer() {
@@ -59,7 +57,8 @@ namespace phui {
         // Now add the widget to this container.
         mWidgets.push_back(widget);
         widget->setParent(this);
-        mLayoutManager->add(widget->getPosition(), widget->getSize());
+        
+        mLayout->layout(this);
     }
 
     void WidgetContainer::remove(WidgetPtr widget) {
@@ -67,12 +66,13 @@ namespace phui {
             if (mWidgets[i] == widget) {
                 mWidgets.erase(mWidgets.begin() + i);
                 widget->setParent(0);
-                mLayoutManager->remove(widget->getPosition());
+                
+                mLayout->layout(this);
             }
         }
     }
 
-    WidgetPtr WidgetContainer::getWidget(size_t idx) {
+    WidgetPtr WidgetContainer::getChild(size_t idx) {
         return mWidgets[idx];
     }
 
@@ -81,17 +81,13 @@ namespace phui {
     }
 
     void WidgetContainer::draw() {
-        // Check to see if the current setup is valid
-        if (!mLayoutManager->isValid()) {
-            mLayoutManager->resize();
-        }
-      
         // Draw all children.  Draw backwards so it's from the back to the
         // front, visually.
         for (size_t i = 0; i < mWidgets.size(); ++i) {
             drawWidget(mWidgets[i]);
         }
-      
+        
+        // Draw the modal window last.
         if (mModalWidget) {
             drawWidget(mModalWidget);
         }
@@ -101,10 +97,6 @@ namespace phui {
         for (size_t i = 0; i < mWidgets.size(); ++i) {
             mWidgets[i]->update(dt);
         }
-    }
-
-    void WidgetContainer::setLayoutManager(LayoutManagerPtr manager) {
-        mLayoutManager = manager;
     }
 
     void WidgetContainer::onKeyDown(InputKey key, InputModifiers modifiers) {

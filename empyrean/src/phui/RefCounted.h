@@ -24,15 +24,15 @@
  *
  * -----------------------------------------------------------------
  * File:          $RCSfile: RefCounted.h,v $
- * Date modified: $Date: 2003-07-22 03:24:31 $
- * Version:       $Revision: 1.1 $
+ * Date modified: $Date: 2003-09-22 23:45:02 $
+ * Version:       $Revision: 1.2 $
  * -----------------------------------------------------------------
  *
  ************************************************************** phui-cpr-end */
 #ifndef PHUI_REFCOUNTED_H
 #define PHUI_REFCOUNTED_H
 
-#include <assert.h>
+#include "Debug.h"
 
 namespace phui
 {
@@ -49,8 +49,9 @@ namespace phui
        * of zero.
        */
       RefCounted()
-         : mRefCount(0)
-      {}
+      {
+         mRefCount = 0;
+      }
 
    protected:
       /**
@@ -59,8 +60,7 @@ namespace phui
        */
       virtual ~RefCounted()
       {
-         assert(mRefCount == 0 &&
-                "Destroying an object that still has references");
+         PYR_ASSERT(mRefCount == 0, "Destroying an object that still has references");
       }
       
    public:
@@ -82,7 +82,7 @@ namespace phui
        */
       void unref()
       {
-         assert(mRefCount > 0 && "tried to unref an object with no references");
+         PYR_ASSERT(mRefCount > 0, "tried to unref an object with no references");
          if (--mRefCount == 0)
          {
             delete this;

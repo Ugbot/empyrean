@@ -24,8 +24,8 @@
  *
  * -----------------------------------------------------------------
  * File:          $RCSfile: WidgetContainer.h,v $
- * Date modified: $Date: 2003-09-21 19:37:55 $
- * Version:       $Revision: 1.6 $
+ * Date modified: $Date: 2003-09-22 23:45:02 $
+ * Version:       $Revision: 1.7 $
  * -----------------------------------------------------------------
  *
  ************************************************************** phui-cpr-end */
@@ -33,8 +33,8 @@
 #define PHUI_WIDGET_CONTAINER_H
 
 #include <vector>
+#include "Layout.h"
 #include "Widget.h"
-#include "LayoutManager.h"
 
 namespace phui {
 
@@ -44,20 +44,14 @@ namespace phui {
      */
     class WidgetContainer : public Widget {
     protected:
-        /**
-         * Constructor
-         *
-         * @param   manager        the layout manager for this container
-         */
-        WidgetContainer(LayoutManagerPtr manager = 0);
-
+        WidgetContainer(LayoutPtr layout = 0);
         ~WidgetContainer();
 
     public:
         void add(WidgetPtr widget);
         void remove(WidgetPtr widget);
 
-        WidgetPtr getWidget(size_t idx);
+        WidgetPtr getChild(size_t idx);
 
         /// Gets the number of widgets in this container.
         size_t getNumChildren();
@@ -66,8 +60,6 @@ namespace phui {
         void draw();
       
         void update(float dt);
-
-        void setLayoutManager(LayoutManagerPtr manager);
 
         void onKeyDown(InputKey key, InputModifiers modifiers);
         void onKeyUp(InputKey key, InputModifiers modifiers);
@@ -84,9 +76,9 @@ namespace phui {
         void setModal(WidgetPtr dialog);
         void endModal() { setModal(0); }
       
+    private:
         WidgetPtr getWidgetAt(const Point& p);
 
-    private:
         /** Returns the widget that should be used for mouse events.  The
             Captured widget, if any, and if not, the widget at point p. */
         WidgetPtr getMouseWidget(const Point& p);
@@ -98,12 +90,12 @@ namespace phui {
             where the */
         std::vector<WidgetPtr> mWidgets;
 
-        LayoutManagerPtr mLayoutManager;
+        LayoutPtr mLayout;
 
         WidgetPtr mCapturedWidget;
       
-        // Should be a DialogPtr, but then we'd have a circular dependency
-        // between WidgetContainer and Dialog.
+        // Should be a WindowPtr, but then we'd have a circular dependency
+        // between WidgetContainer and Window.
         WidgetPtr mModalWidget;
     };
 

@@ -24,8 +24,8 @@
  *
  * -----------------------------------------------------------------
  * File:          $RCSfile: Window.h,v $
- * Date modified: $Date: 2003-09-21 19:37:55 $
- * Version:       $Revision: 1.3 $
+ * Date modified: $Date: 2003-09-22 23:45:02 $
+ * Version:       $Revision: 1.4 $
  * -----------------------------------------------------------------
  *
  ************************************************************** phui-cpr-end */
@@ -34,6 +34,7 @@
 
 #include <string>
 #include <list>
+#include "Layout.h"
 #include "WidgetContainer.h"
 #include "WindowListener.h"
 
@@ -47,7 +48,7 @@ namespace phui
        *
        * @param   title          the title for the window
        */
-      Window(const std::string& title = "");
+      Window(const std::string& title = "", LayoutPtr layout = 0);
 
       void draw();
 

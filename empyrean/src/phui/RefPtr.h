@@ -24,13 +24,17 @@
  *
  * -----------------------------------------------------------------
  * File:          $RCSfile: RefPtr.h,v $
- * Date modified: $Date: 2003-08-05 06:17:06 $
- * Version:       $Revision: 1.2 $
+ * Date modified: $Date: 2003-09-22 23:45:02 $
+ * Version:       $Revision: 1.3 $
  * -----------------------------------------------------------------
  *
  ************************************************************** phui-cpr-end */
 #ifndef PHUI_REF_PTR_H
 #define PHUI_REF_PTR_H
+
+
+#include "Debug.h"
+
 
 namespace phui
 {
@@ -142,7 +146,7 @@ namespace phui
        */
       ValueType& operator*() const
       {
-         assert( mPtr != NULL && "Dereferencing a NULL ref pointer" );
+         PYR_ASSERT(mPtr, "Dereferencing a NULL ref pointer");
          return *mPtr;
       }
 
@@ -152,7 +156,7 @@ namespace phui
        */
       ValueType* operator->() const
       {
-         assert( mPtr != NULL && "Accessing member of a NULL ref pointer" );
+         PYR_ASSERT(mPtr, "Accessing member of a NULL ref pointer");
          return mPtr;
       }
 

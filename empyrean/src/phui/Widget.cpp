@@ -24,8 +24,8 @@
  *
  * -----------------------------------------------------------------
  * File:          $RCSfile: Widget.cpp,v $
- * Date modified: $Date: 2003-08-05 05:00:28 $
- * Version:       $Revision: 1.2 $
+ * Date modified: $Date: 2003-09-22 23:45:02 $
+ * Version:       $Revision: 1.3 $
  * -----------------------------------------------------------------
  *
  ************************************************************** phui-cpr-end */
@@ -38,8 +38,7 @@
 namespace phui
 {
    Widget::Widget()
-      : mSize(0,0)
-      , mEnabled(true)
+      : mEnabled(true)
       , mVisible(true)
       , mBackgroundColor(BLACK)
       , mForegroundColor(WHITE)

@@ -98,11 +98,15 @@ namespace pyr {
         return 0;
     }
     
+    std::string italic(const std::string& s) {
+        return "<i>" + s + "</i>";
+    }
+    
     void World::handleLogin(Connection* c, LoginPacket* p) {
         ConnectionData* cd = getData(c);
         if (cd->loggedIn) {
             c->sendPacket(new LoginResponsePacket(LR_ALREADY_LOGGED_IN));
-            logMessage(p->username() + " attempted to log in twice!");
+            logMessage(italic(p->username()) + " attempted to log in twice!");
             return;
         }
 
@@ -113,7 +117,7 @@ namespace pyr {
             ConnectionData* cdi = getData(_connections[i]);
             if (cdi != cd && cdi->account->getUsername() == p->username()) {
                 c->sendPacket(new LoginResponsePacket(LR_ALREADY_LOGGED_IN));
-                logMessage(p->username() + " already logged in!");
+                logMessage(italic(p->username()) + " already logged in!");
                 return;
             }
         }
@@ -122,14 +126,14 @@ namespace pyr {
         if (p->newAccount()) {
             if (account) {
                 c->sendPacket(new LoginResponsePacket(LR_ACCOUNT_TAKEN));
-                logMessage(p->username() + ": account taken!");
+                logMessage(italic(p->username()) + ": account taken!");
             } else {
                 account = new Account(p->username(), p->password());
                 Database::instance().addAccount(account);
                 cd->account = account;
                 cd->loggedIn = true;
                 c->sendPacket(new LoginResponsePacket(LR_LOGGED_IN));
-                logMessage(p->username() + " new account, logged in");
+                logMessage(italic(p->username()) + " new account, logged in");
 
                 announceLogin(c);
             }
@@ -138,18 +142,18 @@ namespace pyr {
         
         if (!account) {
             c->sendPacket(new LoginResponsePacket(LR_NO_ACCOUNT));
-            logMessage(p->username() + " doesn't exist");
+            logMessage(italic(p->username()) + " doesn't exist");
         } else {
             if (p->password() == account->getPassword()) {
                 cd->account = account;
                 cd->loggedIn = true;
                 c->sendPacket(new LoginResponsePacket(LR_LOGGED_IN));
-                logMessage(p->username() + " logged in");
+                logMessage(italic(p->username()) + " logged in");
                 
                 announceLogin(c);
             } else {
                 c->sendPacket(new LoginResponsePacket(LR_INVALID_PASSWORD));
-                logMessage(p->username() + " invalid password");
+                logMessage(italic(p->username()) + " invalid password");
             }
         }
     }
@@ -160,7 +164,7 @@ namespace pyr {
                                 LOBBY_SAY,
                                 p->text()));
 
-        logMessage(cd->account->getUsername() + " says: " + p->text());
+        logMessage(italic(cd->account->getUsername()) + " says: " + p->text());
     }
     
     void World::handleJoinGame(Connection* c, JoinGamePacket* p) {
@@ -175,7 +179,7 @@ namespace pyr {
         
         if (p->name().empty()) {
             c->sendPacket(new JoinGameResponsePacket(JGR_INVALID_NAME));
-            logMessage(username + " tried to create/join game with no name");
+            logMessage(italic(username) + " tried to create/join game with no name");
             return;
         }
         
@@ -183,23 +187,23 @@ namespace pyr {
         if (p->newGame()) {
             if (game) {
                 c->sendPacket(new JoinGameResponsePacket(JGR_ALREADY_STARTED));
-                logMessage(username + ": game: " + p->name() + " already started");
+                logMessage(italic(username) + ": game " + italic(p->name()) + " already started");
             } else {
                 game = new Game(p->name(), p->password());
                 _games.push_back(game);
                 c->sendPacket(new JoinGameResponsePacket(JGR_JOINED));
-                logMessage(username + " created game " + p->name());
+                logMessage(italic(username) + " created game " + italic(p->name()));
             }
         } else {
             if (!game) {
                 c->sendPacket(new JoinGameResponsePacket(JGR_NO_GAME));
-                logMessage(username + " tried to join nonexistant game " + p->name());
+                logMessage(italic(username) + " tried to join nonexistant game " + italic(p->name()));
             } else if (game->getPassword() != p->password()) {
                 c->sendPacket(new JoinGameResponsePacket(JGR_INVALID_PASSWORD));
-                logMessage(username + ": invalid password for game " + p->name());
+                logMessage(italic(username) + ": invalid password for game " + italic(p->name()));
             } else {
                 c->sendPacket(new JoinGameResponsePacket(JGR_JOINED));
-                logMessage(username + " joined game " + p->name());
+                logMessage(italic(username) + " joined game " + italic(p->name()));
             }
         }
     }
@@ -216,18 +220,18 @@ namespace pyr {
         
         if (p->name().empty()) {
             c->sendPacket(new NewCharacterResponsePacket(NCR_INVALID_NAME));
-            logMessage(username + " tried to create character with no name");
+            logMessage(italic(username) + " tried to create character with no name");
             return;
         }
         
         Character* character = Database::instance().getCharacter(p->name());
         if (character) {
             c->sendPacket(new NewCharacterResponsePacket(NCR_ALREADY_TAKEN));
-            logMessage(username + " tried to create character " + p->name() + ", but name was already taken");
+            logMessage(italic(username) + " tried to create character " + italic(p->name()) + ", but name was already taken");
         } else {
             Database::instance().addCharacter(new Character(p->name()));
             c->sendPacket(new NewCharacterResponsePacket(NCR_SUCCESS));
-            logMessage(username + " created character " + p->name());
+            logMessage(italic(username) + " created character " + italic(p->name()));
         }
     }
     

@@ -24,8 +24,8 @@
  *
  * -----------------------------------------------------------------
  * File:          $RCSfile: Widget.h,v $
- * Date modified: $Date: 2003-09-21 19:37:55 $
- * Version:       $Revision: 1.6 $
+ * Date modified: $Date: 2003-09-22 23:45:02 $
+ * Version:       $Revision: 1.7 $
  * -----------------------------------------------------------------
  *
  ************************************************************** phui-cpr-end */
@@ -37,6 +37,7 @@
 #include "Input.h"
 #include "Insets.h"
 #include "Point.h"
+#include "Rect.h"
 #include "RefCounted.h"
 #include "RefPtr.h"
 #include "Size.h"
@@ -98,6 +99,12 @@ namespace phui
        */
       void setSize(const Size& size);
       void setSize(int w, int h) { setSize(Size(w, h)); }
+      
+      void setPositionAndSize(const Rect& r)
+      {
+         setPosition(r.mX, r.mY);
+         setSize(r.mWidth, r.mHeight);
+      }
       
       void setPositionAndSize(const Point& pos, const Size& size)
       {

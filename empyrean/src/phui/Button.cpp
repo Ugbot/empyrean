@@ -24,8 +24,8 @@
  *
  * -----------------------------------------------------------------
  * File:          $RCSfile: Button.cpp,v $
- * Date modified: $Date: 2003-09-19 13:32:26 $
- * Version:       $Revision: 1.9 $
+ * Date modified: $Date: 2003-09-22 23:45:02 $
+ * Version:       $Revision: 1.10 $
  * -----------------------------------------------------------------
  *
  ************************************************************** phui-cpr-end */
@@ -113,7 +113,7 @@ namespace phui
       // draw text shadow
       glColor(BLACK);
       glPushMatrix();
-      glTranslatef(xLoc + 2.0f, yLoc + 2.0f, 0.0f);
+      glTranslatef(xLoc + 1.0f, yLoc + 1.0f, 0.0f);
       renderer->render(mText.c_str());
       glPopMatrix();
 

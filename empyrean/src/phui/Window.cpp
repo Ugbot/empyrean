@@ -24,8 +24,8 @@
  *
  * -----------------------------------------------------------------
  * File:          $RCSfile: Window.cpp,v $
- * Date modified: $Date: 2003-09-21 19:37:55 $
- * Version:       $Revision: 1.3 $
+ * Date modified: $Date: 2003-09-22 23:45:02 $
+ * Version:       $Revision: 1.4 $
  * -----------------------------------------------------------------
  *
  ************************************************************** phui-cpr-end */
@@ -35,8 +35,9 @@
 
 namespace phui
 {
-   Window::Window(const std::string& title)
-      : mTitle(title)
+   Window::Window(const std::string& title, LayoutPtr layout)
+      : WidgetContainer(layout)
+      , mTitle(title)
    {
       init(title, false);
    }

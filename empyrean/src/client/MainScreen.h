@@ -23,21 +23,20 @@ namespace pyr {
             phui::PicturePtr background = new phui::Picture("images/title/title_composite.png");
             background->setPositionAndSize(0, 0, 1024, 768);
             
-            phui::WindowPtr buttons = new phui::Window();
+            phui::WindowPtr buttons = new phui::Window(
+                "Empyrean",
+                new phui::BoxLayout(phui::BoxLayout::VERTICAL));
             buttons->setPositionAndSize(400, 350, 224, 240);
             buttons->show();
         
             phui::ButtonPtr connect = new phui::Button("Connect to Server");
-            connect->addListener(this, &MainScreen::onConnectToServer);
-            connect->setPositionAndSize(0, 0, 224, 80);
+            connect->addListener(this, MainScreen::onConnectToServer);
             
             phui::ButtonPtr options = new phui::Button("Options");
-            options->addListener(this, &MainScreen::onOptions);
-            options->setPositionAndSize(0, 84, 224, 80);
+            options->addListener(this, MainScreen::onOptions);
             
             phui::ButtonPtr quit = new phui::Button("Quit");
-            quit->addListener(this, &MainScreen::onQuit);
-            quit->setPositionAndSize(0, 168, 224, 80);
+            quit->addListener(this, MainScreen::onQuit);
 
             add(background);
             buttons->add(connect);
@@ -49,13 +48,13 @@ namespace pyr {
         void createConnectWindow() {
             phui::ButtonPtr connect = new phui::Button("Connect");
             connect->addListener(this, MainScreen::onConnect);
-            connect->setPositionAndSize(0, 0, 424, 220);
             
             phui::ButtonPtr cancel  = new phui::Button("Cancel");
             cancel->addListener(this, MainScreen::onCancel);
-            cancel->setPositionAndSize(0, 220, 424, 220);
         
-            _connectWindow = new phui::Window("Connect to Server");
+            _connectWindow = new phui::Window(
+                "Connect to Server",
+                new phui::BoxLayout(phui::BoxLayout::VERTICAL));
             _connectWindow->show();
             _connectWindow->setPositionAndSize(300, 250, 424, 440);
             _connectWindow->add(connect);

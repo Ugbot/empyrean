@@ -203,10 +203,12 @@ namespace pyr {
         }
 
         T* operator->() const {
+            PYR_ASSERT(_ptr, "Accessing member of null pointer!");
             return _ptr;
         }
 
         T& operator*() const {
+            PYR_ASSERT(_ptr, "Dereferencing null pointer!");
             return *_ptr;
         }
 

@@ -113,6 +113,12 @@
 				RelativePath="..\..\src\phui\ActionListener.h">
 			</File>
 			<File
+				RelativePath="..\..\src\phui\BoxLayout.cpp">
+			</File>
+			<File
+				RelativePath="..\..\src\phui\BoxLayout.h">
+			</File>
+			<File
 				RelativePath="..\..\src\phui\Button.cpp">
 			</File>
 			<File
@@ -126,18 +132,6 @@
 			</File>
 			<File
 				RelativePath="..\..\src\phui\Color.h">
-			</File>
-			<File
-				RelativePath="..\..\src\phui\EmptyConstraint.h">
-			</File>
-			<File
-				RelativePath="..\..\src\phui\FlowLayout.cpp">
-			</File>
-			<File
-				RelativePath="..\..\src\phui\FlowLayout.h">
-			</File>
-			<File
-				RelativePath="..\..\src\phui\FlowVerticalConstraint.h">
 			</File>
 			<File
 				RelativePath="..\..\src\phui\Input.h">
@@ -155,13 +149,7 @@
 				RelativePath="..\..\src\phui\Label.h">
 			</File>
 			<File
-				RelativePath="..\..\src\phui\LayoutConstraint.h">
-			</File>
-			<File
-				RelativePath="..\..\src\phui\LayoutManager.cpp">
-			</File>
-			<File
-				RelativePath="..\..\src\phui\LayoutManager.h">
+				RelativePath="..\..\src\phui\Layout.h">
 			</File>
 			<File
 				RelativePath="..\..\src\phui\ListBox.cpp">
@@ -171,6 +159,9 @@
 			</File>
 			<File
 				RelativePath="..\..\src\phui\ListSelectionListener.h">
+			</File>
+			<File
+				RelativePath="..\..\src\phui\NullLayout.h">
 			</File>
 			<File
 				RelativePath="..\..\src\phui\phui.h">

@@ -2,9 +2,6 @@
 #define PYR_ASSERT_H
 
 
-#include <assert.h>
-
-
 #define PYR_REQUIRE_SEMI \
     do { } while (false)
 
@@ -14,6 +11,15 @@
 
     #ifdef _MSC_VER
     
+        #ifndef STRICT
+            #define STRICT
+        #endif
+        #ifndef WIN32_LEAN_AND_MEAN
+            #define WIN32_LEAN_AND_MEAN
+        #endif
+        #ifndef NOMINMAX
+            #define NOMINMAX
+        #endif
         #include <windows.h>
     
         #define PYR_ASSERT(condition, label)                            \
@@ -24,15 +30,15 @@
         
     #else
     
-        #define PYR_ASSERT(condition, label) \
-            assert((condition) && (label))
+        #include <assert.h>
+    
+        #define PYR_ASSERT(condition, label) assert((condition) && (label))
     
     #endif
 
 #else
 
-    #define PYR_ASSERT(condition, label) \
-        PYR_REQUIRE_SEMI
+    #define PYR_ASSERT(condition, label) PYR_REQUIRE_SEMI
 
 #endif
 
