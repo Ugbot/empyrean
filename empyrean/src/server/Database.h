@@ -35,7 +35,18 @@ namespace pyr {
     
     class Character {
     public:
-        void save(FILE* file) const { }
+        Character(const std::string& name) {
+            _name = name;
+        }
+    
+        void save(FILE* file) const;
+        
+        const std::string& getName() const {
+            return _name;
+        }
+        
+    private:
+        std::string _name;
     };
     
     
@@ -58,7 +69,10 @@ namespace pyr {
         void save(const std::string& filename) const;
     
         void addAccount(Account* account);
-        Account* getAccount(const std::string& username);
+        Account* getAccount(const std::string& username) const;
+        
+        void addCharacter(Character* character);
+        Character* getCharacter(const std::string& name) const;
     
     private:
         std::vector<Account*>   _accounts;

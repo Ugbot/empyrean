@@ -52,9 +52,9 @@ namespace pyr {
 
     // This packet represents both creating a game and joining a game.
     #define PYR_JOIN_GAME_PACKET_NAME JoinGamePacket
-    #define PYR_JOIN_GAME_PACKET(_)     \
-        _(string)(24, name)             \
-        _(string)(24, password)         \
+    #define PYR_JOIN_GAME_PACKET(_) \
+        _(string)(24, name)         \
+        _(string)(24, password)     \
         _(field)(u8, newGame)
         
     // Join Game Response codes
@@ -70,24 +70,41 @@ namespace pyr {
     #define PYR_JOIN_GAME_RESPONSE_PACKET_NAME JoinGameResponsePacket
     #define PYR_JOIN_GAME_RESPONSE_PACKET(_)  \
         _(field)(u16, code)
+        
+    #define PYR_NEW_CHARACTER_PACKET_NAME NewCharacterPacket
+    #define PYR_NEW_CHARACTER_PACKET(_) \
+        _(string)(24, name)
+        
+    // New Character Response codes
+    enum {
+        NCR_SUCCESS,    // success
+        
+        NCR_INVALID_NAME,
+        NCR_ALREADY_TAKEN,
+    };
+        
+    #define PYR_NEW_CHARACTER_RESPONSE_PACKET_NAME NewCharacterResponsePacket
+    #define PYR_NEW_CHARACTER_RESPONSE_PACKET(_) \
+        _(field)(u16, code)
 
 
     // PACKET LIST
     
     // Packet IDs are allocated based on the order of this list.
-    #define PYR_PACKET_LIST(_)              \
-        _(PYR_LOGIN_PACKET)                 \
-        _(PYR_LOGIN_RESPONSE_PACKET)        \
-        _(PYR_SAY_PACKET)                   \
-        _(PYR_LOBBY_PACKET)                 \
-        _(PYR_JOIN_GAME_PACKET)             \
-        _(PYR_JOIN_GAME_RESPONSE_PACKET)
+    #define PYR_PACKET_LIST(_)                  \
+        _(PYR_LOGIN_PACKET)                     \
+        _(PYR_LOGIN_RESPONSE_PACKET)            \
+        _(PYR_SAY_PACKET)                       \
+        _(PYR_LOBBY_PACKET)                     \
+        _(PYR_JOIN_GAME_PACKET)                 \
+        _(PYR_JOIN_GAME_RESPONSE_PACKET)        \
+        _(PYR_NEW_CHARACTER_PACKET)             \
+        _(PYR_NEW_CHARACTER_RESPONSE_PACKET)
 
 
     // allocate packet IDs
 
     #define PYR_ID(name) name ## _ID,
-    
     enum {
         PYR_PACKET_LIST(PYR_ID)
     };
@@ -95,9 +112,7 @@ namespace pyr {
     
     // declare packet types
     
-    #define PYR_DECLARE(name)   \
-        PYR_DECLARE_PACKET(name ## _NAME, name ## _ID, name)
-
+    #define PYR_DECLARE(name) PYR_DECLARE_PACKET(name ## _NAME, name ## _ID, name)
     PYR_PACKET_LIST(PYR_DECLARE)
 }
 

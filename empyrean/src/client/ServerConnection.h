@@ -20,6 +20,7 @@ namespace pyr {
     class JoinGameResponsePacket;
     class LobbyPacket;
     class LoginResponsePacket;
+    class NewCharacterResponsePacket;
     class Packet;
     class ServerConnectionThread;
     
@@ -47,6 +48,9 @@ namespace pyr {
         bool hasJoinGameResponse() { return _hasJoinGameResponse; }
         u16 getJoinGameResponse()  { return _joinGameResponse; }
         
+        bool hasNewCharacterResponse() { return _hasNewCharacterResponse; }
+        u16 getNewCharacterResponse()  { return _newCharacterResponse; }
+        
         /// valid if DISCONNECTED after beginConnecting()
         const std::string& getError();
         
@@ -63,7 +67,10 @@ namespace pyr {
         bool joinGame(const std::string& name,
                       const std::string& password,
                       bool newGame);
+                      
+        bool newCharacter(const std::string& name);
 
+    private:
         /**
          * Sends a packet to the server.
          *
@@ -72,10 +79,10 @@ namespace pyr {
          */
         bool sendPacket(Packet* p);
     
-    private:
         void handleLoginResponse(Connection*, LoginResponsePacket* p);
         void handleLobby(Connection*, LobbyPacket* p);
         void handleJoinGameResponse(Connection*, JoinGameResponsePacket* p);
+        void handleNewCharacterResponse(Connection*, NewCharacterResponsePacket* p);
     
         Status _status;
         
@@ -92,6 +99,9 @@ namespace pyr {
         
         bool _hasJoinGameResponse;
         u16 _joinGameResponse;
+        
+        bool _hasNewCharacterResponse;
+        u16 _newCharacterResponse;
     };
 
 }

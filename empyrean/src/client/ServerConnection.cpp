@@ -17,6 +17,9 @@ namespace pyr {
         
         _hasJoinGameResponse = false;
         _joinGameResponse = 0;
+        
+        _hasNewCharacterResponse = false;
+        _newCharacterResponse = 0;
     }
 
     void ServerConnection::beginConnecting(const std::string& server, int port) {
@@ -104,6 +107,12 @@ namespace pyr {
         _joinGameResponse = 0;
         return sendPacket(new JoinGamePacket(name, password, newGame ? 1 : 0));
     }
+    
+    bool ServerConnection::newCharacter(const std::string& name) {
+        _hasNewCharacterResponse = false;
+        _newCharacterResponse = 0;
+        return sendPacket(new NewCharacterPacket(name));
+    }
 
     bool ServerConnection::sendPacket(Packet* p) {
         if (_connection) {
@@ -149,6 +158,11 @@ namespace pyr {
     void ServerConnection::handleJoinGameResponse(Connection*, JoinGameResponsePacket* p) {
         _hasJoinGameResponse = true;
         _joinGameResponse = p->code();
+    }
+    
+    void ServerConnection::handleNewCharacterResponse(Connection*, NewCharacterResponsePacket* p) {
+        _hasNewCharacterResponse = true;
+        _newCharacterResponse = p->code();
     }
 
 }

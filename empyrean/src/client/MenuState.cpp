@@ -10,6 +10,7 @@
 #include "LoginScreen.h"
 #include "MainScreen.h"
 #include "MenuState.h"
+#include "NewCharacterScreen.h"
 #include "NewGameScreen.h"
 #include "OptionsState.h"
 #include "ServerConnection.h"
@@ -156,6 +157,7 @@ namespace pyr {
     }
 
     void MenuState::onLobbyNewChar() {
+        _screen = _newCharacterScreen;
     }
 
     void MenuState::onLobbyQuit() {
@@ -197,11 +199,16 @@ namespace pyr {
         ServerConnection::instance().disconnect();
         _screen = new ErrorScreen(this, error);
     }
-
-    void MenuState::onCreatingGameCancel() {
+    
+    void MenuState::onNewCharacterCreate(const std::string& name) {
+        ServerConnection::instance().newCharacter(name);
         _screen = _lobbyScreen;
     }
     
+    void MenuState::onNewCharacterCancel() {
+        _screen = _lobbyScreen;
+    }
+
     void MenuState::createInterface() {
         _mainScreen         = new MainScreen(this);
         _connectScreen      = new ConnectScreen(this);
@@ -211,6 +218,7 @@ namespace pyr {
         _loginScreen        = new LoginScreen(this);
         _loggingInScreen    = new LoggingInScreen(this);
         _lobbyScreen        = new LobbyScreen(this);
+        _newCharacterScreen = new NewCharacterScreen(this);
         _newGameScreen      = new NewGameScreen(this);
         
         _screen = _mainScreen;

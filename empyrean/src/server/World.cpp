@@ -48,6 +48,7 @@ namespace pyr {
         connection->definePacketHandler(this, &World::handleLogin);
         connection->definePacketHandler(this, &World::handleSay);
         connection->definePacketHandler(this, &World::handleJoinGame);
+        connection->definePacketHandler(this, &World::handleNewCharacter);
 
         // add the connection to the list of connections
         _connections.push_back(connection);
@@ -164,6 +165,12 @@ namespace pyr {
     
     void World::handleJoinGame(Connection* c, JoinGamePacket* p) {
         ConnectionData* cd = getData(c);
+        
+        if (!cd->account) {
+            // ignore packet, must log in first
+            return;
+        }
+        
         std::string username = cd->account->getUsername();
         
         if (p->name().empty()) {
@@ -194,6 +201,33 @@ namespace pyr {
                 c->sendPacket(new JoinGameResponsePacket(JGR_JOINED));
                 logMessage(username + " joined game " + p->name());
             }
+        }
+    }
+    
+    void World::handleNewCharacter(Connection* c, NewCharacterPacket* p) {
+        ConnectionData* cd = getData(c);
+        
+        if (!cd->account) {
+            // ignore packet, must log in first
+            return;
+        }
+        
+        std::string username = cd->account->getUsername();
+        
+        if (p->name().empty()) {
+            c->sendPacket(new NewCharacterResponsePacket(NCR_INVALID_NAME));
+            logMessage(username + " tried to create character with no name");
+            return;
+        }
+        
+        Character* character = Database::instance().getCharacter(p->name());
+        if (character) {
+            c->sendPacket(new NewCharacterResponsePacket(NCR_ALREADY_TAKEN));
+            logMessage(username + " tried to create character " + p->name() + ", but name was already taken");
+        } else {
+            Database::instance().addCharacter(new Character(p->name()));
+            c->sendPacket(new NewCharacterResponsePacket(NCR_SUCCESS));
+            logMessage(username + " created character " + p->name());
         }
     }
     

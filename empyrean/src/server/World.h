@@ -13,6 +13,7 @@ namespace pyr {
     class Game;
     class JoinGamePacket;
     class LoginPacket;
+    class NewCharacterPacket;
     class Packet;
     class SayPacket;
 
@@ -42,6 +43,7 @@ namespace pyr {
         void handleLogin(Connection* c, LoginPacket* p);
         void handleSay(Connection* c, SayPacket* p);
         void handleJoinGame(Connection* c, JoinGamePacket* p);
+        void handleNewCharacter(Connection* c, NewCharacterPacket* p);
         
         void announceLogin(Connection* c);
         void announceLogout(Connection* d);

@@ -315,6 +315,9 @@
 				RelativePath="..\..\src\client\MenuScreen.h">
 			</File>
 			<File
+				RelativePath="..\..\src\client\NewCharacterScreen.h">
+			</File>
+			<File
 				RelativePath="..\..\src\client\NewGameScreen.h">
 			</File>
 		</Filter>

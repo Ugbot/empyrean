@@ -15,6 +15,15 @@ namespace pyr {
             getPassword().c_str());
     }
     
+    
+    void Character::save(FILE* file) const {
+        fprintf(
+            file,
+            "<character name=\"%s\"/>\n",
+            getName().c_str());
+    }
+    
+    
     PYR_DEFINE_SINGLETON(Database)
 
     Database::~Database() {
@@ -42,20 +51,26 @@ namespace pyr {
                 throw DatabaseError("Invalid server database file");
             }
             
+            // Load into temporary lists so an exception doesn't mess up the
+            // DB's state.
             std::vector<Account*> accounts;
+            std::vector<Character*> characters;
             
             for (size_t i = 0; i < node->getChildCount(); ++i) {
-                XMLNode* actnode = node->getChild(i);
-                if (actnode->getName() == "account") {
-                    Account* account = new Account(
-                        actnode->getAttr("username"),
-                        actnode->getAttr("password"));
-                    accounts.push_back(account);
+                XMLNode* subnode = node->getChild(i);
+                if (subnode->getName() == "account") {
+                    accounts.push_back(new Account(
+                        subnode->getAttr("username"),
+                        subnode->getAttr("password")));
+                } else if (subnode->getName() == "character") {
+                    characters.push_back(new Character(
+                        subnode->getAttr("name")));
                 }
             }
             
             clear();
             _accounts = accounts;
+            _characters = characters;
         }
         catch (const XMLParseError& e) {
             throw DatabaseError("XML Parse Error: " + std::string(e.what()));
@@ -92,10 +107,23 @@ namespace pyr {
         _accounts.push_back(account);
     }
     
-    Account* Database::getAccount(const std::string& username) {
+    Account* Database::getAccount(const std::string& username) const {
         for (size_t i = 0; i < _accounts.size(); ++i) {
             if (_accounts[i]->getUsername() == username) {
                 return _accounts[i];
+            }
+        }
+        return 0;
+    }
+    
+    void Database::addCharacter(Character* character) {
+        _characters.push_back(character);
+    }
+    
+    Character* Database::getCharacter(const std::string& name) const {
+        for (size_t i = 0; i < _characters.size(); ++i) {
+            if (_characters[i]->getName() == name) {
+                return _characters[i];
             }
         }
         return 0;
