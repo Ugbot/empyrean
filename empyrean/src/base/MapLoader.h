@@ -2,13 +2,17 @@
 #define PYR_MAP_LOADER_H
 
 
-#include <string>
+#include "Error.h"
+#include "Types.h"
 
 
 namespace pyr {
     class Map;
 
-    Map* loadMap(const std::string& filename);
+    PYR_DEFINE_RUNTIME_ERROR(LoadMapError);    
+
+    /// Throws LoadMapError on failure.
+    Map* loadMap(const string& filename);
 }
 
 

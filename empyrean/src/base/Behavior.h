@@ -51,10 +51,6 @@ namespace pyr {
     typedef RefPtr<BehaviorSlot> BehaviorSlotPtr;
 
 
-    class Behavior;
-    typedef RefPtr<Behavior> BehaviorPtr;
-
-
     /**
      * Responsible for controlling an entity's motion and actions.
      */
@@ -91,7 +87,7 @@ namespace pyr {
         void beginAnimationCycle(Entity* entity, const std::string& animation);
         void beginAnimation(Entity* entity, const std::string& animation);
 
-        void copySlots(const BehaviorPtr& other) {
+        void copySlots(const Behavior* other) {
             _slots = other->_slots;
         }
 
@@ -101,6 +97,7 @@ namespace pyr {
         typedef std::map<TypeInfo, BehaviorSlotPtr> SlotMap;
         SlotMap _slots;
     };
+    PYR_REF_PTR(Behavior);
 
     /**
      * Instantiates a behavior from the type 'name'.  Returns a default (naive)

@@ -13,9 +13,69 @@
 
 namespace pyr {
 
+    struct EntityState {
+        EntityState(ServerEntityPtr e)
+        : entity(e)
+        , id(e->getID())
+        , pos(e->getPos())
+        , vel(e->getVel())
+        , bounds(e->getBounds()) {
+        }
+        
+        bool operator<(const EntityState& rhs) const {
+            return id < rhs.id;        
+        }
+        
+        bool operator!=(const EntityState& rhs) const {
+            return id     != rhs.id  ||
+                   pos    != rhs.pos ||
+                   vel    != rhs.vel ||
+                   bounds != rhs.bounds;
+        }
+    
+        ServerEntityPtr entity;
+        u16 id;
+        Vec2f pos;
+        Vec2f vel;
+        BoundingRectangle bounds;
+    };
+    
+    typedef std::set<EntityState> EntityStateSet;
+    typedef EntityStateSet::iterator EntityStateSetIter;
+    typedef EntityStateSet::const_iterator EntityStateSetCIter;
+
+    struct WorldAspect {
+        EntityStateSet entities;
+    };
+
+    /// While in a game, extra data is needed.
+    struct GameConnectionData : public ServerConnectionData {
+        GameConnectionData() {
+            behavior = 0;
+        }
+
+        GameConnectionData(const ServerConnectionData& rhs)
+        : ServerConnectionData(rhs) {
+            behavior = 0;
+        }
+
+        GameConnectionData(const GameConnectionData& rhs)
+        : ServerConnectionData(rhs) {
+            playerEntity = rhs.playerEntity;
+            behavior = rhs.behavior;
+        }
+
+        ServerEntityPtr playerEntity;
+        PlayerBehaviorPtr behavior;
+        Inited<bool, false> acceptingUpdates;
+        WorldAspect aspect;
+    };
+
+
     Game::Game(const std::string& name, const std::string& password) {
         PYR_LOG_BLOCK("Game::Game");
 
+        definePacketHandler(this, &Game::handleAllowUpdates);
         definePacketHandler(this, &Game::handlePlayerEvent);
         definePacketHandler(this, &Game::handleHUDUpdate);
         definePacketHandler(this, &Game::handlePlayerAttack);
@@ -23,12 +83,28 @@ namespace pyr {
         _name = name;
         _password = password;
 
-        // Loading below.
+        loadGameResources();
+    }
 
+    Game::~Game() {
+        PYR_LOG_BLOCK("Game::~Game");
+    }
+
+    void Game::update(float dt) {
+        PYR_LOG_BLOCK("Game::update");
+        
+        // Process packets from all connections.
+        ConnectionHolder::update();
+        updateWorld(dt);
+        updateConnections();
+    }
+
+    GameConnectionData* Game::getData(Connection* c) {
+        return checked_cast<GameConnectionData*>(c->getData());
+    }
+    
+    void Game::loadGameResources() {
         _map = loadMap("maps/map2.obj");
-        if (!_map) {
-            throw std::runtime_error("Loading maps/map2.obj failed");
-        }
         
         // Find start position.
         MapElementPtr start = _map->findElementByName("start");
@@ -73,16 +149,8 @@ namespace pyr {
             }
         }
     }
-
-    Game::~Game() {
-        PYR_LOG_BLOCK("Game::~Game");
-        clearConnections();
-    }
-
-    void Game::update(float dt) {
-        PYR_LOG_BLOCK("Game::update");
-        ConnectionHolder::update();
-
+    
+    void Game::updateWorld(float dt) {
         Environment env;
         env.map = _map.get();
         for (size_t i = 0; i < _entities.size(); ++i) {
@@ -96,26 +164,88 @@ namespace pyr {
         }
 
         resolveCollisions(dt, _map.get(),entityVector);
+    }
+    
+    void Game::updateConnections() {
+        // Calculate authoritative world state.
+        WorldAspect aspect;
+        for (size_t i = 0; i < _entities.size(); ++i) {
+            aspect.entities.insert(EntityState(_entities[i]));
+        }
+    
+        // Update connections.
+        for (size_t i = 0; i < getConnectionCount(); ++i) {
+            updateConnection(aspect, getConnection(i));
+        }
+        
+        // Clear appearance changes for this frame.
+        for (size_t i = 0; i < _entities.size(); ++i) {
+            ServerAppearance* appearance = _entities[i]->getServerAppearance();
+            appearance->clearAppearanceChanges();
+        }
+    }
+    
+    void Game::updateConnection(const WorldAspect& aspect, Connection* c) {
+        GameConnectionData* cd = getData(c);
+        if (!cd->acceptingUpdates) {
+            return;
+        }
+                
+        // Send difference between client aspect and world.
+        EntityStateSetCIter clientIter = cd->aspect.entities.begin();
+        EntityStateSetCIter clientEnd  = cd->aspect.entities.end();
+        EntityStateSetCIter serverIter = aspect.entities.begin();
+        EntityStateSetCIter serverEnd  = aspect.entities.end();
+        
+        while (clientIter != clientEnd || serverIter != serverEnd) {
+            if (serverIter == serverEnd || clientIter->id < serverIter->id) {
+                // Client has entity that server doesn't.  Remove and increment client.
+                c->sendPacket(new EntityRemovedPacket(clientIter->id));
+                
+                ++clientIter;
+                
+            } else if (clientIter == clientEnd || clientIter->id > serverIter->id) {
+                ServerEntityPtr entity = serverIter->entity;            
 
+                // Server has entity that client doesn't.  Add and increment server.
+                c->sendPacket(buildEntityAddedPacket(entity));
+                
+                // If this is the player's own entity, do special things.
+                if (entity == cd->playerEntity) {
+                    c->sendPacket(new SetPlayerPacket(entity->getID()));
+
+                    // Send the client its character stats
+                    c->sendPacket(new CharacterUpdatedPacket(
+                        entity->getID(),
+                        entity->getGameStats()->getCurrentVitality(),
+                        entity->getGameStats()->getMaxVitality(),
+                        entity->getGameStats()->getCurrentEther(),
+                        entity->getGameStats()->getMaxEther()));
+                }
+                
+                ++serverIter;
+            } else {
+                // Entities match.  Compare and increment both.
+                if (*clientIter != *serverIter) {
+                    ServerEntityPtr e = serverIter->entity;
+                    c->sendPacket(new EntityUpdatedPacket(
+                        e->getID(), e->getPos(), e->getVel()));
+                }
+                
+                ++clientIter;
+                ++serverIter;
+            }
+        }
+        
+        cd->aspect = aspect;
+        
         for (size_t i = 0; i < _entities.size(); ++i) {
             // Send all appearance updates to all of the clients.
             ServerAppearance* appearance = _entities[i]->getServerAppearance();
-            std::vector<Packet*> packets;
+            std::vector<PacketPtr> packets;
             appearance->sendAppearanceChanges(_entities[i]->getID(), packets);
-            for (size_t i = 0; i < packets.size(); ++i) {
-                sendAll(packets[i]);
-            }
+            c->sendPackets(packets);
         }
-
-        for (size_t i = 0; i < _entities.size(); ++i) {
-            ServerEntityPtr e = _entities[i];
-            sendAll(new EntityUpdatedPacket(
-                        e->getID(), e->getPos(), e->getVel()));
-        }
-    }
-
-    GameConnectionData* Game::getData(Connection* c) {
-        return checked_cast<GameConnectionData*>(c->getData());
     }
 
     void Game::addEntity(ServerEntityPtr entity) {
@@ -167,44 +297,16 @@ namespace pyr {
         cd->playerEntity = entity;
         cd->behavior = pb;
         connection->setData(cd);
-        connection->addReceiver(this);
 
         addEntity(entity);
-
-        // Add player entity to other clients.
-        sendAll(buildEntityAddedPacket(entity));
-
-        // Send all entities to the new connection.
-        for (size_t i = 0; i < _entities.size(); ++i) {
-            connection->sendPacket(buildEntityAddedPacket(_entities[i]));
-        }
-
-        connection->sendPacket(new SetPlayerPacket(entity->getID()));
-
-        // Send the client its character stats
-        connection->sendPacket(new CharacterUpdatedPacket( entity->getID(),
-                                                           entity->getGameStats()->getCurrentVitality(),
-                                                           entity->getGameStats()->getMaxVitality(),
-                                                           entity->getGameStats()->getCurrentEther(),
-                                                           entity->getGameStats()->getMaxEther()        ));
     }
 
     void Game::connectionRemoved(Connection* connection) {
         GameConnectionData* cd = getData(connection);
         PYR_ASSERT(cd, "No ConnectionData.  connectionRemoved() called before connectionAdded()?");
 
-        // Why do we send it to all connections, and then the connection passed?
-        // Is the passed connection removed before calling this function?
-        sendAll(new EntityRemovedPacket(cd->playerEntity->getID()));
-        connection->sendPacket(new EntityRemovedPacket(
-                                   cd->playerEntity->getID()));
-
         _idGenerator.release(cd->playerEntity->getID());
         removeEntity(cd->playerEntity);
-        // Don't need to delete the behavior, because the entity does
-        // that for us.
-
-        connection->removeReceiver(this);
     }
 
     int Game::getHitModifier(CollisionBox& box, const std::string& attackType, std::vector<Vec2f>& points) {
@@ -257,12 +359,16 @@ namespace pyr {
             }
         }
     }
+    
+    void Game::handleAllowUpdates(Connection* c, AllowUpdatesPacket* p) {
+        getData(c)->acceptingUpdates = true;  // maybe allow it to turn off later.
+    }
 
     void Game::handlePlayerAttack(Connection* c, PlayerAttackPacket* p) {
         GameConnectionData* cd = getData(c);
         ServerEntityPtr attacker = cd->playerEntity;
         PYR_ASSERT(attacker, "GameConnectionData does not have an associated entity");
-        PlayerBehavior* attackerBehavior = cd->behavior;
+        PlayerBehaviorPtr attackerBehavior = cd->behavior;
         PYR_ASSERT(attackerBehavior, "GameConnectionData does not have an associated entity");
 
         float damageMod = 1.0f;
@@ -368,7 +474,7 @@ namespace pyr {
 
     void Game::handlePlayerEvent(Connection* c, PlayerEventPacket* p) {
         GameConnectionData* cd = getData(c);
-        PlayerBehavior* behavior = cd->behavior;
+        PlayerBehaviorPtr behavior = cd->behavior;
         Entity* entity = cd->playerEntity.get();
         behavior->handleEvent(entity, p->event());
     }
@@ -381,11 +487,12 @@ namespace pyr {
         entity->getGameStats()->changeEther(p->addEth() == 0 ? -p->decEth() : p->addEth());
 
         // Send the change
-        c->sendPacket(new CharacterUpdatedPacket( entity->getID(),
-                                                  entity->getGameStats()->getCurrentVitality(),
-                                                  entity->getGameStats()->getMaxVitality(),
-                                                  entity->getGameStats()->getCurrentEther(),
-                                                  entity->getGameStats()->getMaxEther()        ));
+        c->sendPacket(new CharacterUpdatedPacket(
+            entity->getID(),
+            entity->getGameStats()->getCurrentVitality(),
+            entity->getGameStats()->getMaxVitality(),
+            entity->getGameStats()->getCurrentEther(),
+            entity->getGameStats()->getMaxEther()));
     }
 
 }

@@ -25,8 +25,7 @@ namespace pyr {
     public:
         ServerEntity(u16 id, BehaviorPtr behavior, ServerAppearance* appearance,
                      GameStatisticsPtr gameStats)
-            : Entity(behavior, appearance)
-        {
+        : Entity(behavior, appearance) {
             _id = id;
             _gameStats = gameStats;
         }
@@ -38,7 +37,7 @@ namespace pyr {
         ServerAppearance* getServerAppearance() const {
             // Since we created the base class, we know what
             // type of appearance it has.
-            return static_cast<ServerAppearance*>(getAppearance());
+            return checked_cast<ServerAppearance*>(getAppearance());
         }
 
         GameStatisticsPtr getGameStats() const {

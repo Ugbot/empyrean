@@ -63,7 +63,7 @@ namespace pyr {
     Map* loadMap(const std::string& filename) {
         Map* map = loadOBJFile(filename);
         if (!map) {
-            return 0;
+            throw LoadMapError("loadMap(" + filename + ") failed");
         }
 
         loadMetaData(map, filename + ".meta");

@@ -60,6 +60,10 @@ namespace pyr {
     void Connection::sendPacket(PacketPtr p) {
         _writer->addPacket(p);
     }
+    
+    void Connection::sendPackets(const std::vector<PacketPtr>& packets) {
+        _writer->addPackets(packets);
+    }
 
     void Connection::close() {
         _closing = true;

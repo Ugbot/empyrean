@@ -85,6 +85,10 @@ namespace pyr {
     //   "End Right
     //   "Jump"
     //   "Attack"
+    
+    // client -> server
+    #define PYR_ALLOW_UPDATES_PACKET_NAME AllowUpdatesPacket
+    #define PYR_ALLOW_UPDATES_PACKET(_)
 
     // client -> server
     #define PYR_PLAYER_EVENT_PACKET_NAME PlayerEventPacket
@@ -165,6 +169,7 @@ namespace pyr {
         _(PYR_LOBBY_PACKET)                     \
         _(PYR_JOIN_GAME_PACKET)                 \
         _(PYR_JOIN_GAME_RESPONSE_PACKET)        \
+        _(PYR_ALLOW_UPDATES_PACKET)             \
         _(PYR_PLAYER_EVENT_PACKET)              \
         _(PYR_SET_PLAYER_PACKET)                \
         _(PYR_ENTITY_ADDED_PACKET)              \

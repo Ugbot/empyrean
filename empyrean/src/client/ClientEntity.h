@@ -14,8 +14,7 @@ namespace pyr {
 
     public:
         ClientEntity(BehaviorPtr behavior, ClientAppearance* appearance)
-            : Entity(behavior, appearance)
-        {
+        : Entity(behavior, appearance) {
         }
 
         /// Override update() so we can update the appearance.
@@ -45,7 +44,7 @@ namespace pyr {
 
         /// We specified the appearance, so we know what type it is.
         ClientAppearance* getClientAppearance() const {
-            return static_cast<ClientAppearance*>(getAppearance());
+            return checked_cast<ClientAppearance*>(getAppearance());
         }
     };
     typedef RefPtr<ClientEntity> ClientEntityPtr;

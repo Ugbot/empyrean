@@ -6,6 +6,7 @@
 namespace pyr {
 
     void ConnectionHolder::addConnection(Connection* connection) {
+        connection->addReceiver(this);
         connectionAdded(connection);
         _connections.push_back(connection);
     }
@@ -14,8 +15,8 @@ namespace pyr {
     }
     
     ConnectionHolder::~ConnectionHolder() {
-        PYR_ASSERT(getConnectionCount() == 0,
-            "Connection holders should call clearConnections in their destructors");
+        clearConnections();
+        PYR_ASSERT(getConnectionCount() == 0, "clearConnections() didn't get rid of all connections.");
     }
     
     void ConnectionHolder::update() {
@@ -77,6 +78,7 @@ namespace pyr {
         Connection* c = getConnection(index);
         _connections.erase(_connections.begin() + index);
         connectionRemoved(c);
+        c->removeReceiver(this);
         return c;
     }
     

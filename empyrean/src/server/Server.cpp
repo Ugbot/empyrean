@@ -16,8 +16,6 @@ namespace pyr {
     }
 
     Server::~Server() {
-        clearConnections();
-
         for_each(_games.begin(), _games.end(), delete_function<Game>);
         _games.clear();
     }
@@ -63,7 +61,6 @@ namespace pyr {
             cd->account = 0;
         }
         connection->setData(cd);
-        connection->addReceiver(this);
     }
 
     void Server::connectionRemoved(Connection* connection) {
@@ -72,8 +69,6 @@ namespace pyr {
         if (cd->loggedIn) {
             announceLogout(connection);
         }
-
-        connection->removeReceiver(this);
 
         // Don't say the client disconnected if it only went to another
         // ConnectionHolder.

@@ -29,6 +29,7 @@ namespace pyr {
     private:
         PhysicsBehaviorSlotPtr _physics;
     };
+    PYR_REF_PTR(PlayerBehavior);
 
 }
 

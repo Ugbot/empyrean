@@ -132,6 +132,8 @@ namespace pyr {
 
         /// Adds a packet to the outgoing queue.
         void sendPacket(PacketPtr packet);
+        
+        void sendPackets(const std::vector<PacketPtr>& packets);
 
         /// Begins disconnecting.
         void close();

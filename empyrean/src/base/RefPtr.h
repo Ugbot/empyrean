@@ -163,6 +163,10 @@ namespace pyr {
     bool operator!=(const T* a, const RefPtr<U>& b) {
         return (a != b.get());
     }
+    
+    
+    #define PYR_REF_PTR(type)    \
+        typedef RefPtr<type> type##Ptr
 
 }
 

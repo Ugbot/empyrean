@@ -3,27 +3,24 @@
 
 
 #include <vector>
-#include "Packet.h"
+#include "Connection.h"
 
 
 namespace pyr {
 
-    class Connection;
-    
     /**
-     * Base class that represents the owner of a set of connections.  On
-     * destruction, ConnectionHolder deletes the connections that it owns.
+     * Base class that represents the owner of a set of connections.
      * giveConnection() allows connections to be passed from one connection
      * holder to another.
      */
-    class ConnectionHolder {
+    class ConnectionHolder : public PacketReceiver {
     public:
         /// Gives an unmanaged connection to this holder.
         void addConnection(Connection* connection);
 
     protected:
         ConnectionHolder();
-        virtual ~ConnectionHolder();
+        ~ConnectionHolder();
         
         void update();
         

@@ -86,7 +86,8 @@ namespace pyr {
         fastComboDefs.push_back(combo2);
         fastComboDefs.push_back(combo3);
 
-
+        the<ServerConnection>().sendPacket(
+	  new AllowUpdatesPacket());
     }
 
     GameState::~GameState() {

@@ -23,7 +23,7 @@ namespace pyr {
      *
      * @note This class is designed to run within one thread.
      */
-    class Server : public ConnectionHolder, public PacketReceiver {
+    class Server : public ConnectionHolder {
     public:
         Server();
         ~Server();

@@ -35,7 +35,8 @@ namespace pyr {
             _animationCycles.push_back(animation);
         }
 
-        void sendAppearanceChanges(u16 id, std::vector<Packet*>& packets);
+        void sendAppearanceChanges(u16 id, std::vector<PacketPtr>& packets);
+        void clearAppearanceChanges();
 
     protected:
         std::string _name;

@@ -13,44 +13,18 @@
 
 namespace pyr {
 
+    class AllowUpdatesPacket;
     class EntityAddedPacket;
     class PlayerBehavior;
     class PlayerEventPacket;
     class TempHUDPacket;
     class PlayerAttackPacket;
+
     class CollisionBox;
+    class GameConnectionData;
+    class WorldAspect;
 
-    struct ClientAspect {
-        std::vector<ServerEntityPtr> entities;
-    };
-
-    /// While in a game, extra data is needed.
-    struct GameConnectionData : public ServerConnectionData {
-        GameConnectionData() {
-            behavior = 0;
-        }
-
-        GameConnectionData(const ServerConnectionData& rhs)
-            : ServerConnectionData(rhs)
-        {
-            behavior = 0;
-        }
-
-        GameConnectionData(const GameConnectionData& rhs)
-            : ServerConnectionData(rhs)
-        {
-            playerEntity = rhs.playerEntity;
-            behavior = rhs.behavior;
-        }
-
-        // Can't use Zeroed<> because delete doesn't work.
-        ServerEntityPtr playerEntity;
-        PlayerBehavior* behavior;
-        Inited<bool, false> acceptingUpdates;
-        ClientAspect lastAcknowledged;
-    };
-
-    class Game : public ConnectionHolder, public PacketReceiver {
+    class Game : public ConnectionHolder {
     public:
         Game(const std::string& name, const std::string& password);
         ~Game();
@@ -63,6 +37,11 @@ namespace pyr {
     private:
         static GameConnectionData* getData(Connection* c);
 
+        void loadGameResources();
+        void updateWorld(float dt);
+        void updateConnections();
+        void updateConnection(const WorldAspect& aspect, Connection* c);
+        
         void addEntity(ServerEntityPtr entity);
         void removeEntity(ServerEntityPtr entity);
         static EntityAddedPacket* buildEntityAddedPacket(ServerEntityPtr entity);
@@ -70,15 +49,16 @@ namespace pyr {
         void connectionAdded(Connection* connection);
         void connectionRemoved(Connection* connection);
 
+        void handleAllowUpdates(Connection* c, AllowUpdatesPacket* p);
         void handlePlayerEvent(Connection* c, PlayerEventPacket* p);
         void handleHUDUpdate(Connection* c, TempHUDPacket* p);
         void handlePlayerAttack(Connection* c, PlayerAttackPacket* p);
 
+        int getHitModifier(CollisionBox& box, const string& attackType,
+                           std::vector<Vec2f>& points);
     private:
-        int getHitModifier(CollisionBox& box, const std::string& attackType, std::vector<Vec2f>& points);
-
-        std::string _name;
-        std::string _password;
+        string _name;
+        string _password;
 
         ScopedPtr<Map> _map;
         Vec2f _startPosition;

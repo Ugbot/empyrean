@@ -68,11 +68,11 @@ namespace pyr {
         bool joinGame(const std::string& name,
                       const std::string& password,
                       bool newGame);
+
         bool sendEvent(const std::string& event);
         bool sendAttack(const std::string& attack);
         bool sendHUDUpdate(Packet* p) { return sendPacket(p); }
 
-    private:
         /**
          * Sends a packet to the server.
          *
@@ -80,7 +80,8 @@ namespace pyr {
          *           false otherwise
          */
         bool sendPacket(Packet* p);
-
+    
+    private:
         void handleLoginResponse(Connection*, LoginResponsePacket* p);
         void handleLobby(Connection*, LobbyPacket* p);
         void handleJoinGameResponse(Connection*, JoinGameResponsePacket* p);
