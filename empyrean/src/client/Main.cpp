@@ -201,11 +201,12 @@ namespace pyr {
             throwSDLError("Setting video mode failed");
         }
 
-#ifdef PYR_USE_EXTGL
-        if (extgl_Initialize() != 0) {
-            throw std::runtime_error("extgl_Initialize() failed");
+        GLenum glewError = glewInit();
+        if (glewError != GLEW_OK) {
+            std::string error = "glewInit() failed: ";
+            error += reinterpret_cast<const char*>(glewGetErrorString(glewError));
+            throw std::runtime_error(error.c_str());
         }
-#endif
 
         PYR_LOG() << "GL_VENDOR: " << glGetString(GL_VENDOR);
         PYR_LOG() << "GL_RENDERER: " << glGetString(GL_RENDERER);

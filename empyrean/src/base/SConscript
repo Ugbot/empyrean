@@ -10,6 +10,7 @@ SOURCES = Split("""
     Connection.cpp
     Entity.cpp
     Error.cpp
+    glew.c
     GLUtility.cpp
     Log.cpp
     Map.cpp
@@ -45,8 +46,4 @@ SOURCES = Split("""
 """)
 
 env = env.Copy(tools = [TOOLS[n] for n in ['NSPR', 'Corona', 'Boost', 'Python']])
-
-if env['USE_EXTGL']:
-    SOURCES.append('extgl.c')
-
 env.Library('base', SOURCES)

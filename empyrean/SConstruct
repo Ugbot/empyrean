@@ -93,6 +93,7 @@ def SetupGLText(env):
     env.Append(LIBS = ['gltext', 'freetype', 'z'])
 
 def SetupOpenGL(env):
+    env.Append(CPPDEFINES=['GLEW_STATIC'])
     if env['PLATFORM'] == 'cygwin':
         env.Append(LIBS = ['glu32', 'opengl32'])
     else:
@@ -192,12 +193,6 @@ if env['PLATFORM'] == 'cygwin':
     env.Append(CPPDEFINES = ['WIN32', '_WIN32', 'NOMINMAX'],
                CPPPATH = ['#/third-party-cygwin/include'],
                LIBPATH = ['#/third-party-cygwin/lib'])
-
-if env['PLATFORM'] in ['cygwin', 'irix']:
-    env['USE_EXTGL'] = 1
-    env.Append(CCFLAGS = ['-DPYR_USE_EXTGL'])
-else:
-    env['USE_EXTGL'] = 0
 
 if env['PLATFORM'] == 'irix':
     env.Append(
