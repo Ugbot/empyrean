@@ -4,4 +4,7 @@ Here is the site for converting from gmax to MD3:
 Here is a site discussing a few 3D animation formats:
     http://www.cyberloonies.com/animation_formats.html
 
+How Kevin Meinert used 3ds to make aki:
+    http://mantis.subatomicglue.com/twiki/bin/view/Main/HowToCal3D
+
 I'll go ahead and add those URLs to some directory in CVS.
