@@ -14,6 +14,10 @@ namespace pyr {
         return 768;
     }
     
+    bool Configuration::isFullscreen() {
+        return false;
+    }
+    
     std::string Configuration::getServer() {
         return "localhost";
     }

@@ -43,10 +43,15 @@ namespace pyr {
         SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE,   16);
         SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
 
+        int mode = SDL_OPENGL;
+        if (Configuration::instance().isFullscreen()) {
+            mode |= SDL_FULLSCREEN;
+        }
+        
         const int width  = Configuration::instance().getScreenWidth();
         const int height = Configuration::instance().getScreenHeight();
         const int bpp    = info->vfmt->BitsPerPixel;
-        if (!SDL_SetVideoMode(width, height, bpp, SDL_OPENGL)) {
+        if (!SDL_SetVideoMode(width, height, bpp, mode)) {
             throwSDLError("Setting video mode failed");
         }
 

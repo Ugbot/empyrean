@@ -8,6 +8,7 @@
 
 namespace pyr {
 
+    /// Immutable for now.
     class Configuration {
         PYR_DECLARE_SINGLETON(Configuration)
 
@@ -15,9 +16,9 @@ namespace pyr {
         ~Configuration() { }
         
     public:
-        // immutable for now
         int getScreenWidth();
         int getScreenHeight();
+        bool isFullscreen();
         
         std::string getServer();
         int getPort();
