@@ -66,9 +66,9 @@ namespace pyr {
     }
     
     void Thread::threadRoutine() {
-        PYR_BEGIN_EXCEPTION_TRAP()
-        _runnable->run(this);
-        PYR_END_EXCEPTION_TRAP()
+        PYR_EXCEPTION_TRAP({
+            _runnable->run(this);
+        })
         PR_AtomicSet(&_stopped, 1);
     }
     

@@ -76,23 +76,23 @@ namespace pyr {
     }
 
     void ServerFrame::onClose(wxCloseEvent& evt) {
-        PYR_BEGIN_EXCEPTION_TRAP()
+        PYR_EXCEPTION_TRAP({
             the<Configuration>().windowPosition = GetPosition();
             the<Configuration>().windowSize     = GetSize();
             Destroy();
-        PYR_END_EXCEPTION_TRAP()
+        })
     }
 
     void ServerFrame::onStart() {
-        PYR_BEGIN_EXCEPTION_TRAP()
+        PYR_EXCEPTION_TRAP({
             wxGetApp().start();
-        PYR_END_EXCEPTION_TRAP()
+        })
     }
 
     void ServerFrame::onStop() {
-        PYR_BEGIN_EXCEPTION_TRAP()
+        PYR_EXCEPTION_TRAP({
             wxGetApp().stop();
-        PYR_END_EXCEPTION_TRAP()
+        })
     }
 
     void ServerFrame::onRestart() {

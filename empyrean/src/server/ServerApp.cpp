@@ -22,7 +22,7 @@ namespace pyr {
     }
 
     bool ServerApp::OnInit() {
-        PYR_BEGIN_EXCEPTION_TRAP()
+        PYR_EXCEPTION_TRAP({
 
             // Prepare the log file
             the<Log>().open(getStartDirectory(argc, argv) + "/server.log");
@@ -57,12 +57,12 @@ namespace pyr {
 
             return true;
 
-        PYR_END_EXCEPTION_TRAP()
+        })
         return false;
     }
 
     int ServerApp::OnExit() {
-        PYR_BEGIN_EXCEPTION_TRAP()
+        PYR_EXCEPTION_TRAP({
             // setStartDirectory requires that we chdir *from* the directory we
             // started in.
             setCurrentDirectory(_startDirectory);
@@ -70,7 +70,7 @@ namespace pyr {
             _frame = 0;
             the<Database>().save(getDatabaseFilename());
             the<Configuration>().save();
-        PYR_END_EXCEPTION_TRAP()
+        })
         return 0;
     }
 

@@ -8,7 +8,7 @@
 namespace pyr {
 
     bool Editor::OnInit() {
-        PYR_BEGIN_EXCEPTION_TRAP()
+        PYR_EXCEPTION_TRAP({
         
             the<Log>().open(getStartDirectory(argc, argv) + "/editor.log");
         
@@ -21,7 +21,7 @@ namespace pyr {
             _theMainFrame->Show(true);
             return true;
             
-        PYR_END_EXCEPTION_TRAP()
+        })
         return false;
     }
 

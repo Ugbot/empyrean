@@ -6,20 +6,18 @@
 #include <string>
 
 
-// PYR_BEGIN_EXCEPTION_TRAP and PYR_END_EXCEPTION_TRAP define a
-// region of code that catches all exceptions and converts them
-// into fatal errors.  An exception trap is usually placed around
-// callbacks or entry points, such as wxWindows event handlers or
-// main().
+// PYR_EXCEPTION_TRAP defines a block of code that catches all
+// exceptions and converts them into fatal errors.  An exception
+// trap is usually placed around callbacks or entry points, such
+// as wxWindows event handlers or main().
 
-#define PYR_BEGIN_EXCEPTION_TRAP()                  \
-    try {
-    
-#define PYR_END_EXCEPTION_TRAP()                    \
+#define PYR_EXCEPTION_TRAP(block)                   \
+    try {                                           \
+        block                                       \
     }                                               \
     catch (const std::exception& e) {               \
         std::string what = e.what();                \
-        pyr::error("Exception: " + what);    \
+        pyr::error("Exception: " + what);           \
     }                                               \
     PYR_CATCH_ALL()
 

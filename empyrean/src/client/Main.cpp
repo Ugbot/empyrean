@@ -258,12 +258,10 @@ int main(int argc, char* argv[]) {
 
     pyr::registerLeakChecker();
 
-    PYR_BEGIN_EXCEPTION_TRAP()
-
+    PYR_EXCEPTION_TRAP({
         pyr::runClient(argc, argv);
         result = EXIT_SUCCESS;
-
-    PYR_END_EXCEPTION_TRAP()
+    })
     
     return result;
 }
