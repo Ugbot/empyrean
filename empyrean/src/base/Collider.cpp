@@ -9,45 +9,45 @@
 
 namespace pyr {
 
-    
+
 
     struct CollisionRegion {
         std::vector<int> indici;
     };
 
-    //CollisionData collideWithWorld(float dt, const Vec2f& origPos, Vec2f& newPos, 
+    //CollisionData collideWithWorld(float dt, const Vec2f& origPos, Vec2f& newPos,
     //                               Vec2f& vel, const BoundingRectangle& bounds, const Map* terrain) {
-    
+
     CollisionData collideWithWorld(float dt, Entity* ent, const Map* terrain) {
-        CollisionBox newBox(ent->getPos() + ent->getBounds().min, 
+        CollisionBox newBox(ent->getPos() + ent->getBounds().min,
                             ent->getPos() + ent->getBounds().max);
-        
+
         std::vector<Segment> segs;
         terrain->getSegs(segs,ent->getPos()[0]);
         CollisionData rv;
         newBox.getIntersectingSegs(rv.interesting, segs);
 
         collision::COLLISION_TYPE result = newBox.collideWithStationary(dt,ent->getVel(),rv.interesting, rv.points);
-        
-        if(result == collision::GROUND_BELOW) {        
+
+        if(result == collision::GROUND_BELOW) {
             Behavior* beh = ent->getBehavior();
             PlayerBehavior* pb = dynamic_cast<PlayerBehavior*>(beh);
             if(pb) {
                 pb->handleEvent(ent, "Reset Jumping");
             }
         }
-        
+
         ent->getPos() += newBox.getDisplacement();
-              
+
         return rv;
     };
 
-    
+
     void collideWithEntity(Entity* ent1, Entity* ent2) {
-        
+
         CollisionBox entityBox(ent1->getPos() + ent1->getBounds().min, ent1->getPos() + ent1->getBounds().max);
         CollisionBox otherBox(ent2->getPos() + ent2->getBounds().min, ent2->getPos() + ent2->getBounds().max);
-        
+
         CollisionData rv;
 
         /*collision::COLLISION_TYPE result = */entityBox.collideWithDynamic(0,ent1->getVel(),ent2->getVel(), otherBox, rv.points);
@@ -56,7 +56,7 @@ namespace pyr {
     void resolveCollisions(float dt, const Map* terrain, const std::vector<Entity*>& ents) {
         PYR_PROFILE_BLOCK("resolveCollisions");
 
-        int* entityRegionAssignment = new int[ents.size()];
+        std::vector<int> entityRegionAssignment(ents.size());
         std::vector<CollisionRegion> regions;
 
         // Clear region assignments
