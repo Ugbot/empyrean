@@ -43,15 +43,14 @@ namespace pyr {
             // Thus, make a local copy first.
             ReceiverSet r = _receivers;
             
+            PYR_LOG() << "Received: " << p->getName();
+
             bool handled = false;
             for (ReceiverSetIter i = r.begin(); i != r.end(); ++i) {
                 handled |= (*i)->receivePacket(this, p.get());
             }
-            
-            if (!handled) {
-                PYR_LOG() << "Unhandled packet: ";
-                p->log();
 
+            if (!handled) {
                 _unhandled.push_back(p);
             }
         }
@@ -60,7 +59,7 @@ namespace pyr {
     void Connection::sendPacket(PacketPtr p) {
         _writer->addPacket(p);
     }
-    
+
     void Connection::sendPackets(const std::vector<PacketPtr>& packets) {
         _writer->addPackets(packets);
     }

@@ -85,6 +85,8 @@ namespace pyr {
         fastComboDefs.push_back(combo1);
         fastComboDefs.push_back(combo2);
         fastComboDefs.push_back(combo3);
+    
+        the<ServerConnection>().sendPacket(new AllowUpdatesPacket());
     }
 
     GameState::~GameState() {
@@ -93,14 +95,11 @@ namespace pyr {
 
     void GameState::update(float dt) {
         PYR_PROFILE_BLOCK("GameState::update");
-        
+
         _scene.update(dt);
         _hud.update(dt);
 
         ServerConnection& sc = the<ServerConnection>();
-
-        // Make SURE we can receive entity commands.
-        the<ServerConnection>().sendPacket(new AllowUpdatesPacket());
 
         // Affect the player's vitality
         if (_input1->getValue() == 1) {

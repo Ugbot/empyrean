@@ -22,7 +22,7 @@ namespace pyr {
     class Packet : public RefCounted {
     protected:
         ~Packet() { }
-    
+
     public:
         Packet() {
             _id = 0;
@@ -34,6 +34,8 @@ namespace pyr {
 
         virtual void serialize(ByteBuffer& out) const = 0;
         virtual Packet* clone() const = 0;
+        
+        virtual const char* getName() const = 0;
         virtual void log() const = 0;
 
     protected:
@@ -98,6 +100,7 @@ namespace pyr {
             void serialize(ByteBuffer& out) const;                      \
             static Packet* create(int size, const void* bytes);         \
             Packet* clone() const;                                      \
+            const char* getName() const;                                \
             void log() const;                                           \
                                                                         \
         private:                                                        \
@@ -130,6 +133,10 @@ namespace pyr {
             return new name(                                            \
                 body(PYR_CLONE)                                         \
                 EndOfList());                                           \
+        }                                                               \
+                                                                        \
+        const char* name::getName() const {                             \
+            return #name;                                               \
         }                                                               \
                                                                         \
         void name::log() const {                                        \
