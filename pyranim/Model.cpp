@@ -155,11 +155,15 @@ void Model::recalcJoints() {
         // XXX - Default matrices for now.
         IMatrix transMat = trans_mat(bi.m_trans - IPoint());
         IMatrix rotMat   = quat_to_mat(bi.m_rotQuat);
+        ji.m_quat     = bi.m_rotQuat;
         if(ji.m_parent != -1) {
             IMatrix parentMat = m_joints[ji.m_parent].m_localToGlobalMat;
             ji.m_localToGlobalMat = parentMat * transMat * rotMat;
+            ji.m_parentQuat = m_joints[ji.m_parent].m_quat*
+                              m_joints[ji.m_parent].m_parentQuat;
         } else {
             ji.m_localToGlobalMat =             transMat * rotMat;
+            ji.m_parentQuat = IQuat();
         }
 
         m_joints.push_back(ji);

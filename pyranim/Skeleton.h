@@ -9,9 +9,9 @@
 struct BoneInfo {
     std::string m_name;
     IPoint m_trans;
-    IPoint m_rotQuat;
+    IQuat  m_rotQuat;
     IPoint m_localTrans;
-    IPoint m_localRotQuat;
+    IQuat  m_localRotQuat;
     int m_parent;
     std::vector<int> m_children;
 };

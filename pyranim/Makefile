@@ -48,7 +48,7 @@ Anim.cpp:      Anim.h IAlgebra.h
 Camera.cpp:    Camera.h IAlgebra.h
 IAlgebra.cpp:  IAlgebra.h
 Model.cpp:     Model.h IAlgebra.h RotWidget.h Skeleton.h View.h
-RotWidget.cpp: RotWidget.h IAlgebra.h
+RotWidget.cpp: RotWidget.h IAlgebra.h Camera.h
 Skeleton.cpp:  Skeleton.h IAlgebra.h
 View.cpp:      View.h Camera.h IAlgebra.h Model.h RotWidget.h Skeleton.h
 

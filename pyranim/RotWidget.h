@@ -2,6 +2,7 @@
 #define INCLUDED_ROTWIDGET_H
 
 #include "IAlgebra.h"
+#include <vector>
 
 class Camera;
 class RotWidget;
@@ -17,6 +18,12 @@ public:
     virtual void rotWidgetChanged(RotWidget *, const IPoint &quat) = 0;
 };
 
+struct RWPoint {
+    IPoint m_worldPoint;
+    IPoint m_screenPoint;
+    bool m_back;
+};
+
 class RotWidget {
 public:
     RotWidget();
@@ -24,17 +31,33 @@ public:
 
     void draw();
     void setLocation(const IPoint &loc);
-    void setRotation(const IPoint &quat);
+    void setRotation(const IQuat &quat);
     void setListener(RotWidgetListener *listener);
+    const IQuat &getRotation() const;
+    const IPoint &getLocation() const;
+
+    void setRadius(double r);
+    double getRadius() const;
 
     bool mouseDown(int x, int y);
     bool mouseMove(int x, int y);
     bool mouseUp(int x, int y);
     
 protected:
-    IPoint m_quat;
+    IQuat m_quat;
     IPoint m_loc;
     RotWidgetListener *m_listener;
+    double m_radius;
+    int m_selAxis;
+    bool m_mouseDown;
+
+    typedef std::vector<RWPoint> RWPointVector;
+    RWPointVector m_points[4];
+
+    typedef std::pair<int, int> IntPair;
+    IntPair getClosestPoint(int x, int y, double maxDist);
+
+    void refreshRWPoints();
 
 private:
     // Not implemented:

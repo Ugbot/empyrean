@@ -82,20 +82,36 @@ The implementation schedule:
 
 - Tool selection working.
 
---- WE ARE HERE ---
+1/3/03
 
 - Draw rotation widget.
-- Rotation widget interaction?
+
+1/5/03
+
+- Rotation widget drawing better.  (colors, scale independence)
+
+1/8/03 (3567 LOC, 102641 bytes)
+
+- Rotation widget picking points correctly.
+- Rotation tool allows picking of joints.
+
+--- WE ARE HERE ---
+
+- Rotation widget rotating.
 - Joint drawing off by one?
 - Position widget?
 - Compute skeleton joint angles for current view.
 - Load animation.
 - Display animation.
-- Design user interface.
+- Design animation panel user interface (after Infini-D's?).
 - Get interface working with stubs.
 - Edit animation.
 - Save animation.
 - Do some animations to make sure it all works OK.
+
+
+
+--- Other stuff ---
 
 - Load mesh?
 - Display mesh?

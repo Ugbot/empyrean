@@ -81,6 +81,7 @@ protected:
     double m_navPrevX;
     double m_navPrevY;
     int m_selectedJoint;
+    IMatrix m_modelTransform;
 
     void drawGroundPlane() const;
     void drawSkeleton();
@@ -90,6 +91,7 @@ protected:
     double getViewDepth() const;
 
     int getClickedJoint(int x, int y);
+    void updateRotWidget();
 
 private:
     // Not implemented:

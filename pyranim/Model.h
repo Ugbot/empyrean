@@ -22,6 +22,8 @@ struct JointInfo {
     //IMatrix m_globalToLocalMat;
     IMatrix m_localToGlobalMat;
     int m_parent;
+    IQuat m_parentQuat;
+    IQuat m_quat;
     std::vector<int> m_children;
 };
 

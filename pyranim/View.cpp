@@ -39,6 +39,7 @@ View::View(Model *model) {
     m_navPrevX     = 0.0;
     m_navPrevY     = 0.0;
     m_selectedJoint = -1;
+    m_modelTransform = scale_mat(0.01, 0.01, 0.01);
 
     m_camera = new Camera();
     m_camera->orient(IPoint(0, 0, 0),
@@ -137,19 +138,18 @@ void View::drawSkeleton() {
     glDisable(GL_DEPTH_TEST);
 
     IPoint grid[5];
-    grid[0] = IPoint(0, 0, 0);
-    grid[1] = IPoint(0, -1, 0);
-    grid[2] = IPoint(-1, 0, 0);
-    grid[3] = IPoint(0, 1, 0);
-    grid[4] = IPoint(1, 0, 0);
+    grid[0] = IPoint( 0,  0, 0);
+    grid[1] = IPoint( 0, -1, 0);
+    grid[2] = IPoint(-1,  0, 0);
+    grid[3] = IPoint( 0,  1, 0);
+    grid[4] = IPoint( 1,  0, 0);
 
     int numJoints = m_model->getNumJoints();
     std::vector<JointDrawInfo> jdis(numJoints + 1);
-    IMatrix scaleMat = scale_mat(0.01, 0.01, 0.01);
     for(int i = 0; i < numJoints; i ++) {
         JointDrawInfo &jdi = jdis[i];
         const JointInfo &ji = m_model->getJointInfo(i);
-        IMatrix m = scaleMat * ji.m_localToGlobalMat;
+        IMatrix m = m_modelTransform * ji.m_localToGlobalMat;
         for(int j = 0; j < 5; j ++) {
             jdi.m_p[j] = m * grid[j];
         }
@@ -159,7 +159,7 @@ void View::drawSkeleton() {
         }
     }
     for(int j = 0; j < 5; j ++) {
-        jdis[numJoints].m_p[j] = scaleMat * grid[j];
+        jdis[numJoints].m_p[j] = m_modelTransform * grid[j];
     }
     glBegin(GL_LINES);
     for(int i = 0; i < numJoints; i ++) {
@@ -370,6 +370,8 @@ void View::navMouseMove(int x, int y) {
 
     m_navPrevX = x;
     m_navPrevY = y;
+    updateRotWidget();
+
     notifyViewListeners();
 }
 
@@ -389,6 +391,7 @@ void View::mouseDown(int x, int y) {
         } else {
             m_rotWidgetActive = false;
             m_selectedJoint = getClickedJoint(x, y);
+            updateRotWidget();
             notifyViewListeners();
         }
     }
@@ -417,8 +420,10 @@ void View::setToolMode(int toolMode) {
 
     if(m_toolMode == TOOL_SELECT) {
     } else if(m_toolMode == TOOL_ROTATE) {
+        if(m_selectedJoint != -1) {
+            updateRotWidget();
+        }
     }
-
     redraw();
 }
 
@@ -454,8 +459,7 @@ void View::rotWidgetChanged(RotWidget *widget, const IPoint &quat) {
 
 int View::getClickedJoint(int x, int y) {
     // Generate the screen locations of the joints.
-    IMatrix scaleMat = scale_mat(0.01, 0.01, 0.01);
-    IMatrix projMat = m_camera->getProjectMat() * scaleMat;
+    IMatrix projMat = m_camera->getProjectMat() * m_modelTransform;
 
     int numJoints = m_model->getNumJoints();
     std::vector<IPoint> jointLocs;
@@ -498,3 +502,14 @@ int View::getClickedJoint(int x, int y) {
     }
     return closestJoint;
 }
+
+void View::updateRotWidget() {
+    if(m_selectedJoint != -1) {
+        const JointInfo &ji = m_model->getJointInfo(m_selectedJoint);
+        IPoint loc = m_modelTransform * ji.m_localToGlobalMat * IPoint();
+        m_rotWidget->setLocation(loc);
+        // XXX - set initial rotation here.
+        m_rotWidget->setRotation(ji.m_parentQuat);
+    }
+}
+
