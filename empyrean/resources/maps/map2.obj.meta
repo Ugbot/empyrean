@@ -9,6 +9,7 @@
   </node>
   <node name="Line04" position="27.8393 17.8492 9.62532">
   </node>
+<!--
   <node name="Dummy01" position="10 2 0">
     <property key="entity" value="true"/>
     <property key="behavior" value="python"/>
@@ -46,4 +47,5 @@
   <node name="Dummy04" position="30.3564 19.47228 -2.16701">
     <property key="enemy" value="true"/>
   </node>
+-->
 </map-metadata>

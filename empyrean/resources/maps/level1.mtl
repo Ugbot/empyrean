@@ -3,22 +3,15 @@ illum 4
 Kd 0.00 0.00 0.00
 Ka 0.09 0.05 0.00
 Tf 1.00 1.00 1.00
-map_Kd vb_019_3_h.TGA
+map_Kd teal_leaves.png
 Ni 1.00
 newmtl Tree_leaf_green_lambert_Linde_SG2
 illum 4
 Kd 0.00 0.00 0.00
 Ka 0.09 0.05 0.00
 Tf 1.00 1.00 1.00
-map_Kd vb_019_3_f.TGA
+map_Kd vb_019_3_f.png
 Ni 1.00
-newmtl blinn1SG
-illum 4
-Kd 0.76 0.76 0.76
-Ka 0.00 0.00 0.00
-Tf 1.00 1.00 1.00
-Ni 1.00
-Ks 0.50 0.50 0.50
 newmtl castlemap_det_2_texed_lambert2SG
 illum 4
 Kd 0.00 0.00 0.00
@@ -46,8 +39,8 @@ illum 4
 Kd 0.00 0.00 0.00
 Ka 0.00 0.00 0.00
 Tf 1.00 1.00 1.00
-map_Kd rock_texture.jpg
-bump rock_texture.jpg -bm 3
+map_Kd rock5.jpg
+bump rock5.jpg -bm 2
 Ni 1.00
 newmtl lambert3SG
 illum 4
@@ -78,12 +71,6 @@ Ka 0.00 0.00 0.00
 Tf 1.00 1.00 1.00
 map_Kd S_S_Arabesca.jpg
 Ni 1.00
-newmtl lambert9SG
-illum 4
-Kd 0.00 0.00 0.00
-Ka 0.00 0.00 0.00
-Tf 1.00 1.00 1.00
-Ni 1.00
 newmtl lambert10SG
 illum 4
 Kd 0.00 0.00 0.00
@@ -98,10 +85,44 @@ Kd 0.00 0.00 0.00
 Ka 0.00 0.00 0.00
 Tf 1.00 1.00 1.00
 map_Kd bark.jpg
+bump bark.jpg -bm 1
 Ni 1.00
 newmtl lambert14SG
 illum 4
 Kd 0.00 0.00 0.00
 Ka 0.00 0.00 0.00
 Tf 1.00 1.00 1.00
+map_Kd -s 0.02 0.02 ground.jpg
+bump ground.jpg -bm 0.5
+Ni 1.00
+newmtl lambert17SG
+illum 4
+Kd 0.00 0.00 0.00
+Ka 0.00 0.00 0.00
+Tf 1.00 1.00 1.00
+map_Kd -s 0.01 0.01 cave.jpg
+bump cave.jpg -bm 0.5
+Ni 1.00
+newmtl lambert18SG
+illum 4
+Kd 0.00 0.00 0.00
+Ka 0.00 0.00 0.00
+Tf 1.00 1.00 1.00
+map_Kd rock_texture_brown.jpg
+bump rock_texture_brown.jpg -bm 4
+Ni 1.00
+newmtl lambert20SG
+illum 4
+Kd 0.00 0.00 0.00
+Ka 0.00 0.00 0.00
+Tf 1.00 1.00 1.00
+map_Kd Sky.jpg
+Ni 1.00
+newmtl lambert21SG
+illum 4
+Kd 0.00 0.00 0.00
+Ka 0.00 0.00 0.00
+Tf 1.00 1.00 1.00
+map_Kd -s 0.2 0.2 bricks.jpg
+bump bricks.jpg -bm 1
 Ni 1.00
