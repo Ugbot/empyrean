@@ -25,7 +25,11 @@ namespace pyr {
         PR_GetErrorText(error_string.get());
         error_string[length] = 0;
 
-        throw std::runtime_error(prefix + ": " + error_string.get());
+        if (length > 0) {
+            throw std::runtime_error(prefix + ": " + error_string.get());
+        } else {
+            throw std::runtime_error(prefix);
+        }
     }
 
 }
