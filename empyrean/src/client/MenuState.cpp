@@ -6,11 +6,11 @@
 namespace pyr {
 
     MenuState::MenuState() 
-        : main("images/title/title_main.png")
+        :/* main("images/title/title_main.png")
         , bg1 ("images/title/title_bg1.png")
         , bg2 ("images/title/title_bg2.png")
         , sky ("images/title/title_sky.png")
-        , connectbutton("images/ui/multiplayer_up.png")
+        ,*/ connectbutton("images/ui/multiplayer_up.png")
         , optionsbutton("images/ui/options_up.png")
         , exitbutton("images/ui/quit_up.png")
     {
@@ -30,11 +30,12 @@ namespace pyr {
         glLoadIdentity();
         
         glColor4f(1, 1, 1, 1 - fade);
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-        sky.draw(0, 0);
-        bg2.draw(0, 0);
-        bg1.draw(679, 314);
-        main.draw(0, 0);
+        //sky.draw(0, 0);
+        //bg2.draw(0, 0);
+        //bg1.draw(679, 314);
+        //main.draw(0, 0);
         connectbutton.draw(396,332);
         optionsbutton.draw(396,396);
         exitbutton.draw(396,460);
@@ -44,6 +45,7 @@ namespace pyr {
         float ny = float(y) / Application::instance().getHeight();
         
         if (ny < 0.33) {
+            //invokeTransition<ConnectToServerState>();
             invokeTimedTransition<GameState>(1);
         } else if (ny < 0.66) {
 //            invokeTimedTransition<OptionsState>(1);

@@ -15,7 +15,7 @@ namespace pyr {
         void onMousePress(Uint8 button, bool down, int x, int y);
 
     private:
-        MultiTextureImage main, bg1, bg2, sky;
+        //MultiTextureImage main, bg1, bg2, sky;
         MultiTextureImage connectbutton, optionsbutton, exitbutton;        
     };
 

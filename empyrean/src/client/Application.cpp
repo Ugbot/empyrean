@@ -56,6 +56,18 @@ namespace pyr {
     
         if (_currentState) {
             _currentState->draw(0);
+            
+            if (_currentState->isPointerVisible()) {
+                glMatrixMode(GL_PROJECTION);
+                glLoadIdentity();
+                glOrtho(0, _width, _height, 0, -1, 1);
+
+                glMatrixMode(GL_MODELVIEW);
+                glLoadIdentity();
+                
+                glColor4f(1, 1, 1, 1);
+                _pointer->drawRectangle(_lastX, _lastY);
+            }
         }
         if (_fadingState && _totalFadeTime != 0) {
             _fadingState->draw(_currentFadeTime / _totalFadeTime);
@@ -82,17 +94,6 @@ namespace pyr {
             }
 
             glPopMatrix();
-        }
-        
-        if (_currentState && _currentState->isPointerVisible()) {
-            glMatrixMode(GL_PROJECTION);
-            glLoadIdentity();
-            glOrtho(0, _width, _height, 0, -1, 1);
-            
-            glMatrixMode(GL_MODELVIEW);
-            glLoadIdentity();
-            
-            _pointer->drawRectangle(_lastX, _lastY);
         }
     }
     
