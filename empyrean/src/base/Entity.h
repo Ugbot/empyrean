@@ -2,10 +2,10 @@
 #define PYR_ENTITY_H
 
 
+#include <list>
 // Hm, I'm not sure why we need these here instead of in the source file.
 #include "Appearance.h"
 #include "Behavior.h"
-
 #include "BoundingRectangle.h"
 #include "ScopedPtr.h"
 #include "VecMath.h"
@@ -42,6 +42,9 @@ namespace pyr {
         void setBounds(const BoundingRectangle& br) { _bounds = br; }
         BoundingRectangle& getBounds()              { return _bounds; }
         const BoundingRectangle& getBounds() const  { return _bounds; }
+
+        typedef std::list<Entity*> EntityList;
+        void collideWithOthers(EntityList entities);
 
     private:
         ScopedPtr<Behavior> _behavior;

@@ -27,9 +27,6 @@ namespace pyr {
         void draw();
         void update(float dt, const Map* terrain);
         
-        typedef std::map<u16, ClientEntity*> EntityMap;
-        void collideWithOthers(EntityMap entities);
-
     private:
         typedef void (GameEntity::*StateHandler)(float dt);
         StateHandler _state;

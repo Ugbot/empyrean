@@ -22,8 +22,6 @@ namespace pyr {
         if (!_map) {
             throw std::runtime_error("Loading maps/map1.obj failed");
         }
-
-        //addParticles(_map->getRoot());
     }
     
     Scene::~Scene() {
@@ -87,17 +85,18 @@ namespace pyr {
     
     void Scene::update(float dt) {
         EntityMap::iterator itr = _entities.begin();
+        Entity::EntityList entityList;
+
         // Update all entities (regardless of collision with others)
         for (; itr != _entities.end(); ++itr) {
-            itr->second->update(dt,_map.get());
+            itr->second->update(dt, _map.get());
+            entityList.push_back(itr->second);
         }
         // Now that everyone has moved do a collision amongst entities (game entities that is)
         itr = _entities.begin();
         for (; itr != _entities.end(); ++itr) {
-            GameEntity* gentity = dynamic_cast<GameEntity*>(itr->second);
-            if(gentity) {
-                gentity->collideWithOthers(_entities);
-            }
+            Entity* entity = itr->second;
+            entity->collideWithOthers(entityList);
         }
     }
     
@@ -128,6 +127,8 @@ namespace pyr {
 
     void Scene::addParticles(MapElementPtr elt) {
         static u16 id = 65535;  /// @todo WARNING: HACK!
+        // Yeah, the server should send these in, now that it has the
+        // infrastructure.
 
         if (elt && elt->properties["particles"] == "true") {
             ParticleSystem* ps = new ParticleSystem;

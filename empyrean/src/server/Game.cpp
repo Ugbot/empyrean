@@ -54,8 +54,9 @@ namespace pyr {
             _entities[i]->update(dt, _map.get());
         }
 
+        std::list<Entity*> list(_entities.begin(), _entities.end());
         for (size_t i = 0; i < _entities.size(); ++i) {
-            _entities[i]->collideWithOthers(_entities);
+            _entities[i]->collideWithOthers(list);
         }
 
         for (size_t i = 0; i < _entities.size(); ++i) {

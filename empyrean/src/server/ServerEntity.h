@@ -27,9 +27,6 @@ namespace pyr {
             return _id;
         }
 
-        //void update(float dt, Map* terrain);
-        void collideWithOthers(std::vector<ServerEntity*>& entities);
-
     private:
         u16 _id;
     };

@@ -98,21 +98,6 @@ namespace pyr {
         }
     }
 
-    void GameEntity::collideWithOthers(EntityMap entities) {
-        // Proceed to collide with all other game entities
-        EntityMap::iterator itr = entities.begin();
-        for (; itr != entities.end(); ++itr) {
-            GameEntity* gentity = dynamic_cast<GameEntity*>(itr->second);
-            if(gentity) {
-                if(gentity->getPos() != getPos()) { // if the entities aren't in the same exact position
-                    //collideWithEntity(getPos(), getVel(), getWidth(), getHeight(), 
-                    //     gentity->getPos(), gentity->getVel(), gentity->getWidth(),gentity->getHeight());
-                }
-
-            }
-        }
-    }
-
 /*
     bool GameEntity::attack() {
         if(_attackStart) {
