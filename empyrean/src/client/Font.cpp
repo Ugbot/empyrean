@@ -10,6 +10,7 @@ namespace pyr {
     Font::Font(const std::string& face,int size,Style style)
         : _face(0)
         , _pos(0, 0)
+        , _scale(1.0f)
     {
         int result;
 
@@ -51,6 +52,15 @@ namespace pyr {
         _pos=pos;
     }
 
+    float Font::getScale() const {
+        return _scale;
+    }
+
+    void Font::setScale(float scale) {
+        _scale = scale;
+        if (_scale < 0.01f)
+            scale = 0.01f;
+    }
     void Font::printString(const std::string& s) {
         for (unsigned int i = 0; i < s.length(); i++) {
             if (s[i] == '\n')
@@ -58,8 +68,11 @@ namespace pyr {
             else {
                 Glyph& glyph = getGlyph(s[i]);
 
-                glyph.tex->drawRectangle(_pos[0] + glyph.bearingX, _pos[1] - glyph.bearingY);
-                _pos[0] += glyph.advance;
+                glyph.tex->drawRectangle(_pos[0] + glyph.bearingX * _scale
+                    , _pos[1] - glyph.bearingY * _scale
+                    , glyph.tex->width() * _scale
+                    , glyph.tex->height() * _scale);
+                _pos[0] += glyph.advance * _scale;
             }
         }
     }

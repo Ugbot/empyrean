@@ -71,7 +71,9 @@ namespace pyr {
     }
 
 
-    void Texture::drawRectangle(float x1, float y1, float x2, float y2) {
+    void Texture::drawRectangle(float x1, float y1, float width, float height) {
+        float x2 = x1 + width;
+        float y2 = y1 + height;
         bind();
         glBegin(GL_QUADS);
         glTexCoord2f(0,          0);           glVertex2f(x1, y1);

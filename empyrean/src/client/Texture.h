@@ -22,7 +22,7 @@ namespace pyr {
         
         void bind();
         static void unbind();
-        void drawRectangle(float x1, float y1, float x2, float y2);
+        void drawRectangle(float x1, float y1, float width, float height);
         void drawRectangle(float x, float y);
 
         int width() const;

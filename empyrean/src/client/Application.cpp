@@ -37,6 +37,7 @@ namespace pyr {
         _currentFadeTime = 0;
 
         _font = new Font("fonts/arial.ttf", 16);
+        _font->setScale(400.0f / 1024.0f);
     }
     
     void Application::resize(int width, int height) {
@@ -60,10 +61,8 @@ namespace pyr {
 
             glPushMatrix();
 
-            // Temp hack.  We'll have to do something about this sooner or later.   
-            glScalef(400.0f / _width, 300.0f / _height, 1.0f);
             for (Profiler::ProcessMap::const_iterator iter = pi.begin(); iter != pi.end(); iter++) {
-                glTranslatef(0,16,0);
+                glTranslatef(0,8,0);
                 int i = int(iter->second.time / totaltime * 100);
                 (*_font) << iter->first << ": " << i << "%\n";
             }
