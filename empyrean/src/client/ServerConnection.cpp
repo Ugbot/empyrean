@@ -1,7 +1,7 @@
 #include "Connection.h"
 #include "Model.h"
 #include "PacketTypes.h"
-#include "PlayerEntity.h"
+#include "GameEntity.h"
 #include "Renderer.h"
 #include "Scene.h"
 #include "ServerConnection.h"
@@ -14,18 +14,6 @@ namespace pyr {
     PYR_DEFINE_SINGLETON(ServerConnection)
 
    
-    ServerConnection::ServerConnection() {
-        _status = DISCONNECTED;
-        _connectionMaker = 0;
-        _loginFailed = false;
-        
-        _hasJoinGameResponse = false;
-        _joinGameResponse = 0;
-        
-        _hasNewCharacterResponse = false;
-        _newCharacterResponse = 0;
-    }
-
     void ServerConnection::beginConnecting(const std::string& server, int port) {
         _status = CONNECTING;
         _loginFailed = false;
@@ -184,7 +172,7 @@ namespace pyr {
     }
 
     void ServerConnection::handleEntityAdded(Connection*, EntityAddedPacket* p) {
-        PlayerEntity* entity = new PlayerEntity(
+        GameEntity* entity = new GameEntity(
             new Model(p->appearance()),
             new DefaultRenderer());
         the<Scene>().addEntity(p->id(), entity);

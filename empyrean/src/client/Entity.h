@@ -9,6 +9,7 @@ namespace pyr {
 
     class Map;
 
+    /// Represents a drawable, updateable object with a position and velocity.
     class Entity {
     public:
         virtual ~Entity() { }

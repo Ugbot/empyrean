@@ -32,7 +32,7 @@ namespace pyr {
     class ServerConnection {
         PYR_DECLARE_SINGLETON(ServerConnection)
         
-        ServerConnection();
+        ServerConnection() {}
         ~ServerConnection() {}
 
     public:
@@ -91,24 +91,24 @@ namespace pyr {
         void handleEntityRemoved(Connection*, EntityRemovedPacket* p);
         void handleEntityUpdated(Connection*, EntityUpdatedPacket* p);
     
-        Status _status;
+        Inited<Status, DISCONNECTED> _status;
         
         // if CONNECTING...
-        ServerConnectionThread* _connectionMaker;
-        ScopedPtr<Thread>       _connectionThread;
-        std::string             _error;
+        Zeroed<ServerConnectionThread*> _connectionMaker;
+        ScopedPtr<Thread>               _connectionThread;
+        std::string                     _error;
         
         // if CONNECTED
         ScopedPtr<Connection> _connection;
-        bool _loginFailed;
+        Inited<bool, false> _loginFailed;
 
         std::vector<std::string> _lobbyMessages;
         
-        bool _hasJoinGameResponse;
-        u16 _joinGameResponse;
+        Inited<bool, false> _hasJoinGameResponse;
+        Zeroed<u16> _joinGameResponse;
         
-        bool _hasNewCharacterResponse;
-        u16 _newCharacterResponse;
+        Inited<bool, false> _hasNewCharacterResponse;
+        Zeroed<u16> _newCharacterResponse;
     };
 
 }

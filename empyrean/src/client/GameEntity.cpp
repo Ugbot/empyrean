@@ -8,14 +8,14 @@
 #include "InputManager.h"
 #include "Model.h"
 #include "OpenGL.h"
-#include "PlayerEntity.h"
+#include "GameEntity.h"
 #include "Renderer.h"
 #include "ResourceManager.h"
 #include "VecMath.h"
 #include "Log.h"
 
 namespace pyr {
-    PlayerEntity::PlayerEntity(Model* model, Renderer* renderer) {
+    GameEntity::GameEntity(Model* model, Renderer* renderer) {
         _model = model;
         _renderer = renderer;
         _direction = 90;
@@ -23,7 +23,7 @@ namespace pyr {
         startStandState();
     }
 
-    void PlayerEntity::draw() {
+    void GameEntity::draw() {
         // Render player model.
         glPushMatrix();
         glEnable(GL_DEPTH_TEST);
@@ -63,7 +63,7 @@ namespace pyr {
         glEnd();*/
     }
 
-    void PlayerEntity::update(float dt, const Map* terrain) {
+    void GameEntity::update(float dt, const Map* terrain) {
         // Provide client-side estimation of server physics model.
         Vec2f origPos = getPos();
 
@@ -83,30 +83,30 @@ namespace pyr {
         _model->update(dt);
     }
 
-    void PlayerEntity::startStandState() {
+    void GameEntity::startStandState() {
         _model->getModel().getMixer()->clearCycle(0, 0.0f);
         if(!_model->getModel().getMixer()->blendCycle(1, 1.0f, 10.0f)) {
             PYR_LOG() << "ERROR CHANGING BACK TO STAND STATE";
         }
-        _state = &PlayerEntity::updateStandState;
+        _state = &GameEntity::updateStandState;
     }
     
-    void PlayerEntity::updateStandState(float dt) {
+    void GameEntity::updateStandState(float dt) {
         float xvel = getVel()[0];
         if (gmtl::Math::abs(xvel) > gmtl::GMTL_EPSILON) {
             startWalkState();
         }
     }
 
-    void PlayerEntity::startWalkState() {
+    void GameEntity::startWalkState() {
         if(!_model->getModel().getMixer()->clearCycle(1, 0.0f)) {
             PYR_LOG() << "ERROR CHANGING BACK TO ACTION STATE";
         }
         _model->getModel().getMixer()->blendCycle(0, 1.0f, 5.0f);
-        _state = &PlayerEntity::updateWalkState;
+        _state = &GameEntity::updateWalkState;
     }
 
-    void PlayerEntity::updateWalkState(float dt) {
+    void GameEntity::updateWalkState(float dt) {
         float xvel = getVel()[0];
         if (gmtl::Math::abs(xvel) < gmtl::GMTL_EPSILON) {
             startStandState();

@@ -151,6 +151,12 @@
 				RelativePath="..\..\src\client\FPSCounter.h">
 			</File>
 			<File
+				RelativePath="..\..\src\client\GameEntity.cpp">
+			</File>
+			<File
+				RelativePath="..\..\src\client\GameEntity.h">
+			</File>
+			<File
 				RelativePath="..\..\src\client\Input.h">
 			</File>
 			<File
@@ -179,12 +185,6 @@
 			</File>
 			<File
 				RelativePath="..\..\src\client\ParticleSystem.h">
-			</File>
-			<File
-				RelativePath="..\..\src\client\PlayerEntity.cpp">
-			</File>
-			<File
-				RelativePath="..\..\src\client\PlayerEntity.h">
 			</File>
 			<File
 				RelativePath="..\..\src\client\Profiler.cpp">

@@ -47,7 +47,7 @@ namespace pyr {
         Inited() : _value(initVal) { }
         Inited(const T& t) : _value(t) { }
 
-        operator T&() { return _value; }
+        operator       T&()       { return _value; }
         operator const T&() const { return _value; }
 
     private:
@@ -65,8 +65,11 @@ namespace pyr {
         Zeroed() : _value(0) { }
         Zeroed(const T& t) : _value(t) { }
 
-        operator T&() { return _value; }
+        operator       T&()       { return _value; }
         operator const T&() const { return _value; }
+
+              T& operator->()       { return _value; }
+        const T& operator->() const { return _value; }
 
     private:
         T _value;

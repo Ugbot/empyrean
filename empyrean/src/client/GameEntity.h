@@ -1,5 +1,5 @@
-#ifndef PYR_PLAYERENTITY_H
-#define PYR_PLAYERENTITY_H
+#ifndef PYR_GAME_ENTITY_H
+#define PYR_GAME_ENTITY_H
 
 #include "Collider.h"
 #include "Entity.h"
@@ -24,15 +24,15 @@ namespace pyr {
      * as other miscellaneous weirdness. (as is customary for any
      * code written by yours truly)
      */
-    class PlayerEntity : public Entity {
+    class GameEntity : public Entity {
     public:
-        PlayerEntity(Model* model, Renderer* renderer);
+        GameEntity(Model* model, Renderer* renderer);
 
         void draw();
         void update(float dt, const Map* terrain);
 
     private:
-        typedef void (PlayerEntity::*StateHandler)(float dt);
+        typedef void (GameEntity::*StateHandler)(float dt);
         StateHandler _state;
 
         void changeState(StateHandler* newstate);
