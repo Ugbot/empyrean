@@ -4,7 +4,6 @@
 #include "TranslateTool.h"
 #include "ObstructionTool.h"
 
-
 namespace pyr {
 
     static const int MINIMUM_PANE_SIZE = 50;
@@ -23,10 +22,14 @@ namespace pyr {
         EVT_MENU(wxID_REDO, MainFrame::onRedo)
         EVT_TOOL(ID_TOOL_RECTANGLE, MainFrame::onUseImageTool)
         EVT_TOOL(ID_TOOL_OBSTRUCTION, MainFrame::onUseObstructionTool)
+
+        EVT_GRID_EDITOR_SHOWN(MainFrame::onBeginEditGrid)
+        EVT_GRID_CELL_CHANGE(MainFrame::onChangeGrid)
     END_EVENT_TABLE()
     
     MainFrame::MainFrame()
         : wxFrame(0, -1, "pyrEdit", wxDefaultPosition, wxSize(640, 480))
+        , _map(new MapFile)
     {
         createMenu();
         createToolBars();
@@ -34,6 +37,23 @@ namespace pyr {
         createStatusBar();
     }
 
+    MainFrame::~MainFrame() {
+        clearList(_undoList);
+        clearList(_redoList);
+    }
+
+    const MapFile* MainFrame::getMap() const {
+        return _map;
+    }
+
+    void MainFrame::handleCommand(::pyr::Command* cmd) {
+        clearList(_redoList);
+        _undoList.push(cmd);
+        bool refresh = cmd->perform(_map);
+        if (refresh) {
+            Refresh();
+        }
+    }
     void MainFrame::createMenu() {
         wxMenu* fileMenu = new wxMenu;
         fileMenu->Append(wxID_NEW,    "&New");
@@ -105,24 +125,31 @@ namespace pyr {
     }
     
     void MainFrame::createContents() {
-//        typedef TranslateTool DefaultTool;
-//        typedef RectangleTool DefaultTool;
-    
-    
         // use wxCLIP_CHILDREN to avoid some flicker
         _splitter = new wxSplitterWindow(
             this, -1, wxDefaultPosition, wxDefaultSize,
             wxSP_3D | wxSP_LIVE_UPDATE | wxCLIP_CHILDREN);
+
+        wxSplitterWindow* split2 = new wxSplitterWindow(
+            _splitter, -1, wxDefaultPosition, wxDefaultSize,
+            wxSP_3D | wxSP_LIVE_UPDATE | wxCLIP_CHILDREN);
         
-        _mapTree = new wxTreeCtrl(_splitter, -1);
+        _mapTree = new wxTreeCtrl(split2, -1);
         wxTreeItemId root = _mapTree->AddRoot("Root");
         _mapTree->AppendItem(root, "Part 1");
         _mapTree->AppendItem(root, "Part 2");
+
+        _propertiesGrid = new wxGrid(split2, -1);
+        _propertiesGrid->CreateGrid(1, 2);
+        _propertiesGrid->SetRowLabelSize(0);
+        _propertiesGrid->SetColLabelSize(0);
+
+        split2->SplitHorizontally(_mapTree, _propertiesGrid);
         
-        _mapView = new MapView(_splitter);
+        _mapView = new MapView(_splitter, this);
 
         _splitter->SetMinimumPaneSize(MINIMUM_PANE_SIZE);
-        _splitter->SplitVertically(_mapTree, _mapView, DEFAULT_TREE_SIZE);
+        _splitter->SplitVertically(split2, _mapView, DEFAULT_TREE_SIZE);
     }
     
     void MainFrame::createStatusBar() {
@@ -134,18 +161,61 @@ namespace pyr {
     }
 
     void MainFrame::onUndo(wxCommandEvent&) {
-        _mapView->undo();
+        undo();
     }
 
     void MainFrame::onRedo(wxCommandEvent&) {
-        _mapView->redo();
+        redo();
     }
 
     void MainFrame::onUseImageTool(wxCommandEvent&) {
-        _mapView->setTool(new RectangleTool(_mapView));
+        _mapView->setTool(new RectangleTool(this));
     }
 
     void MainFrame::onUseObstructionTool(wxCommandEvent&) {
-        _mapView->setTool(new ObstructionTool(_mapView));
+        _mapView->setTool(new ObstructionTool(this));
+    }
+    void MainFrame::onBeginEditGrid(wxGridEvent& event) {
+        // ?
+    }
+
+    void MainFrame::onChangeGrid(wxGridEvent& event) {
+        int row = event.GetRow();
+ 
+        _mapView->getTool()->onPropertiesChanged(
+            _propertiesGrid->GetCellValue(row, 0).c_str(),
+            _propertiesGrid->GetCellValue(row, 1).c_str());
+    }
+
+    void MainFrame::undo() {
+        if (!_undoList.empty()) {
+            ::pyr::Command* c = _undoList.top();
+            _undoList.pop();
+            _redoList.push(c);
+            bool refresh = c->undo(_map);
+            if (refresh) {
+                Refresh();
+            }
+        }
+    }
+
+    void MainFrame::redo() {
+        if (!_redoList.empty()) {
+            ::pyr::Command* c = _redoList.top();
+            _redoList.pop();
+            _undoList.push(c);
+            bool refresh = c->perform(_map);
+            if (refresh) {
+                Refresh();
+            }
+        }
+    }
+
+    void MainFrame::clearList(std::stack<::pyr::Command*>& list) {
+        while (!list.empty()) {
+            ::pyr::Command* c = list.top();
+            delete c;
+            list.pop();
+        }
     }
 }

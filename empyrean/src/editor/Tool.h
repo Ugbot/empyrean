@@ -1,9 +1,12 @@
 #ifndef PYR_TOOL_H
 #define PYR_TOOL_H
 
+#include <map>
+#include <string>
 
 namespace pyr {
 
+    class MainFrame;
     class MapView;
     class MapFile;
     class CommandReciever;
@@ -28,21 +31,25 @@ namespace pyr {
      */
     class Tool {
     public:
-        Tool(MapView* mv);  // necessary -_-
+        Tool(MainFrame* mf);  // necessary -_-
         virtual ~Tool() { }
         
         virtual bool onMouseMove(ToolEvent&) { return false; }
         virtual bool onLeftDown(ToolEvent&)  { return false; }
         virtual bool onLeftUp(ToolEvent&)    { return false; }
+        virtual bool onPropertiesChanged(const std::string& name, const std::string& value) { return false; }
 
         virtual void onRender(){}
 
     protected:
-        const MapView* getMapView() const;
+        MainFrame* getMainFrame() const;
+        //MapView* getMapView() const;
         const MapFile* getMap() const;
 
+        void setPropertiesGrid(std::map<std::string, std::string>& properties);
+
     private:
-        MapView* _mapView;
+        MainFrame* _mainFrame;
     };
 
 }

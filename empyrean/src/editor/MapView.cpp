@@ -1,7 +1,7 @@
 #include <stdlib.h>
 #include "MapView.h"
 #include "Tool.h"
-
+#include "MainFrame.h"
 #include "RectangleTool.h"
 
 namespace pyr {
@@ -19,29 +19,21 @@ namespace pyr {
     END_EVENT_TABLE()
     
 
-    MapView::MapView(wxWindow* parent)
+    MapView::MapView(wxWindow* parent, MainFrame* mainFrame)
         : wxGLCanvas(parent, -1)
+        , _mainFrame(mainFrame)
     {
         typedef RectangleTool DefaultTool;
 
-        _tool = new DefaultTool(this);
-
-        _map._obstructions.points.push_back(MapFile::Point(0, 0));
-        _map._obstructions.points.push_back(MapFile::Point(0.5, 0));
-        _map._obstructions.points.push_back(MapFile::Point(0.5, 0.5));
-        _map._obstructions.obstructions.push_back(MapFile::Obstruction(0, 1));
-        _map._obstructions.obstructions.push_back(MapFile::Obstruction(1, 2));
-        _map._obstructions.obstructions.push_back(MapFile::Obstruction(2, 0));
+        _tool = new DefaultTool(_mainFrame);
     }
 
     MapView::~MapView() {
-        clearList(_undoList);
-        clearList(_redoList);
     }
     
     
-    MapFile& MapView::getMap() {
-        return _map;
+    const MapFile* MapView::getMap() const {
+        return _mainFrame->getMap();
     }
     
     
@@ -53,39 +45,6 @@ namespace pyr {
     Tool* MapView::getTool() const {
         return _tool.get();
     }
-    
-    void MapView::handleCommand(Command* cmd) {
-        clearList(_redoList);
-        _undoList.push(cmd);
-        bool refresh = cmd->perform(&_map);
-        if (refresh) {
-            Refresh();
-        }
-    }
-    void MapView::undo() {
-        if (!_undoList.empty()) {
-            Command* c = _undoList.top();
-            _undoList.pop();
-            _redoList.push(c);
-            bool refresh = c->undo(&_map);
-            if (refresh) {
-                Refresh();
-            }
-        }
-    }
-
-    void MapView::redo() {
-        if (!_redoList.empty()) {
-            Command* c = _redoList.top();
-            _redoList.pop();
-            _undoList.push(c);
-            bool refresh = c->perform(&_map);
-            if (refresh) {
-                Refresh();
-            }
-        }
-    }
-
     
     void MapView::OnSize(wxSizeEvent& e) {
         wxGLCanvas::OnSize(e);
@@ -126,7 +85,7 @@ namespace pyr {
         }
     
         ToolEvent te;
-        te.cmd = this;
+        te.cmd = _mainFrame;
         te.x = float(e.GetX()) / size.x *  2 - 1;
         te.y = float(e.GetY()) / size.y * -2 + 1;
         te.shift = e.ShiftDown();
@@ -156,10 +115,11 @@ namespace pyr {
     void MapView::draw() {
 
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+        const MapFile* map = getMap();
 
-        for (std::vector<MapFile::Image>::iterator
-            iter = _map._terrain.images.begin();
-            iter != _map._terrain.images.end();
+        for (std::vector<MapFile::Image>::const_iterator
+            iter = map->_terrain.images.begin();
+            iter != map->_terrain.images.end();
             iter++) {
             // glBindTexture
             glColor4f(1, 1, 1, 1);
@@ -175,13 +135,13 @@ namespace pyr {
 
         glColor4f(1, 0, 0, 1);
         glBegin(GL_LINES);
-        for (std::vector<MapFile::Obstruction>::iterator
-            iter = _map._obstructions.obstructions.begin();
-            iter != _map._obstructions.obstructions.end();
+        for (std::vector<MapFile::Obstruction>::const_iterator
+            iter = map->_obstructions.obstructions.begin();
+            iter != map->_obstructions.obstructions.end();
             iter++)
         {
-            MapFile::Point& p1 = _map._obstructions.points[iter->p1];
-            MapFile::Point& p2 = _map._obstructions.points[iter->p2];
+            const MapFile::Point& p1 = map->_obstructions.points[iter->p1];
+            const MapFile::Point& p2 = map->_obstructions.points[iter->p2];
 
             glVertex2f(p1.x, p1.y);
             glVertex2f(p2.x, p2.y);
@@ -233,15 +193,7 @@ namespace pyr {
         glEnd();
         
         glColor3f(0.5f, 0.5f, 0.5f);
-        _map.draw();
+        map->draw();
     }
 #endif
-
-    void MapView::clearList(std::stack<Command*>& list) {
-        while (!list.empty()) {
-            Command* c = list.top();
-            delete c;
-            list.pop();
-        }
-    }
 }

@@ -4,29 +4,23 @@
 
 #include "MapFile.h"
 #include "Tool.h"
-#include "Command.h"
 #include "Utility.h"
 #include "wx.h"
 
-#include <stack>
-
 namespace pyr {
 
+    class MainFrame;
     
-    class MapView : public wxGLCanvas, public CommandReciever {
+    class MapView : public wxGLCanvas {
     public:
-        MapView(wxWindow* parent);
+        MapView(wxWindow* parent, MainFrame* mainFrame);
         ~MapView();
 
-        MapFile& getMap();
+        const MapFile* getMap() const;
         
         void setTool(Tool* tool);
         Tool* getTool() const;
 
-        virtual void handleCommand(Command* cmd);
-        void undo();
-        void redo();
-    
     private:
         void OnSize(wxSizeEvent& e);
         void OnEraseBackground(wxEraseEvent& e);
@@ -34,13 +28,9 @@ namespace pyr {
         void OnMouseEvent(wxMouseEvent& e);
         
         void draw();
-       
-        MapFile _map;
-        ScopedPtr<Tool> _tool;
 
-        std::stack<Command*> _undoList;
-        std::stack<Command*> _redoList;
-        void clearList(std::stack<Command*>& list); // deletes and clears
+        MainFrame* _mainFrame;
+        ScopedPtr<Tool> _tool;
     
         DECLARE_EVENT_TABLE()
     };

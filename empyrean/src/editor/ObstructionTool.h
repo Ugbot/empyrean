@@ -6,7 +6,7 @@
 namespace pyr {
     class ObstructionTool : public Tool {
     public:
-        ObstructionTool(MapView* mv);
+        ObstructionTool(MainFrame* mf);
 
         virtual bool onLeftDown(ToolEvent& event);
         virtual void onRender();

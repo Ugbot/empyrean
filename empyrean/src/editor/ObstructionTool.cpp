@@ -7,8 +7,8 @@
 #include "AddObstructionSegmentCommand.h"
 
 namespace pyr {
-    ObstructionTool::ObstructionTool(MapView* mv)
-        : Tool(mv)
+    ObstructionTool::ObstructionTool(MainFrame* mf)
+        : Tool(mf)
     {
     }
 

@@ -1,22 +1,30 @@
 
+#include <map>
+#include <string>
+
 #include "MapFile.h"
 #include "RectangleTool.h"
 
 #include "Command.h"
 #include "AddImageCommand.h"
 
-#include "Utility.h"
-
 #include "OpenGL.h"
+#include "Utility.h"
 
 namespace pyr {
 
-    RectangleTool::RectangleTool(MapView* mv)
-        : Tool(mv)
+    RectangleTool::RectangleTool(MainFrame* mf)
+        : Tool(mf)
     {
         _down = false;
         _x = 0;
         _y = 0;
+
+        std::map<std::string, std::string> properties;
+        properties["omfg"] = "wtf";
+        properties["tool"] = "Rectangle";
+        properties["dumb"] = "you";
+        setPropertiesGrid(properties);
     }
 
     bool RectangleTool::onMouseMove(ToolEvent& te) {
