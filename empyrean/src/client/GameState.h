@@ -18,6 +18,7 @@ namespace pyr {
     class EntityRemovedPacket;
     class EntityUpdatedPacket;
     class CharacterUpdatedPacket;
+    class SetMapPacket;
     class SetPlayerPacket;
 
     class GameState : public State, public PacketReceiver {
@@ -31,14 +32,15 @@ namespace pyr {
 
         void update(float dt);
         void draw();
-        
+
         void onKeyPress(SDLKey key, bool down);
         void onMousePress(Uint8 button, bool down, int x, int y);
         void onMouseMove(int x, int y);
         void onJoyPress(Uint8 button, bool down);
         void onJoyMove(int axis, float value);
-        
+
     private:
+        void handleSetMap(Connection*, SetMapPacket* p);
         void handleSetPlayer(Connection*, SetPlayerPacket* p);
         void handleEntityAdded(Connection*, EntityAddedPacket* p);
         void handleEntityRemoved(Connection*, EntityRemovedPacket* p);

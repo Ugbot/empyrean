@@ -29,6 +29,7 @@ namespace pyr {
     GameState::GameState() {
         PYR_PROFILE_BLOCK("GameState::GameState");
 
+        definePacketHandler(this, &GameState::handleSetMap);
         definePacketHandler(this, &GameState::handleSetPlayer);
         definePacketHandler(this, &GameState::handleEntityAdded);
         definePacketHandler(this, &GameState::handleEntityRemoved);
@@ -43,7 +44,7 @@ namespace pyr {
         _inputAttack = &_im.getInput("RCtrl");
         _inputQuit   = &_im.getInput("Escape");
         _inputAttackA = &_im.getInput("D");
-        _inputAttackB = &_im.getInput("F");    
+        _inputAttackB = &_im.getInput("F");
 
         _inputJoyX   = &_im.getInput("JoyX");
         _inputJoyJump = &_im.getInput("JoyJump");
@@ -202,6 +203,10 @@ namespace pyr {
                 glPopMatrix();
             }
         }
+    }
+
+    void GameState::handleSetMap(Connection*, SetMapPacket* p) {
+        _scene.setMap(p->map());
     }
 
     void GameState::handleSetPlayer(Connection*, SetPlayerPacket* p) {

@@ -2,6 +2,7 @@
 #include "Connection.h"
 #include "Collider.h"
 #include "CollisionBox.h"
+#include "Configuration.h"
 #include "Game.h"
 #include "MapLoader.h"
 #include "PacketTypes.h"
@@ -25,30 +26,31 @@ namespace pyr {
         , vel(e->getVel())
         , bounds(e->getBounds()) {
         }
-        
+
         bool operator<(const EntityState& rhs) const {
-            return id < rhs.id;        
+            return id < rhs.id;
         }
-        
+
         bool operator!=(const EntityState& rhs) const {
             return id     != rhs.id  ||
                    pos    != rhs.pos ||
                    vel    != rhs.vel ||
                    bounds != rhs.bounds;
         }
-    
+
         ServerEntityPtr entity;
         u16 id;
         Vec2f pos;
         Vec2f vel;
         BoundingRectangle bounds;
     };
-    
+
     typedef std::set<EntityState> EntityStateSet;
     typedef EntityStateSet::iterator EntityStateSetIter;
     typedef EntityStateSet::const_iterator EntityStateSetCIter;
 
     struct WorldAspect {
+        string map;
         EntityStateSet entities;
     };
 
@@ -109,7 +111,7 @@ namespace pyr {
     
     void Game::loadGameResources() {
         _map = loadMap("maps/map2.obj");
-        
+
         // Find start position.
         MapElementPtr start = _map->findElementByName("start");
         if (start) {
@@ -173,6 +175,7 @@ namespace pyr {
     void Game::updateConnections() {
         // Calculate authoritative world state.
         WorldAspect aspect;
+        aspect.map = the<Configuration>().map;
         for (size_t i = 0; i < _entities.size(); ++i) {
             aspect.entities.insert(EntityState(_entities[i]));
         }
@@ -196,6 +199,11 @@ namespace pyr {
         }
 
         // Send difference between client aspect and world.
+
+        if (aspect.map != cd->aspect.map) {
+            c->sendPacket(new SetMapPacket(aspect.map));
+        }
+
         EntityStateSetCIter clientIter = cd->aspect.entities.begin();
         EntityStateSetCIter clientEnd  = cd->aspect.entities.end();
         EntityStateSetCIter serverIter = aspect.entities.begin();
@@ -213,7 +221,7 @@ namespace pyr {
 
                 // Server has entity that client doesn't.  Add and increment server.
                 c->sendPacket(buildEntityAddedPacket(entity));
-                    
+
                 // EntityAddedPacket doesn't have pos/vel.
                 c->sendPacket(new EntityUpdatedPacket(
                     entity->getID(), entity->getPos(), entity->getVel()));

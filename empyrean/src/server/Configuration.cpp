@@ -8,16 +8,16 @@
 namespace pyr {
 
     const std::string FILENAME = "server.cfg";
-    
+
     PYR_DEFINE_SINGLETON(Configuration)
 
     Configuration::Configuration() {
         serverPort = constants::SERVER_PORT;
         shouldStartServer = true;
-        
+
         windowPosition = wxDefaultPosition;
         windowSize     = wxDefaultSize;
-        
+
         map = "maps/map2.obj";
     }
 
@@ -41,7 +41,9 @@ namespace pyr {
                         windowSize.SetWidth(atoi(value.c_str()));
                     } else if (attr == "windowSizeHeight") {
                         windowSize.SetHeight(atoi(value.c_str()));
-                    }                    
+                    } else if (attr == "map") {
+                        map = value;
+                    }
                 }
             }
         }
@@ -50,7 +52,7 @@ namespace pyr {
                 "Error reading server configuration: " + str(e.what()));
         }
     }
-    
+
     // Maybe move these into Utility.h.
     std::string str(int i) {
         return itos(i);
@@ -58,7 +60,7 @@ namespace pyr {
     std::string str(bool b) {
         return (b ? "true" : "false");
     }
-    
+
     template<typename T>
     void writeAttr(FILE* file, const char* name, const T& t) {
         fprintf(file, "  <attr name=\"%s\" value=\"%s\"/>\n", name, str(t).c_str());
@@ -69,7 +71,7 @@ namespace pyr {
         if (!file) {
             throw ConfigurationError("Error opening " + FILENAME);
         }
-        
+
         fprintf(file, "<server-configuration>\n");
         writeAttr(file, "serverPort", serverPort);
         writeAttr(file, "shouldStartServer", shouldStartServer);
@@ -77,8 +79,9 @@ namespace pyr {
         writeAttr(file, "windowPositionY", windowPosition.y);
         writeAttr(file, "windowSizeWidth", windowSize.GetWidth());
         writeAttr(file, "windowSizeHeight", windowSize.GetHeight());
+        writeAttr(file, "map", map);
         fprintf(file, "</server-configuration>\n");
-        
+
         fclose(file);
     }
 

@@ -23,13 +23,15 @@ namespace pyr {
         
         void draw(gltext::FontRendererPtr rend);
         void update(float dt);
-        
+
+        void setMap(const string& map);
+
         void addEntity(u16 id, ClientEntityPtr entity);
         void removeEntity(u16 id);
         ClientEntityPtr getEntity(u16 id) const;
 
         void clear();
-        
+
         void setFocus(u16 id);
         ClientEntityPtr getFocus() const;
         

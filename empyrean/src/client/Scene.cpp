@@ -15,7 +15,6 @@ namespace pyr {
 
     Scene::Scene() {
         _backdrop = Texture::create("images/stars.tga");
-        _map = loadMap("maps/map2.obj");
     }
 
     void Scene::draw(gltext::FontRendererPtr rend) {
@@ -112,8 +111,14 @@ namespace pyr {
             entityVector.push_back(itr->second.get());
         }
 
-        resolveCollisions(dt,_map.get(),entityVector);
-
+        if (_map.get()) {
+            resolveCollisions(dt, _map.get(), entityVector);
+        }
+    }
+    
+    void Scene::setMap(const string& map) {
+        // Throws an exception.
+        _map = loadMap(map);
     }
 
     void Scene::addEntity(u16 id, ClientEntityPtr entity) {
@@ -127,7 +132,7 @@ namespace pyr {
         }
         _entities.erase(id);
     }
-    
+
     ClientEntityPtr Scene::getEntity(u16 id) const {
         EntityMap::const_iterator i = _entities.find(id);
         return (i == _entities.end() ? 0 : i->second);
@@ -148,8 +153,10 @@ namespace pyr {
 
     void Scene::drawMap() {
         PYR_PROFILE_BLOCK("Scene::drawMap");
-        MapRenderer renderer;
-        _map->handleVisitor(renderer);
+        if (_map) {
+            MapRenderer renderer;
+            _map->handleVisitor(renderer);
+        }
     }
 
     void Scene::addParticles(MapElementPtr elt) {
