@@ -15,6 +15,11 @@
 #include "Types.h"
 
 namespace pyr {
+
+    struct CalTexture {
+        GLuint tex;
+    };
+
     using std::ifstream;
     using std::string;
     using std::vector;
@@ -60,8 +65,9 @@ namespace pyr {
                 CalCoreMaterial& material = *_coreModel.getCoreMaterial(i);
 
                 for (int j = 0; j < material.getMapCount(); j++) {                    
-                    pyr::u32 tex = (pyr::u32)material.getMapUserData(j);
-                    glDeleteTextures(1, &tex);
+                    CalTexture* tex = static_cast<CalTexture*>(material.getMapUserData(j));
+                    glDeleteTextures(1, &tex->tex);
+                    delete tex;
                 }
             }
 
@@ -143,8 +149,8 @@ namespace pyr {
 
                 for (int j = 0; j < material.getMapCount(); j++) {
                     string s=material.getMapFilename(j);
-                    u32 hTex=loadTexture(path + s); // for now, loading RAW textures.  TODO: replace with corona
-                    material.setMapUserData(j,(Cal::UserData)hTex);
+                    CalTexture* hTex=loadTexture(path + s); // for now, loading RAW textures.  TODO: replace with corona
+                    material.setMapUserData(j,hTex);
                 }
             }
 
@@ -164,7 +170,7 @@ namespace pyr {
         }
 
         //! Temporary RAW texture loader.
-        static u32 loadTexture(const string& fname) {
+        static CalTexture* loadTexture(const string& fname) {
             ifstream file;
             file.open(fname.c_str(), std::ios::in | std::ios::binary);
 
@@ -188,10 +194,10 @@ namespace pyr {
 
             int pixelformat = (d == 3) ? GL_RGB : GL_RGBA;
 
-            u32 tex;
+            CalTexture* tex = new CalTexture;
             glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
-            glGenTextures(1, &tex);
-            glBindTexture(GL_TEXTURE_2D, tex);
+            glGenTextures(1, &tex->tex);
+            glBindTexture(GL_TEXTURE_2D, tex->tex);
             glTexImage2D(GL_TEXTURE_2D, 0, pixelformat, w, h, 0, pixelformat, GL_UNSIGNED_BYTE, pixels.get());
             glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
             glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);

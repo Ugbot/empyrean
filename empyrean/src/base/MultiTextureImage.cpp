@@ -48,8 +48,8 @@ namespace pyr {
 
         int x = 0;
         int y = 0;
-        for (int row = 0; row < _texrows; row++) {
-            for (int col = 0; col < _texcols; col++) {
+        for (size_t row = 0; row < _texrows; row++) {
+            for (size_t col = 0; col < _texcols; col++) {
                 Canvas c(_hsizes[col], _vsizes[row]);
                 CanvasBlitter<Opaque>::Blit(src, c, x, y);
                 _tex.push_back(new Texture(c.getWidth(), c.getHeight(), (u32*)c.getPixels()));
@@ -73,10 +73,10 @@ namespace pyr {
         float cury = y;
         int idx = 0;
 
-        for (int row = 0; row < _texrows; row ++) {
+        for (size_t row = 0; row < _texrows; row ++) {
             float ys = _vsizes[row] * yscale;
 
-            for (int col = 0; col < _texcols; col++) {
+            for (size_t col = 0; col < _texcols; col++) {
                 _tex[idx]->drawRectangle(curx, cury, _hsizes[col] * xscale, ys);
                 curx += (float)_hsizes[col];
                 idx++;

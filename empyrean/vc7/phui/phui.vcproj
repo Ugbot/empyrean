@@ -29,7 +29,7 @@
 				UsePrecompiledHeader="0"
 				AssemblerOutput="4"
 				WarningLevel="3"
-				Detect64BitPortabilityProblems="FALSE"
+				Detect64BitPortabilityProblems="TRUE"
 				DebugInformationFormat="4"/>
 			<Tool
 				Name="VCCustomBuildTool"/>
@@ -76,7 +76,7 @@
 				UsePrecompiledHeader="0"
 				AssemblerOutput="4"
 				WarningLevel="3"
-				Detect64BitPortabilityProblems="FALSE"
+				Detect64BitPortabilityProblems="TRUE"
 				DebugInformationFormat="3"/>
 			<Tool
 				Name="VCCustomBuildTool"/>

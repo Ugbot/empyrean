@@ -144,6 +144,9 @@ Export('TOOLS')
 # Create base environment.
 base_env = Environment(ENV = os.environ)
 
+if base_env.get('CC') == 'gcc':
+    base_env.Append(CCFLAGS = ['-Wall'])
+
 if base_env['PLATFORM'] == 'cygwin':
     base_env.Append(CPPDEFINES = ['WIN32', '_WIN32', 'NOMINMAX'],
                     CPPPATH = ['#/third-party-cygwin/include'],

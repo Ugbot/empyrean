@@ -161,10 +161,10 @@ namespace pyr {
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
         MapRenderer renderer;
-        getMap()->getRoot()->handleVisitor(renderer);
+        getMap()->handleVisitor(renderer);
 
         MapOutliner outliner;
-        getMap()->getRoot()->handleVisitor(outliner);
+        getMap()->handleVisitor(outliner);
 
         _tool->onRender();
         

@@ -17,6 +17,10 @@ namespace pyr {
     inline void glVertex(const Vec2f& vec) {
         glVertex2f(vec[0], vec[1]);
     }
+
+    inline void glVertex(const Vec3f& vec) {
+        glVertex3f(vec[0], vec[1], vec[2]);
+    }
     
     inline void glTexCoord(const Vec2f& vec) {
         glTexCoord2f(vec[0], vec[1]);

@@ -41,8 +41,14 @@ namespace pyr {
         ~GeometryElement() { }
 
     public:
-        PlanarMap geometry;
+        typedef Vec3f Vertex;
+        typedef Vec3i Triangle;
+
+        //PlanarMap geometry;
         MaterialPtr material;
+
+        std::vector<Vertex> vertices;
+        std::vector<Triangle> triangles;
 
         virtual void handleVisitor(MapVisitor& v);
     };

@@ -34,6 +34,20 @@ namespace pyr {
         glPushMatrix();
         glTranslate(e->pos);
 
+        glBegin(GL_POINTS);
+        for (size_t i = 0; i < e->vertices.size(); ++i) {
+            glVertex(e->vertices[i]);
+        }
+        glEnd();
+
+        for (size_t i = 0; i < e->triangles.size(); ++i) {
+            glBegin(GL_LINE_LOOP);
+            glVertex(e->vertices[e->triangles[i][0]]);
+            glVertex(e->vertices[e->triangles[i][1]]);
+            glVertex(e->vertices[e->triangles[i][2]]);
+            glEnd();
+        }
+
         /*
         const GeometryElement::VertList& v = e->vertices;
 

@@ -49,7 +49,7 @@ namespace pyr {
                 PYR_LOG() << "Creating geometry element.";
 
                 GeometryElementPtr elt = new GeometryElement;
-                elt->geometry.addFace(_points);
+                //elt->geometry.addFace(_points);
                 _points.clear();
 
                 GroupElementPtr parent = getMap()->getRoot();

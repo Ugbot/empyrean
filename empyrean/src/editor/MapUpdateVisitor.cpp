@@ -21,11 +21,11 @@ namespace pyr {
         } else if (_property == "y") {
             newPos[1] = atof(_newValue.c_str());
         } else if (_property == "Texture") {
-            tex = _newValue;
+            //tex = _newValue;
         }
 
         Editor::getMainFrame()->handleCommand(
-            new UpdateGeometryElementCommand(e, newPos, tex));
+            new UpdateGeometryElementCommand(e, newPos, /*tex*/ ""));
     }
 
     void MapUpdateVisitor::visitGroup(GroupElement* e) {

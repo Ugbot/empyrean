@@ -1,4 +1,4 @@
-
+#include <algorithm>
 #include "UpdateGeometryElementCommand.h"
 #include "MapElement.h"
 

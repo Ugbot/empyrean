@@ -24,26 +24,26 @@ namespace phui {
 
         if (_type == VERTICAL) {
             int total_height = s.getHeight() - top - bottom + _spacing;
-            int widget_height = total_height / container->getNumChildren();
+            size_t widget_height = total_height / container->getNumChildren();
             
             for (size_t i = 0; i < container->getNumChildren(); ++i) {
                 Rect r;
                 r.x      = left;
-                r.y      = top + i * widget_height;
+                r.y      = int(top + i * widget_height);
                 r.width  = s.getWidth() - r.x - right;
-                r.height = widget_height - _spacing;
+                r.height = int(widget_height - _spacing);
                 
                 container->getChild(i)->setPositionAndSize(r);
             }
         } else if (_type == HORIZONTAL) {
             int total_width = s.getWidth() - left - right + _spacing;
-            int widget_width = total_width / container->getNumChildren();
+            size_t widget_width = total_width / container->getNumChildren();
             
             for (size_t i = 0; i < container->getNumChildren(); ++i) {
                 Rect r;
-                r.x      = right + i * widget_width;
+                r.x      = int(right + i * widget_width);
                 r.y      = top;
-                r.width  = widget_width - _spacing;
+                r.width  = int(widget_width - _spacing);
                 r.height = s.getHeight() - r.y - bottom;
                 
                 container->getChild(i)->setPositionAndSize(r);

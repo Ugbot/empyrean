@@ -34,8 +34,8 @@ namespace pyr {
 
     private:
         int _width, _height;        ///< size of the image as a whole
-        int _texrows;
-        int _texcols;
+        size_t _texrows;
+        size_t _texcols;
         std::vector<int> _hsizes;   ///< widths of the textures
         std::vector<int> _vsizes;   ///< http://ikagames.com/andy/gfx/captobvious.gif
         std::vector<Texture*> _tex; ///< The actual textures.  I was considering using a Texture***. (2D array of Texture*s)  :D

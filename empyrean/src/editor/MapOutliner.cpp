@@ -20,12 +20,14 @@ namespace pyr {
         glPushMatrix();
         glTranslate(e->pos);
 
+/*
         PlanarMap& pm = e->geometry;
         glBegin(GL_POINTS);
         for (size_t i = 0; i < pm.getVertexCount(); ++i) {
             glVertex(pm.getVertex(i).pos);
         }
         glEnd();
+        */
 
         /*
         // Draw segments in blue

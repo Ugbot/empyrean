@@ -9,8 +9,8 @@ namespace pyr {
         // use the wxWindows logging system because it's thread-safe
         wxGetApp().log(s);
 
-		// Log this in the file
-		the<Log>().write(s);
+        // Log this in the file
+        the<Log>().write(s);
     }
 
 }

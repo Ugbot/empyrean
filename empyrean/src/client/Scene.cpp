@@ -1,7 +1,9 @@
 #include "Entity.h"
 #include "GLUtility.h"
-#include "Scene.h"
+#include "MapRenderer.h"
+#include "OBJLoader.h"
 #include "Renderer.h"
+#include "Scene.h"
 #include "Texture.h"
 
 
@@ -12,6 +14,10 @@ namespace pyr {
     Scene::Scene() {
         _focus = 0;
         _backdrop = Texture::create("images/stars.tga");
+        _map.reset(loadOBJFile("maps/map1.obj"));
+        if (!_map.get()) {
+            throw std::runtime_error("Loading maps/map1.obj failed");
+        }
     }
     
     Scene::~Scene() {
@@ -37,7 +43,7 @@ namespace pyr {
         glDisable(GL_DEPTH_TEST);
         glDisable(GL_BLEND);
 
-        glClear(GL_DEPTH_BUFFER_BIT);
+        glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
 
         // draw background
         glEnable(GL_TEXTURE_2D);
@@ -50,6 +56,11 @@ namespace pyr {
         glEnd();
         
         glTranslatef(width / 2 - focusX, height / 2 - focusY, 0);
+
+        glColor3f(1, 1, 1);
+        glPointSize(5);
+        MapRenderer renderer;
+        _map->handleVisitor(renderer);
 
         EntityMap::iterator itr = _entities.begin();
         for (; itr != _entities.end(); ++itr) {

@@ -26,8 +26,7 @@ namespace pyr {
         _renderer->render(
             "Lead Programmer:  Chad Austin\n"
             "Programmer:    Andy Friesen\n"
-            "Artwork:   Corey Annis\n"
-            "Design:    Theo Reed, Bryan Walter, Ian Bollinger");
+            "Artwork:   Corey Annis\n");
     }
     
     

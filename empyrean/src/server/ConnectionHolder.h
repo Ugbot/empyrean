@@ -23,7 +23,7 @@ namespace pyr {
 
     protected:
         ConnectionHolder();
-        ~ConnectionHolder();
+        virtual ~ConnectionHolder();
         
         void update();
         

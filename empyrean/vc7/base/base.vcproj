@@ -29,7 +29,7 @@
 				UsePrecompiledHeader="0"
 				AssemblerOutput="4"
 				WarningLevel="3"
-				Detect64BitPortabilityProblems="FALSE"
+				Detect64BitPortabilityProblems="TRUE"
 				DebugInformationFormat="4"/>
 			<Tool
 				Name="VCCustomBuildTool"/>
@@ -76,7 +76,7 @@
 				UsePrecompiledHeader="0"
 				AssemblerOutput="4"
 				WarningLevel="3"
-				Detect64BitPortabilityProblems="FALSE"
+				Detect64BitPortabilityProblems="TRUE"
 				DebugInformationFormat="3"/>
 			<Tool
 				Name="VCCustomBuildTool"/>
@@ -170,9 +170,6 @@
 				RelativePath="..\..\src\base\LokiTypeInfo.h">
 			</File>
 			<File
-				RelativePath="..\..\src\base\Map.cpp">
-			</File>
-			<File
 				RelativePath="..\..\src\base\Map.h">
 			</File>
 			<File
@@ -206,6 +203,12 @@
 				RelativePath="..\..\src\base\NSPRUtility.h">
 			</File>
 			<File
+				RelativePath="..\..\src\base\OBJLoader.cpp">
+			</File>
+			<File
+				RelativePath="..\..\src\base\OBJLoader.h">
+			</File>
+			<File
 				RelativePath="..\..\src\base\OpenGL.h">
 			</File>
 			<File
@@ -222,6 +225,12 @@
 			</File>
 			<File
 				RelativePath="..\..\src\base\PacketTypes.h">
+			</File>
+			<File
+				RelativePath="..\..\src\base\PlanarMap.cpp">
+			</File>
+			<File
+				RelativePath="..\..\src\base\PlanarMap.h">
 			</File>
 			<File
 				RelativePath="..\..\src\base\Platform.cpp">

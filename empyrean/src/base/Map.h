@@ -10,6 +10,8 @@
 
 namespace pyr {
 
+    class MapVisitor;
+
     class Map {
     public:
         Map() {
@@ -18,6 +20,10 @@ namespace pyr {
 
         GroupElementPtr getRoot() const {
             return _root;
+        }
+
+        void handleVisitor(MapVisitor& visitor) const {
+            getRoot()->handleVisitor(visitor);
         }
         
     private:

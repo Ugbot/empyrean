@@ -3,6 +3,8 @@
 
 
 #include <map>
+#include <memory>
+#include "Map.h"
 #include "Singleton.h"
 #include "Types.h"
 #include "Utility.h"
@@ -11,6 +13,7 @@
 namespace pyr {
 
     class Entity;
+    class Map;
     class Texture;
 
     class Scene {
@@ -38,6 +41,7 @@ namespace pyr {
         Entity* _focus;
         Texture* _backdrop;
         EntityMap _entities;
+        std::auto_ptr<Map> _map;
     };
 
 }

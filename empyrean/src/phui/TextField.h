@@ -24,8 +24,8 @@
  *
  * -----------------------------------------------------------------
  * File:          $RCSfile: TextField.h,v $
- * Date modified: $Date: 2003-11-09 08:15:56 $
- * Version:       $Revision: 1.6 $
+ * Date modified: $Date: 2004-02-17 02:18:27 $
+ * Version:       $Revision: 1.7 $
  * -----------------------------------------------------------------
  *
  ************************************************************** phui-cpr-end */
@@ -61,10 +61,10 @@ namespace phui
         std::string mText;
 
         /// Actual cursor position horizontally
-        int mCursorScreenPosition;
+        size_t mCursorScreenPosition;
 
         /// Index of character of where cursor is at
-        unsigned int mCursorCharacterPosition;
+        size_t mCursorCharacterPosition;
     };
 
     typedef pyr::RefPtr<TextField> TextFieldPtr;

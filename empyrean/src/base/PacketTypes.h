@@ -9,7 +9,7 @@
 
 namespace pyr {
 
-    const unsigned USERNAME_LENGTH = 12;
+    const unsigned USERNAME_LENGTH = 32;
     const unsigned TEXT_LENGTH = 512;
 
     // PACKET DEFINITIONS

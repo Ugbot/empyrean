@@ -20,19 +20,21 @@ namespace pyr {
         typedef size_t VertexIndex;
 
         struct Face {
-            HalfEdgeIndex incidentEdge;
+            HalfEdgeIndex outerComponent;
+            std::vector<HalfEdgeIndex> innerComponents;
         };
 
         struct HalfEdge {
+            VertexIndex   origin;
+            HalfEdgeIndex twin;
             FaceIndex     incidentFace;
             HalfEdgeIndex next;
-            HalfEdgeIndex opposite;
-            VertexIndex   start;
+            HalfEdgeIndex prev;
         };
 
         struct Vertex {
             Vec2f pos;
-            std::vector<HalfEdgeIndex> incidentEdges;
+            std::vector<HalfEdgeIndex> incidentEdge;
         };
 
     public:
