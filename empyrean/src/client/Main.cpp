@@ -10,6 +10,8 @@
 #include "OpenGL.h"
 #include "Platform.h"
 #include "Profiler.h"
+#include "PythonClientBindings.h"
+#include "PythonInterpreter.h"
 #include "SDLUtility.h"
 #include "NSPRUtility.h"
 
@@ -40,7 +42,7 @@ namespace pyr {
     /// @return true if application should quit.
     bool handleSDLEvents() {
         PYR_PROFILE_BLOCK("handleSDLEvents");
-
+        
         Application& app = the<Application>();
 
         bool should_quit = false;
@@ -146,6 +148,7 @@ namespace pyr {
     }
 
     void runClient(int argc, char* argv[]) {
+        // Initialize log.
         try {
             the<Log>().open(getStartDirectory(argc, argv) + "/client.log");
         }
@@ -153,8 +156,10 @@ namespace pyr {
             // Could not open log file.  That's okay, defer any problems until later.
         }
 
+        // Set start directory.
         setStartDirectory(argc, argv);
 
+        // Load configuration.
         try {
             the<Configuration>().load();
         }
@@ -162,6 +167,9 @@ namespace pyr {
             PYR_LOG() << "Could not load client configuration: " << e.what()
                       << "  That's okay, using defaults.";
         }
+
+        // Register pyr.client module with the PythonInterpreter.
+        the<PythonInterpreter>().addSubModule("client", initpyr_client);
 
         PYR_LOG() << "Initializing SDL...";
         initializeSDL(SDL_INIT_NOPARACHUTE | SDL_INIT_VIDEO | SDL_INIT_TIMER | SDL_INIT_JOYSTICK);

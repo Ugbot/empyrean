@@ -1,5 +1,6 @@
 import __builtin__
 import pyr
+#import pyr.client
 import sys
 import os
 

@@ -29,11 +29,8 @@ SOURCES = Split("""
     ParticleEmitter.cpp
     ParticleSystem.cpp
     Player.cpp
-    PythonBindings.cpp
+    PythonClientBindings.cpp
     PythonCutScene.cpp
-    PythonInterpreter.cpp
-    PythonLog.cpp
-    PythonScript.cpp
     Renderer.cpp
     Scene.cpp
     SDLUtility.cpp
