@@ -38,10 +38,10 @@ namespace pyr {
         float width = 0.3f;
 
         glBegin(GL_LINE_LOOP);
-        glVertex2f(-width/2.0,0);
-        glVertex2f(width/2.0,0);
-        glVertex2f(width/2.0,height);
-        glVertex2f(-width/2.0,height);
+        glVertex2f(-width/2,0);
+        glVertex2f(width/2,0);
+        glVertex2f(width/2,height);
+        glVertex2f(-width/2,height);
         glEnd();
 
         // Render last collision data [debugging].

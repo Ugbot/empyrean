@@ -25,7 +25,7 @@ namespace pyr {
 
     public:
         void open(const std::string& filename);
-        bool write(const std::string& message);
+        void write(const std::string& message);
 
     private:
         // private until somebody needs it.
