@@ -14,10 +14,10 @@ namespace pyr {
     Game::~Game() {
         clearConnections();
     
-        while (!_entities.empty()) {
-            delete _entities[0];
-            _entities.erase(_entities.begin());
+        for (size_t i = 0; i < _entities.size(); ++i) {
+            delete _entities[i];
         }
+        _entities.clear();
     }
     
     const std::string& Game::getName() const {
@@ -34,17 +34,9 @@ namespace pyr {
         for (size_t i = 0; i < _entities.size(); ++i) {
             _entities[i]->update(dt);
         }
-        for (size_t i = 0; i < getConnectionCount(); ++i) {
-            getData(getConnection(i))->playerEntity->update(dt);
-        }
 
         for (size_t i = 0; i < _entities.size(); ++i) {
             ServerEntity* e = _entities[i];
-            sendAll(new EntityUpdatedPacket(
-                        e->getID(), e->getPos(), e->getVel()));
-        }
-        for (size_t i = 0; i < getConnectionCount(); ++i) {
-            ServerEntity* e = getData(getConnection(i))->playerEntity;
             sendAll(new EntityUpdatedPacket(
                         e->getID(), e->getPos(), e->getVel()));
         }
@@ -54,16 +46,24 @@ namespace pyr {
         return static_cast<ConnectionData*>(c->getOpaque());
     }
     
+    void Game::addEntity(ServerEntity* entity) {
+        _entities.push_back(entity);
+    }
+    
+    void Game::removeEntity(ServerEntity* entity) {
+        for (size_t i = 0; i < _entities.size(); ++i) {
+            if (_entities[i] == entity) {
+                _entities.erase(_entities.begin() + i);
+                return;
+            }
+        }
+    }
+    
     void Game::connectionAdded(Connection* connection) {
         ServerEntity* entity = new ServerEntity(_idGenerator.reserve());
         sendAll(new EntityAddedPacket(
                     entity->getID(),
                     entity->getAppearance()));
-        connection->sendPacket(new EntityAddedPacket(
-                 entity->getID(),
-                 entity->getAppearance()));
-                 
-        // @todo send all existing entities to the new connection
 
         // set connection-specific data
         ConnectionData* cd = new ConnectionData;
@@ -72,6 +72,15 @@ namespace pyr {
 
         // add packet handlers
         connection->definePacketHandler(this, &Game::handleSetVelocity);
+        
+        addEntity(entity);
+        
+        // send all existing entities to the new connection
+        for (size_t i = 0; i < _entities.size(); ++i) {
+            connection->sendPacket(new EntityAddedPacket(
+                _entities[i]->getID(),
+                _entities[i]->getAppearance()));
+        }
     }
     
     void Game::connectionRemoved(Connection* connection) {
@@ -83,6 +92,7 @@ namespace pyr {
                                    cd->playerEntity->getID()));
 
         _idGenerator.release(cd->playerEntity->getID());
+        removeEntity(cd->playerEntity);
         delete cd->playerEntity;
         delete cd;
 

@@ -30,6 +30,9 @@ namespace pyr {
         };
 
         static ConnectionData* getData(Connection* c);
+        
+        void addEntity(ServerEntity* entity);
+        void removeEntity(ServerEntity* entity);
 
         void connectionAdded(Connection* connection);
         void connectionRemoved(Connection* connection);
