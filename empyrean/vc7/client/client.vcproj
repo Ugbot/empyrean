@@ -33,7 +33,7 @@
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalDependencies="SDL.lib corona.lib opengl32.lib glu32.lib"
-				OutputFile="$(OutDir)/client.exe"
+				OutputFile="../bin/Debug/client.exe"
 				LinkIncremental="2"
 				AdditionalLibraryDirectories="../../src/third-party/lib"
 				GenerateDebugInformation="TRUE"
@@ -80,7 +80,7 @@
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalDependencies="SDL.lib corona.lib opengl32.lib glu32.lib"
-				OutputFile="$(OutDir)/client.exe"
+				OutputFile="../bin/Release/client.exe"
 				LinkIncremental="1"
 				AdditionalLibraryDirectories="../../src/third-party/lib"
 				GenerateDebugInformation="TRUE"
