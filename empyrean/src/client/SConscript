@@ -8,6 +8,7 @@ SOURCES = [
     'Main.cpp',
     'MenuState.cpp',
     'Model.cpp',
+    'Renderer.cpp',
     'Texture.cpp']
 
 env = base_env.Copy()

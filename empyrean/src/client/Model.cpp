@@ -3,6 +3,7 @@
 #include <vector>
 #include <map>
 #include <sstream>
+#include <stdexcept>
 
 #include <cal3d/cal3d.h>
 

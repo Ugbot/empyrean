@@ -68,8 +68,11 @@ def SetupGL(env):
 
 base_env = Environment(
     ENV = os.environ)
+
+base_env['CCFLAGS'] += "-Isrc/base -I/usr/include/mozilla/nspr"
+base_env['LIBS'] = ["cal3d", "corona"]
+
 Export('base_env SetupSDL SetupGL')
 
-base_env['CCFLAGS'] += "-Isrc/base "
 
 SConscript(dirs = ['src'])
