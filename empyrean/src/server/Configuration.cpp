@@ -6,7 +6,7 @@ namespace pyr {
 
     PYR_DEFINE_SINGLETON(Configuration)
 
-    int Configuration::getServerPort() {
+    u16 Configuration::getServerPort() {
         return 14702;
     }
     

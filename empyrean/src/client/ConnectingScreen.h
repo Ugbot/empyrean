@@ -27,7 +27,9 @@ namespace pyr {
         
         void update(float dt) {
             MenuScreen::update(dt);
-            switch (ServerConnection::instance().getStatus()) {
+            ServerConnection& sc = ServerConnection::instance();
+            
+            switch (sc.getStatus()) {
                 case ServerConnection::CONNECTING: {
                     // keep showing the message...
                     break;
@@ -39,7 +41,7 @@ namespace pyr {
                 }
                     
                 case ServerConnection::DISCONNECTED: {
-                    std::string error = ServerConnection::instance().getError();
+                    std::string error = sc.getError();
                     getState()->onConnectingError("Connection failed: " + error);
                     break;
                 }

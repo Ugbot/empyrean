@@ -17,6 +17,7 @@
 
 namespace pyr {
 
+    class JoinGameResponsePacket;
     class LobbyPacket;
     class LoginResponsePacket;
     class Packet;
@@ -26,7 +27,7 @@ namespace pyr {
         PYR_DECLARE_SINGLETON(ServerConnection)
         
         ServerConnection();
-        ~ServerConnection() { }
+        ~ServerConnection() {}
 
     public:
         enum Status {
@@ -41,6 +42,10 @@ namespace pyr {
         bool isConnected();
         Status getStatus();
         bool loginFailed();
+        bool isInGame();
+        
+        bool hasJoinGameResponse() { return _hasJoinGameResponse; }
+        u16 getJoinGameResponse()  { return _joinGameResponse; }
         
         /// valid if DISCONNECTED after beginConnecting()
         const std::string& getError();
@@ -54,6 +59,10 @@ namespace pyr {
                    bool newuser);
 
         bool say(const std::string& text);
+        
+        bool joinGame(const std::string& name,
+                      const std::string& password,
+                      bool newGame);
 
         /**
          * Sends a packet to the server.
@@ -66,6 +75,7 @@ namespace pyr {
     private:
         void handleLoginResponse(Connection*, LoginResponsePacket* p);
         void handleLobby(Connection*, LobbyPacket* p);
+        void handleJoinGameResponse(Connection*, JoinGameResponsePacket* p);
     
         Status _status;
         
@@ -79,6 +89,9 @@ namespace pyr {
         bool _loginFailed;
 
         std::vector<std::string> _lobbyMessages;
+        
+        bool _hasJoinGameResponse;
+        u16 _joinGameResponse;
     };
 
 }

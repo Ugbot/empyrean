@@ -4,6 +4,7 @@
 #include "ErrorScreen.h"
 #include "GameState.h"
 #include "JoinGameScreen.h"
+#include "JoiningGameScreen.h"
 #include "LobbyScreen.h"
 #include "LoggingInScreen.h"
 #include "LoginScreen.h"
@@ -167,30 +168,50 @@ namespace pyr {
     }
     
     void MenuState::onJoinGameJoin(const std::string& name, const std::string& password) {
-        invokeTransition<GameState>();
+        ServerConnection::instance().joinGame(name, password, false);
+        _screen = _joiningGameScreen;
     }
     
     void MenuState::onJoinGameCancel() {
         _screen = _lobbyScreen;
     }
-
+    
     void MenuState::onNewGameCreate(const std::string& name, const std::string& password) {
-        invokeTransition<GameState>();
+        ServerConnection::instance().joinGame(name, password, true);
+        _screen = _joiningGameScreen;
     }
 
     void MenuState::onNewGameCancel() {
         _screen = _lobbyScreen;
     }
     
+    void MenuState::onJoiningGameJoined() {
+        invokeTransition<GameState>();
+    }
+    
+    void MenuState::onJoiningGameCancel() {
+        _screen = _lobbyScreen;
+    }
+    
+    void MenuState::onJoiningGameError(const std::string& error) {
+        ServerConnection::instance().disconnect();
+        _screen = new ErrorScreen(this, error);
+    }
+
+    void MenuState::onCreatingGameCancel() {
+        _screen = _lobbyScreen;
+    }
+    
     void MenuState::createInterface() {
-        _mainScreen       = new MainScreen(this);
-        _connectScreen    = new ConnectScreen(this);
-        _connectingScreen = new ConnectingScreen(this);
-        _joinGameScreen   = new JoinGameScreen(this);
-        _loginScreen      = new LoginScreen(this);
-        _loggingInScreen  = new LoggingInScreen(this);
-        _lobbyScreen      = new LobbyScreen(this);
-        _newGameScreen    = new NewGameScreen(this);
+        _mainScreen         = new MainScreen(this);
+        _connectScreen      = new ConnectScreen(this);
+        _connectingScreen   = new ConnectingScreen(this);
+        _joinGameScreen     = new JoinGameScreen(this);
+        _joiningGameScreen  = new JoiningGameScreen(this);
+        _loginScreen        = new LoginScreen(this);
+        _loggingInScreen    = new LoggingInScreen(this);
+        _lobbyScreen        = new LobbyScreen(this);
+        _newGameScreen      = new NewGameScreen(this);
         
         _screen = _mainScreen;
     }

@@ -2,7 +2,6 @@
 #include <prnetdb.h>
 #include "NSPRUtility.h"
 #include "Socket.h"
-#include "Types.h"
 
 
 namespace pyr {
@@ -11,7 +10,7 @@ namespace pyr {
         _socket = fd;
     }
     
-    Socket::Socket(const std::string& host, int port) {
+    Socket::Socket(const std::string& host, u16 port) {
         char buffer[PR_NETDB_BUF_SIZE];
         PRHostEnt hostentry;
         PRStatus status = PR_GetHostByName(

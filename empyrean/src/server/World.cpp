@@ -1,5 +1,6 @@
 #include "Connection.h"
 #include "Database.h"
+#include "Game.h"
 #include "Log.h"
 #include "PacketTypes.h"
 #include "ServerEntity.h"
@@ -27,6 +28,12 @@ namespace pyr {
             
             c->processIncomingPackets();
         }
+        
+        // update games
+        for (unsigned i = 0; i < _games.size(); ++i) {
+            Game* g = _games[i];
+            g->update(dt);
+        }
     }
     
     void World::addConnection(Connection* connection) {
@@ -40,6 +47,7 @@ namespace pyr {
         // set up packet handlers
         connection->definePacketHandler(this, &World::handleLogin);
         connection->definePacketHandler(this, &World::handleSay);
+        connection->definePacketHandler(this, &World::handleJoinGame);
 
         // add the connection to the list of connections
         _connections.push_back(connection);
@@ -64,6 +72,29 @@ namespace pyr {
         delete connection;
         
         logMessage("Disconnected");
+    }
+    
+    void World::sendAll(Packet* p) {
+        for (size_t i = 0; i < _connections.size(); ++i) {
+            _connections[i]->sendPacket(p);
+        }
+    }
+    
+    void World::sendAllBut(Connection* c, Packet* p) {
+        for (size_t i = 0; i < _connections.size(); ++i) {
+            if (_connections[i] != c) {
+                _connections[i]->sendPacket(p);
+            }
+        }
+    }
+    
+    Game* World::getGame(const std::string& name) {
+        for (size_t i = 0; i < _games.size(); ++i) {
+            if (_games[i]->getName() == name) {
+                return _games[i];
+            }
+        }
+        return 0;
     }
     
     void World::handleLogin(Connection* c, LoginPacket* p) {
@@ -124,38 +155,58 @@ namespace pyr {
 
     void World::handleSay(Connection* c, SayPacket* p) {
         ConnectionData* cd = getData(c);
-        for (size_t i = 0; i < _connections.size(); ++i) {
-            _connections[i]->sendPacket(new LobbyPacket(
-                cd->account->getUsername(),
-                LOBBY_SAY,
-                p->text()));
-        }
+        sendAll(new LobbyPacket(cd->account->getUsername(),
+                                LOBBY_SAY,
+                                p->text()));
 
         logMessage(cd->account->getUsername() + " says: " + p->text());
     }
     
-    void World::announceLogin(Connection* c) {
+    void World::handleJoinGame(Connection* c, JoinGamePacket* p) {
         ConnectionData* cd = getData(c);
-        for (size_t i = 0; i < _connections.size(); ++i) {
-            if (_connections[i] != c) {
-                _connections[i]->sendPacket(new LobbyPacket(
-                    cd->account->getUsername(),
-                    LOBBY_LOGIN,
-                    ""));
+        std::string username = cd->account->getUsername();
+        
+        if (p->name().empty()) {
+            c->sendPacket(new JoinGameResponsePacket(JGR_INVALID_NAME));
+            logMessage(username + " tried to create/join game with no name");
+            return;
+        }
+        
+        Game* game = getGame(p->name());
+        if (p->newGame()) {
+            if (game) {
+                c->sendPacket(new JoinGameResponsePacket(JGR_ALREADY_STARTED));
+                logMessage(username + ": game: " + p->name() + " already started");
+            } else {
+                game = new Game(p->name(), p->password());
+                _games.push_back(game);
+                c->sendPacket(new JoinGameResponsePacket(JGR_JOINED));
+                logMessage(username + " created game " + p->name());
+            }
+        } else {
+            if (!game) {
+                c->sendPacket(new JoinGameResponsePacket(JGR_NO_GAME));
+                logMessage(username + " tried to join nonexistant game " + p->name());
+            } else if (game->getPassword() != p->password()) {
+                c->sendPacket(new JoinGameResponsePacket(JGR_INVALID_PASSWORD));
+                logMessage(username + ": invalid password for game " + p->name());
+            } else {
+                c->sendPacket(new JoinGameResponsePacket(JGR_JOINED));
+                logMessage(username + " joined game " + p->name());
             }
         }
     }
     
+    void World::announceLogin(Connection* c) {
+        ConnectionData* cd = getData(c);
+        sendAllBut(c, new LobbyPacket(cd->account->getUsername(),
+                                      LOBBY_LOGIN, ""));
+    }
+    
     void World::announceLogout(Connection* c) {
         ConnectionData* cd = getData(c);
-        for (size_t i = 0; i < _connections.size(); ++i) {
-            if (_connections[i] != c) {
-                _connections[i]->sendPacket(new LobbyPacket(
-                    cd->account->getUsername(),
-                    LOBBY_LOGOUT,
-                    ""));
-            }
-        }
+        sendAllBut(c, new LobbyPacket(cd->account->getUsername(),
+                                      LOBBY_LOGOUT, ""));
     }
     
 }

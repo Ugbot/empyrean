@@ -4,6 +4,7 @@
 
 #include <string>
 #include <prio.h>
+#include "Types.h"
 
 
 namespace pyr {
@@ -11,7 +12,7 @@ namespace pyr {
     class Socket {
     public:
         Socket(PRFileDesc* fd);
-        Socket(const std::string& host, int port);
+        Socket(const std::string& host, u16 port);
         ~Socket();
         
         /// if this returns 0, the socket has been disconnected

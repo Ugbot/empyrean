@@ -90,7 +90,7 @@ namespace pyr {
         _nodeStack.push(node);
     }
     
-    void XMLParser::onEndElement(const XML_Char* name) {
+    void XMLParser::onEndElement(const XML_Char* /*name*/) {
         _lastTextNode = 0;
         PYR_ASSERT(!_nodeStack.empty(), "Node stack shouldn't be empty!");
         _nodeStack.pop();

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="Windows-1252"?>
 <VisualStudioProject
 	ProjectType="Visual C++"
-	Version="7.00"
+	Version="7.10"
 	Name="client"
 	ProjectGUID="{9A8DD0EB-2ADD-4815-9E3D-E818A9297C9C}"
 	Keyword="Win32Proj">
@@ -297,6 +297,9 @@
 				RelativePath="..\..\src\client\JoinGameScreen.h">
 			</File>
 			<File
+				RelativePath="..\..\src\client\JoiningGameScreen.h">
+			</File>
+			<File
 				RelativePath="..\..\src\client\LobbyScreen.h">
 			</File>
 			<File
@@ -319,4 +322,3 @@
 	<Globals>
 	</Globals>
 </VisualStudioProject>
-

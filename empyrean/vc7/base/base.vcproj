@@ -1,7 +1,7 @@
-<?xml version="1.0" encoding = "Windows-1252"?>
+<?xml version="1.0" encoding="Windows-1252"?>
 <VisualStudioProject
 	ProjectType="Visual C++"
-	Version="7.00"
+	Version="7.10"
 	Name="base"
 	ProjectGUID="{03B95B05-B6D6-4FB1-B9AC-269467287C88}"
 	Keyword="Win32Proj">
@@ -48,6 +48,12 @@
 				Name="VCResourceCompilerTool"/>
 			<Tool
 				Name="VCWebServiceProxyGeneratorTool"/>
+			<Tool
+				Name="VCXMLDataGeneratorTool"/>
+			<Tool
+				Name="VCManagedWrapperGeneratorTool"/>
+			<Tool
+				Name="VCAuxiliaryManagedWrapperGeneratorTool"/>
 		</Configuration>
 		<Configuration
 			Name="Release|Win32"
@@ -89,8 +95,16 @@
 				Name="VCResourceCompilerTool"/>
 			<Tool
 				Name="VCWebServiceProxyGeneratorTool"/>
+			<Tool
+				Name="VCXMLDataGeneratorTool"/>
+			<Tool
+				Name="VCManagedWrapperGeneratorTool"/>
+			<Tool
+				Name="VCAuxiliaryManagedWrapperGeneratorTool"/>
 		</Configuration>
 	</Configurations>
+	<References>
+	</References>
 	<Files>
 		<Filter
 			Name="files"
@@ -123,10 +137,19 @@
 				RelativePath="..\..\src\base\Connection.h">
 			</File>
 			<File
+				RelativePath="..\..\src\base\Debug.h">
+			</File>
+			<File
 				RelativePath="..\..\src\base\Error.cpp">
 			</File>
 			<File
 				RelativePath="..\..\src\base\Error.h">
+			</File>
+			<File
+				RelativePath="..\..\src\base\extgl.c">
+			</File>
+			<File
+				RelativePath="..\..\src\base\extgl.h">
 			</File>
 			<File
 				RelativePath="..\..\src\base\LokiTypeInfo.h">
@@ -213,19 +236,13 @@
 				RelativePath="..\..\src\base\WriterThread.h">
 			</File>
 			<File
+				RelativePath="..\..\src\base\wx.h">
+			</File>
+			<File
 				RelativePath="..\..\src\base\XMLParser.cpp">
 			</File>
 			<File
 				RelativePath="..\..\src\base\XMLParser.h">
-			</File>
-			<File
-				RelativePath="..\..\src\base\extgl.c">
-			</File>
-			<File
-				RelativePath="..\..\src\base\extgl.h">
-			</File>
-			<File
-				RelativePath="..\..\src\base\wx.h">
 			</File>
 		</Filter>
 	</Files>

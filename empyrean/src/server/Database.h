@@ -39,12 +39,6 @@ namespace pyr {
     };
     
     
-    class Game {
-    public:
-        void save(FILE* file) const { }
-    };
-    
-    
     struct DatabaseError : std::runtime_error {
         DatabaseError(const std::string& what)
         : std::runtime_error(what) { }
@@ -69,7 +63,6 @@ namespace pyr {
     private:
         std::vector<Account*>   _accounts;
         std::vector<Character*> _characters;
-        std::vector<Game*>      _games;
     };
 
 }

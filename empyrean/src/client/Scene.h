@@ -3,6 +3,7 @@
 
 
 #include <map>
+#include <memory>
 #include "Singleton.h"
 #include "Types.h"
 
@@ -32,7 +33,7 @@ namespace pyr {
         
         Texture* _backdrop;
         EntityMap _entities;
-        MapFile* _map;
+        std::auto_ptr<MapFile> _map;
     };
 
 }

@@ -13,33 +13,6 @@ namespace pyr {
 
     // PACKET DEFINITIONS
 
-    #define PYR_SAY_PACKET_NAME SayPacket
-    #define PYR_SAY_PACKET(_) \
-        _(string)(512, text)
-        
-    enum {
-        LOBBY_LOGIN,
-        LOBBY_LOGOUT,
-        LOBBY_SAY,
-    };
-
-    #define PYR_LOBBY_PACKET_NAME LobbyPacket
-    #define PYR_LOBBY_PACKET(_) \
-        _(string)(12, username) \
-        _(field)(u16, action)   \
-        _(string)(512, text)
-    
-    #define PYR_ENTITY_ADDED_PACKET_NAME EntityAddedPacket
-    #define PYR_ENTITY_ADDED_PACKET(_)      \
-        _(string)(256, appearance)          \
-        _(field)(u32, entityID)             \
-        _(field)(gmtl::Vec2f, pos)          \
-        _(field)(gmtl::Vec2f, vel)
-        
-    #define PYR_ENTITY_REMOVED_PACKET_NAME EntityRemovedPacket
-    #define PYR_ENTITY_REMOVED_PACKET(_)    \
-        _(field)(u32, entityID)
-        
     #define PYR_LOGIN_PACKET_NAME LoginPacket
     #define PYR_LOGIN_PACKET(_)             \
         _(string)(12, username)             \
@@ -61,35 +34,54 @@ namespace pyr {
     #define PYR_LOGIN_RESPONSE_PACKET(_)    \
         _(field)(u16, response)
         
-    #define PYR_PING_PACKET_NAME PingPacket
-    #define PYR_PING_PACKET(_)
-    
-    #define PYR_PLAYER_STATE_PACKET_NAME PlayerStatePacket
-    #define PYR_PLAYER_STATE_PACKET(_)                                      \
-        /* This is the force component on the x axis.  It is directly */    \
-        /* related to the left and right arrow keys. */                     \
-        _(field)(float, force)
+    #define PYR_SAY_PACKET_NAME SayPacket
+    #define PYR_SAY_PACKET(_) \
+        _(string)(512, text)
         
-    #define PYR_UPDATE_PACKET_NAME UpdatePacket
-    #define PYR_UPDATE_PACKET(_)    \
-        _(field)(u16, entityID)     \
-        _(field)(gmtl::Vec2f, pos)  \
-        _(field)(gmtl::Vec2f, vel)
+    enum {
+        LOBBY_LOGIN,
+        LOBBY_LOGOUT,
+        LOBBY_SAY,
+    };
+
+    #define PYR_LOBBY_PACKET_NAME LobbyPacket
+    #define PYR_LOBBY_PACKET(_) \
+        _(string)(12, username) \
+        _(field)(u16, action)   \
+        _(string)(512, text)
+
+    // This packet represents both creating a game and joining a game.
+    #define PYR_JOIN_GAME_PACKET_NAME JoinGamePacket
+    #define PYR_JOIN_GAME_PACKET(_)     \
+        _(string)(24, name)             \
+        _(string)(24, password)         \
+        _(field)(u8, newGame)
+        
+    // Join Game Response codes
+    enum {
+        JGR_JOINED,     // success
+        
+        JGR_INVALID_NAME,
+        JGR_NO_GAME,
+        JGR_INVALID_PASSWORD,
+        JGR_ALREADY_STARTED,
+    };
+    
+    #define PYR_JOIN_GAME_RESPONSE_PACKET_NAME JoinGameResponsePacket
+    #define PYR_JOIN_GAME_RESPONSE_PACKET(_)  \
+        _(field)(u16, code)
 
 
     // PACKET LIST
     
     // Packet IDs are allocated based on the order of this list.
-    #define PYR_PACKET_LIST(_)          \
-        _(PYR_SAY_PACKET)               \
-        _(PYR_LOBBY_PACKET)             \
-        _(PYR_ENTITY_ADDED_PACKET)      \
-        _(PYR_ENTITY_REMOVED_PACKET)    \
-        _(PYR_LOGIN_PACKET)             \
-        _(PYR_LOGIN_RESPONSE_PACKET)    \
-        _(PYR_PING_PACKET)              \
-        _(PYR_PLAYER_STATE_PACKET)      \
-        _(PYR_UPDATE_PACKET)
+    #define PYR_PACKET_LIST(_)              \
+        _(PYR_LOGIN_PACKET)                 \
+        _(PYR_LOGIN_RESPONSE_PACKET)        \
+        _(PYR_SAY_PACKET)                   \
+        _(PYR_LOBBY_PACKET)                 \
+        _(PYR_JOIN_GAME_PACKET)             \
+        _(PYR_JOIN_GAME_RESPONSE_PACKET)
 
 
     // allocate packet IDs

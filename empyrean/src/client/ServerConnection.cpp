@@ -14,8 +14,11 @@ namespace pyr {
         _status = DISCONNECTED;
         _connectionMaker = 0;
         _loginFailed = false;
+        
+        _hasJoinGameResponse = false;
+        _joinGameResponse = 0;
     }
-    
+
     void ServerConnection::beginConnecting(const std::string& server, int port) {
         _status = CONNECTING;
         _loginFailed = false;
@@ -49,12 +52,16 @@ namespace pyr {
         if (_connectionMaker) {
             ServerConnectionThread::Status status = _connectionMaker->getStatus();
             if (status == ServerConnectionThread::CONNECT_SUCCEEDED) {
+            
                 _connection = new Connection(_connectionMaker->getSocket());
                 _connection->definePacketHandler(this, &ServerConnection::handleLoginResponse);
                 _connection->definePacketHandler(this, &ServerConnection::handleLobby);
+                _connection->definePacketHandler(this, &ServerConnection::handleJoinGameResponse);
+                
                 _connectionMaker = 0;
                 _connectionThread = 0;
                 _status = CONNECTED;
+                
             } else if (status == ServerConnectionThread::CONNECT_FAILED) {
                 _error = _connectionMaker->getError();
                 _status = DISCONNECTED;
@@ -86,6 +93,16 @@ namespace pyr {
 
     bool ServerConnection::say(const std::string& text) {
         return sendPacket(new SayPacket(text));
+    }
+    
+    bool ServerConnection::joinGame(
+        const std::string& name,
+        const std::string& password,
+        bool newGame)
+    {
+        _hasJoinGameResponse = false;
+        _joinGameResponse = 0;
+        return sendPacket(new JoinGamePacket(name, password, newGame ? 1 : 0));
     }
 
     bool ServerConnection::sendPacket(Packet* p) {
@@ -127,6 +144,11 @@ namespace pyr {
         if (!message.empty()) {
             _lobbyMessages.push_back(message);
         }
+    }
+    
+    void ServerConnection::handleJoinGameResponse(Connection*, JoinGameResponsePacket* p) {
+        _hasJoinGameResponse = true;
+        _joinGameResponse = p->code();
     }
 
 }

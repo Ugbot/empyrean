@@ -13,6 +13,7 @@ namespace pyr {
     class ConnectScreen;
     class ConnectingScreen;
     class JoinGameScreen;
+    class JoiningGameScreen;
     class LoginScreen;
     class LoggingInScreen;
     class LobbyScreen;
@@ -65,6 +66,12 @@ namespace pyr {
 
         void onNewGameCreate(const std::string& name, const std::string& password);
         void onNewGameCancel();
+        
+        void onJoiningGameJoined();
+        void onJoiningGameCancel();
+        void onJoiningGameError(const std::string& error);
+        
+        void onCreatingGameCancel();
 
     private:
         void createInterface();
@@ -74,14 +81,15 @@ namespace pyr {
     
         phui::RefPtr<MenuScreen> _screen;
         
-        phui::RefPtr<MainScreen>       _mainScreen;
-        phui::RefPtr<ConnectScreen>    _connectScreen;
-        phui::RefPtr<ConnectingScreen> _connectingScreen;
-        phui::RefPtr<LoginScreen>      _loginScreen;
-        phui::RefPtr<LoggingInScreen>  _loggingInScreen;
-        phui::RefPtr<LobbyScreen>      _lobbyScreen;
-        phui::RefPtr<JoinGameScreen>   _joinGameScreen;
-        phui::RefPtr<NewGameScreen>    _newGameScreen;
+        phui::RefPtr<MainScreen>         _mainScreen;
+        phui::RefPtr<ConnectScreen>      _connectScreen;
+        phui::RefPtr<ConnectingScreen>   _connectingScreen;
+        phui::RefPtr<JoinGameScreen>     _joinGameScreen;
+        phui::RefPtr<JoiningGameScreen>  _joiningGameScreen;
+        phui::RefPtr<LoginScreen>        _loginScreen;
+        phui::RefPtr<LoggingInScreen>    _loggingInScreen;
+        phui::RefPtr<LobbyScreen>        _lobbyScreen;
+        phui::RefPtr<NewGameScreen>      _newGameScreen;
     };
 
 }

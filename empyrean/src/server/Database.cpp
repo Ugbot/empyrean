@@ -28,13 +28,9 @@ namespace pyr {
         for (size_t i = 0; i < _characters.size(); ++i) {
             delete _characters[i];
         }
-        for (size_t i = 0; i < _games.size(); ++i) {
-            delete _games[i];
-        }
 
         _accounts.clear();
         _characters.clear();
-        _games.clear();
     }
     
     void Database::load(const std::string& filename) {
@@ -80,9 +76,6 @@ namespace pyr {
             }
             for (size_t i = 0; i < _characters.size(); ++i) {
                 _characters[i]->save(file);
-            }
-            for (size_t i = 0; i < _games.size(); ++i) {
-                _games[i]->save(file);
             }
             
             fprintf(file, "</serverdatabase>\n");

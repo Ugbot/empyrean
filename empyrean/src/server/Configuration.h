@@ -3,6 +3,7 @@
 
 
 #include "Singleton.h"
+#include "Types.h"
 
 
 namespace pyr {
@@ -14,7 +15,7 @@ namespace pyr {
         ~Configuration() { }
         
     public:
-        int getServerPort();
+        u16 getServerPort();
         bool shouldStartServer();
     };
 

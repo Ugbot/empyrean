@@ -22,7 +22,7 @@ namespace pyr {
         return "localhost";
     }
     
-    int Configuration::getPort() {
+    u16 Configuration::getPort() {
         return 14702;
     }
     

@@ -44,9 +44,9 @@ namespace pyr {
 
         // convert from 16bpp
         RGBA(u16 c) {
-            b = (c & 31) << 3;
-            g = (c >> 3) & 0xFC;
-            r = (c >> 8) & 0xF8;
+            b = u8((c & 31) << 3);
+            g = u8((c >> 3) & 0xFC);
+            r = u8((c >> 8) & 0xF8);
             a = c ? 0xFF : 0;
         }
 

@@ -4,6 +4,7 @@
 
 #include <string>
 #include "Singleton.h"
+#include "Types.h"
 
 
 namespace pyr {
@@ -21,7 +22,7 @@ namespace pyr {
         bool isFullscreen();
         
         std::string getServer();
-        int getPort();
+        u16 getPort();
         
         std::string getUsername();
     };
