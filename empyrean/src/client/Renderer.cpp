@@ -74,15 +74,15 @@ namespace pyr {
                         texcoords2[i]=light;
                     }
 
-                    glClientActiveTextureARB(GL_TEXTURE1_ARB);
-                    glActiveTextureARB(GL_TEXTURE1_ARB);
+                    glClientActiveTexture(GL_TEXTURE1_ARB);
+                    glActiveTexture(GL_TEXTURE1_ARB);
                     glEnable(GL_TEXTURE_1D);
                     glEnableClientState(GL_TEXTURE_COORD_ARRAY);
                     glBindTexture(GL_TEXTURE_1D,shadetex);
                     glTexCoordPointer(1,GL_FLOAT,0,texcoords2);
                     
-                    glClientActiveTextureARB(GL_TEXTURE0_ARB);
-                    glActiveTextureARB(GL_TEXTURE0_ARB);
+                    glClientActiveTexture(GL_TEXTURE0_ARB);
+                    glActiveTexture(GL_TEXTURE0_ARB);
 
                 } else {
                     glEnableClientState(GL_NORMAL_ARRAY);
@@ -107,11 +107,11 @@ namespace pyr {
                 glDrawElements(GL_TRIANGLES, nFaces*3, GL_UNSIGNED_INT, &faces[0][0]);
 
                 if (cellshade) {
-                    glClientActiveTextureARB(GL_TEXTURE1_ARB);
+                    glClientActiveTexture(GL_TEXTURE1_ARB);
                     glDisableClientState(GL_TEXTURE_COORD_ARRAY);
-                    glActiveTextureARB(GL_TEXTURE1_ARB);
+                    glActiveTexture(GL_TEXTURE1_ARB);
                     glDisable(GL_TEXTURE_1D);
-                    glActiveTextureARB(GL_TEXTURE0_ARB);
+                    glActiveTexture(GL_TEXTURE0_ARB);
                 }
             }
         }
@@ -251,19 +251,19 @@ namespace pyr {
             _lightVec.set(0.5,0.5,1);
             gmtl::normalize(_lightVec);
 
-            glActiveTextureARB(GL_TEXTURE1_ARB);
+            glActiveTexture(GL_TEXTURE1_ARB);
             glBindTexture(GL_TEXTURE_1D,_shadeTex);
             glEnable(GL_TEXTURE_1D);
-            glActiveTextureARB(GL_TEXTURE0_ARB);
+            glActiveTexture(GL_TEXTURE0_ARB);
             glEnable(GL_TEXTURE_2D);
         }
 
         static void end() {
-            glActiveTextureARB(GL_TEXTURE1_ARB);
+            glActiveTexture(GL_TEXTURE1_ARB);
             Texture::unbind();
             glDisable(GL_TEXTURE_1D);
 
-            glActiveTextureARB(GL_TEXTURE0_ARB);
+            glActiveTexture(GL_TEXTURE0_ARB);
             Texture::unbind();
             glDisable(GL_TEXTURE_2D);
         }
@@ -273,7 +273,7 @@ namespace pyr {
             float light = gmtl::dot(v,_lightVec);
             if (light<0) light=0;
 
-            glMultiTexCoord1fARB(GL_TEXTURE1_ARB, light);
+            glMultiTexCoord1f(GL_TEXTURE1_ARB, light);
             glTexCoord2fv(texcoords);
             glVertex3fv(verts);
         }
