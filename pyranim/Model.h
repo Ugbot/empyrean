@@ -22,8 +22,10 @@ struct JointInfo {
     //IMatrix m_globalToLocalMat;
     IMatrix m_localToGlobalMat;
     int m_parent;
-    IQuat m_parentQuat;
-    IQuat m_quat;
+    IVector m_compTrans;
+    IQuat   m_compQuat;
+    IVector m_trans;
+    IQuat   m_quat;
     std::vector<int> m_children;
 };
 
@@ -57,7 +59,7 @@ public:
     void getKeyInfo(KeyInfo &info);
     int getNumJoints();
     const JointInfo &getJointInfo(int index);
-    void setJointRotation(int index, const IQuat &quat);
+    void setJointRotTrans(int index, const IQuat &quat, const IVector &trans);
     const char *getErrorString() const;
 
     void getGroundPlaneColor(IVector &color) const;
@@ -73,7 +75,7 @@ protected:
     ViewVector m_views;
 
     void recalcJoints();
-    void recalcJointParentQuats();
+    void recalcJointChain();
     void refreshViews();
 
 private:

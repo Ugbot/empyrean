@@ -99,15 +99,18 @@ class ViewCanvas(wxGLCanvas):
         self.gotMouse = 0
         self.leftDown = 0
         EVT_ERASE_BACKGROUND(self, self.OnEraseBackground)
-        EVT_SIZE(self, self.OnSize)
-        EVT_PAINT(self, self.OnPaint)
-        EVT_LEFT_DOWN(self, self.OnLeftDown)
-        EVT_LEFT_UP(self, self.OnLeftUp)
-        EVT_RIGHT_DOWN(self, self.OnRightDown)
-        EVT_RIGHT_UP(self, self.OnRightUp)
-        EVT_MIDDLE_DOWN(self, self.OnMiddleDown)
-        EVT_MIDDLE_UP(self, self.OnMiddleUp)
-        EVT_MOTION(self, self.OnMotion)
+        EVT_SIZE         (self, self.OnSize)
+        EVT_PAINT        (self, self.OnPaint)
+        EVT_LEFT_DOWN    (self, self.OnLeftDown)
+        EVT_LEFT_DCLICK  (self, self.OnLeftDown)
+        EVT_LEFT_UP      (self, self.OnLeftUp)
+        EVT_RIGHT_DOWN   (self, self.OnRightDown)
+        EVT_RIGHT_DCLICK (self, self.OnRightDown)
+        EVT_RIGHT_UP     (self, self.OnRightUp)
+        EVT_MIDDLE_DOWN  (self, self.OnMiddleDown)
+        EVT_MIDDLE_DCLICK(self, self.OnMiddleDown)
+        EVT_MIDDLE_UP    (self, self.OnMiddleUp)
+        EVT_MOTION       (self, self.OnMotion)
 
         def refreshCallback(self=self):
             self.Refresh()

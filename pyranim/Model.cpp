@@ -142,28 +142,13 @@ const JointInfo &Model::getJointInfo(int index) {
     return m_joints[index];
 }
 
-void Model::setJointRotation(int index, const IQuat &quat) {
+void Model::setJointRotTrans(int index,
+                             const IQuat &quat,
+                             const IVector &trans) {
     // XXX - Set joint info for now...
-    m_joints[index].m_quat = quat;
-    recalcJointParentQuats();
-}
-
-void Model::recalcJointParentQuats() {
-    const Skeleton &s = getSkeleton();
-    for(int i = 0; i < (int) m_joints.size(); i ++) {
-        const BoneInfo &bi = s.getBoneInfo(i); JointInfo &ji = m_joints[i];
-        IMatrix transMat = trans_mat(bi.m_trans - IPoint());
-        IMatrix rotMat   = quat_to_mat(ji.m_quat);
-        if(ji.m_parent == -1) {
-            ji.m_localToGlobalMat =             transMat * rotMat;
-            ji.m_parentQuat = IQuat();
-        } else {
-            IMatrix parentMat = m_joints[ji.m_parent].m_localToGlobalMat;
-            ji.m_localToGlobalMat = parentMat * transMat * rotMat;
-            ji.m_parentQuat = (m_joints[ji.m_parent].m_quat *
-                               m_joints[ji.m_parent].m_parentQuat);
-        }
-    }
+    m_joints[index].m_quat  = quat;
+    m_joints[index].m_trans = trans;
+    recalcJointChain();
 }
 
 void Model::recalcJoints() {
@@ -177,22 +162,30 @@ void Model::recalcJoints() {
         ji.m_children = bi.m_children;
 
         // XXX - Default matrices for now.
-        IMatrix transMat = trans_mat(bi.m_trans - IPoint());
-        IMatrix rotMat   = quat_to_mat(bi.m_rotQuat);
-        ji.m_quat     = bi.m_rotQuat;
-        if(ji.m_parent != -1) {
-            IMatrix parentMat = m_joints[ji.m_parent].m_localToGlobalMat;
-            ji.m_localToGlobalMat = parentMat * transMat * rotMat;
-            ji.m_parentQuat = m_joints[ji.m_parent].m_quat*
-                              m_joints[ji.m_parent].m_parentQuat;
-        } else {
-            ji.m_localToGlobalMat =             transMat * rotMat;
-            ji.m_parentQuat = IQuat();
-        }
-
+        ji.m_quat        = bi.m_rotQuat;
+        ji.m_trans       = bi.m_trans - IPoint();
         m_joints.push_back(ji);
     }
+    recalcJointChain();
+
     m_jointsDirty = false;
+}
+
+void Model::recalcJointChain() {
+    for(int i = 0; i < (int) m_joints.size(); i ++) {
+        JointInfo &ji = m_joints[i];
+        if(ji.m_parent == -1) {
+            ji.m_compQuat = ji.m_quat;
+            ji.m_compTrans = ji.m_trans;
+        } else {
+            JointInfo &pji = m_joints[ji.m_parent];
+            ji.m_compQuat = (ji.m_quat * pji.m_compQuat);
+            ji.m_compTrans = (quat_to_mat(pji.m_compQuat) * ji.m_trans +
+                              pji.m_compTrans);
+        }
+        ji.m_localToGlobalMat = (trans_mat(ji.m_compTrans) *
+                                 quat_to_mat(ji.m_compQuat));
+    }
 }
 
 void Model::refreshViews() {

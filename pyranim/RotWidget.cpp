@@ -127,7 +127,7 @@ double RotWidget::getRadius() const {
 }
 
 bool RotWidget::mouseDown(int x, int y) {
-    //printf("RotWidget::mouseDown\n"); fflush(stdout);
+    //printf("mouseDown(%d, %d)\n", x, y); fflush(stdout);
     IntPair ip = getClosestPoint(x, y, RW_FUDGE_DIST);
     if(ip.first == -1) return false;
     m_mouseDown = true;
@@ -141,6 +141,7 @@ bool RotWidget::mouseDown(int x, int y) {
 }
 
 bool RotWidget::mouseMove(int x, int y) {
+    //printf("mouseMove(%d, %d)\n", x, y); fflush(stdout);
     if(!m_listener) return false;
     if(!m_mouseDown) return false;
     if(m_selAxis == -1) {
@@ -173,6 +174,7 @@ bool RotWidget::mouseMove(int x, int y) {
 }
 
 bool RotWidget::mouseUp(int x, int y) {
+    //printf("mouseUp(%d, %d)\n", x, y); fflush(stdout);
     if(!m_mouseDown) return false;
     if(!m_listener)  return false;
 

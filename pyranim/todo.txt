@@ -100,10 +100,17 @@ The implementation schedule:
 - Rotation widget rotating.
 - Propagate rotations to model.
 
---- WE ARE HERE ---
+1/12/03 (3829 LOC, 110432 bytes)
+
+- Fix occasional joint picking error.
+
+1/13/03 (3853 LOC, 110888 bytes)
 
 - Fix "rotWidget init resets quaternion" bug (off by one?)
 - Joint drawing off by one?
+
+--- WE ARE HERE ---
+
 - Position widget?
 - Load animation.
 - Display animation.
@@ -118,7 +125,6 @@ The implementation schedule:
 
 --- Other stuff (would be nice later) ---
 
-- Fix occasional joint picking error?
 - Load mesh?
 - Display mesh?
 - More intuitive rotation widget interaction.

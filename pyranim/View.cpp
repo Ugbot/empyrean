@@ -165,7 +165,8 @@ void View::drawSkeleton() {
     for(int i = 0; i < numJoints; i ++) {
         const JointDrawInfo &jdi = jdis[i];
         const JointInfo &ji = m_model->getJointInfo(i);
-        if(m_selectedJoint == i) {
+        if(m_selectedJoint != -1 &&
+           m_selectedJoint == ji.m_parent) {
             glColor3d(1.0, 1.0, 1.0);
         } else if(jdi.m_parentSelected) {
             glColor3d(0.25, 0.25, 0.4);
@@ -382,22 +383,27 @@ void View::navMouseUp(int x, int y) {
 }
 
 void View::mouseDown(int x, int y) {
+    //printf("mouseDown(%d, %d)\n", x, y); fflush(stdout);
     if(m_toolMode == TOOL_SELECT) {
         m_selectedJoint = getClickedJoint(x, y);
         notifyViewListeners();
     } else if(m_toolMode == TOOL_ROTATE) {
-        if(m_rotWidget->mouseDown(x, y)) {
+        if(m_selectedJoint != -1 &&
+           m_rotWidget->mouseDown(x, y)) {
+            printf("mouseDown on widget.\n"); fflush(stdout);
             m_rotWidgetActive = true;
         } else {
             m_rotWidgetActive = false;
             m_selectedJoint = getClickedJoint(x, y);
             updateRotWidget();
             notifyViewListeners();
+            printf("mouseDown on model (%d).\n", m_selectedJoint); fflush(stdout);
         }
     }
 }
 
 void View::mouseMove(int x, int y) {
+    //printf("mouseMove(%d, %d)\n", x, y); fflush(stdout);
     if(m_toolMode == TOOL_SELECT) {
     } else if(m_toolMode == TOOL_ROTATE && m_rotWidgetActive) {
         m_rotWidget->mouseMove(x, y);
@@ -405,6 +411,7 @@ void View::mouseMove(int x, int y) {
 }
 
 void View::mouseUp(int x, int y) {
+    //printf("mouseUp(%d, %d)\n", x, y); fflush(stdout);
     if(m_toolMode == TOOL_SELECT) {
     } else if(m_toolMode == TOOL_ROTATE && m_rotWidgetActive) {
         m_rotWidget->mouseUp(x, y);
@@ -457,8 +464,19 @@ void View::rotWidgetChanged(RotWidget *widget, const IQuat &quat, bool final) {
     assert(widget == m_rotWidget);
     if(m_selectedJoint == -1) return;
     const JointInfo &ji = m_model->getJointInfo(m_selectedJoint);
-    IQuat parentQuat = ji.m_parentQuat;
-    m_model->setJointRotation(m_selectedJoint, quat * conjugate(parentQuat));
+    IQuat compQuat;
+    if(ji.m_parent == -1) {
+        compQuat = IQuat();
+    } else {
+        const JointInfo &pji = m_model->getJointInfo(ji.m_parent);
+        compQuat = pji.m_compQuat;
+    }
+    
+    IVector trans = ji.m_trans;
+    IQuat q = ji.m_quat * compQuat;
+    m_model->setJointRotTrans(m_selectedJoint,
+                              quat * conjugate(compQuat),
+                              trans);
 
     // XXX - if final is set, commit undo stuff.
     
@@ -474,6 +492,13 @@ int View::getClickedJoint(int x, int y) {
     std::vector<int> jointIndexes;
     for(int i = 0; i < numJoints; i ++) {
         const JointInfo &ji = m_model->getJointInfo(i);
+        /*IPoint loc;
+        if(ji.m_parent == -1) {
+            loc = projMat * IPoint();
+        } else {
+            const JointInfo &pji = m_model->getJointInfo(ji.m_parent);
+            loc = projMat * pji.m_localToGlobalMat * IPoint();
+        }*/
         IPoint loc = projMat * ji.m_localToGlobalMat * IPoint();
         if(fabs(loc[3]) < IALGEBRA_EPSILON) {
             printf("Warning: bad projection encountered (%s:%d)\n", __FILE__, __LINE__);
@@ -508,16 +533,26 @@ int View::getClickedJoint(int x, int y) {
             }
         }
     }
+
+    printf("closestJoint %d\n", closestJoint); fflush(stdout);
+    
     return closestJoint;
 }
 
 void View::updateRotWidget() {
     if(m_selectedJoint != -1) {
         const JointInfo &ji = m_model->getJointInfo(m_selectedJoint);
-        IPoint loc = m_modelTransform * ji.m_localToGlobalMat * IPoint();
+        IPoint loc;
+        IQuat  compQuat;
+        loc = m_modelTransform * ji.m_localToGlobalMat * IPoint();
+        if(ji.m_parent == -1) {
+            compQuat = IQuat();
+        } else {
+            const JointInfo &pji = m_model->getJointInfo(ji.m_parent);
+            compQuat = pji.m_compQuat;
+        }
         m_rotWidget->setLocation(loc);
-        // XXX - set initial rotation here.
-        m_rotWidget->setRotation(ji.m_parentQuat);
+        m_rotWidget->setRotation(ji.m_quat * compQuat);
     }
 }
 
