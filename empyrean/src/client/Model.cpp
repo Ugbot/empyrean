@@ -1,8 +1,6 @@
-
-#include <cal3d.h>
-
-#include "ResourceManager.h"
+#include <cal3d/cal3d.h>
 #include "Model.h"
+#include "ResourceManager.h"
 
 namespace pyr {
     /**

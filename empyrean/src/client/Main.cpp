@@ -158,7 +158,7 @@ int main() {
         char* backslash = strrchr(filename, '\\');
         if (backslash) {
             *backslash = 0;
-            //SetCurrentDirectory(filename);
+            SetCurrentDirectory(filename);
         }
         
         return main();
