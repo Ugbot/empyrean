@@ -162,7 +162,7 @@ namespace pyr {
         vel = axisRotMat * Vec2f(x[0],velBox1PreCol[1]);
         vel2 = axisRotMat * Vec2f(x[1],velBox2PreCol[1]);
         
-        if(abs(this->getCenter()[1] - box2.getCenter()[1]) < 0.5) {
+        if(fabs(this->getCenter()[1] - box2.getCenter()[1]) < 0.5) {
             return collision::ENTITY_HORIZ;
         }
         else if(this->getCenter()[1] > box2.getCenter()[1]) {

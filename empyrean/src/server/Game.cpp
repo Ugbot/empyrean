@@ -271,7 +271,7 @@ namespace pyr {
                     PYR_LOG() << "Found a potential hit!! ";
 
                     // Determine the location and hitMod of the hit location
-                    int hitModifier = getHitModifier(attackArea,p->type(),rv.points);
+                    /*int hitModifier = */getHitModifier(attackArea,p->type(),rv.points);
 
                     // Get the weapon and armor stats of the combatants
                     int minWpnDmg,maxWpnDmg,wpnDmgMult,wpnAccuracy = 0;

@@ -20,6 +20,6 @@ SOURCES = Split("""
 """)
 
 env = env.Copy()
-for t in ['PyrBase', 'SDL', 'NSPR']:
+for t in ['PyrBase', 'SDL', 'NSPR', 'GLText']:
     TOOLS[t](env)
 env.Library('phui', SOURCES)

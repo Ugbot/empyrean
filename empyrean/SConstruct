@@ -148,7 +148,8 @@ opts.AddOptions(
     BoolOption('dbg',    'Build with debugging enabled', 0),
     BoolOption('opt',    'Build with optimizations', 0),
     BoolOption('distcc', 'Enable compiling with distcc', 0),
-    BoolOption('nowarn', 'Disable all warnings', 0))
+    BoolOption('nowarn', 'Disable all warnings', 0),
+    BoolOption('warningsAsErrors', 'Treat warnings as errors', 0))
 
 # Create base environment.
 env = Environment(ENV = os.environ, options=opts)
@@ -187,8 +188,15 @@ if env.get('nowarn'):
 else:
     if env['CC'] == 'gcc':
         env.Append(CCFLAGS=['-Wall'])
+    elif env['CXX'] == 'g++':
+        env.Append(CXXFLAGS=['-Wall'])
     if env['CXX'] == 'g++':
-        env.Append(CXXFLAGS=['-Wall', '-Wno-non-virtual-dtor'])
+        env.Append(CXXFLAGS=['-Wno-non-virtual-dtor'])
+if env.get('warningsAsErrors'):
+    if env['CC'] == 'gcc':
+        env.Append(CCFLAGS=['-Werror'])
+    elif env['CXX'] == 'g++':
+        env.Append(CXXFLAGS=['-Werror'])
 
 Export('env')
 
