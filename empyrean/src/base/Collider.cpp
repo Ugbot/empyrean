@@ -82,10 +82,9 @@ namespace pyr {
     };
 
     CollisionData collide(float dt, const Vec2f& origPos, Vec2f& newPos, Vec2f& vel,
-                          float width, float height, const Map* terrain) {
+                          const BoundingRectangle& bounds, const Map* terrain) {
                           
-        CollisionBox newBox(newPos - Vec2f(width / 2.0f, 0),
-                            newPos + Vec2f(width / 2.0f, height));
+        CollisionBox newBox(newPos + bounds.min, newPos + bounds.max);
 
         std::vector<Segment> segs;
         SegmentExtractor extractor(segs, 0);
@@ -102,16 +101,12 @@ namespace pyr {
     };
 
     
-    void collideWithEntity(Vec2f& entityPos, Vec2f& entityVel, const float width, const float height, 
-                           Vec2f& otherPos, Vec2f& otherVel, const float otherwidth, const float otherheight) {
+    void collideWithEntity(Vec2f& entityPos, Vec2f& entityVel, const BoundingRectangle& bounds, 
+                           Vec2f& otherPos, Vec2f& otherVel, const BoundingRectangle& otherBounds) {
         
-        CollisionBox entityBox(entityPos - Vec2f(width / 2.0f, 0),
-                               entityPos + Vec2f(width / 2.0f, height));
-
-        CollisionBox otherBox(otherPos - Vec2f(otherwidth / 2.0f, 0),
-                              otherPos + Vec2f(otherwidth / 2.0f, otherheight));
-
-
+        CollisionBox entityBox(entityPos + bounds.min, entityPos + bounds.max);
+        CollisionBox otherBox(otherPos + otherBounds.min, otherPos + otherBounds.max);
+        
         std::vector<Segment> segs;
         otherBox.segment(segs);
 

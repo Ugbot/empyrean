@@ -3,8 +3,8 @@
 
 namespace pyr {
 
-    void Entity::update(float dt, const Map* terrain) {
-        _behavior->update(this, dt);
+    void Entity::update(float dt, const Map* map) {
+        _behavior->update(this, dt, map);
         _appearance->update(dt);
     }
 

@@ -1,7 +1,9 @@
 #ifndef PYR_PLAYER_H
 #define PYR_PLAYER_H
 
+#include "ArmorPool.h"
 #include "ScopedPtr.h"
+#include "WeaponPool.h"
 
 namespace pyr {
 

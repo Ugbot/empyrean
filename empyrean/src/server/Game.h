@@ -30,6 +30,7 @@ namespace pyr {
             ServerEntity* playerEntity;
         };
 
+        static void setData(Connection* c, ConnectionData* cd);
         static ConnectionData* getData(Connection* c);
 
         void addEntity(ServerEntity* entity);

@@ -1,18 +1,11 @@
 #include "Behavior.h"
 #include "Entity.h"
+#include "PlayerBehavior.h"
 #include "Utility.h"
 #include "VecMath.h"
 
 
 namespace pyr {
-
-#define PYR_BEHAVIOR_NAME(name)             \
-    const char* getName() {                 \
-        return getClassName();              \
-    }                                       \
-    static const char* getClassName() {     \
-        return (name);                      \
-    }
 
     /// Placeholder entity behavior class, for testing only.
     class DumbBehavior : public Behavior {
@@ -22,7 +15,7 @@ namespace pyr {
         DumbBehavior(const std::string& /*resource*/) {
         }
 
-        void update(Entity* entity, float dt) {
+        void update(Entity* entity, float dt, const Map* map) {
             entity->getPos() += entity->getVel() * dt;
 
             entity->getVel()[0] += sin(angle) * dt / 2;
@@ -46,7 +39,7 @@ namespace pyr {
         NullBehavior(const std::string& /*resource*/) {
         }
 
-        void update(Entity* entity, float dt) {
+        void update(Entity* entity, float dt, const Map* map) {
             entity->getPos() += entity->getVel() * dt;
         }
 
@@ -64,6 +57,7 @@ namespace pyr {
 
         TRY_TYPE(DumbBehavior);
         TRY_TYPE(NullBehavior);
+        TRY_TYPE(PlayerBehavior);
         return new NullBehavior(resource);
     }
 

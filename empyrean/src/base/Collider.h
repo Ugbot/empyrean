@@ -2,6 +2,7 @@
 #define PYR_COLLIDER_H
 
 #include <vector>
+#include "BoundingRectangle.h"
 #include "CollisionBox.h"
 #include "VecMath.h"
 
@@ -15,10 +16,10 @@ namespace pyr {
     };
 
     CollisionData collide(float dt, const Vec2f& origPos, Vec2f& newPos, Vec2f& vel,
-                          float width, float height, const Map* terrain);
+                          const BoundingRectangle& bounds, const Map* terrain);
 
-    void collideWithEntity(Vec2f& entityPos, Vec2f& entityVel, const float width, const float height, 
-                           Vec2f& otherPos, Vec2f& otherVel, const float otherwidth, const float otherheight);
+    void collideWithEntity(Vec2f& entityPos, Vec2f& entityVel, const BoundingRectangle& bounds, 
+                           Vec2f& otherPos, Vec2f& otherVel, const BoundingRectangle& otherBounds);
 }
 
 #endif

@@ -1,6 +1,4 @@
 #include <stdexcept>
-#include <gmtl/gmtl.h>
-
 #include "GameEntity.h"
 #include "GameState.h"
 #include "GLUtility.h"
@@ -78,7 +76,7 @@ namespace pyr {
         ServerConnection& sc = the<ServerConnection>();
         sc.update();
 
-        // Effect the player's vitality
+        // Affect the player's vitality
         if (_input1->getValue() == 1) {
             _player.decrVitality(2);
         }
@@ -92,6 +90,9 @@ namespace pyr {
             _player.incrEther(1);
         }
 
+        // Combined key/joy input needs to be implemented with an Input
+        // that combines two others.
+       
         // move to the right!
         if (_inputRight->getDelta() > gmtl::GMTL_EPSILON) {
             sc.sendEvent("Begin Right");
@@ -108,22 +109,12 @@ namespace pyr {
         
         // jump!
         if (_inputJump->getDelta() > gmtl::GMTL_EPSILON) {
-            GameEntity* gentity = dynamic_cast<GameEntity*>(the<Scene>().getFocus());
-            if(gentity) {
-                if(gentity->jump()) {
-                    sc.sendEvent("Jump");
-                }
-            }
+            sc.sendEvent("Jump");
         }
         
         // attack!
         if (_inputAttack->getDelta() > gmtl::GMTL_EPSILON) {
-            GameEntity* gentity = dynamic_cast<GameEntity*>(the<Scene>().getFocus());
-            if(gentity) {
-                if(gentity->attack()) {
-                    sc.sendEvent("Attack");
-                }
-            }
+            sc.sendEvent("Attack");
         }
 
         // Input with Joystick
@@ -153,7 +144,7 @@ namespace pyr {
             sc.sendEvent("Begin Right");
             _lastJoyX = 1;
         }
-       
+
         // jump!
         if (_inputJoyJump->getDelta() > gmtl::GMTL_EPSILON) {
             GameEntity* gentity = dynamic_cast<GameEntity*>(the<Scene>().getFocus());

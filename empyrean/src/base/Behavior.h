@@ -8,7 +8,15 @@
 namespace pyr {
 
     class Entity;
+    class Map;
 
+#define PYR_BEHAVIOR_NAME(name)             \
+    const char* getName() {                 \
+        return getClassName();              \
+    }                                       \
+    static const char* getClassName() {     \
+        return (name);                      \
+    }
     
     /**
      * An object that can control an entity's motion and actions.
@@ -16,9 +24,11 @@ namespace pyr {
     class Behavior {
     public:
         virtual ~Behavior() { }
+        // Should getName() and getResource() return std::string instead?
+        // It gets rid of the null pointer issue.
         virtual const char* getName() = 0;
         virtual const char* getResource() = 0;
-        virtual void update(Entity* entity, float dt) = 0;
+        virtual void update(Entity* entity, float dt, const Map* map) = 0;
     };
 
     /**

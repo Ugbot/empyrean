@@ -97,6 +97,13 @@ namespace pyr {
         _(field)(u16, code)
         
     // Player Event codes
+    //   "Begin Left"
+    //   "End Left"
+    //   "Begin Right"
+    //   "End Right
+    //   "Jump"
+    //   "Attack"
+
     // client -> server
     #define PYR_PLAYER_EVENT_PACKET_NAME PlayerEventPacket
     #define PYR_PLAYER_EVENT_PACKET(_) \

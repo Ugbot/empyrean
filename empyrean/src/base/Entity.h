@@ -26,7 +26,7 @@ namespace pyr {
 
         virtual ~Entity() { }
 
-        void update(float dt, const Map* terrain);
+        void update(float dt, const Map* map);
 
         Behavior*   getBehavior()   const { return _behavior.get();   }
         Appearance* getAppearance() const { return _appearance.get(); }

@@ -21,11 +21,13 @@ namespace pyr {
         }
         
         void update(float /*dt*/) {
-        }
-        
-        void draw() {
+            // Send appearance commands to the client.
         }
 
+        void draw() {
+            // Is there a way we can get rid of this method?
+        }
+        
     private:
         std::string _name;
         std::string _resource;

@@ -40,8 +40,8 @@ namespace pyr {
 
         Player _player;
 
-        Zeroed<int> _lastJoyX;
         Inited<bool, false> _showPlayerData;
+        Zeroed<int> _lastJoyX;
         gltext::FontRendererPtr _renderer;
     };
 

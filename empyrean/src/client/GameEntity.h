@@ -11,21 +11,7 @@ namespace pyr {
 
     class InputManager;
     class Input;
-    class Weapon;
-    class Armor;
 
-    /** Represents a local player.
-     *
-     * I'm not all that happy that I have to pass a renderer
-     * here.  It feels sloppy.  Maybe it's just me.
-     *
-     * On the plus side, this means that entities have individual
-     * rendering settings implicitly.  Good juju.  I'll have to
-     * tweak the renderer a bit if we go with this, though, since
-     * every CellShadeRenderer has its own shade texture, as well
-     * as other miscellaneous weirdness. (as is customary for any
-     * code written by yours truly)
-     */
     class GameEntity : public ClientEntity {
     public:
         enum Animation {

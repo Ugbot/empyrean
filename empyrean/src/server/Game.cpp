@@ -64,6 +64,10 @@ namespace pyr {
         }
     }
 
+    void Game::setData(Connection* c, ConnectionData* cd) {
+        c->setOpaque(cd);
+    }
+
     Game::ConnectionData* Game::getData(Connection* c) {
         return static_cast<ConnectionData*>(c->getOpaque());
     }
@@ -96,13 +100,17 @@ namespace pyr {
             instantiateBehavior("player"),
             new ServerAppearance("cal3d", "models/paladin/paladin.cfg"));
         entity->setPos(_startPosition);
+        // Hardcoded for now.  Hardcoded in the server as well.
+        float width  = 0.3f;
+        float height = 1.9f;
+        entity->setBounds(BoundingRectangle(Vec2f(-width / 2, 0), Vec2f(width / 2, height)));
 
         sendAll(buildEntityAddedPacket(entity));
 
         // set connection-specific data
         ConnectionData* cd = new ConnectionData;
         cd->playerEntity = entity;
-        connection->setOpaque(cd);
+        setData(connection, cd);
 
         // add packet handlers
         connection->definePacketHandler(this, &Game::handlePlayerEvent);
@@ -138,6 +146,7 @@ namespace pyr {
         ConnectionData* cd = getData(c);
         ServerEntity* entity = cd->playerEntity;
 
+        const float jumpSpeed = 8;
         const float speed = 2;
 
         if (p->event() == "Begin Right") {
@@ -153,10 +162,10 @@ namespace pyr {
         }
                 
         if (p->event() == "Jump") {
-            entity->getVel()[1] = 8;
+            entity->getVel()[1] = jumpSpeed;
         }
                 
-        if (p->event() == "Attack") {                
+        if (p->event() == "Attack") {
         }
     }
     
