@@ -46,7 +46,8 @@ namespace pyr {
                 the<Database>().load(getDatabaseFilename());
             }
             catch (const DatabaseError& e) {
-                PYR_SERVER_LOG() << "Error loading database: " << e.what();
+                PYR_SERVER_LOG() << "Warning, could not load database: " << e.what();
+                PYR_SERVER_LOG() << "Creating empty one.";
             }
 
             if (the<Configuration>().shouldStartServer) {
