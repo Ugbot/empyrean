@@ -8,7 +8,7 @@ SOURCES = [
     'RectangleTool.cpp']
 
 env = base_env.Copy()
-for t in Split('PyrBase wxWindows'):
+for t in Split('PyrBase wxWindows OpenGL'):
     TOOLS[t](env)
 
 env.Program('#/build/editor', SOURCES)

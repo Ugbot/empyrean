@@ -21,9 +21,6 @@ SOURCES = [
     'ServerConnection.cpp',
     'Texture.cpp']
 
-# if using extgl...
-# SOURCES.append('extgl.c')
-
 env = base_env.Copy()
 for t in Split('PyrBase Cal3D Corona FreeType NSPR OpenGL SDL'):
     TOOLS[t](env)

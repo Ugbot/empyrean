@@ -80,7 +80,10 @@ def SetupSDL(env):
         ParseConfig(env, 'sdl-config', ['--cflags', '--libs'])
 
 def SetupWxWindows(env):
-    ParseConfig(env, 'wx-config', ['--cxxflags', '--libs', '--gl-libs'])
+    args = ['--cxxflags', '--libs']
+    if env['PLATFORM'] != 'cygwin':
+        args.append('--gl-libs')  # special case cygwin's inconsistency
+    ParseConfig(env, 'wx-config', args)
 
 
 # Initialize set of external dependencies.
@@ -101,12 +104,15 @@ base_env = Environment(ENV = os.environ)
 
 if base_env['PLATFORM'] == 'cygwin':
     base_env.Append(CCFLAGS = ['-DWIN32', '-D_WIN32', '-DCYGWIN'],
-                    CPPPATH = ['#/third-party/include'],
-                    LIBPATH = ['#/third-party/lib'])
+                    CPPPATH = ['#/third-party-cygwin/include'],
+                    LIBPATH = ['#/third-party-cygwin/lib'])
+    base_env['USE_EXTGL'] = 1
+else:
+    base_env['USE_EXTGL'] = 0
 
+# Process build options.
 if ARGUMENTS.get('dbg'):
     base_env.Append(CCFLAGS = ['-g', '-DDEBUG'])
-        
 if ARGUMENTS.get('opt'):
     base_env.Append(CCFLAGS = ['-O'],
                     LINKFLAGS = ['-s'])

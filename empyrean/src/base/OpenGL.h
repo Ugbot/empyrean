@@ -9,6 +9,7 @@
 
 #ifdef PYR_USE_EXTGL
     #include "extgl.h"
+    #include <GL/glu.h>
 #else
     #include <GL/gl.h>
     #include <GL/glu.h>

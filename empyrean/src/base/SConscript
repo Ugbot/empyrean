@@ -16,6 +16,9 @@ SOURCES = [
     'Utility.cpp',
     'WriterThread.cpp']
 
+if base_env['USE_EXTGL']:
+    SOURCES.append('extgl.c')
+
 env = base_env.Copy()
 TOOLS['NSPR'](env)
 
